@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Powered Business Solutions | Odyssey-1.AI</title>
+    <meta name="description" content="Advanced AI-powered business solutions for modern enterprises">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1rem 0; }
+        nav { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.5rem; font-weight: bold; }
+        .nav-links { display: flex; list-style: none; gap: 2rem; }
+        .nav-links a { color: white; text-decoration: none; transition: opacity 0.3s; }
+        .nav-links a:hover { opacity: 0.8; }
+        .hero { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 4rem 0; text-align: center; }
+        .hero h1 { font-size: 3rem; margin-bottom: 1rem; }
+        .hero p { font-size: 1.2rem; margin-bottom: 2rem; }
+        .cta-button { background: #ff6b6b; color: white; padding: 1rem 2rem; border: none; border-radius: 5px; font-size: 1.1rem; cursor: pointer; transition: background 0.3s; text-decoration: none; display: inline-block; }
+        .cta-button:hover { background: #ff5252; }
+        .features { padding: 4rem 0; background: #f8f9fa; }
+        .features h2 { text-align: center; margin-bottom: 3rem; font-size: 2.5rem; }
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+        .feature-card { background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); text-align: center; }
+        .feature-icon { font-size: 3rem; margin-bottom: 1rem; }
+        .signup-section { padding: 4rem 0; background: white; text-align: center; }
+        .signup-form { max-width: 400px; margin: 0 auto; }
+        .form-group { margin-bottom: 1rem; text-align: left; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: bold; }
+        .form-group input { width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 5px; font-size: 1rem; }
+        .form-group input:focus { outline: none; border-color: #667eea; }
+        .error-message { color: #ff6b6b; margin-top: 0.5rem; font-size: 0.9rem; }
+        .success-message { color: #4caf50; margin-top: 1rem; font-size: 1rem; }
+        .contact { padding: 4rem 0; text-align: center; }
+        .contact h2 { margin-bottom: 2rem; font-size: 2.5rem; }
+        footer { background: #333; color: white; padding: 2rem 0; text-align: center; }
+        .loading { opacity: 0.7; }
+        .update-indicator { position: fixed; top: 10px; right: 10px; background: #4caf50; color: white; padding: 0.5rem 1rem; border-radius: 5px; font-size: 0.9rem; display: none; z-index: 1000; }
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2rem; }
+            .nav-links { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="update-indicator" id="updateIndicator">Content Updated!</div>
+    
+    <header>
+        <nav class="container">
+            <div class="logo">Odyssey-1.AI</div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#signup">Sign Up</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero" id="home">
+        <div class="container">
+            <h1 id="heroTitle">Transform Your Business with AI</h1>
+            <p id="heroSubtitle">Advanced artificial intelligence solutions for modern enterprises</p>
+            <a href="#signup" class="cta-button" id="heroButton">Get Started Today</a>
+        </div>
+    </section>
+
+    <section class="features" id="services">
+        <div class="container">
+            <h2>Our Services</h2>
+            <div class="features-grid" id="featuresGrid">
+                <!-- Features will be dynamically loaded -->
+            </div>
+        </div>
+    </section>
+
+    <section class="signup-section" id="signup">
+        <div class="container">
+            <h2 id="signupTitle">Create Your Account</h2>
+            <p id="signupSubtitle">Join thousands of businesses already using our AI solutions</p>
+            <form class="signup-form" id="signupForm">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required>
+                    <div class="error-message" id="emailError"></div>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required minlength="6">
+                    <div class="error-message" id="passwordError"></div>
+                </div>
+                <div class="form-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" name="fullName" required>
+                    <div class="error-message" id="nameError"></div>
+                </div>
+                <button type="submit" class="cta-button" id="signupBtn">Create Account</button>
+                <div class="success-message" id="successMessage"></div>
+                <div class="error-message" id="generalError"></div>
+            </form>
+        </div>
+    </section>
+
+    <section class="contact" id="contact">
+        <div class="container">
+            <h2 id="contactTitle">Ready to Get Started?</h2>
+            <p id="contactSubtitle">Contact us today to learn how AI can transform your business</p>
+            <a href="mailto:info@odyssey-1.ai" class="cta-button" id="contactButton">Contact Us</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Odyssey-1.AI. All rights reserved. | <span id="lastUpdated"></span></p>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Supabase client
+        const supabaseUrl = 'https://tvsxloejfsrdganemsmg.supabase.co'
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR2c3hsb2VqZnNyZGdhbmVtc21nIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY3MTk5NzEsImV4cCI6MjA3MjI5NTk3MX0.rkFKJNEOhCZiCTSIEcBKWWGqFnXzJHgTHvpJQl0YLfg'
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey)
+        
+        let lastContentHash = null;
+
+        // Auto-update content function
+        async function updateContent() {
+            try {
+                const { data, error } = await supabase.functions.invoke('static-site-updater');
+                
+                if (error) throw error;
+                
+                const contentHash = JSON.stringify(data);
+                if (lastContentHash && lastContentHash !== contentHash) {
+                    showUpdateIndicator();
+                }
+                lastContentHash = contentHash;
+                
+                // Update hero section
+                if (data.hero) {
+                    document.getElementById('heroTitle').textContent = data.hero.title;
+                    document.getElementById('heroSubtitle').textContent = data.hero.subtitle;
+                    document.getElementById('heroButton').textContent = data.hero.button_text;
+                    document.getElementById('heroButton').href = data.hero.button_link;
+                }
+                
+                // Update features
+                if (data.features) {
+                    const featuresGrid = document.getElementById('featuresGrid');
+                    featuresGrid.innerHTML = data.features.map(feature => `
+                        <div class="feature-card">
+                            <div class="feature-icon">${feature.subtitle}</div>
+                            <h3>${feature.title}</h3>
+                            <p>${feature.content}</p>
+                        </div>
+                    `).join('');
+                }
+                
+                // Update signup section
+                if (data.signup) {
+                    document.getElementById('signupTitle').textContent = data.signup.title;
+                    document.getElementById('signupSubtitle').textContent = data.signup.subtitle;
+                }
+                
+                // Update contact section
+                if (data.contact) {
+                    document.getElementById('contactTitle').textContent = data.contact.title;
+                    document.getElementById('contactSubtitle').textContent = data.contact.subtitle;
+                    document.getElementById('contactButton').textContent = data.contact.button_text;
+                    document.getElementById('contactButton').href = data.contact.button_link;
+                }
+                
+                // Update last updated timestamp
+                document.getElementById('lastUpdated').textContent = 
+                    'Last updated: ' + new Date(data.lastUpdated).toLocaleString();
+                
+            } catch (error) {
+                console.error('Failed to update content:', error);
+            }
+        }
+
+        function showUpdateIndicator() {
+            const indicator = document.getElementById('updateIndicator');
+            indicator.style.display = 'block';
+            setTimeout(() => {
+                indicator.style.display = 'none';
+            }, 3000);
+        }
+
+        // Load content on page load
+        updateContent();
+        
+        // Auto-update every 30 seconds
+        setInterval(updateContent, 30000);
+
+        // Handle form submission
+        document.getElementById('signupForm').addEventListener('submit', async (e) => {
+            e.preventDefault()
+            
+            const email = document.getElementById('email').value
+            const password = document.getElementById('password').value
+            const fullName = document.getElementById('fullName').value
+            
+            // Clear previous errors
+            document.getElementById('emailError').textContent = ''
+            document.getElementById('passwordError').textContent = ''
+            document.getElementById('nameError').textContent = ''
+            document.getElementById('generalError').textContent = ''
+            document.getElementById('successMessage').textContent = ''
+            
+            const signupBtn = document.getElementById('signupBtn')
+            signupBtn.textContent = 'Creating Account...'
+            signupBtn.disabled = true
+            
+            try {
+                // Sign up user
+                const { data, error } = await supabase.auth.signUp({
+                    email: email,
+                    password: password,
+                    options: {
+                        data: {
+                            full_name: fullName
+                        }
+                    }
+                })
+                
+                if (error) {
+                    throw error
+                }
+                
+                document.getElementById('successMessage').textContent = 
+                    'Account created successfully! Please check your email to verify your account, then you can access the full platform.'
+                
+                // Reset form
+                document.getElementById('signupForm').reset()
+                
+                // Redirect to main app after a delay
+                setTimeout(() => {
+                    window.location.href = 'https://odyssey-1.ai/app' // Redirect to React app
+                }, 3000)
+                
+            } catch (error) {
+                document.getElementById('generalError').textContent = error.message
+            } finally {
+                signupBtn.textContent = 'Create Account'
+                signupBtn.disabled = false
+            }
+        })
+    </script>
+</body>
+</html>
