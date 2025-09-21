@@ -31,5 +31,12 @@ export default defineConfig(({ mode }) => ({
       polyfill: false,
       resolveDependencies: () => []
     },
+    // Fix hydration errors by ensuring consistent builds
+    target: 'esnext',
+    minify: mode === 'production' ? 'esbuild' : false,
+  },
+  // Add SSR configuration to prevent hydration mismatches
+  ssr: {
+    noExternal: ['react', 'react-dom']
   },
 }));
