@@ -27,6 +27,8 @@ export default function AIResearchAssistant() {
   const [loading, setLoading] = useState(false);
   const [usage, setUsage] = useState<any>(null);
   const [canQuery, setCanQuery] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const [authError, setAuthError] = useState<string | null>(null);
 
   useEffect(() => {
     checkUsageStatus();
@@ -36,29 +38,56 @@ export default function AIResearchAssistant() {
   const checkUsageStatus = async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
+      if (!user) {
+        setIsAuthenticated(false);
+        setAuthError('Please sign in to use AI Research Assistant');
+        setCanQuery(false);
+        return;
+      }
 
-      // Get user's subscription tier
-      const { data: subscription } = await supabase
-        .from('subscriptions')
-        .select('tier')
-        .eq('user_id', user.id)
-        .eq('status', 'active')
-        .single();
+      setIsAuthenticated(true);
+      setAuthError(null);
 
-      const tier = subscription?.tier || 'free';
+      // Try to get user's subscription tier (with fallback for missing table)
+      try {
+        const { data: subscription } = await supabase
+          .from('subscriptions')
+          .select('tier')
+          .eq('user_id', user.id)
+          .eq('status', 'active')
+          .single();
 
-      // Get usage limits
-      const { data: limits } = await supabase
-        .from('usage_limits')
-        .select('*')
-        .eq('user_id', user.id)
-        .single();
+        const tier = subscription?.tier || 'free';
 
-      setUsage({ ...limits, tier });
-      setCanQuery(limits?.free_queries_remaining > 0);
+        // Try to get usage limits (with fallback for missing table)
+        const { data: limits } = await supabase
+          .from('usage_limits')
+          .select('*')
+          .eq('user_id', user.id)
+          .single();
+
+        setUsage({ 
+          ...limits, 
+          tier,
+          free_queries_remaining: limits?.free_queries_remaining || 5 // Default 5 free queries
+        });
+        setCanQuery((limits?.free_queries_remaining || 5) > 0);
+      } catch (dbError) {
+        console.log('Database tables not found, using defaults');
+        // Fallback to default usage for new users
+        setUsage({ 
+          tier: 'free', 
+          free_queries_remaining: 5,
+          pro_queries_remaining: 0,
+          ultimate_queries_remaining: 0
+        });
+        setCanQuery(true);
+      }
     } catch (error) {
       console.error('Error checking usage:', error);
+      setIsAuthenticated(false);
+      setAuthError('Unable to check usage status. Please try again.');
+      setCanQuery(false);
     }
   };
   const fetchResults = async () => {
@@ -66,20 +95,25 @@ export default function AIResearchAssistant() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      const { data } = await supabase
-        .from('ai_research_usage')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false })
-        .limit(10);
+      try {
+        const { data } = await supabase
+          .from('ai_research_usage')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false })
+          .limit(10);
 
-      if (data) {
-        setResults(data.map(item => ({
-          id: item.id,
-          query: item.query_text,
-          result: item.response_text || 'Processing...',
-          created_at: item.created_at
-        })));
+        if (data) {
+          setResults(data.map(item => ({
+            id: item.id,
+            query: item.query_text,
+            result: item.response_text || 'Processing...',
+            created_at: item.created_at
+          })));
+        }
+      } catch (dbError) {
+        console.log('Usage history table not found, starting fresh');
+        setResults([]);
       }
     } catch (error) {
       console.error('Error fetching results:', error);
@@ -119,11 +153,9 @@ export default function AIResearchAssistant() {
       await supabase
         .from('usage_limits')
         .update({ 
-          free_queries_remaining: supabase.sql`free_queries_remaining - 1`
+          free_queries_remaining: Math.max(0, (usage?.free_queries_remaining || 1) - 1)
         })
-        .eq('user_id', user.id);
-
-      // Refresh data
+        .eq('user_id', user.id);      // Refresh data
       await checkUsageStatus();
       await fetchResults();
       setQuery('');
