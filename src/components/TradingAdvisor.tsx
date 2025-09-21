@@ -70,6 +70,13 @@ const TradingAdvisor: React.FC = () => {
         action: 'hold',
         asset: 'ETH-USD',
         price: 2750,
+        reasoning: 'Consolidation phase, wait for breakout confirmation',
+        risk_level: 'low'
+      }
+    ];
+    setSignals(mockSignals);
+  };
+
   const handleAIQuery = async () => {
     if (!query.trim()) return;
     
