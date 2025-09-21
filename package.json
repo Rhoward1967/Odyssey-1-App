@@ -8,7 +8,19 @@
     "build": "vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "dev:robust": "node robust-lab.cjs",
+    "dev:protected": "npm run backup && npm run dev",
+    "backup": "node work-protection.cjs backup manual",
+    "emergency-backup": "node work-protection.cjs emergency",
+    "clean": "rimraf dist build node_modules/.vite",
+    "clean:all": "rimraf dist build node_modules",
+    "reinstall": "npm run clean:all && npm install",
+    "health-check": "npm run build && echo 'Health check completed'",
+    "dev:debug": "vite --debug --force",
+    "analyze": "vite build --mode analyze",
+    "predev": "echo 'Starting development environment...'",
+    "postdev": "echo 'Development session ended'"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",

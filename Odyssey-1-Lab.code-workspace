@@ -1,0 +1,63 @@
+{
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+    "git.defaultCloneDirectory": ".",
+    "git.openRepositoryInParentFolders": "always",
+    "terminal.integrated.defaultProfile.windows": "PowerShell",
+    "terminal.integrated.cwd": "${workspaceFolder}",
+    "workbench.startupEditor": "none",
+    "simpleBrowser.startup": "http://localhost:8081"
+  },
+  "extensions": {
+    "recommendations": [
+      "ms-vscode.vscode-typescript-next",
+      "bradlc.vscode-tailwindcss",
+      "esbenp.prettier-vscode"
+    ]
+  },
+  "tasks": {
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "Start Odyssey-1 Lab",
+        "type": "shell",
+        "command": "npm run dev",
+        "group": "build",
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "new",
+          "showReuseMessage": true,
+          "clear": false
+        },
+        "isBackground": true,
+        "problemMatcher": [],
+        "runOptions": {
+          "runOn": "folderOpen"
+        },
+        "options": {
+          "cwd": "${workspaceFolder}"
+        }
+      }
+    ]
+  },
+  "launch": {
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Launch Lab Preview",
+        "type": "node",
+        "request": "launch",
+        "program": "${workspaceFolder}/node_modules/.bin/vite",
+        "args": ["--host", "localhost", "--port", "8081"],
+        "console": "integratedTerminal",
+        "internalConsoleOptions": "neverOpen"
+      }
+    ]
+  }
+}

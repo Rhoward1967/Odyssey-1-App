@@ -1,0 +1,20 @@
+{
+  "vite": {
+    "server": {
+      "warmup": {
+        "clientFiles": [
+          "./src/**/*.tsx",
+          "./src/**/*.ts"
+        ]
+      }
+    },
+    "optimizeDeps": {
+      "force": true
+    }
+  },
+  "development": {
+    "autoBackup": true,
+    "crashRecovery": true,
+    "performanceMonitoring": true
+  }
+}
