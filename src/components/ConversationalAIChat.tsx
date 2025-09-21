@@ -12,6 +12,27 @@ interface Message {
   timestamp: Date;
 }
 
+/**
+ * ConversationalAIChat Component
+ * 
+ * A natural, friendly AI chat interface that provides conversational responses
+ * instead of technical/formal interactions. Replaces SimpleAIChat for better UX.
+ * 
+ * Features:
+ * - Natural conversation flow with context awareness
+ * - Emoji and friendly language integration
+ * - Real-time message exchange via Supabase Edge Functions
+ * - Auto-scrolling message history
+ * - Loading states and error handling
+ * - Responsive design with gradient styling
+ * 
+ * Architecture:
+ * - Uses Supabase Edge Function 'conversational-ai-chat' for backend processing
+ * - Maintains conversation history for context (last 10 messages)
+ * - Implements proper error boundaries and fallback responses
+ * 
+ * @returns {JSX.Element} Complete conversational AI chat interface
+ */
 export function ConversationalAIChat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
