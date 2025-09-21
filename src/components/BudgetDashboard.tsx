@@ -10,6 +10,14 @@ import { SpendingChart } from './SpendingChart';
 export const BudgetDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState('odyssey-activation');
 
+  // Mock data for the spending chart
+  const spendingData = [
+    { category: 'Operations', amount: 2500, budget: 3000 },
+    { category: 'Development', amount: 1800, budget: 2000 },
+    { category: 'Marketing', amount: 800, budget: 1000 },
+    { category: 'Infrastructure', amount: 1200, budget: 1500 },
+  ];
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-blue-900 p-6">
       <div className="max-w-7xl mx-auto">
@@ -24,29 +32,29 @@ export const BudgetDashboard: React.FC = () => {
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <TabsList className="grid w-full grid-cols-4 bg-black/20 border border-purple-500/30">
-            <TabsTrigger 
-              value="odyssey-activation" 
+            <TabsTrigger
+              value="odyssey-activation"
               className="flex items-center gap-2 data-[state=active]:bg-purple-600"
             >
               <Brain className="w-4 h-4" />
               AI Activation
             </TabsTrigger>
-            <TabsTrigger 
-              value="survival-analysis" 
+            <TabsTrigger
+              value="survival-analysis"
               className="flex items-center gap-2 data-[state=active]:bg-blue-600"
             >
               <Target className="w-4 h-4" />
               Survival Analysis
             </TabsTrigger>
-            <TabsTrigger 
-              value="intelligent-analysis" 
+            <TabsTrigger
+              value="intelligent-analysis"
               className="flex items-center gap-2 data-[state=active]:bg-green-600"
             >
               <Zap className="w-4 h-4" />
               AI Intelligence
             </TabsTrigger>
-            <TabsTrigger 
-              value="spending-overview" 
+            <TabsTrigger
+              value="spending-overview"
               className="flex items-center gap-2 data-[state=active]:bg-orange-600"
             >
               <DollarSign className="w-4 h-4" />
@@ -67,10 +75,12 @@ export const BudgetDashboard: React.FC = () => {
           </TabsContent>
 
           <TabsContent value="spending-overview" className="space-y-6">
-            <SpendingChart />
+            <SpendingChart data={spendingData} />
           </TabsContent>
         </Tabs>
       </div>
     </div>
   );
 };
+
+export default BudgetDashboard;
