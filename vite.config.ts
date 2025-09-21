@@ -26,5 +26,10 @@ export default defineConfig(({ mode }) => ({
       },
     },
     chunkSizeWarningLimit: 1200, // Increased limit for Phase 4 optimizations
+    // Fix preload warnings by disabling modulePreload for unused chunks
+    modulePreload: {
+      polyfill: false,
+      resolveDependencies: () => []
+    },
   },
 }));
