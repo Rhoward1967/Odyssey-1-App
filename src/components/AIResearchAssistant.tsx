@@ -172,6 +172,14 @@ export default function AIResearchAssistant() {
             <Textarea
               value={query}
               onChange={(e) => setQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault();
+                  if (!loading && query.trim() && canQuery) {
+                    handleSearch();
+                  }
+                }
+              }}
               placeholder="Ask your research question..."
               className="flex-1"
               rows={3}
