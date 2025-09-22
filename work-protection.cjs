@@ -401,7 +401,7 @@ class WorkProtectionSystem {
         console.log(`
 🛡️ Odyssey-1 Work Protection System
 
-Usage: node work-protection.js <command> [args]
+Usage: node work-protection.cjs <command> [args]
 
 Commands:
   start                    Start file watching and protection
@@ -411,10 +411,10 @@ Commands:
   help                     Show this help message
 
 Examples:
-  node work-protection.js start
-  node work-protection.js list src/App.tsx
-  node work-protection.js restore src/App.tsx
-  node work-protection.js backup package.json
+  node work-protection.cjs start
+  node work-protection.cjs list src/App.tsx
+  node work-protection.cjs restore src/App.tsx
+  node work-protection.cjs backup package.json
         `);
     }
 }

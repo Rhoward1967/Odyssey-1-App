@@ -26,7 +26,7 @@ Odyssey-1-Lab/
 ├── 🧪 Lab Configuration
 │   ├── Odyssey-1-Lab.code-workspace    # Main workspace file
 │   ├── robust-lab.cjs                  # Auto-recovery dev server
-│   ├── work-protection.js              # File backup system
+│   ├── work-protection.cjs             # File backup system
 │   └── .vscode/                        # VS Code configuration
 │       ├── tasks.json                  # Automated tasks
 │       ├── settings.json               # Editor settings
@@ -61,19 +61,19 @@ The lab includes pre-configured tasks accessible via `Ctrl+Shift+P` → "Tasks: 
 ### Manual Backup Commands
 ```bash
 # Start protection service
-node work-protection.js start
+node work-protection.cjs start
 
 # List all backups
-node work-protection.js list
+node work-protection.cjs list
 
 # List backups for specific file
-node work-protection.js list src/App.tsx
+node work-protection.cjs list src/App.tsx
 
 # Restore file from latest backup
-node work-protection.js restore src/App.tsx
+node work-protection.cjs restore src/App.tsx
 
 # Restore from specific timestamp
-node work-protection.js restore src/App.tsx 2025-09-21T10-30-00
+node work-protection.cjs restore src/App.tsx 2025-09-21T10-30-00
 ```
 
 ## 🔧 Development Workflow
@@ -149,7 +149,7 @@ FORCE_COLOR=1
 ### Emergency Recovery
 ```bash
 # Restore from backup
-node work-protection.js restore src/App.tsx
+node work-protection.cjs restore src/App.tsx
 
 # Force restart lab server
 Ctrl+C then reopen workspace
@@ -202,7 +202,7 @@ rm -rf node_modules && npm install
 
 For lab-related issues:
 1. Check automatic logs in VS Code terminal
-2. Review backup system status with `node work-protection.js list`
+2. Review backup system status with `node work-protection.cjs list`
 3. Consult troubleshooting section above
 4. Use emergency recovery procedures if needed
 5. Contact project architect for critical issues that cannot be resolved
