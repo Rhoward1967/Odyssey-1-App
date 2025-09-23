@@ -1,8 +1,16 @@
 import { createClient } from '@supabase/supabase-js';
 
-// Hardcoded Supabase configuration to avoid environment variable issues
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://tvsxloejfsrdganemsmg.supabase.co';
-const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR2c3hsb2VqZnNyZGdhbmVtc21nIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQwNjQ5ODksImV4cCI6MjA0OTY0MDk4OX0.E5uK2rsbGX3q3T5B4UPImg_pzsQsfpS-vYqN8zHYKXs';
+// Secure Supabase configuration - environment variables REQUIRED
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+// Build-time validation: Fail if environment variables are missing
+if (!supabaseUrl || !supabaseKey) {
+  throw new Error(
+    'SECURITY ERROR: Missing required Supabase environment variables. ' +
+    'Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in your environment.'
+  );
+}
 
 // Initialize Supabase client
 const supabase = createClient(supabaseUrl, supabaseKey, {

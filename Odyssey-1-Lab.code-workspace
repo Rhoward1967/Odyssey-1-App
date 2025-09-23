@@ -1,0 +1,88 @@
+{
+    "folders": [
+        {
+            "name": "🚀 Odyssey-1-Lab",
+            "path": "."
+        },
+        {
+            "name": "📱 Components",
+            "path": "./src/components"
+        },
+        {
+            "name": "📄 Pages",
+            "path": "./src/pages"
+        },
+        {
+            "name": "🔧 Services",
+            "path": "./src/services"
+        },
+        {
+            "name": "🗃️ Supabase Functions",
+            "path": "./supabase/functions"
+        },
+        {
+            "name": "📊 Lab Tools",
+            "path": "./.vscode"
+        }
+    ],
+    "settings": {
+        "typescript.preferences.quoteStyle": "single",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.fixAll.eslint": true,
+            "source.organizeImports": true
+        },
+        "files.associations": {
+            "*.tsx": "typescriptreact",
+            "*.ts": "typescript"
+        },
+        "emmet.includeLanguages": {
+            "typescript": "html",
+            "typescriptreact": "html"
+        },
+        "workbench.colorCustomizations": {
+            "titleBar.activeBackground": "#1e293b",
+            "titleBar.activeForeground": "#f1f5f9",
+            "statusBar.background": "#0f172a",
+            "statusBar.foreground": "#e2e8f0"
+        },
+        "workbench.iconTheme": "material-icon-theme",
+        "terminal.integrated.defaultProfile.windows": "PowerShell"
+    },
+    "extensions": {
+        "recommendations": [
+            "ms-vscode.vscode-typescript-next",
+            "bradlc.vscode-tailwindcss",
+            "esbenp.prettier-vscode",
+            "ms-vscode.vscode-json",
+            "denoland.vscode-deno",
+            "formulahendry.auto-rename-tag",
+            "christian-kohler.path-intellisense"
+        ]
+    },
+    "tasks": {
+        "version": "2.0.0",
+        "tasks": [
+            {
+                "type": "shell",
+                "label": "🚀 Start Robust Lab Server",
+                "command": "node",
+                "args": ["robust-lab.cjs"],
+                "group": "build",
+                "presentation": {
+                    "echo": true,
+                    "reveal": "always",
+                    "focus": false,
+                    "panel": "new",
+                    "showReuseMessage": true,
+                    "clear": false
+                },
+                "isBackground": true,
+                "problemMatcher": [],
+                "runOptions": {
+                    "runOn": "folderOpen"
+                }
+            }
+        ]
+    }
+}

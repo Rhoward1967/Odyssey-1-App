@@ -133,12 +133,27 @@ export const EnhancedAdminDashboard: React.FC = () => {
       </div>
 
       <Tabs defaultValue="optimization" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-5">
-          <TabsTrigger value="optimization">RLS Optimization</TabsTrigger>
-          <TabsTrigger value="analytics">Analytics</TabsTrigger>
-          <TabsTrigger value="performance">Performance</TabsTrigger>
-          <TabsTrigger value="security">Security</TabsTrigger>
-          <TabsTrigger value="system">System</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-2 md:grid-cols-5 gap-1">
+          <TabsTrigger value="optimization" className="text-xs md:text-sm px-1 md:px-3">
+            <span className="hidden md:inline">RLS Optimization</span>
+            <span className="md:hidden">RLS</span>
+          </TabsTrigger>
+          <TabsTrigger value="analytics" className="text-xs md:text-sm px-1 md:px-3">
+            <span className="hidden md:inline">Analytics</span>
+            <span className="md:hidden">Data</span>
+          </TabsTrigger>
+          <TabsTrigger value="performance" className="text-xs md:text-sm px-1 md:px-3">
+            <span className="hidden md:inline">Performance</span>
+            <span className="md:hidden">Perf</span>
+          </TabsTrigger>
+          <TabsTrigger value="security" className="text-xs md:text-sm px-1 md:px-3">
+            <span className="hidden md:inline">Security</span>
+            <span className="md:hidden">Sec</span>
+          </TabsTrigger>
+          <TabsTrigger value="system" className="text-xs md:text-sm px-1 md:px-3">
+            <span className="hidden md:inline">System</span>
+            <span className="md:hidden">Sys</span>
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="optimization">
