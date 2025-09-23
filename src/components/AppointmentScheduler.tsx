@@ -122,14 +122,15 @@ export const AppointmentScheduler: React.FC<AppointmentSchedulerProps> = ({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="gap-2">
+        <Button className="gap-2 text-sm">
           <Plus className="h-4 w-4" />
-          Schedule Appointment
+          <span className="hidden sm:inline">Schedule Appointment</span>
+          <span className="sm:hidden">Schedule</span>
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
+          <DialogTitle className="flex items-center gap-2 text-lg">
             <Calendar className="h-5 w-5" />
             {showCalendarLinks ? 'Add to Calendar' : 'Schedule New Appointment'}
           </DialogTitle>
@@ -169,8 +170,8 @@ export const AppointmentScheduler: React.FC<AppointmentSchedulerProps> = ({
               />
             </div>
 
-            <div className="grid grid-cols-3 gap-3">
-              <div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div className="md:col-span-1">
                 <Label htmlFor="date">Date *</Label>
                 <Input
                   id="date"
@@ -180,7 +181,7 @@ export const AppointmentScheduler: React.FC<AppointmentSchedulerProps> = ({
                   required
                 />
               </div>
-              <div>
+              <div className="md:col-span-1">
                 <Label htmlFor="startTime">Start *</Label>
                 <Input
                   id="startTime"
@@ -190,7 +191,7 @@ export const AppointmentScheduler: React.FC<AppointmentSchedulerProps> = ({
                   required
                 />
               </div>
-              <div>
+              <div className="md:col-span-1">
                 <Label htmlFor="endTime">End *</Label>
                 <Input
                   id="endTime"
@@ -238,11 +239,11 @@ export const AppointmentScheduler: React.FC<AppointmentSchedulerProps> = ({
               </Select>
             </div>
 
-            <div className="flex justify-end gap-3 pt-4">
-              <Button type="button" variant="outline" onClick={handleClose}>
+            <div className="flex flex-col gap-3 md:flex-row md:justify-end pt-4">
+              <Button type="button" variant="outline" onClick={handleClose} className="w-full md:w-auto">
                 Cancel
               </Button>
-              <Button type="submit" disabled={loading}>
+              <Button type="submit" disabled={loading} className="w-full md:w-auto">
                 {loading ? 'Creating...' : 'Create Appointment'}
               </Button>
             </div>
