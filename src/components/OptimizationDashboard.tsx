@@ -1,10 +1,5 @@
 import React from 'react';
-import { C            </TabsTrigger>
-            <TabsTrigger value="revenue" className="flex items-center gap-1 md:gap-2 text-xs md:text-sm px-1 md:px-3">
-              <TrendingUp className="h-3 w-3 md:h-4 md:w-4" />
-              <span className="hidden md:inline">Revenue Tracking</span>
-              <span className="md:hidden">Rev</span>
-            </TabsTrigger>CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Settings, Zap, Database, DollarSign } from 'lucide-react';
 import APIOptimizer from './APIOptimizer';
