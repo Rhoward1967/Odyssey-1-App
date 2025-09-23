@@ -3,6 +3,7 @@ import { Calendar, ChevronLeft, ChevronRight, Clock, User, Plus, UserPlus } from
 import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { supabase } from '@/lib/supabase';
+import { useIsMobile } from '@/hooks/use-mobile';
 import SchedulePopup from './SchedulePopup';
 import AddEmployeePopup from './AddEmployeePopup';
 
@@ -35,6 +36,7 @@ export default function MonthlyScheduleCalendar() {
   const [selectedDateForPopup, setSelectedDateForPopup] = useState<string>('');
   const [selectedShift, setSelectedShift] = useState<Shift | null>(null);
   const [showAddEmployee, setShowAddEmployee] = useState(false);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     loadEmployees();
@@ -149,9 +151,9 @@ export default function MonthlyScheduleCalendar() {
   };
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900">
+    <div className={`${isMobile ? 'flex flex-col h-screen' : 'flex h-screen'} bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900`}>
       {/* Employee Sidebar */}
-      <div className="w-80 bg-black/20 backdrop-blur-sm border-r border-white/10 p-4">
+      <div className={`${isMobile ? 'w-full h-48' : 'w-80'} bg-black/20 backdrop-blur-sm border-r border-white/10 p-4`}>
         <Card className="bg-black/20 backdrop-blur-sm border-white/10 h-full">
           <CardHeader>
             <CardTitle className="text-white flex items-center justify-between">
@@ -169,10 +171,10 @@ export default function MonthlyScheduleCalendar() {
               </Button>
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-2 overflow-y-auto">
+          <CardContent className={`space-y-2 overflow-y-auto ${isMobile ? 'max-h-24' : ''}`}>
             {employees.map(employee => (
               <div key={employee.id} className="space-y-2">
-                <div className="p-3 rounded-lg bg-white/5">
+                <div className={`p-3 rounded-lg bg-white/5 ${isMobile ? 'p-2' : ''}`}>
                   <div className="text-white font-medium">{employee.name}</div>
                   <div className="text-sm text-gray-300">{employee.position}</div>
                   <div className="text-xs text-gray-400">{employee.department}</div>
@@ -182,10 +184,10 @@ export default function MonthlyScheduleCalendar() {
                       setShowPopup(true);
                     }}
                     size="sm"
-                    className="mt-2 w-full bg-blue-500/20 border-blue-400/30 text-blue-200 hover:bg-blue-500/30"
+                    className={`mt-2 w-full bg-blue-500/20 border-blue-400/30 text-blue-200 hover:bg-blue-500/30 ${isMobile ? 'text-xs py-1' : ''}`}
                   >
                     <Plus className="h-3 w-3 mr-1" />
-                    Add to Schedule
+                    {isMobile ? 'Add' : 'Add to Schedule'}
                   </Button>
                 </div>
               </div>
@@ -195,8 +197,9 @@ export default function MonthlyScheduleCalendar() {
       </div>
 
       {/* Calendar Main Area */}
-      <div className="flex-1 p-6">
-        <Card className="bg-black/20 backdrop-blur-sm border-white/10 h-full">
+      <div className={`flex-1 ${isMobile ? 'p-2' : 'p-6'}`}>
+        <Card className="bg-black/20 backdrop-blur-sm border-white/10 h-full"
+        >
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle className="text-white flex items-center gap-2">
@@ -227,10 +230,10 @@ export default function MonthlyScheduleCalendar() {
             </div>
           </CardHeader>
           <CardContent className="p-0">
-            <div className="grid grid-cols-7 gap-1 p-4">
+            <div className={`grid grid-cols-7 gap-1 ${isMobile ? 'p-2' : 'p-4'}`}>
               {/* Day headers */}
               {dayNames.map(day => (
-                <div key={day} className="text-center text-white font-medium p-2">
+                <div key={day} className={`text-center text-white font-medium ${isMobile ? 'p-1 text-xs' : 'p-2'}`}>
                   {day}
                 </div>
               ))}
@@ -239,13 +242,13 @@ export default function MonthlyScheduleCalendar() {
               {days.map((day, index) => (
                 <div
                   key={index}
-                  className={`min-h-[120px] border border-white/10 rounded-lg p-1 ${
+                  className={`${isMobile ? 'min-h-[80px] text-xs' : 'min-h-[120px]'} border border-white/10 rounded-lg p-1 ${
                     day ? 'bg-white/5' : ''
                   }`}
                 >
                   {day && (
                     <>
-                      <div className="text-white text-sm font-medium mb-1">
+                      <div className={`text-white font-medium mb-1 ${isMobile ? 'text-xs' : 'text-sm'}`}>
                         {day.getDate()}
                       </div>
                        <div className="space-y-1">
@@ -259,9 +262,9 @@ export default function MonthlyScheduleCalendar() {
                               setSelectedDateForPopup(day.toISOString().split('T')[0]);
                               setShowPopup(true);
                             }}
-                            className="text-xs p-1 rounded bg-green-500/30 text-green-200 cursor-pointer hover:bg-green-500/40"
+                            className={`text-xs p-1 rounded bg-green-500/30 text-green-200 cursor-pointer hover:bg-green-500/40 ${isMobile ? 'text-[10px]' : ''}`}
                           >
-                            <div className="font-medium">{shift.employeeName}</div>
+                            <div className="font-medium">{isMobile ? shift.employeeName.split(' ')[0] : shift.employeeName}</div>
                             <div>{shift.startTime} - {shift.endTime}</div>
                           </div>
                         ))}

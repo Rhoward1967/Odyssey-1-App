@@ -1,6 +1,14 @@
 import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Clock, Users, Calendar, Phone, Shield, ClipboardList, Settings } from 'lucide-react';
+import { Clock, Users, Calendar, Phone, Shield, ClipboardList, Settings, Menu, ChevronDown } from 'lucide-react';
+import { useIsMobile } from '@/hooks/use-mobile';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Button } from '@/components/ui/button';
 import MainScheduleWithSidebar from './MainScheduleWithSidebar';
 import TimeClockManagement from './TimeClockManagement';
 import EmployeeOnboardingSystem from './EmployeeOnboardingSystem';
@@ -11,6 +19,22 @@ import AdminDashboard from './AdminDashboard';
 
 export default function AppLayout() {
   const [activeTab, setActiveTab] = useState('schedule');
+  const isMobile = useIsMobile();
+
+  // Define all tabs with their properties
+  const allTabs = [
+    { value: 'schedule', icon: Calendar, label: 'Schedule', priority: 1 },
+    { value: 'timeclock', icon: Clock, label: 'Time Clock', priority: 2 },
+    { value: 'onboarding', icon: Users, label: 'Onboarding', priority: 4 },
+    { value: 'compliance', icon: Shield, label: 'I-9 Compliance', priority: 5 },
+    { value: 'profiles', icon: ClipboardList, label: 'Profiles', priority: 3 },
+    { value: 'contacts', icon: Phone, label: 'Contacts', priority: 6 },
+    { value: 'admin', icon: Settings, label: 'Admin', priority: 7, className: 'bg-red-100' },
+  ];
+
+  // On mobile, show only the first 3 most important tabs
+  const visibleTabs = isMobile ? allTabs.filter(tab => tab.priority <= 3) : allTabs;
+  const hiddenTabs = isMobile ? allTabs.filter(tab => tab.priority > 3) : [];
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -29,36 +53,50 @@ export default function AppLayout() {
 
       <div className="w-full">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-7 bg-white border-b">
-            <TabsTrigger value="schedule" className="flex items-center gap-2">
-              <Calendar className="w-4 h-4" />
-              Schedule
-            </TabsTrigger>
-            <TabsTrigger value="timeclock" className="flex items-center gap-2">
-              <Clock className="w-4 h-4" />
-              Time Clock
-            </TabsTrigger>
-            <TabsTrigger value="onboarding" className="flex items-center gap-2">
-              <Users className="w-4 h-4" />
-              Onboarding
-            </TabsTrigger>
-            <TabsTrigger value="compliance" className="flex items-center gap-2">
-              <Shield className="w-4 h-4" />
-              I-9 Compliance
-            </TabsTrigger>
-            <TabsTrigger value="profiles" className="flex items-center gap-2">
-              <ClipboardList className="w-4 h-4" />
-              Profiles
-            </TabsTrigger>
-            <TabsTrigger value="contacts" className="flex items-center gap-2">
-              <Phone className="w-4 h-4" />
-              Contacts
-            </TabsTrigger>
-            <TabsTrigger value="admin" className="flex items-center gap-2 bg-red-100">
-              <Settings className="w-4 h-4" />
-              Admin
-            </TabsTrigger>
-          </TabsList>
+          <div className="flex bg-white border-b">
+            <TabsList className={`${isMobile ? 'grid grid-cols-3 flex-1' : 'grid w-full grid-cols-7'} bg-white border-b-0`}>
+              {visibleTabs.map(tab => {
+                const IconComponent = tab.icon;
+                return (
+                  <TabsTrigger 
+                    key={tab.value}
+                    value={tab.value} 
+                    className={`flex items-center gap-2 ${tab.className || ''}`}
+                  >
+                    <IconComponent className="w-4 h-4" />
+                    {isMobile ? '' : tab.label}
+                  </TabsTrigger>
+                );
+              })}
+            </TabsList>
+            
+            {/* Mobile dropdown for additional tabs */}
+            {isMobile && hiddenTabs.length > 0 && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="border-b rounded-none h-10 px-3">
+                    <Menu className="w-4 h-4" />
+                    <ChevronDown className="w-3 h-3 ml-1" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  {hiddenTabs.map(tab => {
+                    const IconComponent = tab.icon;
+                    return (
+                      <DropdownMenuItem
+                        key={tab.value}
+                        onClick={() => setActiveTab(tab.value)}
+                        className="flex items-center gap-2"
+                      >
+                        <IconComponent className="w-4 h-4" />
+                        {tab.label}
+                      </DropdownMenuItem>
+                    );
+                  })}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+          </div>
 
           <TabsContent value="schedule" className="m-0 p-0">
             <MainScheduleWithSidebar />
