@@ -120,14 +120,18 @@ class RobustLabServer {
             '--open'
         ];
 
-        this.viteProcess = spawn('npm', args, {
+        // Use full npm path to avoid ENOENT errors
+        const npmPath = process.platform === 'win32' ? 'F:\\npm.cmd' : 'npm';
+        
+        this.viteProcess = spawn(npmPath, args, {
             stdio: ['pipe', 'pipe', 'pipe'],
             env: {
                 ...process.env,
                 FORCE_COLOR: '1',
                 NODE_ENV: 'development',
                 VITE_LAB_MODE: 'true'
-            }
+            },
+            shell: process.platform === 'win32'
         });
 
         this.viteProcess.stdout.on('data', (data) => {

@@ -19,8 +19,8 @@ interface SchedulePopupProps {
     id: string;
     startTime: string;
     endTime: string;
-    location: string;
-    notes: string;
+    location?: string;
+    notes?: string;
   } | null;
   onSave: (data: ScheduleData) => void;
 }

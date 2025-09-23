@@ -1,0 +1,7 @@
+{
+  "originalPath": "vite.config.ts",
+  "timestamp": "2025-09-23T16:47:31.891Z",
+  "hash": "aaa925400bed14e6ccd26f7625a2031502a76eab8b3213fdf69824fffb182c15",
+  "size": 1222,
+  "content": "/// <reference types=\"vitest\" />\r\nimport { defineConfig } from \"vite\";\r\nimport react from \"@vitejs/plugin-react-swc\";\r\nimport path from \"path\";\r\n\r\n// https://vitejs.dev/config/\r\nexport default defineConfig(({ mode }) => ({\r\n  server: {\r\n    host: \"::\",\r\n    port: 8080,\r\n  },\r\n  plugins: [\r\n    react()\r\n  ].filter(Boolean),\r\n  resolve: {\r\n    alias: {\r\n      \"@\": path.resolve(__dirname, \"./src\"),\r\n    },\r\n  },\r\n  test: {\r\n    globals: true,\r\n    environment: 'jsdom',\r\n    setupFiles: './src/test/setup.ts',\r\n  },\r\n  build: {\r\n    rollupOptions: {\r\n      output: {\r\n        manualChunks: {\r\n          vendor: ['react', 'react-dom'],\r\n          ui: ['lucide-react', 'recharts'],\r\n        },\r\n      },\r\n    },\r\n    chunkSizeWarningLimit: 1200, // Increased limit for Phase 4 optimizations\r\n    // Fix preload warnings by disabling modulePreload for unused chunks\r\n    modulePreload: {\r\n      polyfill: false,\r\n      resolveDependencies: () => []\r\n    },\r\n    // Fix hydration errors by ensuring consistent builds\r\n    target: 'esnext',\r\n    minify: mode === 'production' ? 'esbuild' : false,\r\n  },\r\n  // Add SSR configuration to prevent hydration mismatches\r\n  ssr: {\r\n    noExternal: ['react', 'react-dom']\r\n  },\r\n}));\r\n"
+}

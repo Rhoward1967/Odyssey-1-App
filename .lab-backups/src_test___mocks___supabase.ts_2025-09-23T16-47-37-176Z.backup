@@ -1,0 +1,7 @@
+{
+  "originalPath": "src\\test\\__mocks__\\supabase.ts",
+  "timestamp": "2025-09-23T16:47:37.176Z",
+  "hash": "1ad93a062e815b5b54eb78454dbe8caa3b3077119b87982c33a55f76320e4dc7",
+  "size": 914,
+  "content": "// Mock Supabase client for testing\r\nexport const supabase = {\r\n  from: jest.fn(() => ({\r\n    select: jest.fn(() => ({\r\n      order: jest.fn(() => Promise.resolve({ data: [], error: null })),\r\n      limit: jest.fn(() => Promise.resolve({ data: [], error: null })),\r\n      single: jest.fn(() => Promise.resolve({ data: null, error: null }))\r\n    })),\r\n    insert: jest.fn(() => Promise.resolve({ data: [], error: null })),\r\n    update: jest.fn(() => Promise.resolve({ data: [], error: null })),\r\n    delete: jest.fn(() => Promise.resolve({ data: [], error: null }))\r\n  })),\r\n  auth: {\r\n    getSession: jest.fn(() => Promise.resolve({ data: { session: null }, error: null })),\r\n    signIn: jest.fn(() => Promise.resolve({ data: null, error: null })),\r\n    signOut: jest.fn(() => Promise.resolve({ error: null }))\r\n  },\r\n  functions: {\r\n    invoke: jest.fn(() => Promise.resolve({ data: null, error: null }))\r\n  }\r\n};"
+}
