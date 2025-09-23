@@ -30,14 +30,24 @@ export const InferenceEngine: React.FC = () => {
   const [newQuery, setNewQuery] = useState('');
   const [activeAgents, setActiveAgents] = useState(3);
   const [researchCycles, setResearchCycles] = useState(0);
+  const [isResearchActive, setIsResearchActive] = useState(true);
+  const [maxResearchCycles, setMaxResearchCycles] = useState(20);
 
   useEffect(() => {
+    if (!isResearchActive) return;
+    
     const interval = setInterval(() => {
-      setResearchCycles(prev => prev + 1);
+      setResearchCycles(prev => {
+        if (prev >= maxResearchCycles) {
+          setIsResearchActive(false); // Auto-stop when max cycles reached
+          return prev;
+        }
+        return prev + 1;
+      });
     }, 5000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [isResearchActive, maxResearchCycles]);
 
   const performRealResearch = async (query: ResearchQuery) => {
     setQueries(prev => prev.map(q => 
@@ -150,6 +160,26 @@ export const InferenceEngine: React.FC = () => {
               <div className="text-sm text-gray-600">Completed</div>
             </div>
           </div>
+          
+          <div className="flex items-center justify-between bg-purple-50 p-3 rounded-lg">
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-purple-700">Research Cycles:</span>
+              <span className="font-medium text-purple-800">{researchCycles}/{maxResearchCycles}</span>
+            </div>
+            <Button 
+              size="sm" 
+              onClick={() => setIsResearchActive(!isResearchActive)}
+              className={isResearchActive ? "bg-red-600 hover:bg-red-700" : "bg-green-600 hover:bg-green-700"}
+            >
+              {isResearchActive ? "Stop" : "Start"} Research
+            </Button>
+          </div>
+          
+          {researchCycles >= maxResearchCycles && (
+            <div className="text-sm text-orange-600 bg-orange-50 p-2 rounded">
+              Research cycles limit reached. Click "Start Research" to continue.
+            </div>
+          )}
         </div>
 
         <div className="space-y-4">

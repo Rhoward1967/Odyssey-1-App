@@ -58,8 +58,13 @@ export const SelfEvolutionEngine: React.FC = () => {
     knowledgeGrowth: 156.3
   });
 
+  const [isPaused, setIsPaused] = useState(false);
+  const [maxCycles, setMaxCycles] = useState(100);
+
   useEffect(() => {
-    // Autonomous evolution - no manual intervention needed
+    if (isPaused) return;
+    
+    // Autonomous evolution with limits to prevent infinite processing
     const interval = setInterval(() => {
       setCurrentCycle(prev => {
         const phases: EvolutionCycle['phase'][] = ['audit', 'research', 'hypothesis', 'testing', 'deployment'];
@@ -71,14 +76,22 @@ export const SelfEvolutionEngine: React.FC = () => {
           const nextPhase = phases[nextIndex];
           
           if (nextIndex === 0) {
-            // Complete autonomous cycle, update metrics
-            setEvolutionMetrics(prevMetrics => ({
-              ...prevMetrics,
-              totalCycles: prevMetrics.totalCycles + 1,
-              knowledgeGrowth: prevMetrics.knowledgeGrowth + Math.random() * 5,
-              successRate: Math.min(99.9, prevMetrics.successRate + (Math.random() - 0.5) * 0.5),
-              codebaseHealth: Math.min(99.9, prevMetrics.codebaseHealth + (Math.random() - 0.3) * 0.8)
-            }));
+            // Check if we've reached the maximum cycles
+            setEvolutionMetrics(prevMetrics => {
+              if (prevMetrics.totalCycles >= maxCycles) {
+                setIsPaused(true); // Auto-pause when max cycles reached
+                return prevMetrics;
+              }
+              
+              // Complete autonomous cycle, update metrics
+              return {
+                ...prevMetrics,
+                totalCycles: prevMetrics.totalCycles + 1,
+                knowledgeGrowth: prevMetrics.knowledgeGrowth + Math.random() * 5,
+                successRate: Math.min(99.9, prevMetrics.successRate + (Math.random() - 0.5) * 0.5),
+                codebaseHealth: Math.min(99.9, prevMetrics.codebaseHealth + (Math.random() - 0.3) * 0.8)
+              };
+            });
             
             // Autonomous code improvements
             const improvements = [
@@ -117,7 +130,7 @@ export const SelfEvolutionEngine: React.FC = () => {
     }, 2000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [isPaused, maxCycles]);
 
   const getPhaseDescription = (phase: EvolutionCycle['phase']): string => {
     switch (phase) {
@@ -233,6 +246,34 @@ export const SelfEvolutionEngine: React.FC = () => {
                   </Badge>
                 </div>
               ))}
+            </div>
+          </div>
+
+          <div className="border rounded-lg p-4 bg-blue-50">
+            <h4 className="font-medium mb-3 text-blue-800">Evolution Controls</h4>
+            <div className="flex items-center gap-4 mb-3">
+              <Button 
+                size="sm" 
+                onClick={() => setIsPaused(!isPaused)}
+                className={isPaused ? "bg-green-600 hover:bg-green-700" : "bg-red-600 hover:bg-red-700"}
+              >
+                {isPaused ? "Resume" : "Pause"} Evolution
+              </Button>
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-blue-700">Max Cycles:</span>
+                <input
+                  type="number"
+                  value={maxCycles}
+                  onChange={(e) => setMaxCycles(Math.max(10, parseInt(e.target.value) || 100))}
+                  className="w-16 px-2 py-1 text-sm border rounded"
+                  min="10"
+                  max="1000"
+                />
+              </div>
+            </div>
+            <div className="text-sm text-blue-600">
+              {isPaused ? "Evolution paused" : `Evolution active (${evolutionMetrics.totalCycles}/${maxCycles} cycles)`}
+              {evolutionMetrics.totalCycles >= maxCycles && " - Max cycles reached"}
             </div>
           </div>
         </div>
