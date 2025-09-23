@@ -70,6 +70,13 @@ const TradingAdvisor: React.FC = () => {
         action: 'hold',
         asset: 'ETH-USD',
         price: 2750,
+        reasoning: 'Sideways consolidation, waiting for direction',
+        risk_level: 'low'
+      }
+    ];
+    setSignals(mockSignals);
+  };
+
   const handleAIQuery = async () => {
     if (!query.trim()) return;
     
@@ -90,11 +97,7 @@ const TradingAdvisor: React.FC = () => {
       setResponse(data.response);
     } catch (error) {
       console.error('AI Advisor Error:', error);
-      setResponse('Sorry, I encountered an error processing your request. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
+      const responses = [
         'Based on current market conditions, I recommend a cautious approach. The market is showing mixed signals with high volatility.',
         'Technical analysis suggests BTC is forming a bullish flag pattern. Consider dollar-cost averaging into positions.',
         'Risk management is crucial in current conditions. Keep position sizes small and use stop-losses.',
@@ -102,8 +105,6 @@ const TradingAdvisor: React.FC = () => {
       ];
       
       setResponse(responses[Math.floor(Math.random() * responses.length)]);
-    } catch (error) {
-      setResponse('Sorry, I encountered an error processing your request.');
     } finally {
       setLoading(false);
     }

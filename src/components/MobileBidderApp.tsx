@@ -413,6 +413,7 @@ export default function MobileBidderApp() {
                     </div>
                     <div className="text-xs text-blue-500">
                       Accuracy: {(location.accuracy || 0).toFixed(0)}m
+                    </div>
                   </div>
                 )}
 
