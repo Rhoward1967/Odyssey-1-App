@@ -10,7 +10,7 @@ import EmployeeProfileSystem from './EmployeeProfileSystem';
 import AdminDashboard from './AdminDashboard';
 
 export default function AppLayout() {
-  const [activeTab, setActiveTab] = useState('schedule');
+  const [activeTab, setActiveTab] = useState('admin');
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -30,6 +30,11 @@ export default function AppLayout() {
       <div className="w-full">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full grid-cols-3 md:grid-cols-7 bg-white border-b gap-1">
+            <TabsTrigger value="admin" className="flex items-center gap-1 md:gap-2 text-xs md:text-sm px-1 md:px-2 bg-red-100">
+              <Settings className="w-3 h-3 md:w-4 md:h-4" />
+              <span className="hidden md:inline">Admin</span>
+              <span className="md:hidden">⚙️</span>
+            </TabsTrigger>
             <TabsTrigger value="schedule" className="flex items-center gap-1 md:gap-2 text-xs md:text-sm px-1 md:px-2">
               <Calendar className="w-3 h-3 md:w-4 md:h-4" />
               <span className="hidden md:inline">Schedule</span>
@@ -43,29 +48,30 @@ export default function AppLayout() {
             <TabsTrigger value="onboarding" className="flex items-center gap-1 md:gap-2 text-xs md:text-sm px-1 md:px-2">
               <Users className="w-3 h-3 md:w-4 md:h-4" />
               <span className="hidden md:inline">Onboarding</span>
-              <span className="md:hidden">👥</span>
+              <span className="md:hidden">�</span>
             </TabsTrigger>
             <TabsTrigger value="compliance" className="flex items-center gap-1 md:gap-2 text-xs md:text-sm px-1 md:px-2">
               <Shield className="w-3 h-3 md:w-4 md:h-4" />
               <span className="hidden md:inline">I-9 Compliance</span>
-              <span className="md:hidden">🛡️</span>
+              <span className="md:hidden">�️</span>
             </TabsTrigger>
             <TabsTrigger value="profiles" className="flex items-center gap-1 md:gap-2 text-xs md:text-sm px-1 md:px-2">
               <ClipboardList className="w-3 h-3 md:w-4 md:h-4" />
               <span className="hidden md:inline">Profiles</span>
-              <span className="md:hidden">📋</span>
+              <span className="md:hidden">�</span>
             </TabsTrigger>
             <TabsTrigger value="contacts" className="flex items-center gap-1 md:gap-2 text-xs md:text-sm px-1 md:px-2">
               <Phone className="w-3 h-3 md:w-4 md:h-4" />
               <span className="hidden md:inline">Contacts</span>
               <span className="md:hidden">📞</span>
             </TabsTrigger>
-            <TabsTrigger value="admin" className="flex items-center gap-1 md:gap-2 text-xs md:text-sm px-1 md:px-2 bg-red-100">
-              <Settings className="w-3 h-3 md:w-4 md:h-4" />
-              <span className="hidden md:inline">Admin</span>
-              <span className="md:hidden">⚙️</span>
-            </TabsTrigger>
           </TabsList>
+
+          <TabsContent value="admin" className="m-0 p-0">
+            <div className="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 min-h-screen p-6">
+              <AdminDashboard />
+            </div>
+          </TabsContent>
 
           <TabsContent value="schedule" className="m-0 p-0">
             <MainScheduleWithSidebar />
@@ -89,12 +95,6 @@ export default function AppLayout() {
 
           <TabsContent value="contacts" className="m-0 p-0">
             <ContactPhoneBook />
-          </TabsContent>
-
-          <TabsContent value="admin" className="m-0 p-0">
-            <div className="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 min-h-screen p-6">
-              <AdminDashboard />
-            </div>
           </TabsContent>
         </Tabs>
       </div>
