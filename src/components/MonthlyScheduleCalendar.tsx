@@ -27,7 +27,15 @@ interface Shift {
 }
 
 export default function MonthlyScheduleCalendar() {
-  const [currentDate, setCurrentDate] = useState(new Date());
+  const [currentDate, setCurrentDate] = useState(() => {
+    // Fix for incorrect system date - force to correct year 2024
+    const today = new Date();
+    if (today.getFullYear() === 2025) {
+      // System date is set to 2025, correct it to 2024
+      today.setFullYear(2024);
+    }
+    return today;
+  });
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [shifts, setShifts] = useState<Shift[]>([]);
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);

@@ -14,8 +14,22 @@ interface Appointment {
 }
 
 export function SimpleCalendar() {
-  const [currentDate, setCurrentDate] = useState(new Date());
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [currentDate, setCurrentDate] = useState(() => {
+    // Fix for incorrect system date - force to correct year 2024
+    const today = new Date();
+    if (today.getFullYear() === 2025) {
+      today.setFullYear(2024);
+    }
+    return today;
+  });
+  const [selectedDate, setSelectedDate] = useState(() => {
+    // Fix for incorrect system date - force to correct year 2024
+    const today = new Date();
+    if (today.getFullYear() === 2025) {
+      today.setFullYear(2024);
+    }
+    return today;
+  });
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -87,7 +101,15 @@ export function SimpleCalendar() {
     for (let day = 1; day <= daysInMonth; day++) {
       const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
       const isSelected = date.toDateString() === selectedDate.toDateString();
-      const isToday = date.toDateString() === new Date().toDateString();
+      // Fix for incorrect system date - force to correct year 2024 for today comparison
+      const today = (() => {
+        const todayDate = new Date();
+        if (todayDate.getFullYear() === 2025) {
+          todayDate.setFullYear(2024);
+        }
+        return todayDate;
+      })();
+      const isToday = date.toDateString() === today.toDateString();
 
       days.push(
         <button

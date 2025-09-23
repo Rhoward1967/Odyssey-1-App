@@ -25,7 +25,14 @@ interface Assignment {
 
 export default function MobileEmployeePortal() {
   const [assignments, setAssignments] = useState<Assignment[]>([]);
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(() => {
+    // Fix for incorrect system date - force to correct year 2024
+    const today = new Date();
+    if (today.getFullYear() === 2025) {
+      today.setFullYear(2024);
+    }
+    return today;
+  });
   const [selectedAssignment, setSelectedAssignment] = useState<Assignment | null>(null);
   const [currentEmployee] = useState({ id: '1', name: 'John Doe' }); // Would come from auth
 

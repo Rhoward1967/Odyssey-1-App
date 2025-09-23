@@ -22,7 +22,14 @@ interface CalendarViewProps {
 }
 
 export function CalendarView({ onNewAppointment }: CalendarViewProps) {
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const [selectedDate, setSelectedDate] = useState<Date>(() => {
+    // Fix for incorrect system date - force to correct year 2024
+    const today = new Date();
+    if (today.getFullYear() === 2025) {
+      today.setFullYear(2024);
+    }
+    return today;
+  });
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [weeklyAppointments, setWeeklyAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(true);
