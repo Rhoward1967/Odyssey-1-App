@@ -47,7 +47,7 @@ const ComprehensiveHRSystem: React.FC = () => {
             <CardTitle className="text-white">Add New Employee</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <Label className="text-white">Full Name</Label>
                 <Input 
@@ -65,7 +65,7 @@ const ComprehensiveHRSystem: React.FC = () => {
                 />
               </div>
             </div>
-            <div className="flex space-x-2">
+            <div className="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2">
               <Button 
                 className="bg-green-600 hover:bg-green-700"
                 onClick={() => {
@@ -91,7 +91,7 @@ const ComprehensiveHRSystem: React.FC = () => {
           <CardContent className="space-y-4">
             <p className="text-slate-300">Upload a CSV file with employee data</p>
             <Input type="file" accept=".csv" className="bg-slate-700 border-slate-600 text-white" />
-            <div className="flex space-x-2">
+            <div className="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2">
               <Button 
                 className="bg-blue-600 hover:bg-blue-700"
                 onClick={() => {
@@ -113,7 +113,7 @@ const ComprehensiveHRSystem: React.FC = () => {
           <CardTitle className="text-white">Quick Actions</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <Button 
               className="bg-blue-600 hover:bg-blue-700"
               onClick={() => setShowBulkImport(true)}
@@ -211,7 +211,7 @@ const ComprehensiveHRSystem: React.FC = () => {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div className="text-center">
                 <div className="text-2xl font-bold text-blue-400">24</div>
                 <div className="text-slate-300 text-sm">Pending Requests</div>
@@ -248,7 +248,7 @@ const ComprehensiveHRSystem: React.FC = () => {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Card className="bg-green-900/30 border-green-700">
               <CardContent className="p-4">
                 <h3 className="text-green-300 font-semibold">I-9 Compliance</h3>
@@ -294,7 +294,7 @@ const ComprehensiveHRSystem: React.FC = () => {
             value={policyText}
             onChange={(e) => setPolicyText(e.target.value)}
           />
-          <div className="flex space-x-2">
+          <div className="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2">
             <Button 
               className="bg-blue-600 hover:bg-blue-700"
               onClick={() => {
@@ -313,28 +313,33 @@ const ComprehensiveHRSystem: React.FC = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 p-4 sm:p-6">
       <div className="max-w-7xl mx-auto">
         <div className="mb-6">
-          <h1 className="text-3xl font-bold text-white mb-2">Comprehensive HR Management System</h1>
-          <p className="text-slate-300">AI-powered HR solution with full compliance tracking</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">Comprehensive HR Management System</h1>
+          <p className="text-slate-300 text-sm sm:text-base">AI-powered HR solution with full compliance tracking</p>
         </div>
 
         <Tabs defaultValue="employees" className="space-y-6">
-          <TabsList className="bg-slate-800/50">
-            <TabsTrigger value="employees" className="flex items-center gap-2">
-              <Users className="h-4 w-4" />
-              Employee Management
-            </TabsTrigger>
-            <TabsTrigger value="benefits" className="flex items-center gap-2">
-              <Heart className="h-4 w-4" />
-              Benefits & Leave
-            </TabsTrigger>
-            <TabsTrigger value="compliance" className="flex items-center gap-2">
-              <Shield className="h-4 w-4" />
-              Compliance & Policies
-            </TabsTrigger>
-          </TabsList>
+          <div className="overflow-x-auto">
+            <TabsList className="bg-slate-800/50 flex w-max min-w-full">
+              <TabsTrigger value="employees" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-4">
+                <Users className="h-3 w-3 sm:h-4 sm:w-4" />
+                <span className="hidden sm:inline">Employee Management</span>
+                <span className="sm:hidden">Employees</span>
+              </TabsTrigger>
+              <TabsTrigger value="benefits" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-4">
+                <Heart className="h-3 w-3 sm:h-4 sm:w-4" />
+                <span className="hidden sm:inline">Benefits & Leave</span>
+                <span className="sm:hidden">Benefits</span>
+              </TabsTrigger>
+              <TabsTrigger value="compliance" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-4">
+                <Shield className="h-3 w-3 sm:h-4 sm:w-4" />
+                <span className="hidden sm:inline">Compliance & Policies</span>
+                <span className="sm:hidden">Compliance</span>
+              </TabsTrigger>
+            </TabsList>
+          </div>
 
           <TabsContent value="employees">
             {renderEmployeeManagement()}
