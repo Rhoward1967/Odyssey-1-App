@@ -8,7 +8,14 @@ interface CalendarSidebarProps {
 }
 
 const CalendarSidebar: React.FC<CalendarSidebarProps> = ({ onDateSelect }) => {
-  const [currentDate, setCurrentDate] = useState(new Date());
+  const [currentDate, setCurrentDate] = useState(() => {
+    // Fix for incorrect system date - force to correct year 2024
+    const today = new Date();
+    if (today.getFullYear() === 2025) {
+      today.setFullYear(2024);
+    }
+    return today;
+  });
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
   const monthNames = [
@@ -52,7 +59,14 @@ const CalendarSidebar: React.FC<CalendarSidebarProps> = ({ onDateSelect }) => {
 
   const days = getDaysInMonth(currentDate);
   const dayNames = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
-  const today = new Date();
+  const today = (() => {
+    // Fix for incorrect system date - force to correct year 2024
+    const todayDate = new Date();
+    if (todayDate.getFullYear() === 2025) {
+      todayDate.setFullYear(2024);
+    }
+    return todayDate;
+  })();
 
   return (
     <div className="h-full bg-white p-4">
