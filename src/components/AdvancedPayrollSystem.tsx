@@ -187,32 +187,34 @@ export default function AdvancedPayrollSystem() {
   };
 
   return (
-    <div className="p-6 space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold flex items-center gap-2">
-          <DollarSign className="h-6 w-6" />
+    <div className="p-4 sm:p-6 space-y-6">
+      <div className="flex flex-col space-y-4 sm:flex-row sm:justify-between sm:items-center sm:space-y-0">
+        <h2 className="text-xl sm:text-2xl font-bold flex items-center gap-2">
+          <DollarSign className="h-5 w-5 sm:h-6 sm:w-6" />
           Advanced Payroll System
         </h2>
-        <Button onClick={bulkProcessPayroll} disabled={loading}>
+        <Button onClick={bulkProcessPayroll} disabled={loading} size="sm">
           <Users className="h-4 w-4 mr-2" />
-          Bulk Process
+          <span className="text-xs sm:text-sm">Bulk Process</span>
         </Button>
       </div>
 
       <Tabs defaultValue="calculator" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="calculator">Calculator</TabsTrigger>
-          <TabsTrigger value="paystubs">Paystubs</TabsTrigger>
-          <TabsTrigger value="deposits">Direct Deposit</TabsTrigger>
-          <TabsTrigger value="rules">Payroll Rules</TabsTrigger>
-        </TabsList>
+        <div className="overflow-x-auto">
+          <TabsList className="flex w-max min-w-full">
+            <TabsTrigger value="calculator" className="text-xs sm:text-sm px-2 sm:px-4">Calculator</TabsTrigger>
+            <TabsTrigger value="paystubs" className="text-xs sm:text-sm px-2 sm:px-4">Paystubs</TabsTrigger>
+            <TabsTrigger value="deposits" className="text-xs sm:text-sm px-2 sm:px-4">Direct Deposit</TabsTrigger>
+            <TabsTrigger value="rules" className="text-xs sm:text-sm px-2 sm:px-4">Payroll Rules</TabsTrigger>
+          </TabsList>
+        </div>
 
         <TabsContent value="calculator" className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Calculator className="h-5 w-5" />
+                <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+                  <Calculator className="h-4 w-4 sm:h-5 sm:w-5" />
                   Payroll Calculator
                 </CardTitle>
               </CardHeader>
@@ -222,7 +224,7 @@ export default function AdvancedPayrollSystem() {
                   value={calculationForm.employeeId}
                   onChange={(e) => setCalculationForm({...calculationForm, employeeId: e.target.value})}
                 />
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <Input
                     type="number"
                     placeholder="Regular Hours"
@@ -248,7 +250,7 @@ export default function AdvancedPayrollSystem() {
                   value={calculationForm.payPeriod}
                   onChange={(e) => setCalculationForm({...calculationForm, payPeriod: e.target.value})}
                 />
-                <Button onClick={calculatePayroll} disabled={loading} className="w-full">
+                <Button onClick={calculatePayroll} disabled={loading} className="w-full" size="sm">
                   Calculate Payroll
                 </Button>
               </CardContent>
@@ -278,7 +280,7 @@ export default function AdvancedPayrollSystem() {
                             </Button>
                           </div>
                         </div>
-                        <div className="grid grid-cols-2 gap-4 text-sm">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
                           <div>
                             <p>Gross Pay: <span className="font-medium">${payroll.grossPay}</span></p>
                             <p>Federal Tax: <span className="text-red-600">${payroll.federalTax}</span></p>
@@ -302,13 +304,13 @@ export default function AdvancedPayrollSystem() {
         <TabsContent value="rules" className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Settings className="h-5 w-5" />
+              <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+                <Settings className="h-4 w-4 sm:h-5 sm:w-5" />
                 Create Payroll Rule
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <Input
                   placeholder="Employee ID"
                   value={ruleForm.employeeId}
@@ -326,7 +328,7 @@ export default function AdvancedPayrollSystem() {
                   </SelectContent>
                 </Select>
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <Input
                   type="number"
                   step="0.01"
@@ -340,7 +342,7 @@ export default function AdvancedPayrollSystem() {
                   onChange={(e) => setRuleForm({...ruleForm, effectiveDate: e.target.value})}
                 />
               </div>
-              <Button onClick={createPayrollRule} disabled={loading} className="w-full">
+              <Button onClick={createPayrollRule} disabled={loading} className="w-full" size="sm">
                 Create Rule
               </Button>
             </CardContent>
