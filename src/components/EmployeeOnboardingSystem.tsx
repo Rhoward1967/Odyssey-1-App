@@ -79,8 +79,8 @@ export default function EmployeeOnboardingSystem() {
       fileInput.onchange = async (e) => {
         const file = (e.target as HTMLInputElement).files?.[0];
         if (file) {
-          // Simulate upload delay
-          await new Promise(resolve => setTimeout(resolve, 2000));
+          // Simulate upload delay (reduced for better development experience)
+          await new Promise(resolve => setTimeout(resolve, 500));
           
           // Create new document entry
           const newDocument: Document = {
