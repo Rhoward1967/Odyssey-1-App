@@ -29,34 +29,41 @@ export default function AppLayout() {
 
       <div className="w-full">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-7 bg-white border-b">
-            <TabsTrigger value="schedule" className="flex items-center gap-2">
-              <Calendar className="w-4 h-4" />
-              Schedule
+          <TabsList className="grid w-full grid-cols-7 bg-white border-b md:grid-cols-7 sm:grid-cols-4 grid-cols-3 sm:h-auto h-12">
+            <TabsTrigger value="schedule" className="flex items-center gap-2 md:flex-row flex-col md:gap-2 gap-0.5 md:text-sm text-xs md:px-4 px-1 md:py-2 py-1">
+              <Calendar className="md:w-4 md:h-4 w-3 h-3 flex-shrink-0" />
+              <span className="hidden md:inline">Schedule</span>
+              <span className="md:hidden text-[10px] leading-tight">Sched</span>
             </TabsTrigger>
-            <TabsTrigger value="timeclock" className="flex items-center gap-2">
-              <Clock className="w-4 h-4" />
-              Time Clock
+            <TabsTrigger value="timeclock" className="flex items-center gap-2 md:flex-row flex-col md:gap-2 gap-0.5 md:text-sm text-xs md:px-4 px-1 md:py-2 py-1">
+              <Clock className="md:w-4 md:h-4 w-3 h-3 flex-shrink-0" />
+              <span className="hidden md:inline">Time Clock</span>
+              <span className="md:hidden text-[10px] leading-tight">Clock</span>
             </TabsTrigger>
-            <TabsTrigger value="onboarding" className="flex items-center gap-2">
-              <Users className="w-4 h-4" />
-              Onboarding
+            <TabsTrigger value="onboarding" className="flex items-center gap-2 md:flex-row flex-col md:gap-2 gap-0.5 md:text-sm text-xs md:px-4 px-1 md:py-2 py-1">
+              <Users className="md:w-4 md:h-4 w-3 h-3 flex-shrink-0" />
+              <span className="hidden md:inline">Onboarding</span>
+              <span className="md:hidden text-[10px] leading-tight">Board</span>
             </TabsTrigger>
-            <TabsTrigger value="compliance" className="flex items-center gap-2">
-              <Shield className="w-4 h-4" />
-              I-9 Compliance
+            <TabsTrigger value="compliance" className="flex items-center gap-2 md:flex-row flex-col md:gap-2 gap-0.5 md:text-sm text-xs md:px-4 px-1 md:py-2 py-1 sm:block hidden">
+              <Shield className="md:w-4 md:h-4 w-3 h-3 flex-shrink-0" />
+              <span className="hidden md:inline">I-9 Compliance</span>
+              <span className="md:hidden text-[10px] leading-tight">I-9</span>
             </TabsTrigger>
-            <TabsTrigger value="profiles" className="flex items-center gap-2">
-              <ClipboardList className="w-4 h-4" />
-              Profiles
+            <TabsTrigger value="profiles" className="flex items-center gap-2 md:flex-row flex-col md:gap-2 gap-0.5 md:text-sm text-xs md:px-4 px-1 md:py-2 py-1 sm:block hidden">
+              <ClipboardList className="md:w-4 md:h-4 w-3 h-3 flex-shrink-0" />
+              <span className="hidden md:inline">Profiles</span>
+              <span className="md:hidden text-[10px] leading-tight">Prof</span>
             </TabsTrigger>
-            <TabsTrigger value="contacts" className="flex items-center gap-2">
-              <Phone className="w-4 h-4" />
-              Contacts
+            <TabsTrigger value="contacts" className="flex items-center gap-2 md:flex-row flex-col md:gap-2 gap-0.5 md:text-sm text-xs md:px-4 px-1 md:py-2 py-1 sm:block hidden">
+              <Phone className="md:w-4 md:h-4 w-3 h-3 flex-shrink-0" />
+              <span className="hidden md:inline">Contacts</span>
+              <span className="md:hidden text-[10px] leading-tight">Call</span>
             </TabsTrigger>
-            <TabsTrigger value="admin" className="flex items-center gap-2 bg-red-100">
-              <Settings className="w-4 h-4" />
-              Admin
+            <TabsTrigger value="admin" className="flex items-center gap-2 md:flex-row flex-col md:gap-2 gap-0.5 md:text-sm text-xs md:px-4 px-1 md:py-2 py-1 bg-red-100 sm:block hidden">
+              <Settings className="md:w-4 md:h-4 w-3 h-3 flex-shrink-0" />
+              <span className="hidden md:inline">Admin</span>
+              <span className="md:hidden text-[10px] leading-tight">Adm</span>
             </TabsTrigger>
           </TabsList>
 
