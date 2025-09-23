@@ -103,17 +103,20 @@ const Appointments: React.FC = () => {
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="appointments" className="flex items-center gap-2">
-            <Calendar className="h-4 w-4" />
-            My Appointments
+          <TabsTrigger value="appointments" className="flex items-center justify-center gap-2 px-2">
+            <Calendar className="h-4 w-4 flex-shrink-0" />
+            <span className="hidden sm:inline">My Appointments</span>
+            <span className="sm:hidden text-xs">Appts</span>
           </TabsTrigger>
-          <TabsTrigger value="google-calendar" className="flex items-center gap-2">
-            <RefreshCw className="h-4 w-4" />
-            Google Calendar
+          <TabsTrigger value="google-calendar" className="flex items-center justify-center gap-2 px-2">
+            <RefreshCw className="h-4 w-4 flex-shrink-0" />
+            <span className="hidden sm:inline">Google Calendar</span>
+            <span className="sm:hidden text-xs">Google</span>
           </TabsTrigger>
-          <TabsTrigger value="settings" className="flex items-center gap-2">
-            <Settings className="h-4 w-4" />
-            Calendar Settings
+          <TabsTrigger value="settings" className="flex items-center justify-center gap-2 px-2">
+            <Settings className="h-4 w-4 flex-shrink-0" />
+            <span className="hidden sm:inline">Calendar Settings</span>
+            <span className="sm:hidden text-xs">Settings</span>
           </TabsTrigger>
         </TabsList>
 
