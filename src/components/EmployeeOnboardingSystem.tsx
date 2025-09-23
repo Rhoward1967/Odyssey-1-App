@@ -60,6 +60,162 @@ export default function EmployeeOnboardingSystem() {
     }
   ]);
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
+  const [showUploadModal, setShowUploadModal] = useState(false);
+  const [showTrainingModal, setShowTrainingModal] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [assigning, setAssigning] = useState(false);
+  const [generating, setGenerating] = useState(false);
+
+  // Handler for uploading documents
+  const handleUploadDocument = async () => {
+    if (!selectedEmployee) return;
+    
+    setUploading(true);
+    try {
+      // Simulate document upload process
+      const fileInput = document.createElement('input');
+      fileInput.type = 'file';
+      fileInput.accept = '.pdf,.doc,.docx,.jpg,.png';
+      fileInput.onchange = async (e) => {
+        const file = (e.target as HTMLInputElement).files?.[0];
+        if (file) {
+          // Simulate upload delay
+          await new Promise(resolve => setTimeout(resolve, 2000));
+          
+          // Create new document entry
+          const newDocument: Document = {
+            id: Date.now().toString(),
+            type: 'uploaded',
+            name: file.name,
+            status: 'submitted',
+            uploadDate: new Date().toISOString().split('T')[0],
+            required: false
+          };
+
+          // Update employee documents
+          setEmployees(prev => prev.map(emp => 
+            emp.id === selectedEmployee.id 
+              ? { ...emp, documents: [...emp.documents, newDocument] }
+              : emp
+          ));
+
+          // Update selected employee
+          setSelectedEmployee(prev => prev ? 
+            { ...prev, documents: [...prev.documents, newDocument] } 
+            : null
+          );
+          
+          alert(`Document "${file.name}" uploaded successfully!`);
+        }
+        setUploading(false);
+      };
+      fileInput.click();
+    } catch (error) {
+      console.error('Upload error:', error);
+      alert('Upload failed. Please try again.');
+      setUploading(false);
+    }
+  };
+
+  // Handler for assigning training
+  const handleAssignTraining = async () => {
+    if (!selectedEmployee) return;
+    
+    setAssigning(true);
+    try {
+      // Simulate training assignment
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      const trainingOptions = [
+        'Emergency Response Training',
+        'Customer Service Excellence',
+        'Data Privacy Training',
+        'Safety Protocol Update',
+        'Equipment Handling Course'
+      ];
+      
+      const randomTraining = trainingOptions[Math.floor(Math.random() * trainingOptions.length)];
+      
+      const newTraining: Training = {
+        id: Date.now().toString(),
+        name: randomTraining,
+        type: 'safety',
+        status: 'not-started',
+        required: false
+      };
+
+      // Update employee trainings
+      setEmployees(prev => prev.map(emp => 
+        emp.id === selectedEmployee.id 
+          ? { ...emp, trainings: [...emp.trainings, newTraining] }
+          : emp
+      ));
+
+      // Update selected employee
+      setSelectedEmployee(prev => prev ? 
+        { ...prev, trainings: [...prev.trainings, newTraining] } 
+        : null
+      );
+      
+      alert(`Training "${randomTraining}" assigned successfully!`);
+    } catch (error) {
+      console.error('Assignment error:', error);
+      alert('Training assignment failed. Please try again.');
+    } finally {
+      setAssigning(false);
+    }
+  };
+
+  // Handler for generating compliance report
+  const handleGenerateReport = async () => {
+    if (!selectedEmployee) return;
+    
+    setGenerating(true);
+    try {
+      // Simulate report generation
+      await new Promise(resolve => setTimeout(resolve, 3000));
+      
+      const completedDocs = selectedEmployee.documents.filter(doc => doc.status === 'approved').length;
+      const totalDocs = selectedEmployee.documents.filter(doc => doc.required).length;
+      const completedTrainings = selectedEmployee.trainings.filter(training => training.status === 'completed').length;
+      const totalTrainings = selectedEmployee.trainings.filter(training => training.required).length;
+      
+      const complianceScore = Math.round(((completedDocs + completedTrainings) / (totalDocs + totalTrainings)) * 100);
+      
+      // Create downloadable report content
+      const reportContent = `
+COMPLIANCE REPORT
+Generated: ${new Date().toLocaleDateString()}
+Employee: ${selectedEmployee.name}
+Position: ${selectedEmployee.position}
+Hire Date: ${selectedEmployee.hireDate}
+
+DOCUMENT COMPLIANCE: ${completedDocs}/${totalDocs} (${Math.round((completedDocs/totalDocs)*100)}%)
+TRAINING COMPLIANCE: ${completedTrainings}/${totalTrainings} (${Math.round((completedTrainings/totalTrainings)*100)}%)
+OVERALL COMPLIANCE SCORE: ${complianceScore}%
+
+STATUS: ${complianceScore >= 90 ? 'COMPLIANT' : complianceScore >= 70 ? 'PARTIALLY COMPLIANT' : 'NON-COMPLIANT'}
+      `;
+      
+      // Create and download the report
+      const blob = new Blob([reportContent], { type: 'text/plain' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `compliance-report-${selectedEmployee.name.replace(/\s+/g, '-')}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+      
+      alert(`Compliance report generated! Score: ${complianceScore}%`);
+    } catch (error) {
+      console.error('Report generation error:', error);
+      alert('Report generation failed. Please try again.');
+    } finally {
+      setGenerating(false);
+    }
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -169,7 +325,13 @@ export default function EmployeeOnboardingSystem() {
                       </div>
                     ))}
                   </div>
-                  <Button className="w-full">Upload Document</Button>
+                  <Button 
+                    className="w-full" 
+                    onClick={handleUploadDocument}
+                    disabled={uploading || !selectedEmployee}
+                  >
+                    {uploading ? 'Uploading...' : 'Upload Document'}
+                  </Button>
                 </TabsContent>
 
                 <TabsContent value="training" className="space-y-4">
@@ -199,7 +361,13 @@ export default function EmployeeOnboardingSystem() {
                       </div>
                     ))}
                   </div>
-                  <Button className="w-full">Assign Training</Button>
+                  <Button 
+                    className="w-full"
+                    onClick={handleAssignTraining}
+                    disabled={assigning || !selectedEmployee}
+                  >
+                    {assigning ? 'Assigning...' : 'Assign Training'}
+                  </Button>
                 </TabsContent>
 
                 <TabsContent value="compliance" className="space-y-4">
@@ -237,7 +405,13 @@ export default function EmployeeOnboardingSystem() {
                     </Card>
                   </div>
 
-                  <Button className="w-full">Generate Compliance Report</Button>
+                  <Button 
+                    className="w-full"
+                    onClick={handleGenerateReport}
+                    disabled={generating || !selectedEmployee}
+                  >
+                    {generating ? 'Generating Report...' : 'Generate Compliance Report'}
+                  </Button>
                 </TabsContent>
               </Tabs>
             ) : (
