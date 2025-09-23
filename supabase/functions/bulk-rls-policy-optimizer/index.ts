@@ -12,6 +12,9 @@ serve(async (req) => {
   }
 
   try {
+    // SECURITY JUSTIFICATION: Service role key required for bulk RLS policy management
+    // This function needs admin privileges to ALTER TABLE and manage RLS policies across all tables
+    // Only accessible to super-admin users for emergency RLS optimization operations
     const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''

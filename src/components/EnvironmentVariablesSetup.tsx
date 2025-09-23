@@ -16,8 +16,8 @@ interface EnvVariable {
 
 export default function EnvironmentVariablesSetup() {
   const [envVars, setEnvVars] = useState<EnvVariable[]>([
-    { key: 'VITE_SUPABASE_URL', value: 'https://tvsxloejfsrdganemsmg.supabase.co', required: true, description: 'Supabase project URL', platform: 'all' },
-    { key: 'VITE_SUPABASE_ANON_KEY', value: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...', required: true, description: 'Supabase anonymous key', platform: 'all' },
+    { key: 'VITE_SUPABASE_URL', value: 'your_supabase_project_url_here', required: true, description: 'Supabase project URL', platform: 'all' },
+    { key: 'VITE_SUPABASE_ANON_KEY', value: 'your_supabase_anon_key_here', required: true, description: 'Supabase anonymous key', platform: 'all' },
     { key: 'VERCEL_TOKEN', value: '', required: true, description: 'Vercel deployment token', platform: 'github' },
     { key: 'VERCEL_ORG_ID', value: '', required: true, description: 'Vercel organization ID', platform: 'github' },
     { key: 'VERCEL_PROJECT_ID', value: '', required: true, description: 'Vercel project ID', platform: 'github' },
