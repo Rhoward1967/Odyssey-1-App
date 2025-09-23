@@ -93,7 +93,7 @@ export function SimpleCalendar() {
         <button
           key={day}
           onClick={() => setSelectedDate(date)}
-          className={`p-2 text-sm rounded hover:bg-blue-100 ${
+          className={`p-1 md:p-2 text-xs md:text-sm rounded hover:bg-blue-100 transition-colors min-h-[32px] md:min-h-[40px] ${
             isSelected ? 'bg-blue-500 text-white' : 
             isToday ? 'bg-blue-100 text-blue-600 font-semibold' : 
             'text-gray-700'
@@ -108,19 +108,19 @@ export function SimpleCalendar() {
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 md:gap-6">
       <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center justify-between">
+        <CardHeader className="pb-4">
+          <CardTitle className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
             <div className="flex items-center gap-2">
               <Calendar className="h-5 w-5" />
-              Calendar
+              <span className="text-lg md:text-xl">Calendar</span>
             </div>
             <div className="flex items-center gap-2">
               <Button variant="outline" size="sm" onClick={() => navigateMonth('prev')}>
                 <ChevronLeft className="h-4 w-4" />
               </Button>
-              <span className="font-semibold">
+              <span className="font-semibold text-sm md:text-base min-w-0 text-center">
                 {currentDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
               </span>
               <Button variant="outline" size="sm" onClick={() => navigateMonth('next')}>
@@ -129,11 +129,12 @@ export function SimpleCalendar() {
             </div>
           </CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-7 gap-1 mb-4">
+        <CardContent className="p-3 md:p-6">
+          <div className="grid grid-cols-7 gap-1 mb-2 md:mb-4">
             {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-              <div key={day} className="p-2 text-center text-sm font-semibold text-gray-500">
-                {day}
+              <div key={day} className="p-1 md:p-2 text-center text-xs md:text-sm font-semibold text-gray-500">
+                <span className="hidden sm:inline">{day}</span>
+                <span className="sm:hidden">{day.charAt(0)}</span>
               </div>
             ))}
           </div>
@@ -144,9 +145,9 @@ export function SimpleCalendar() {
       </Card>
 
       <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center justify-between">
-            <div>
+        <CardHeader className="pb-4">
+          <CardTitle className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+            <div className="text-sm md:text-base">
               {selectedDate.toLocaleDateString('en-US', { 
                 weekday: 'long', 
                 month: 'long', 
@@ -154,28 +155,28 @@ export function SimpleCalendar() {
                 year: 'numeric'
               })}
             </div>
-            <Badge variant="secondary">
+            <Badge variant="secondary" className="self-start md:self-center">
               {appointments.length} appointment{appointments.length !== 1 ? 's' : ''}
             </Badge>
           </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-3 md:p-6">
           {loading ? (
-            <div className="text-center py-8 text-gray-500">Loading...</div>
+            <div className="text-center py-6 md:py-8 text-gray-500">Loading...</div>
           ) : appointments.length === 0 ? (
-            <div className="text-center py-8 text-gray-500">
-              No appointments scheduled
+            <div className="text-center py-6 md:py-8 text-gray-500">
+              <div className="text-sm md:text-base">No appointments scheduled</div>
             </div>
           ) : (
-            <div className="space-y-3">
+            <div className="space-y-2 md:space-y-3">
               {appointments.map((appointment) => (
-                <div key={appointment.id} className="border rounded-lg p-3 hover:bg-gray-50">
-                  <h3 className="font-semibold">{appointment.title}</h3>
-                  <div className="flex items-center gap-2 mt-1 text-sm text-gray-600">
-                    <Clock className="h-4 w-4" />
-                    {formatTime(appointment.start_time)} - {formatTime(appointment.end_time)}
+                <div key={appointment.id} className="border rounded-lg p-3 hover:bg-gray-50 transition-colors">
+                  <h3 className="font-semibold text-sm md:text-base">{appointment.title}</h3>
+                  <div className="flex items-center gap-1 md:gap-2 mt-1 text-xs md:text-sm text-gray-600">
+                    <Clock className="h-3 w-3 md:h-4 md:w-4 flex-shrink-0" />
+                    <span>{formatTime(appointment.start_time)} - {formatTime(appointment.end_time)}</span>
                   </div>
-                  <Badge variant="outline" className="mt-2">
+                  <Badge variant="outline" className="mt-2 text-xs">
                     {appointment.status}
                   </Badge>
                 </div>

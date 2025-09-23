@@ -104,26 +104,38 @@ export default function MobileFieldApp() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Mobile Header */}
-      <div className="bg-blue-600 text-white p-4 sticky top-0 z-10">
+      <div className="bg-blue-600 text-white p-3 md:p-4 sticky top-0 z-10">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-lg font-bold">Field App</h1>
+            <h1 className="text-lg md:text-xl font-bold">Field App</h1>
             <p className="text-sm opacity-90">Technician Portal</p>
           </div>
           <div className="flex items-center space-x-2">
-            <Badge className="bg-green-500">Online</Badge>
-            <User className="h-6 w-6" />
+            <Badge className="bg-green-500 text-xs">Online</Badge>
+            <User className="h-5 w-5 md:h-6 md:w-6" />
           </div>
         </div>
       </div>
 
-      <div className="p-4">
+      <div className="p-3 md:p-4">
         <Tabs defaultValue="jobs" className="space-y-4">
-          <TabsList className="grid w-full grid-cols-4 text-xs">
-            <TabsTrigger value="jobs">Jobs</TabsTrigger>
-            <TabsTrigger value="active">Active</TabsTrigger>
-            <TabsTrigger value="checklist">Tasks</TabsTrigger>
-            <TabsTrigger value="reports">Reports</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-4 text-xs h-auto">
+            <TabsTrigger value="jobs" className="p-2 md:p-3">
+              <span className="hidden sm:inline">Jobs</span>
+              <span className="sm:hidden">Jobs</span>
+            </TabsTrigger>
+            <TabsTrigger value="active" className="p-2 md:p-3">
+              <span className="hidden sm:inline">Active</span>
+              <span className="sm:hidden">Active</span>
+            </TabsTrigger>
+            <TabsTrigger value="checklist" className="p-2 md:p-3">
+              <span className="hidden sm:inline">Tasks</span>
+              <span className="sm:hidden">Tasks</span>
+            </TabsTrigger>
+            <TabsTrigger value="reports" className="p-2 md:p-3">
+              <span className="hidden sm:inline">Reports</span>
+              <span className="sm:hidden">Reports</span>
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="jobs" className="space-y-4">
