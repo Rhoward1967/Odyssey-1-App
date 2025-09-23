@@ -130,3 +130,55 @@
 .markdown-preview ol {
   @apply my-4 ml-6;
 }
+
+/* Mobile-First Responsive Utilities */
+@layer utilities {
+  /* Prevent horizontal scroll on mobile */
+  .mobile-container {
+    @apply max-w-full overflow-x-hidden;
+  }
+  
+  /* Touch-friendly tap targets */
+  .mobile-tap {
+    @apply min-h-[44px] min-w-[44px];
+  }
+  
+  /* Text that doesn't wrap awkwardly */
+  .mobile-text {
+    @apply text-sm leading-relaxed;
+  }
+  
+  /* Responsive padding that scales with screen size */
+  .mobile-padding {
+    @apply px-3 py-2 md:px-6 md:py-4;
+  }
+  
+  /* Ensure content stays within viewport */
+  .mobile-safe {
+    @apply max-w-full overflow-hidden word-break;
+  }
+}
+
+/* Global Mobile-First Base Styles */
+@layer base {
+  /* Prevent zoom on input focus (iOS Safari) */
+  input, select, textarea {
+    font-size: 16px;
+  }
+  
+  /* Better mobile touch targets */
+  button, a, [role="button"] {
+    @apply min-h-[44px] flex items-center justify-center;
+  }
+  
+  /* Prevent content from running off screen */
+  * {
+    @apply max-w-full;
+  }
+  
+  /* Improve text readability on mobile */
+  body {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+}

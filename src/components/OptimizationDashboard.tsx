@@ -1,5 +1,10 @@
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { C            </TabsTrigger>
+            <TabsTrigger value="revenue" className="flex items-center gap-1 md:gap-2 text-xs md:text-sm px-1 md:px-3">
+              <TrendingUp className="h-3 w-3 md:h-4 md:w-4" />
+              <span className="hidden md:inline">Revenue Tracking</span>
+              <span className="md:hidden">Rev</span>
+            </TabsTrigger>CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Settings, Zap, Database, DollarSign } from 'lucide-react';
 import APIOptimizer from './APIOptimizer';
@@ -21,18 +26,21 @@ export default function OptimizationDashboard() {
         </div>
 
         <Tabs defaultValue="api" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="api" className="flex items-center gap-2">
-              <Zap className="h-4 w-4" />
-              API Optimization
+          <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 gap-1">
+            <TabsTrigger value="api" className="flex items-center gap-1 md:gap-2 text-xs md:text-sm px-1 md:px-3">
+              <Zap className="h-3 w-3 md:h-4 md:w-4" />
+              <span className="hidden md:inline">API Optimization</span>
+              <span className="md:hidden">API</span>
             </TabsTrigger>
-            <TabsTrigger value="database" className="flex items-center gap-2">
-              <Database className="h-4 w-4" />
-              Database Queries
+            <TabsTrigger value="database" className="flex items-center gap-1 md:gap-2 text-xs md:text-sm px-1 md:px-3">
+              <Database className="h-3 w-3 md:h-4 md:w-4" />
+              <span className="hidden md:inline">Database Queries</span>
+              <span className="md:hidden">DB</span>
             </TabsTrigger>
-            <TabsTrigger value="costs" className="flex items-center gap-2">
-              <Settings className="h-4 w-4" />
-              Cost Monitoring
+            <TabsTrigger value="costs" className="flex items-center gap-1 md:gap-2 text-xs md:text-sm px-1 md:px-3">
+              <Settings className="h-3 w-3 md:h-4 md:w-4" />
+              <span className="hidden md:inline">Cost Monitoring</span>
+              <span className="md:hidden">Cost</span>
             </TabsTrigger>
             <TabsTrigger value="revenue" className="flex items-center gap-2">
               <DollarSign className="h-4 w-4" />

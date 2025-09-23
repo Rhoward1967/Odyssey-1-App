@@ -139,11 +139,23 @@ export const UserManual: React.FC = () => {
       </Card>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-4 bg-slate-800/50">
-          <TabsTrigger value="getting-started">Getting Started</TabsTrigger>
-          <TabsTrigger value="bidding">Bidding</TabsTrigger>
-          <TabsTrigger value="appointments">Calendar</TabsTrigger>
-          <TabsTrigger value="research">Research</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 bg-slate-800/50 gap-1">
+          <TabsTrigger value="getting-started" className="text-xs md:text-sm px-1 md:px-3">
+            <span className="hidden md:inline">Getting Started</span>
+            <span className="md:hidden">Start</span>
+          </TabsTrigger>
+          <TabsTrigger value="bidding" className="text-xs md:text-sm px-1 md:px-3">
+            <span className="hidden md:inline">Bidding</span>
+            <span className="md:hidden">Bid</span>
+          </TabsTrigger>
+          <TabsTrigger value="appointments" className="text-xs md:text-sm px-1 md:px-3">
+            <span className="hidden md:inline">Calendar</span>
+            <span className="md:hidden">Cal</span>
+          </TabsTrigger>
+          <TabsTrigger value="research" className="text-xs md:text-sm px-1 md:px-3">
+            <span className="hidden md:inline">Research</span>
+            <span className="md:hidden">AI</span>
+          </TabsTrigger>
         </TabsList>
 
         {sections.map(section => (
