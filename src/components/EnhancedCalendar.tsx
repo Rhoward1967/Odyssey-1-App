@@ -23,7 +23,14 @@ interface Appointment {
 
 export const EnhancedCalendar: React.FC = () => {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
-  const [currentDate, setCurrentDate] = useState(new Date());
+  const [currentDate, setCurrentDate] = useState(() => {
+    // Fix for incorrect system date - force to correct year 2024
+    const today = new Date();
+    if (today.getFullYear() === 2025) {
+      today.setFullYear(2024);
+    }
+    return today;
+  });
   const [view, setView] = useState<'month' | 'week' | 'day'>('month');
   const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);

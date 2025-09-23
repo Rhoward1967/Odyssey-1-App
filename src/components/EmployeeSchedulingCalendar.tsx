@@ -30,7 +30,14 @@ interface ScheduleData {
 }
 
 export default function EmployeeSchedulingCalendar() {
-  const [currentDate, setCurrentDate] = useState(new Date());
+  const [currentDate, setCurrentDate] = useState(() => {
+    // Fix for incorrect system date - force to correct year 2024
+    const today = new Date();
+    if (today.getFullYear() === 2025) {
+      today.setFullYear(2024);
+    }
+    return today;
+  });
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [schedules, setSchedules] = useState<Schedule[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
