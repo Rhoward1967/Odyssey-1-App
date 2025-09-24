@@ -19,49 +19,33 @@ interface Lead {
   lastContact: string;
 }
 
-const mockLeads: Lead[] = [
-  {
-    id: '1',
-    name: 'Sarah Johnson',
-    company: 'Atlanta Medical Center',
-    email: 'sarah.j@atlantamedical.com',
-    phone: '(404) 555-0123',
-    status: 'qualified',
-    source: 'Google Ads',
-    value: 15000,
-    dateAdded: '2024-01-15',
-    lastContact: '2024-01-20'
-  },
-  {
-    id: '2',
-    name: 'Michael Chen',
-    company: 'Georgia State University',
-    email: 'm.chen@gsu.edu',
-    phone: '(678) 555-0456',
-    status: 'proposal',
-    source: 'LinkedIn',
-    value: 25000,
-    dateAdded: '2024-01-12',
-    lastContact: '2024-01-22'
-  },
-  {
-    id: '3',
-    name: 'Lisa Rodriguez',
-    company: 'City of Athens',
-    email: 'l.rodriguez@athensga.gov',
-    phone: '(706) 555-0789',
-    status: 'contacted',
-    source: 'SAM.gov',
-    value: 35000,
-    dateAdded: '2024-01-18',
-    lastContact: '2024-01-21'
-  }
-];
+
+
+import { useEffect } from 'react';
+import { supabase } from '../lib/supabase';
 
 export default function LeadTrackingSystem() {
-  const [leads, setLeads] = useState<Lead[]>(mockLeads);
+  const [leads, setLeads] = useState<Lead[]>([]);
   const [filterStatus, setFilterStatus] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState('');
+
+  useEffect(() => {
+    loadLeads();
+  }, []);
+
+  const loadLeads = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('leads')
+        .select('*')
+        .order('dateAdded', { ascending: false });
+      if (error) throw error;
+      setLeads(data || []);
+    } catch (error) {
+      console.error('Failed to load leads:', error);
+      setLeads([]);
+    }
+  };
 
   const getStatusColor = (status: string) => {
     const colors = {

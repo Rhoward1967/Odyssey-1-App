@@ -11,6 +11,8 @@ interface GoogleAuthProps {
   onAuthSuccess?: (tokens: any, user: any) => void;
 }
 
+const ENABLE_TEST_AUTH = import.meta.env.VITE_ENABLE_TEST_AUTH === 'true';
+
 export function GoogleAuth({ onAuthSuccess }: GoogleAuthProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [authStatus, setAuthStatus] = useState<'idle' | 'success' | 'error'>('idle');
@@ -181,24 +183,26 @@ export function GoogleAuth({ onAuthSuccess }: GoogleAuthProps) {
                 {isLoading ? 'Connecting...' : 'Connect Google Calendar'}
               </Button>
               
-              <div className="flex gap-2">
-                <Button 
-                  onClick={handleTestAuth}
-                  variant="outline"
-                  size="sm"
-                  className="flex-1"
-                >
-                  Test Auth
-                </Button>
-                <Button 
-                  onClick={handleDebugInfo}
-                  variant="outline"
-                  size="sm"
-                  className="flex-1"
-                >
-                  Debug Info
-                </Button>
-              </div>
+              {ENABLE_TEST_AUTH && (
+                <div className="flex gap-2">
+                  <Button 
+                    onClick={handleTestAuth}
+                    variant="outline"
+                    size="sm"
+                    className="flex-1"
+                  >
+                    Test Auth
+                  </Button>
+                  <Button 
+                    onClick={handleDebugInfo}
+                    variant="outline"
+                    size="sm"
+                    className="flex-1"
+                  >
+                    Debug Info
+                  </Button>
+                </div>
+              )}
             </div>
           )}
 
@@ -238,13 +242,15 @@ export function GoogleAuth({ onAuthSuccess }: GoogleAuthProps) {
                 >
                   Try Again
                 </Button>
-                <Button 
-                  onClick={handleTestAuth}
-                  variant="outline"
-                  className="flex-1"
-                >
-                  Test Mode
-                </Button>
+                {ENABLE_TEST_AUTH && (
+                  <Button 
+                    onClick={handleTestAuth}
+                    variant="outline"
+                    className="flex-1"
+                  >
+                    Test Mode
+                  </Button>
+                )}
               </div>
             </div>
           )}

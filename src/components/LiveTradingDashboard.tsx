@@ -28,34 +28,41 @@ export const LiveTradingDashboard = () => {
   const [trades, setTrades] = useState<Trade[]>([]);
   const [selectedAsset, setSelectedAsset] = useState('BTC');
   const [tradeAmount, setTradeAmount] = useState('');
-  const [isDemo, setIsDemo] = useState(true);
+  const [isDemo, setIsDemo] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const mockPortfolio: Portfolio[] = [
-    { symbol: 'BTC', balance: 0.5, value: 32500, change: 2.5 },
-    { symbol: 'ETH', balance: 2.3, value: 4600, change: -1.2 },
-    { symbol: 'USD', balance: 5000, value: 5000, change: 0 },
-  ];
-
   useEffect(() => {
-    setPortfolio(mockPortfolio);
+    loadPortfolio();
     loadTrades();
   }, []);
 
+  const loadPortfolio = async () => {
+    try {
+      // Query Supabase for live portfolio data
+      const { data, error } = await supabase
+        .from('user_portfolio')
+        .select('*');
+      if (error) throw error;
+      setPortfolio(data || []);
+    } catch (error) {
+      console.error('Failed to load portfolio:', error);
+      setPortfolio([]);
+    }
+  };
+
   const loadTrades = async () => {
-    // Mock trades for demo
-    const mockTrades: Trade[] = [
-      {
-        id: '1',
-        symbol: 'BTC',
-        amount: 0.1,
-        price: 65000,
-        type: 'buy',
-        status: 'executed',
-        timestamp: new Date().toISOString()
-      }
-    ];
-    setTrades(mockTrades);
+    try {
+      // Query Supabase for live trade history
+      const { data, error } = await supabase
+        .from('trade_history')
+        .select('*')
+        .order('timestamp', { ascending: false });
+      if (error) throw error;
+      setTrades(data || []);
+    } catch (error) {
+      console.error('Failed to load trades:', error);
+      setTrades([]);
+    }
   };
 
   const executeTrade = async (type: 'buy' | 'sell') => {

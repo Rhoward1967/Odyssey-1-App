@@ -29,8 +29,8 @@
         "typescript.preferences.quoteStyle": "single",
         "editor.formatOnSave": true,
         "editor.codeActionsOnSave": {
-            "source.fixAll.eslint": true,
-            "source.organizeImports": true
+          "source.fixAll.eslint": "explicit",
+          "source.organizeImports": "explicit"
         },
         "files.associations": {
             "*.tsx": "typescriptreact",
@@ -46,8 +46,9 @@
             "statusBar.background": "#0f172a",
             "statusBar.foreground": "#e2e8f0"
         },
-        "workbench.iconTheme": "material-icon-theme",
-        "terminal.integrated.defaultProfile.windows": "PowerShell"
+        "workbench.iconTheme": "vs-seti",
+        "terminal.integrated.defaultProfile.windows": "PowerShell",
+        "liveServer.settings.multiRootWorkspaceName": "🚀 Odyssey-1-Lab"
     },
     "extensions": {
         "recommendations": [

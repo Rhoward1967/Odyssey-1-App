@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { supabase } from '../lib/supabase';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
@@ -30,59 +31,30 @@ interface RegulatorySimulation {
 
 export const ScenarioPlanningEngine: React.FC = () => {
   const [scenarios, setScenarios] = useState<Scenario[]>([]);
-  const [regulatorySimulations, setRegulatorySimulations] = useState<RegulatorySimulation[]>([
-    {
-      scenario: 'New Procurement Regulations',
-      compliance: 0.87,
-      adaptationCost: 45000,
-      timeToImplement: 90,
-      riskLevel: 'medium'
-    },
-    {
-      scenario: 'Environmental Standards Update',
-      compliance: 0.92,
-      adaptationCost: 23000,
-      timeToImplement: 45,
-      riskLevel: 'low'
-    }
-  ]);
-
-  const [economicModels, setEconomicModels] = useState({
-    inflationImpact: 0.032,
-    marketVolatility: 0.18,
-    sectorGrowth: 0.067,
-    competitionIndex: 0.74
-  });
+  const [regulatorySimulations, setRegulatorySimulations] = useState<RegulatorySimulation[]>([]);
+  const [economicModels, setEconomicModels] = useState<any>({});
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setScenarios(prev => prev.map(scenario => {
-        if (scenario.status === 'running' && scenario.progress < 100) {
-          const newProgress = Math.min(100, scenario.progress + Math.random() * 20);
-          const isComplete = newProgress >= 100;
-          
-          return {
-            ...scenario,
-            progress: newProgress,
-            status: isComplete ? 'completed' : 'running',
-            outcomes: isComplete ? {
-              probability: 0.6 + Math.random() * 0.35,
-              impact: Math.random() * 100,
-              recommendation: generateRecommendation(scenario.type),
-              roi: 1.2 + Math.random() * 2.8
-            } : scenario.outcomes
-          };
-        }
-        return scenario;
-      }));
-
-      setEconomicModels(prev => ({
-        ...prev,
-        marketVolatility: Math.max(0.05, Math.min(0.4, prev.marketVolatility + (Math.random() - 0.5) * 0.02))
-      }));
-    }, 1500);
-
-    return () => clearInterval(interval);
+    const fetchScenarioData = async () => {
+      setLoading(true);
+      try {
+        const { data, error } = await supabase.functions.invoke('advanced-simulation-processor', {
+          body: { simulationType: 'scenario_planning', parameters: {} }
+        });
+        if (error) throw error;
+        setRegulatorySimulations(data?.regulatorySimulations || []);
+        setEconomicModels(data?.economicModels || {});
+        setScenarios(data?.scenarios || []);
+      } catch (err) {
+        setRegulatorySimulations([]);
+        setEconomicModels({});
+        setScenarios([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchScenarioData();
   }, []);
 
   const generateRecommendation = (type: string): string => {
@@ -95,52 +67,12 @@ export const ScenarioPlanningEngine: React.FC = () => {
     return recommendations[type as keyof typeof recommendations] || 'Monitor situation closely';
   };
 
-  const runWhatIfAnalysis = () => {
-    const newScenario: Scenario = {
-      id: `whatif_${Date.now()}`,
-      name: 'Price Increase Scenario',
-      type: 'what_if',
-      status: 'running',
-      progress: 0,
-      variables: {
-        priceIncrease: 0.15,
-        demandElasticity: -0.8,
-        competitorResponse: 0.6
-      },
-      outcomes: {
-        probability: 0,
-        impact: 0,
-        recommendation: '',
-        roi: 0
-      }
-    };
-    
-    setScenarios(prev => [...prev, newScenario]);
-  };
+  // Optionally, add functions to trigger new simulations via backend if needed
+  // For now, all data is loaded from backend on mount
 
-  const runStressTest = () => {
-    const newScenario: Scenario = {
-      id: `stress_${Date.now()}`,
-      name: 'Supply Chain Disruption',
-      type: 'stress_test',
-      status: 'running',
-      progress: 0,
-      variables: {
-        supplyReduction: 0.4,
-        costIncrease: 0.25,
-        deliveryDelay: 30
-      },
-      outcomes: {
-        probability: 0,
-        impact: 0,
-        recommendation: '',
-        roi: 0
-      }
-    };
-    
-    setScenarios(prev => [...prev, newScenario]);
-  };
-
+  if (loading) {
+    return <div className="p-8 text-center text-white">Loading scenario planning data...</div>;
+  }
   return (
     <Card className="bg-gradient-to-br from-violet-900 to-purple-900 border-violet-500">
       <CardHeader>
@@ -181,22 +113,24 @@ export const ScenarioPlanningEngine: React.FC = () => {
               ))}
             </div>
             
+            {/*
             <div className="flex gap-2">
               <Button 
                 size="sm" 
                 className="bg-violet-600 hover:bg-violet-700"
-                onClick={runWhatIfAnalysis}
+                disabled
               >
                 What-If Analysis
               </Button>
               <Button 
                 size="sm" 
                 className="bg-purple-600 hover:bg-purple-700"
-                onClick={runStressTest}
+                disabled
               >
                 Stress Test
               </Button>
             </div>
+            */}
           </TabsContent>
           
           <TabsContent value="regulatory" className="space-y-4">

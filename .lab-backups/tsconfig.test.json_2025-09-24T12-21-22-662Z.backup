@@ -1,0 +1,7 @@
+{
+  "originalPath": "tsconfig.test.json",
+  "timestamp": "2025-09-24T12:21:22.662Z",
+  "hash": "bad314cd08ff980e1a239a5349a13612e125784f33b5740e6f4367f5c74b81a3",
+  "size": 344,
+  "content": "{\r\n  \"extends\": \"./tsconfig.json\",\r\n  \"compilerOptions\": {\r\n    \"module\": \"esnext\",\r\n    \"target\": \"es2020\",\r\n    \"jsx\": \"react-jsx\",\r\n    \"esModuleInterop\": true,\r\n    \"allowSyntheticDefaultImports\": true,\r\n    \"types\": [\"vitest/globals\", \"@testing-library/jest-dom\", \"node\"]\r\n  },\r\n  \"include\": [\r\n    \"src/**/*\",\r\n    \"src/test/**/*\"\r\n  ]\r\n}"
+}

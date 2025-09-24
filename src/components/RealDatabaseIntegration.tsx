@@ -86,11 +86,21 @@ export default function RealDatabaseIntegration() {
         const { data, error } = await supabase.from('users').select('*').limit(10);
         if (!error) results = data || [];
       } else {
-        // Mock results for other queries
-        results = [
-          { id: 1, name: 'Sample Data', created_at: new Date().toISOString() },
-          { id: 2, name: 'Demo Record', created_at: new Date().toISOString() }
-        ];
+        // No supported table/query matched; return empty results and set error message
+        setQueryResults([]);
+        setQueryHistory(prev => [
+          {
+            id: Date.now().toString(),
+            query: currentQuery,
+            results: [],
+            executedAt: new Date().toLocaleTimeString(),
+            duration: Date.now() - startTime,
+            error: 'No results: Query not supported or no data found.'
+          },
+          ...prev.slice(0, 9)
+        ]);
+        setIsExecuting(false);
+        return;
       }
       
       const duration = Date.now() - startTime;

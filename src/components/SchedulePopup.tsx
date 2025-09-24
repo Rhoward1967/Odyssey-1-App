@@ -90,7 +90,7 @@ export default function SchedulePopup({ isOpen, onClose, date, employee, existin
           </div>
           
           <div>
-            <label className="text-white text-sm mb-1 block flex items-center gap-2">
+            <label className="text-white text-sm mb-1 flex items-center gap-2">
               <MapPin className="h-4 w-4" />
               Location
             </label>
@@ -103,7 +103,7 @@ export default function SchedulePopup({ isOpen, onClose, date, employee, existin
           </div>
 
           <div>
-            <label className="text-white text-sm mb-1 block flex items-center gap-2">
+            <label className="text-white text-sm mb-1 flex items-center gap-2">
               <FileText className="h-4 w-4" />
               Notes
             </label>

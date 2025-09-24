@@ -41,72 +41,22 @@ const EmployeeBenefitsManager: React.FC = () => {
     try {
       setLoading(true);
       
-      // Try to load from Supabase first, fallback to mock data
+      // Load benefit plans from Supabase
       const { data: benefitsData, error: benefitsError } = await supabase
         .from('benefit_plans')
         .select('*');
 
+      if (benefitsError) throw benefitsError;
+      setBenefitPlans(benefitsData || []);
+
+      // Load leave requests from Supabase
       const { data: leaveData, error: leaveError } = await supabase
         .from('leave_requests')
         .select('*')
         .order('created_at', { ascending: false });
 
-      if (benefitsError || leaveError) {
-        // Fallback to mock data
-        setBenefitPlans([
-          {
-            id: '1',
-            name: 'Health Insurance Premium',
-            type: 'health',
-            employee_cost: 125,
-            company_contribution: 300,
-            enrolled_count: 12,
-            total_employees: 15
-          },
-          {
-            id: '2',
-            name: 'Dental Coverage',
-            type: 'dental',
-            employee_cost: 35,
-            company_contribution: 50,
-            enrolled_count: 8,
-            total_employees: 15
-          },
-          {
-            id: '3',
-            name: 'Vision Plan',
-            type: 'vision',
-            employee_cost: 15,
-            company_contribution: 25,
-            enrolled_count: 10,
-            total_employees: 15
-          }
-        ]);
-
-        setLeaveRequests([
-          {
-            id: '1',
-            employee_name: 'John Smith',
-            leave_type: 'Vacation',
-            start_date: '2024-02-15',
-            end_date: '2024-02-19',
-            status: 'pending',
-            days_requested: 5
-          },
-          {
-            id: '2',
-            employee_name: 'Maria Garcia',
-            leave_type: 'Sick Leave',
-            start_date: '2024-02-10',
-            end_date: '2024-02-12',
-            status: 'approved',
-            days_requested: 3
-          }
-        ]);
-      } else {
-        setBenefitPlans(benefitsData || []);
-        setLeaveRequests(leaveData || []);
-      }
+      if (leaveError) throw leaveError;
+      setLeaveRequests(leaveData || []);
     } catch (error) {
       console.error('Error loading benefits data:', error);
     } finally {

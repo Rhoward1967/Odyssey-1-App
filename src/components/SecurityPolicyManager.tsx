@@ -33,58 +33,44 @@ export function SecurityPolicyManager() {
   const loadPolicies = async () => {
     setLoading(true);
     try {
-      // Mock data - in real app would query pg_policies
-      const mockPolicies: SecurityPolicy[] = [
-        {
-          id: '1',
-          table: 'documents',
-          name: 'documents_select_policy',
-          command: 'SELECT',
-          roles: ['authenticated'],
-          status: 'active',
-          lastModified: new Date()
-        },
-        {
-          id: '2',
-          table: 'subscriptions',
-          name: 'subscriptions_update_policy',
-          command: 'UPDATE',
-          roles: ['authenticated'],
-          status: 'active',
-          lastModified: new Date()
-        },
-        {
-          id: '3',
-          table: 'smart_notifications',
-          name: 'notifications_select_policy',
-          command: 'SELECT',
-          roles: ['authenticated'],
-          status: 'active',
-          lastModified: new Date()
-        }
-      ];
+      // Query Supabase for security policies
+      const { data: policyData, error: policyError } = await supabase
+        .from('security_policies')
+        .select('*');
 
-      const mockIssues: SecurityIssue[] = [
-        {
-          type: 'performance',
-          severity: 'medium',
-          description: 'Multiple permissive policies detected',
-          table: 'users',
-          recommendation: 'Consolidate overlapping policies for better performance'
-        },
-        {
-          type: 'overpermissive',
-          severity: 'high',
-          description: 'Policy allows broader access than needed',
-          table: 'invoices',
-          recommendation: 'Restrict policy to specific user roles'
-        }
-      ];
+      if (policyError) throw policyError;
 
-      setPolicies(mockPolicies);
-      setIssues(mockIssues);
+      // Map backend data to SecurityPolicy interface
+      const policies: SecurityPolicy[] = (policyData || []).map((p: any) => ({
+        id: p.id,
+        table: p.table,
+        name: p.name,
+        command: p.command,
+        roles: p.roles || [],
+        status: p.status,
+        lastModified: p.last_modified ? new Date(p.last_modified) : new Date()
+      }));
+      setPolicies(policies);
+
+      // Query Supabase for security issues
+      const { data: issueData, error: issueError } = await supabase
+        .from('security_issues')
+        .select('*');
+
+      if (issueError) throw issueError;
+
+      const issues: SecurityIssue[] = (issueData || []).map((i: any) => ({
+        type: i.type,
+        severity: i.severity,
+        description: i.description,
+        table: i.table,
+        recommendation: i.recommendation
+      }));
+      setIssues(issues);
     } catch (error) {
       console.error('Failed to load policies:', error);
+      setPolicies([]);
+      setIssues([]);
     } finally {
       setLoading(false);
     }

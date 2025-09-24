@@ -17,16 +17,34 @@ interface RFQData {
   compliance: number;
 }
 
-const SAMPLE_RFQS: RFQData[] = [
-  { id: 'RFQ-2024-001', title: 'IT Infrastructure Modernization', agency: 'Department of Defense', deadline: '2024-03-15', value: 2500000, status: 'open', compliance: 95 },
-  { id: 'RFP-2024-002', title: 'Healthcare Management System', agency: 'Veterans Affairs', deadline: '2024-04-01', value: 1800000, status: 'submitted', compliance: 98 },
-  { id: 'RFQ-2024-003', title: 'Cybersecurity Assessment Services', agency: 'Homeland Security', deadline: '2024-03-30', value: 750000, status: 'open', compliance: 92 }
-];
+
+
+import { useEffect } from 'react';
+import { supabase } from '../lib/supabase';
 
 export function GovernmentProcurement() {
   const [activeTab, setActiveTab] = useState<'dashboard' | 'rfq' | 'rfp' | 'compliance' | 'contracts' | 'clearance' | 'gsa'>('dashboard');
   const [selectedRFQ, setSelectedRFQ] = useState<string>('');
   const [bidAmount, setBidAmount] = useState<string>('');
+  const [rfqs, setRfqs] = useState<RFQData[]>([]);
+
+  useEffect(() => {
+    loadRFQs();
+  }, []);
+
+  const loadRFQs = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('rfqs')
+        .select('*')
+        .order('deadline', { ascending: false });
+      if (error) throw error;
+      setRfqs(data || []);
+    } catch (error) {
+      console.error('Failed to load RFQs:', error);
+      setRfqs([]);
+    }
+  };
 
   const calculateWinProbability = (compliance: number, bidValue: number, marketValue: number) => {
     const complianceScore = compliance / 100;
@@ -141,7 +159,7 @@ export function GovernmentProcurement() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {SAMPLE_RFQS.map((rfq) => (
+              {rfqs.map((rfq) => (
                 <div key={rfq.id} className="bg-black/30 p-4 rounded-lg border border-gray-600/50">
                   <div className="flex justify-between items-start mb-3">
                     <div>
@@ -245,7 +263,7 @@ export function GovernmentProcurement() {
                     <SelectValue placeholder="Select RFQ/RFP" />
                   </SelectTrigger>
                   <SelectContent>
-                    {SAMPLE_RFQS.map((rfq) => (
+                    {rfqs.map((rfq) => (
                       <SelectItem key={rfq.id} value={rfq.id}>
                         {rfq.title}
                       </SelectItem>

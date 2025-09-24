@@ -12,6 +12,7 @@ import {
   Share, Trash2, Eye, Edit, FolderOpen, 
   Calendar, User, Tag, Star
 } from 'lucide-react';
+import { supabase } from '@/lib/supabase';
 
 interface Document {
   id: string;
@@ -42,78 +43,38 @@ export const DocumentManagementHub: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('list');
 
+
   useEffect(() => {
     loadDocuments();
     loadFolders();
   }, []);
 
   const loadDocuments = async () => {
-    // Mock documents for demo
-    const mockDocs: Document[] = [
-      {
-        id: '1',
-        name: 'AI Research Proposal.pdf',
-        type: 'pdf',
-        size: '2.4 MB',
-        created_at: '2024-01-15T10:30:00Z',
-        updated_at: '2024-01-16T14:20:00Z',
-        author: 'Rickey Howard',
-        tags: ['research', 'ai', 'proposal'],
-        category: 'research',
-        starred: true,
-        shared: false
-      },
-      {
-        id: '2',
-        name: 'System Architecture.docx',
-        type: 'docx',
-        size: '1.8 MB',
-        created_at: '2024-01-14T09:15:00Z',
-        updated_at: '2024-01-14T16:45:00Z',
-        author: 'System Admin',
-        tags: ['architecture', 'system', 'technical'],
-        category: 'technical',
-        starred: false,
-        shared: true
-      },
-      {
-        id: '3',
-        name: 'Budget Analysis Q1.xlsx',
-        type: 'xlsx',
-        size: '890 KB',
-        created_at: '2024-01-13T11:20:00Z',
-        updated_at: '2024-01-13T15:30:00Z',
-        author: 'Finance Team',
-        tags: ['budget', 'finance', 'q1'],
-        category: 'finance',
-        starred: false,
-        shared: false
-      },
-      {
-        id: '4',
-        name: 'Meeting Notes - Jan 2024.txt',
-        type: 'txt',
-        size: '45 KB',
-        created_at: '2024-01-12T14:00:00Z',
-        updated_at: '2024-01-12T16:30:00Z',
-        author: 'Team Lead',
-        tags: ['meeting', 'notes', 'january'],
-        category: 'meetings',
-        starred: true,
-        shared: true
-      }
-    ];
-    setDocuments(mockDocs);
+    try {
+      const { data, error } = await supabase
+        .from('documents')
+        .select('*')
+        .order('updated_at', { ascending: false });
+      if (error) throw error;
+      setDocuments(data || []);
+    } catch (error) {
+      console.error('Failed to load documents:', error);
+      setDocuments([]);
+    }
   };
 
   const loadFolders = async () => {
-    const mockFolders: Folder[] = [
-      { id: '1', name: 'Research Papers', document_count: 12, created_at: '2024-01-01T00:00:00Z' },
-      { id: '2', name: 'Technical Docs', document_count: 8, created_at: '2024-01-02T00:00:00Z' },
-      { id: '3', name: 'Financial Reports', document_count: 15, created_at: '2024-01-03T00:00:00Z' },
-      { id: '4', name: 'Meeting Records', document_count: 24, created_at: '2024-01-04T00:00:00Z' }
-    ];
-    setFolders(mockFolders);
+    try {
+      const { data, error } = await supabase
+        .from('folders')
+        .select('*')
+        .order('created_at', { ascending: false });
+      if (error) throw error;
+      setFolders(data || []);
+    } catch (error) {
+      console.error('Failed to load folders:', error);
+      setFolders([]);
+    }
   };
 
   const filteredDocuments = documents.filter(doc => {

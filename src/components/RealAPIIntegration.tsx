@@ -35,22 +35,23 @@ export default function RealAPIIntegration() {
 
   const testConnection = async (apiName: string) => {
     setIsTestingConnection(apiName);
-    
-    // Simulate API connection test
+
+    // TODO: Replace with real backend call for usage/cost data
+    // For now, set status to connected and usage/cost to 'Not available'
     await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    setApis(prev => prev.map(api => 
-      api.name === apiName 
-        ? { 
-            ...api, 
+
+    setApis(prev => prev.map(api =>
+      api.name === apiName
+        ? {
+            ...api,
             status: 'connected',
             lastUsed: new Date(),
-            monthlySpent: Math.random() * 50,
-            requestCount: Math.floor(Math.random() * 1000)
+            monthlySpent: undefined, // Not available
+            requestCount: undefined  // Not available
           }
         : api
     ));
-    
+
     setIsTestingConnection(null);
   };
 
@@ -131,11 +132,15 @@ export default function RealAPIIntegration() {
                 <div className="grid grid-cols-3 gap-4 pt-4 border-t">
                   <div>
                     <p className="text-sm text-muted-foreground">Monthly Spent</p>
-                    <p className="text-lg font-semibold">${api.monthlySpent?.toFixed(2)}</p>
+                    <p className="text-lg font-semibold">
+                      {typeof api.monthlySpent === 'number' ? `$${api.monthlySpent.toFixed(2)}` : 'Not available'}
+                    </p>
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Requests</p>
-                    <p className="text-lg font-semibold">{api.requestCount?.toLocaleString()}</p>
+                    <p className="text-lg font-semibold">
+                      {typeof api.requestCount === 'number' ? api.requestCount.toLocaleString() : 'Not available'}
+                    </p>
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Last Used</p>

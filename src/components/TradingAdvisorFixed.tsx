@@ -29,52 +29,38 @@ const TradingAdvisor: React.FC = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    generateInitialInsights();
-    generateTradingSignals();
+    loadLiveInsights();
+    loadLiveSignals();
   }, []);
 
-  const generateInitialInsights = () => {
-    const mockInsights: MarketInsight[] = [
-      {
-        type: 'bullish',
-        confidence: 78,
-        message: 'Bitcoin showing strong support at $42,000. Technical indicators suggest potential breakout above $45,000.',
-        timestamp: new Date().toLocaleTimeString()
-      },
-      {
-        type: 'bearish',
-        confidence: 65,
-        message: 'Ethereum facing resistance at $2,800. Consider taking profits if holding long positions.',
-        timestamp: new Date().toLocaleTimeString()
-      },
-      {
-        type: 'neutral',
-        confidence: 82,
-        message: 'Market volatility expected due to upcoming Fed announcement. Maintain balanced portfolio.',
-        timestamp: new Date().toLocaleTimeString()
-      }
-    ];
-    setInsights(mockInsights);
+  const loadLiveInsights = async () => {
+    try {
+      // Query Supabase for live market insights
+      const { data, error } = await supabase
+        .from('market_insights')
+        .select('*')
+        .order('timestamp', { ascending: false });
+      if (error) throw error;
+      setInsights(data || []);
+    } catch (error) {
+      console.error('Failed to load market insights:', error);
+      setInsights([]);
+    }
   };
 
-  const generateTradingSignals = () => {
-    const mockSignals: TradingSignal[] = [
-      {
-        action: 'buy',
-        asset: 'BTC-USD',
-        price: 43287,
-        reasoning: 'RSI oversold, MACD bullish crossover, strong volume support',
-        risk_level: 'medium'
-      },
-      {
-        action: 'hold',
-        asset: 'ETH-USD',
-        price: 2750,
-        reasoning: 'Consolidating near resistance, wait for clear breakout signal',
-        risk_level: 'low'
-      }
-    ];
-    setSignals(mockSignals);
+  const loadLiveSignals = async () => {
+    try {
+      // Query Supabase for live trading signals
+      const { data, error } = await supabase
+        .from('trading_signals')
+        .select('*')
+        .order('created_at', { ascending: false });
+      if (error) throw error;
+      setSignals(data || []);
+    } catch (error) {
+      console.error('Failed to load trading signals:', error);
+      setSignals([]);
+    }
   };
 
   const handleAIQuery = async () => {

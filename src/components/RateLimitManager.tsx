@@ -68,18 +68,21 @@ export const RateLimitManager: React.FC = () => {
     }
   };
 
-  const loadConfigurations = () => {
-    // Mock configurations - in production, load from database
-    const mockConfigs: RateLimitConfig[] = [
-      { endpoint: '/api/ai-chat', limit: 100, window: '1 hour', enabled: true },
-      { endpoint: '/api/trading', limit: 500, window: '1 hour', enabled: true },
-      { endpoint: '/api/research', limit: 200, window: '1 hour', enabled: true },
-      { endpoint: '/api/deployment', limit: 50, window: '1 hour', enabled: true },
-      { endpoint: '/api/auth', limit: 20, window: '15 minutes', enabled: true }
-    ];
-    
-    setConfigs(mockConfigs);
-    setLoading(false);
+  const loadConfigurations = async () => {
+    setLoading(true);
+    try {
+      // Fetch live rate limit configs from Supabase table 'api_rate_limits'
+      const { data, error } = await supabase
+        .from('api_rate_limits')
+        .select('*');
+      if (error) throw error;
+      setConfigs(data || []);
+    } catch (error) {
+      console.error('Error loading rate limit configs:', error);
+      setConfigs([]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const testRateLimit = async () => {

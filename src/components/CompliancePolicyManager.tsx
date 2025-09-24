@@ -42,97 +42,22 @@ const CompliancePolicyManager: React.FC = () => {
     try {
       setLoading(true);
       
-      // Try to load from Supabase first, fallback to mock data
+      // Load compliance items from Supabase
       const { data: complianceData, error: complianceError } = await supabase
         .from('compliance_tracking')
         .select('*');
 
+      if (complianceError) throw complianceError;
+      setComplianceItems(complianceData || []);
+
+      // Load policy documents from Supabase
       const { data: policyData, error: policyError } = await supabase
         .from('policy_documents')
         .select('*')
         .order('last_updated', { ascending: false });
 
-      if (complianceError || policyError) {
-        // Fallback to mock data
-        setComplianceItems([
-          {
-            id: '1',
-            name: 'I-9 Employment Verification',
-            status: 'compliant',
-            percentage: 100,
-            last_updated: '2024-01-15',
-            description: 'All employees have completed I-9 forms'
-          },
-          {
-            id: '2',
-            name: 'W-4 Tax Forms',
-            status: 'compliant',
-            percentage: 98,
-            last_updated: '2024-01-10',
-            description: 'Current tax withholding forms on file'
-          },
-          {
-            id: '3',
-            name: 'OSHA Safety Training',
-            status: 'warning',
-            percentage: 85,
-            last_updated: '2024-01-05',
-            description: '2 employees need updated safety certification'
-          },
-          {
-            id: '4',
-            name: 'Background Check Renewals',
-            status: 'warning',
-            percentage: 87,
-            last_updated: '2024-01-01',
-            description: '2 background checks expiring soon'
-          },
-          {
-            id: '5',
-            name: 'Drug Testing Compliance',
-            status: 'compliant',
-            percentage: 100,
-            last_updated: '2024-01-12',
-            description: 'All required testing completed'
-          }
-        ]);
-
-        setPolicies([
-          {
-            id: '1',
-            title: 'Employee Handbook 2024',
-            category: 'General',
-            last_updated: '2024-01-01',
-            version: '2.1',
-            requires_acknowledgment: true,
-            acknowledged_count: 13,
-            total_employees: 15
-          },
-          {
-            id: '2',
-            title: 'Safety Protocols',
-            category: 'Safety',
-            last_updated: '2024-01-15',
-            version: '1.3',
-            requires_acknowledgment: true,
-            acknowledged_count: 15,
-            total_employees: 15
-          },
-          {
-            id: '3',
-            title: 'Anti-Harassment Policy',
-            category: 'HR',
-            last_updated: '2023-12-01',
-            version: '1.0',
-            requires_acknowledgment: true,
-            acknowledged_count: 14,
-            total_employees: 15
-          }
-        ]);
-      } else {
-        setComplianceItems(complianceData || []);
-        setPolicies(policyData || []);
-      }
+      if (policyError) throw policyError;
+      setPolicies(policyData || []);
     } catch (error) {
       console.error('Error loading compliance data:', error);
     } finally {
@@ -165,19 +90,7 @@ const CompliancePolicyManager: React.FC = () => {
       setNewPolicy({ title: '', category: '', content: '' });
     } catch (error) {
       console.error('Error creating policy:', error);
-      // Add to local state anyway for demo
-      const policyDoc = {
-        id: Date.now().toString(),
-        title: newPolicy.title,
-        category: newPolicy.category,
-        last_updated: new Date().toISOString().split('T')[0],
-        version: '1.0',
-        requires_acknowledgment: true,
-        acknowledged_count: 0,
-        total_employees: 15
-      };
-      setPolicies(prev => [policyDoc, ...prev]);
-      setNewPolicy({ title: '', category: '', content: '' });
+      // No fallback to local state; only live data is used
     }
   };
 

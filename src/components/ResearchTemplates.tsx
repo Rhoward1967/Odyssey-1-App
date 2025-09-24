@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { FileText, Download, Plus, Star, Clock, Users } from 'lucide-react';
+
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { FileText, Download, Plus, Star, Clock } from 'lucide-react';
+
+import { supabase } from '../lib/supabase';
 
 interface ResearchTemplate {
   id: string;
@@ -16,80 +19,31 @@ interface ResearchTemplate {
   popularity: number;
 }
 
-const RESEARCH_TEMPLATES: ResearchTemplate[] = [
-  {
-    id: 'lit-review',
-    title: 'Literature Review',
-    description: 'Comprehensive academic literature review template',
-    category: 'Academic',
-    sections: ['Abstract', 'Introduction', 'Methodology', 'Findings', 'Discussion', 'Conclusion', 'References'],
-    estimatedTime: '2-4 weeks',
-    difficulty: 'Intermediate',
-    popularity: 95
-  },
-  {
-    id: 'case-study',
-    title: 'Case Study Analysis',
-    description: 'In-depth case study research framework',
-    category: 'Business',
-    sections: ['Executive Summary', 'Background', 'Problem Statement', 'Analysis', 'Solutions', 'Recommendations'],
-    estimatedTime: '1-2 weeks',
-    difficulty: 'Beginner',
-    popularity: 87
-  },
-  {
-    id: 'experimental',
-    title: 'Experimental Research',
-    description: 'Scientific experimental research design',
-    category: 'Science',
-    sections: ['Hypothesis', 'Materials & Methods', 'Data Collection', 'Results', 'Statistical Analysis', 'Discussion'],
-    estimatedTime: '4-8 weeks',
-    difficulty: 'Advanced',
-    popularity: 78
-  },
-  {
-    id: 'market-research',
-    title: 'Market Research',
-    description: 'Business market analysis template',
-    category: 'Business',
-    sections: ['Market Overview', 'Target Audience', 'Competitive Analysis', 'SWOT Analysis', 'Recommendations'],
-    estimatedTime: '1-3 weeks',
-    difficulty: 'Intermediate',
-    popularity: 92
-  },
-  {
-    id: 'thesis',
-    title: 'Thesis/Dissertation',
-    description: 'Complete thesis research structure',
-    category: 'Academic',
-    sections: ['Title Page', 'Abstract', 'Introduction', 'Literature Review', 'Methodology', 'Results', 'Discussion', 'Conclusion'],
-    estimatedTime: '6-12 months',
-    difficulty: 'Advanced',
-    popularity: 85
-  },
-  {
-    id: 'survey-analysis',
-    title: 'Survey Analysis',
-    description: 'Survey data collection and analysis',
-    category: 'Social Science',
-    sections: ['Survey Design', 'Data Collection', 'Demographics', 'Results Analysis', 'Insights', 'Recommendations'],
-    estimatedTime: '2-6 weeks',
-    difficulty: 'Intermediate',
-    popularity: 73
-  }
-];
-
 interface ResearchTemplatesProps {
   onTemplateSelect: (template: ResearchTemplate) => void;
 }
 
 export default function ResearchTemplates({ onTemplateSelect }: ResearchTemplatesProps) {
+  const [templates, setTemplates] = useState<ResearchTemplate[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState('');
+  const [loading, setLoading] = useState(true);
 
-  const categories = ['all', ...new Set(RESEARCH_TEMPLATES.map(t => t.category))];
-  
-  const filteredTemplates = RESEARCH_TEMPLATES.filter(template => {
+  useEffect(() => {
+    const fetchTemplates = async () => {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('research_templates')
+        .select('*');
+      setTemplates(data || []);
+      setLoading(false);
+    };
+    fetchTemplates();
+  }, []);
+
+  const categories = ['all', ...Array.from(new Set(templates.map(t => t.category)))] ;
+
+  const filteredTemplates = templates.filter(template => {
     const matchesCategory = selectedCategory === 'all' || template.category === selectedCategory;
     const matchesSearch = template.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          template.description.toLowerCase().includes(searchTerm.toLowerCase());
@@ -131,7 +85,11 @@ export default function ResearchTemplates({ onTemplateSelect }: ResearchTemplate
           </TabsList>
 
           <div className="grid gap-4">
-            {filteredTemplates.map(template => (
+            {loading ? (
+              <div className="text-center py-8 text-gray-500">Loading templates...</div>
+            ) : filteredTemplates.length === 0 ? (
+              <div className="text-center py-8 text-gray-500">No templates found</div>
+            ) : filteredTemplates.map(template => (
               <Card key={template.id} className="hover:shadow-md transition-shadow">
                 <CardContent className="p-4">
                   <div className="flex justify-between items-start mb-3">

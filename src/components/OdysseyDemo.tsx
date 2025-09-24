@@ -1,44 +1,49 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
-import { Brain, Zap, TrendingUp, Shield, Users, BarChart3 } from 'lucide-react';
+import { Brain, Zap, BarChart3 } from 'lucide-react';
+import { supabase } from '../lib/supabase';
 
 const industries = [
   {
     name: 'Healthcare',
     icon: '🏥',
     scenario: 'Patient Flow Optimization',
-    aiResponse: 'Analyzing 847 patient records... Predicted 23% reduction in wait times by optimizing staff allocation. Recommending dynamic scheduling for peak hours 2-4 PM.',
-    metrics: { efficiency: '+34%', cost: '-$127K', satisfaction: '94%' }
+    prompt: 'Analyze patient flow and staff allocation for a hospital. Predict wait time reduction and recommend scheduling improvements.',
+    metricsKeys: ['efficiency', 'cost', 'satisfaction']
   },
   {
     name: 'Manufacturing',
     icon: '🏭',
     scenario: 'Predictive Maintenance',
-    aiResponse: 'Machine learning models detect anomaly in Assembly Line 3. Predicting bearing failure in 72 hours. Scheduling maintenance to prevent $45K downtime.',
-    metrics: { uptime: '99.7%', savings: '+$89K', defects: '-67%' }
+    prompt: 'Detect anomalies in assembly line data and predict equipment failure. Recommend maintenance actions to prevent downtime.',
+    metricsKeys: ['uptime', 'savings', 'defects']
   },
   {
     name: 'Finance',
     icon: '💼',
     scenario: 'Risk Assessment',
-    aiResponse: 'Processing 12,000 transactions... Identified 3 high-risk patterns. Fraud probability reduced by 89%. Compliance score improved to AAA rating.',
-    metrics: { risk: '-89%', compliance: 'AAA', accuracy: '99.2%' }
+    prompt: 'Assess risk in financial transactions, identify fraud patterns, and report compliance improvements.',
+    metricsKeys: ['risk', 'compliance', 'accuracy']
   },
   {
     name: 'Government',
     icon: '🏛️',
     scenario: 'Procurement Optimization',
-    aiResponse: 'Analyzing 500+ vendor proposals... Optimal bid identified with 15% cost savings while maintaining quality standards. Contract terms optimized.',
-    metrics: { savings: '15%', time: '-40%', quality: 'A+' }
+    prompt: 'Analyze vendor proposals for government procurement. Identify optimal bids and contract terms for cost savings and quality.',
+    metricsKeys: ['savings', 'time', 'quality']
   }
 ];
+
 
 export function OdysseyDemo() {
   const [activeIndustry, setActiveIndustry] = useState(0);
   const [isProcessing, setIsProcessing] = useState(false);
   const [showResults, setShowResults] = useState(false);
+  const [aiResponse, setAiResponse] = useState('');
+  const [metrics, setMetrics] = useState<Record<string, string>>({});
 
   // Auto-cycle through industries
   useEffect(() => {
@@ -48,11 +53,8 @@ export function OdysseyDemo() {
         runDemo(nextIndex);
         return nextIndex;
       });
-    }, 10000); // Auto-cycle every 10 seconds for better readability
-
-    // Start with first industry
+    }, 10000);
     runDemo(0);
-
     return () => clearInterval(interval);
   }, []);
 
@@ -60,8 +62,26 @@ export function OdysseyDemo() {
     setActiveIndustry(industryIndex);
     setIsProcessing(true);
     setShowResults(false);
-    
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    setAiResponse('');
+    setMetrics({});
+    try {
+      // Call live AI backend for demo response
+      const { data, error } = await supabase.functions.invoke('ai-assistant-chat', {
+        body: {
+          message: industries[industryIndex].prompt,
+          conversationMode: 'demo',
+          industry: industries[industryIndex].name,
+          personality: 'showcase'
+        }
+      });
+      if (error) throw error;
+      // Expecting response in format: { response: string, metrics?: Record<string, string> }
+      setAiResponse(data?.response || 'No response.');
+      setMetrics(data?.metrics || {});
+    } catch (e) {
+      setAiResponse('Error: Unable to fetch live demo.');
+      setMetrics({});
+    }
     setIsProcessing(false);
     setShowResults(true);
   };
@@ -130,17 +150,15 @@ export function OdysseyDemo() {
                     <span className="text-2xl">{industries[activeIndustry].icon}</span>
                     <h3 className="font-semibold text-lg">{industries[activeIndustry].name}</h3>
                   </div>
-                  
                   <div className="bg-blue-50 p-4 rounded-lg">
                     <p className="text-sm text-gray-700">
-                      {industries[activeIndustry].aiResponse}
+                      {aiResponse}
                     </p>
                   </div>
-
                   <div className="grid grid-cols-3 gap-4 mt-4">
-                    {Object.entries(industries[activeIndustry].metrics).map(([key, value]) => (
+                    {industries[activeIndustry].metricsKeys.map((key) => (
                       <div key={key} className="text-center p-3 bg-green-50 rounded-lg">
-                        <div className="font-bold text-green-700">{value}</div>
+                        <div className="font-bold text-green-700">{metrics[key] || '--'}</div>
                         <div className="text-xs text-gray-600 capitalize">{key}</div>
                       </div>
                     ))}

@@ -106,69 +106,30 @@ export const DatabaseManager = () => {
 
   const loadDatabaseInfo = async () => {
     try {
-      const tableInfo: TableInfo[] = [];
-      let totalRows = 0;
+      // Query Supabase for all tables and their row counts
+      const { data: tablesData, error: tablesError } = await supabase.rpc('get_all_table_info');
+      if (tablesError) throw tablesError;
 
-      // Get research entries info
-      const { count: entriesCount } = await supabase
-        .from('research_entries')
-        .select('*', { count: 'exact', head: true });
+      // tablesData should be an array of { name, rows, columns, created }
+      setTables(tablesData || []);
 
-      tableInfo.push({
-        name: 'research_entries',
-        rows: entriesCount || 0,
-        columns: ['id', 'title', 'content', 'tags', 'citations', 'type', 'created_at', 'updated_at'],
-        created: 'Today'
-      });
-
-      // Get research tags info
-      const { count: tagsCount } = await supabase
-        .from('research_tags')
-        .select('*', { count: 'exact', head: true });
-
-      tableInfo.push({
-        name: 'research_tags',
-        rows: tagsCount || 0,
-        columns: ['id', 'name', 'created_at'],
-        created: 'Today'
-      });
-
-      totalRows = (entriesCount || 0) + (tagsCount || 0);
-
-      setTables(tableInfo);
+      // Calculate stats
+      const totalTables = (tablesData || []).length;
+      const totalRows = (tablesData || []).reduce((sum: number, t: any) => sum + (t.rows || 0), 0);
       setStats({
-        totalTables: tableInfo.length,
+        totalTables,
         totalRows,
         storageUsed: `${Math.round(totalRows * 0.5)} KB`,
         lastBackup: new Date().toLocaleDateString()
       });
-
     } catch (error) {
       console.error('Error loading database info:', error);
-      // Fallback to local storage info
-      const localEntries = JSON.parse(localStorage.getItem('research_entries') || '[]');
-      const localTags = JSON.parse(localStorage.getItem('research_tags') || '[]');
-      
-      setTables([
-        {
-          name: 'research_entries (local)',
-          rows: localEntries.length,
-          columns: ['id', 'title', 'content', 'tags', 'citations', 'type', 'created_at'],
-          created: 'Local Storage'
-        },
-        {
-          name: 'research_tags (local)',
-          rows: localTags.length,
-          columns: ['id', 'name'],
-          created: 'Local Storage'
-        }
-      ]);
-
+      setTables([]);
       setStats({
-        totalTables: 2,
-        totalRows: localEntries.length + localTags.length,
-        storageUsed: `${Math.round((localEntries.length + localTags.length) * 0.3)} KB (Local)`,
-        lastBackup: 'N/A (Local Storage)'
+        totalTables: 0,
+        totalRows: 0,
+        storageUsed: '0 KB',
+        lastBackup: 'N/A'
       });
     }
   };

@@ -47,74 +47,50 @@ export default function AdvancedSearchEngine() {
 
   const performSearch = async () => {
     if (!query.trim()) return;
-    
     setLoading(true);
     try {
-      // Simulate advanced search with multiple data sources
-      const mockResults: SearchResult[] = [
-        {
-          id: '1',
-          title: 'AI Research Documentation',
-          content: 'Comprehensive guide to AI research methodologies and best practices...',
-          type: 'document',
-          category: 'AI',
-          createdAt: new Date().toISOString(),
-          relevanceScore: 0.95
-        },
-        {
-          id: '2',
-          title: 'Business Strategy Template',
-          content: 'Strategic planning template for modern businesses...',
-          type: 'template',
-          category: 'Business',
-          createdAt: new Date(Date.now() - 86400000).toISOString(),
-          relevanceScore: 0.87
-        },
-        {
-          id: '3',
-          title: 'Research Conversation Log',
-          content: 'Discussion about quantum computing applications...',
-          type: 'conversation',
-          category: 'Research',
-          createdAt: new Date(Date.now() - 172800000).toISOString(),
-          relevanceScore: 0.78
-        }
-      ];
+      // Build Supabase query for live search
+      let supaQuery = supabase
+        .from('search_index')
+        .select('*')
+        .textSearch('content', query, { type: 'websearch' });
 
       // Apply filters
-      let filteredResults = mockResults.filter(result => {
-        if (filters.type.length > 0 && !filters.type.includes(result.type)) return false;
-        if (filters.category.length > 0 && !filters.category.includes(result.category)) return false;
-        
-        if (filters.dateRange !== 'all') {
-          const resultDate = new Date(result.createdAt);
-          const now = new Date();
-          const timeDiff = now.getTime() - resultDate.getTime();
-          
-          switch (filters.dateRange) {
-            case '24h': if (timeDiff > 86400000) return false; break;
-            case '7d': if (timeDiff > 604800000) return false; break;
-            case '30d': if (timeDiff > 2592000000) return false; break;
-            case '90d': if (timeDiff > 7776000000) return false; break;
-          }
+      if (filters.type.length > 0) {
+        supaQuery = supaQuery.in('type', filters.type);
+      }
+      if (filters.category.length > 0) {
+        supaQuery = supaQuery.in('category', filters.category);
+      }
+      if (filters.dateRange !== 'all') {
+        const now = new Date();
+        let afterDate = null;
+        switch (filters.dateRange) {
+          case '24h': afterDate = new Date(now.getTime() - 86400000); break;
+          case '7d': afterDate = new Date(now.getTime() - 604800000); break;
+          case '30d': afterDate = new Date(now.getTime() - 2592000000); break;
+          case '90d': afterDate = new Date(now.getTime() - 7776000000); break;
         }
-        
-        return true;
-      });
+        if (afterDate) {
+          supaQuery = supaQuery.gte('createdAt', afterDate.toISOString());
+        }
+      }
 
       // Apply sorting
-      filteredResults.sort((a, b) => {
-        switch (filters.sortBy) {
-          case 'relevance': return b.relevanceScore - a.relevanceScore;
-          case 'date': return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-          case 'title': return a.title.localeCompare(b.title);
-          default: return 0;
-        }
-      });
+      if (filters.sortBy === 'date') {
+        supaQuery = supaQuery.order('createdAt', { ascending: false });
+      } else if (filters.sortBy === 'title') {
+        supaQuery = supaQuery.order('title', { ascending: true });
+      } else {
+        supaQuery = supaQuery.order('relevanceScore', { ascending: false });
+      }
 
-      setResults(filteredResults);
+      const { data, error } = await supaQuery;
+      if (error) throw error;
+      setResults(data || []);
     } catch (error) {
       console.error('Search failed:', error);
+      setResults([]);
     } finally {
       setLoading(false);
     }

@@ -21,56 +21,34 @@ interface RFP {
   postedDate: string;
 }
 
-const mockRFPs: RFP[] = [
-  {
-    id: '1',
-    title: 'Janitorial Services - Federal Building Complex',
-    agency: 'General Services Administration',
-    solicitation: 'GS-00F-0001P',
-    description: 'Comprehensive janitorial and maintenance services for federal building complex including daily cleaning, floor care, and waste management.',
-    dueDate: '2024-02-15',
-    value: '$250,000 - $500,000',
-    category: 'Janitorial Services',
-    status: 'open',
-    location: 'Atlanta, GA',
-    setAside: 'Small Business',
-    postedDate: '2024-01-15'
-  },
-  {
-    id: '2',
-    title: 'AI Technology Solutions for Healthcare Data',
-    agency: 'Department of Health and Human Services',
-    solicitation: 'HHS-AI-2024-001',
-    description: 'Advanced AI platform for healthcare data analysis, patient outcome prediction, and operational efficiency improvements.',
-    dueDate: '2024-02-28',
-    value: '$1,000,000 - $2,500,000',
-    category: 'Information Technology',
-    status: 'open',
-    location: 'Washington, DC',
-    setAside: 'Unrestricted',
-    postedDate: '2024-01-20'
-  },
-  {
-    id: '3',
-    title: 'Educational Facility Maintenance Services',
-    agency: 'Department of Education',
-    solicitation: 'ED-MAINT-2024-003',
-    description: 'Complete facility maintenance including HVAC, electrical, plumbing, and general repairs for educational institutions.',
-    dueDate: '2024-02-10',
-    value: '$150,000 - $300,000',
-    category: 'Facility Maintenance',
-    status: 'closing-soon',
-    location: 'Athens, GA',
-    setAside: 'Small Business',
-    postedDate: '2024-01-10'
-  }
-];
+
+
+import { useEffect } from 'react';
+import { supabase } from '../lib/supabase';
 
 export default function GovernmentRFPPortal() {
-  const [rfps, setRfps] = useState<RFP[]>(mockRFPs);
+  const [rfps, setRfps] = useState<RFP[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCategory, setFilterCategory] = useState('all');
   const [filterStatus, setFilterStatus] = useState('all');
+
+  useEffect(() => {
+    loadRFPs();
+  }, []);
+
+  const loadRFPs = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('rfps')
+        .select('*')
+        .order('dueDate', { ascending: false });
+      if (error) throw error;
+      setRfps(data || []);
+    } catch (error) {
+      console.error('Failed to load RFPs:', error);
+      setRfps([]);
+    }
+  };
 
   const getStatusColor = (status: string) => {
     const colors = {
