@@ -1,0 +1,19 @@
+{
+  "name": "Odyssey-1 Lab Codespace",
+  "image": "mcr.microsoft.com/devcontainers/typescript-node:20",
+  "features": {},
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash"
+      },
+      "extensions": [
+        "esbenp.prettier-vscode",
+        "dbaeumer.vscode-eslint",
+        "ms-vscode.vscode-typescript-next"
+      ]
+    }
+  },
+  "forwardPorts": [5173],
+  "postCreateCommand": "npm install"
+}
