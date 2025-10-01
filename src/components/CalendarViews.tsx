@@ -101,30 +101,31 @@ export const CalendarViews: React.FC<CalendarViewsProps> = ({
     const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     
     return (
-      <div className="grid grid-cols-7 gap-1">
+      <div className="grid grid-cols-7 gap-0.5 md:gap-1">
         {weekDays.map(day => (
-          <div key={day} className="p-2 text-center font-semibold text-gray-600 bg-gray-50">
-            {day}
+          <div key={day} className="p-1 md:p-2 text-center font-semibold text-gray-600 bg-gray-50 text-xs md:text-sm">
+            <span className="hidden sm:inline">{day}</span>
+            <span className="sm:hidden">{day.charAt(0)}</span>
           </div>
         ))}
         {days.map((day, index) => (
           <div
             key={index}
-            className={`p-2 min-h-[80px] border border-gray-200 ${
+            className={`p-1 md:p-2 min-h-[60px] md:min-h-[80px] border border-gray-200 ${
               day.isCurrentMonth ? 'bg-white' : 'bg-gray-50'
             } ${day.isToday ? 'bg-blue-50 border-blue-300' : ''}`}
           >
-            <div className={`text-sm ${day.isCurrentMonth ? 'text-gray-900' : 'text-gray-400'}`}>
+            <div className={`text-xs md:text-sm ${day.isCurrentMonth ? 'text-gray-900' : 'text-gray-400'}`}>
               {day.date.getDate()}
             </div>
             <div className="mt-1 space-y-1">
-              {day.appointments.slice(0, 2).map((apt, i) => (
-                <div key={i} className="text-xs p-1 bg-blue-100 text-blue-800 rounded truncate">
+              {day.appointments.slice(0, window.innerWidth < 768 ? 1 : 2).map((apt, i) => (
+                <div key={i} className="text-xs p-0.5 md:p-1 bg-blue-100 text-blue-800 rounded truncate">
                   {apt.title}
                 </div>
               ))}
-              {day.appointments.length > 2 && (
-                <div className="text-xs text-gray-500">+{day.appointments.length - 2} more</div>
+              {day.appointments.length > (window.innerWidth < 768 ? 1 : 2) && (
+                <div className="text-xs text-gray-500">+{day.appointments.length - (window.innerWidth < 768 ? 1 : 2)} more</div>
               )}
             </div>
           </div>
@@ -137,20 +138,26 @@ export const CalendarViews: React.FC<CalendarViewsProps> = ({
     const days = getWeekView();
     
     return (
-      <div className="grid grid-cols-7 gap-2">
+      <div className="grid grid-cols-7 gap-1 md:gap-2">
         {days.map((day, index) => (
-          <div key={index} className={`p-4 border rounded-lg ${day.isToday ? 'bg-blue-50 border-blue-300' : 'bg-white'}`}>
+          <div key={index} className={`p-2 md:p-4 border rounded-lg ${day.isToday ? 'bg-blue-50 border-blue-300' : 'bg-white'}`}>
             <div className="text-center mb-2">
-              <div className="text-sm font-semibold">{day.date.toLocaleDateString('en-US', { weekday: 'short' })}</div>
-              <div className="text-lg">{day.date.getDate()}</div>
+              <div className="text-xs md:text-sm font-semibold">
+                <span className="hidden sm:inline">{day.date.toLocaleDateString('en-US', { weekday: 'short' })}</span>
+                <span className="sm:hidden">{day.date.toLocaleDateString('en-US', { weekday: 'narrow' })}</span>
+              </div>
+              <div className="text-sm md:text-lg">{day.date.getDate()}</div>
             </div>
             <div className="space-y-1">
-              {day.appointments.map((apt, i) => (
-                <div key={i} className="text-xs p-1 bg-blue-100 text-blue-800 rounded">
-                  <div className="font-medium">{apt.title}</div>
-                  <div>{new Date(apt.start_time).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</div>
+              {day.appointments.slice(0, window.innerWidth < 768 ? 2 : 4).map((apt, i) => (
+                <div key={i} className="text-xs p-0.5 md:p-1 bg-blue-100 text-blue-800 rounded">
+                  <div className="font-medium truncate">{apt.title}</div>
+                  <div className="hidden md:block">{new Date(apt.start_time).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</div>
                 </div>
               ))}
+              {day.appointments.length > (window.innerWidth < 768 ? 2 : 4) && (
+                <div className="text-xs text-gray-500">+{day.appointments.length - (window.innerWidth < 768 ? 2 : 4)}</div>
+              )}
             </div>
           </div>
         ))}
@@ -193,8 +200,8 @@ export const CalendarViews: React.FC<CalendarViewsProps> = ({
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <h3 className="text-lg font-semibold">{formatHeader()}</h3>
+      <div className="flex flex-col gap-3 md:flex-row md:justify-between md:items-center">
+        <h3 className="text-base md:text-lg font-semibold">{formatHeader()}</h3>
         <div className="flex gap-2">
           <Button variant="outline" size="sm" onClick={() => navigateDate('prev')}>
             <ChevronLeft className="h-4 w-4" />
@@ -205,7 +212,7 @@ export const CalendarViews: React.FC<CalendarViewsProps> = ({
         </div>
       </div>
       
-      <div className="bg-white rounded-lg p-4">
+      <div className="bg-white rounded-lg p-2 md:p-4 overflow-x-auto">
         {view === 'month' && renderMonthView()}
         {view === 'week' && renderWeekView()}
         {view === 'day' && renderDayView()}
