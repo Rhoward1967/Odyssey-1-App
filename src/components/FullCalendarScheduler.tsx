@@ -42,7 +42,14 @@ const TEAM_COLORS = {
 };
 
 export default function FullCalendarScheduler() {
-  const [currentDate, setCurrentDate] = useState(new Date());
+  const [currentDate, setCurrentDate] = useState(() => {
+    // Fix for incorrect system date - force to correct year 2024
+    const today = new Date();
+    if (today.getFullYear() === 2025) {
+      today.setFullYear(2024);
+    }
+    return today;
+  });
   const [viewMode, setViewMode] = useState<'monthly' | 'weekly' | 'biweekly'>('monthly');
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [schedules, setSchedules] = useState<Schedule[]>([]);
