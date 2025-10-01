@@ -247,7 +247,8 @@ export default function MobileEmployeePortal() {
         <CardHeader>
           <CardTitle className="text-white flex items-center gap-2">
             <Calendar className="h-5 w-5" />
-            My Work Schedule - {currentEmployee.name}
+            <span className="block sm:hidden">Schedule</span>
+            <span className="hidden sm:block">My Work Schedule</span>
           </CardTitle>
         </CardHeader>
         <CardContent>
