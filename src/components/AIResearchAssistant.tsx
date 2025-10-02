@@ -34,6 +34,7 @@ export default function AIResearchAssistant() {
     checkUsageStatus();
     fetchResults();
   }, []);
+  const [error, setError] = useState<string | null>(null);
 
   const checkUsageStatus = async () => {
     try {
@@ -126,7 +127,11 @@ export default function AIResearchAssistant() {
     setLoading(true);
     try {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
+    if (!query.trim()) {
+      setError('Please enter a question.');
+      return;
+    }
+    setError(null);
 
       // Call AI research function
       const { data, error } = await supabase.functions.invoke('ai-assistant-chat', {
@@ -217,6 +222,9 @@ export default function AIResearchAssistant() {
               rows={3}
               disabled={!canQuery}
             />
+          {error && (
+            <div className="text-red-500 text-sm mb-2">{error}</div>
+          )}
             <Button
               onClick={handleSearch}
               disabled={loading || !query.trim() || !canQuery}
