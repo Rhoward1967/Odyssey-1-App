@@ -28,12 +28,12 @@ export default function PayrollDashboard() {
   const complianceItems: any[] = [];
 
   return (
-    <div className="p-6 space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">Advanced Payroll System</h1>
-        <div className="flex gap-3">
+    <div className="p-4 sm:p-6 space-y-6">
+      <div className="flex flex-col space-y-4 sm:flex-row sm:justify-between sm:items-center sm:space-y-0">
+        <h1 className="text-2xl sm:text-3xl font-bold">Advanced Payroll System</h1>
+        <div className="flex flex-col space-y-2 sm:flex-row sm:gap-3 sm:space-y-0">
           <Select value={payPeriod} onValueChange={setPayPeriod}>
-            <SelectTrigger className="w-48">
+            <SelectTrigger className="w-full sm:w-48">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -42,14 +42,16 @@ export default function PayrollDashboard() {
               <SelectItem value="ytd">Year to Date</SelectItem>
             </SelectContent>
           </Select>
-          <Button variant="outline" onClick={() => alert('Export functionality will be implemented')}>
-            <FileText className="w-4 h-4 mr-2" />
-            Export Reports
-          </Button>
-          <Button onClick={() => alert('AI Payroll processing will be implemented')}>
-            <Brain className="w-4 h-4 mr-2" />
-            AI Process Payroll
-          </Button>
+          <div className="flex gap-2 sm:gap-3">
+            <Button variant="outline" size="sm" className="flex-1 sm:flex-none" onClick={() => alert('Export functionality will be implemented')}>
+              <FileText className="w-4 h-4 mr-1 sm:mr-2" />
+              <span className="text-xs sm:text-sm">Export</span>
+            </Button>
+            <Button size="sm" className="flex-1 sm:flex-none" onClick={() => alert('AI Payroll processing will be implemented')}>
+              <Brain className="w-4 h-4 mr-1 sm:mr-2" />
+              <span className="text-xs sm:text-sm">AI Process</span>
+            </Button>
+          </div>
         </div>
       </div>
 
@@ -105,14 +107,16 @@ export default function PayrollDashboard() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList>
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="tutorial">Tutorial</TabsTrigger>
-          <TabsTrigger value="schedules">Pay Schedules</TabsTrigger>
-          <TabsTrigger value="deposits">Direct Deposit</TabsTrigger>
-          <TabsTrigger value="ai-processor">AI Processor</TabsTrigger>
-          <TabsTrigger value="compliance">Compliance</TabsTrigger>
-        </TabsList>
+        <div className="overflow-x-auto">
+          <TabsList className="flex w-max min-w-full">
+            <TabsTrigger value="overview" className="text-xs sm:text-sm px-2 sm:px-4">Overview</TabsTrigger>
+            <TabsTrigger value="tutorial" className="text-xs sm:text-sm px-2 sm:px-4">Tutorial</TabsTrigger>
+            <TabsTrigger value="schedules" className="text-xs sm:text-sm px-2 sm:px-4">Pay Schedules</TabsTrigger>
+            <TabsTrigger value="deposits" className="text-xs sm:text-sm px-2 sm:px-4">Direct Deposit</TabsTrigger>
+            <TabsTrigger value="ai-processor" className="text-xs sm:text-sm px-2 sm:px-4">AI Processor</TabsTrigger>
+            <TabsTrigger value="compliance" className="text-xs sm:text-sm px-2 sm:px-4">Compliance</TabsTrigger>
+          </TabsList>
+        </div>
 
         <TabsContent value="overview">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
