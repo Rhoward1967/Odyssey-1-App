@@ -226,7 +226,9 @@ const Subscription: React.FC = () => {
             </Button>
           </Link>
           <Link to='/admin' className='w-full sm:w-auto'>
-            <Button variant='outline' className='w-full sm:w-auto'>Admin Dashboard</Button>
+            <Button variant='outline' className='w-full sm:w-auto'>
+              Admin Dashboard
+            </Button>
           </Link>
         </div>
       </div>

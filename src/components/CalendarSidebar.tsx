@@ -12,8 +12,18 @@ const CalendarSidebar: React.FC<CalendarSidebarProps> = ({ onDateSelect }) => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
   const monthNames = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
   ];
 
   const getDaysInMonth = (date: Date) => {
@@ -25,17 +35,17 @@ const CalendarSidebar: React.FC<CalendarSidebarProps> = ({ onDateSelect }) => {
     const startingDayOfWeek = firstDay.getDay();
 
     const days = [];
-    
+
     // Add empty cells for days before the first day of the month
     for (let i = 0; i < startingDayOfWeek; i++) {
       days.push(null);
     }
-    
+
     // Add all days of the month
     for (let day = 1; day <= daysInMonth; day++) {
       days.push(new Date(year, month, day));
     }
-    
+
     return days;
   };
 
@@ -55,53 +65,51 @@ const CalendarSidebar: React.FC<CalendarSidebarProps> = ({ onDateSelect }) => {
   const today = new Date();
 
   return (
-    <div className="h-full bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 p-4">
-      <div className="mb-4">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="font-semibold flex items-center gap-2">
-            <Calendar className="w-4 h-4" />
+    <div className='h-full bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 p-4'>
+      <div className='mb-4'>
+        <div className='flex items-center justify-between mb-4'>
+          <h3 className='font-semibold flex items-center gap-2'>
+            <Calendar className='w-4 h-4' />
             30-Day Calendar
           </h3>
         </div>
-        
-        <div className="flex items-center justify-between mb-3">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => navigateMonth(-1)}
-          >
-            <ChevronLeft className="h-4 w-4" />
+
+        <div className='flex items-center justify-between mb-3'>
+          <Button variant='ghost' size='sm' onClick={() => navigateMonth(-1)}>
+            <ChevronLeft className='h-4 w-4' />
           </Button>
-          <span className="text-sm font-medium">
+          <span className='text-sm font-medium'>
             {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
           </span>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => navigateMonth(1)}
-          >
-            <ChevronRight className="h-4 w-4" />
+          <Button variant='ghost' size='sm' onClick={() => navigateMonth(1)}>
+            <ChevronRight className='h-4 w-4' />
           </Button>
         </div>
 
-        <div className="grid grid-cols-7 gap-1">
+        <div className='grid grid-cols-7 gap-1'>
           {/* Day headers */}
           {dayNames.map(day => (
-            <div key={day} className="text-center text-xs font-medium text-gray-500 p-1">
+            <div
+              key={day}
+              className='text-center text-xs font-medium text-gray-500 p-1'
+            >
               {day}
             </div>
           ))}
-          
+
           {/* Calendar days */}
           {days.map((day, index) => {
-            const isToday = day && 
-              day.getDate() === today.getDate() && 
-              day.getMonth() === today.getMonth() && 
+            const isToday =
+              day &&
+              day.getDate() === today.getDate() &&
+              day.getMonth() === today.getMonth() &&
               day.getFullYear() === today.getFullYear();
-            
-            const isSelected = day && selectedDate &&
-              day.getDate() === selectedDate.getDate() && 
-              day.getMonth() === selectedDate.getMonth() && 
+
+            const isSelected =
+              day &&
+              selectedDate &&
+              day.getDate() === selectedDate.getDate() &&
+              day.getMonth() === selectedDate.getMonth() &&
               day.getFullYear() === selectedDate.getFullYear();
 
             return (
@@ -123,20 +131,26 @@ const CalendarSidebar: React.FC<CalendarSidebarProps> = ({ onDateSelect }) => {
       </div>
 
       {/* Quick Stats */}
-      <div className="mt-6 space-y-2">
-        <div className="text-sm font-medium mb-2">Today's Schedule</div>
-        <div className="space-y-1">
-          <div className="flex justify-between text-xs">
+      <div className='mt-6 space-y-2'>
+        <div className='text-sm font-medium mb-2'>Today's Schedule</div>
+        <div className='space-y-1'>
+          <div className='flex justify-between text-xs'>
             <span>Active Jobs</span>
-            <Badge variant="default" className="h-5">12</Badge>
+            <Badge variant='default' className='h-5'>
+              12
+            </Badge>
           </div>
-          <div className="flex justify-between text-xs">
+          <div className='flex justify-between text-xs'>
             <span>Employees On Duty</span>
-            <Badge variant="secondary" className="h-5">8</Badge>
+            <Badge variant='secondary' className='h-5'>
+              8
+            </Badge>
           </div>
-          <div className="flex justify-between text-xs">
+          <div className='flex justify-between text-xs'>
             <span>Emergency Calls</span>
-            <Badge variant="destructive" className="h-5">2</Badge>
+            <Badge variant='destructive' className='h-5'>
+              2
+            </Badge>
           </div>
         </div>
       </div>

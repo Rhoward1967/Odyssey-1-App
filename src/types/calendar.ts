@@ -16,7 +16,7 @@ export interface CalendarEvent {
   title: string;
   description?: string;
   start: string; // ISO string
-  end: string;   // ISO string
+  end: string; // ISO string
   type: 'work' | 'personal' | 'holiday' | 'birthday' | 'other';
   location?: string;
   attendees?: string[];
