@@ -53,7 +53,9 @@ export default function MobileEmployeePortal() {
       })
       .subscribe();
 
-    return () => subscription.unsubscribe();
+    return () => {
+      subscription.unsubscribe();
+    };
   }, [currentEmployee.id]);
 
   const loadAssignments = async () => {
@@ -252,7 +254,7 @@ export default function MobileEmployeePortal() {
         </CardHeader>
         <CardContent>
           {/* Calendar Grid */}
-          <div className="grid grid-cols-7 gap-1">
+          <div className="grid grid-cols-7 gap-1 bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 rounded-lg">
             {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
               <div key={day} className="text-center text-white font-medium p-2 text-sm">
                 {day}

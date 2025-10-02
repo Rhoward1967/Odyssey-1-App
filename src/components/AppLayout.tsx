@@ -17,7 +17,7 @@ export default function AppLayout() {
       <header className="bg-blue-900 text-white p-4">
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-2xl font-bold">Rhoward1967/Odyssey-1ai</h1>
+            <h1 className="font-bold text-lg md:text-2xl truncate max-w-[70vw]">Rhoward1967/Odyssey-1ai</h1>
             <p className="text-blue-200">ODYSSEY-1 Technology Platform - Powered by HJS SERVICES LLC</p>
           </div>
           <div className="text-right">

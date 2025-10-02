@@ -195,7 +195,7 @@ export default function SubscriptionManagementPortal() {
                 onClick={handleCancelSubscription}
                 disabled={subscription?.cancel_at_period_end}
               >
-                Cancel Subscription
+                <span className="md:hidden">Cancel</span><span className="hidden md:inline">Cancel Subscription</span>
               </Button>
             </div>
           </CardContent>

@@ -92,9 +92,10 @@ export default function TimeClockManagement() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold flex items-center gap-2">
-          <Clock className="w-6 h-6" />
-          Time Clock Management
+        <h2 className="font-bold flex items-center gap-2 text-lg sm:text-2xl">
+          <Clock className="w-5 h-5 sm:w-6 sm:h-6" />
+          <span className="block sm:hidden">Time Clock</span>
+          <span className="hidden sm:block">Time Clock Management</span>
         </h2>
         <div className="flex gap-2">
           <Button onClick={loadTimeEntries} variant="outline">

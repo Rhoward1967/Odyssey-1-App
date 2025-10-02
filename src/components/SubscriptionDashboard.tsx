@@ -19,31 +19,30 @@ const SubscriptionDashboard: React.FC = () => {
   const [subscription, setSubscription] = useState<Subscription | null>(null);
   const [loading, setLoading] = useState(true);
 
+
   useEffect(() => {
-    if (user) {
-      fetchSubscription();
-    }
+    if (!user) return;
+    const fetchSubscription = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('subscriptions')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false })
+          .limit(1)
+          .single();
+        if (!error && data) {
+          setSubscription(data);
+        }
+      } catch (err) {
+        console.error('Error fetching subscription:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchSubscription();
   }, [user]);
 
-  const fetchSubscription = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('subscriptions')
-        .select('*')
-        .eq('user_id', user?.id)
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .single();
-
-      if (!error && data) {
-        setSubscription(data);
-      }
-    } catch (err) {
-      console.error('Error fetching subscription:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleCancelSubscription = async () => {
     if (!subscription) return;
@@ -82,6 +81,7 @@ const SubscriptionDashboard: React.FC = () => {
       default: return 'bg-gray-500';
     }
   };
+
 
   if (loading) {
     return (
@@ -162,7 +162,7 @@ const SubscriptionDashboard: React.FC = () => {
               className="flex-1"
               onClick={handleCancelSubscription}
             >
-              Cancel Subscription
+              <span className="md:hidden">Cancel</span><span className="hidden md:inline">Cancel Subscription</span>
             </Button>
           )}
         </div>

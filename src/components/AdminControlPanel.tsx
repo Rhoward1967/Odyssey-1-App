@@ -64,11 +64,7 @@ export default function AdminControlPanel() {
 
   return (
     <div className="space-y-6 p-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold flex items-center gap-2">
-          <Shield className="w-8 h-8 text-red-600" />
-          Admin Control Panel
-        </h1>
+      <div className="flex items-center justify-end">
         <div className="flex gap-2">
           <Button onClick={checkSystemHealth} variant="outline">
             <Activity className="w-4 h-4 mr-2" />
@@ -127,11 +123,19 @@ export default function AdminControlPanel() {
       </div>
 
       <Tabs defaultValue="system" className="w-full">
-        <TabsList>
-          <TabsTrigger value="system">System Status</TabsTrigger>
-          <TabsTrigger value="users">User Management</TabsTrigger>
-          <TabsTrigger value="database">Database</TabsTrigger>
-          <TabsTrigger value="settings">Settings</TabsTrigger>
+        <TabsList className="flex overflow-x-auto gap-2 md:grid md:grid-cols-4 md:gap-0">
+          <TabsTrigger value="system" className="flex-shrink-0 md:w-full">
+            <span className="md:hidden">Sys</span><span className="hidden md:inline">System Status</span>
+          </TabsTrigger>
+          <TabsTrigger value="users" className="flex-shrink-0 md:w-full">
+            <span className="md:hidden">Users</span><span className="hidden md:inline">User Management</span>
+          </TabsTrigger>
+          <TabsTrigger value="database" className="flex-shrink-0 md:w-full">
+            <span className="md:hidden">DB</span><span className="hidden md:inline">Database</span>
+          </TabsTrigger>
+          <TabsTrigger value="settings" className="flex-shrink-0 md:w-full">
+            <span className="md:hidden">Set</span><span className="hidden md:inline">Settings</span>
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="system">

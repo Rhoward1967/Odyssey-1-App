@@ -1,4 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { Dialog } from './ui/dialog';
+import { Input } from './ui/input';
+import { Label } from './ui/label';
+import { getCalendars, createCalendar, getCalendarEvents } from '@/services/calendarService';
+import { CalendarEvent, Calendar as CustomCalendar } from '@/types/calendar';
 import { Calendar, ChevronLeft, ChevronRight, Clock, User, Plus, UserPlus } from 'lucide-react';
 import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
@@ -27,7 +32,55 @@ interface Shift {
 }
 
 export default function MonthlyScheduleCalendar() {
+  // All state declarations at the top, before any usage
+  const [calendarEvents, setCalendarEvents] = useState<CalendarEvent[]>([]);
+  const [eventsLoading, setEventsLoading] = useState(false);
+  const [showAddCalendar, setShowAddCalendar] = useState(false);
+  const [newCalendarName, setNewCalendarName] = useState('');
+  const [newCalendarColor, setNewCalendarColor] = useState('#3b82f6');
+  const [addingCalendar, setAddingCalendar] = useState(false);
+  const [calendars, setCalendars] = useState<CustomCalendar[]>([]);
+  const [selectedCalendars, setSelectedCalendars] = useState<string[]>([]);
+  const [calendarLoading, setCalendarLoading] = useState(false);
   const [currentDate, setCurrentDate] = useState(new Date());
+
+  // Load events for selected calendars
+  useEffect(() => {
+    if (selectedCalendars.length === 0) {
+      setCalendarEvents([]);
+      return;
+    }
+    setEventsLoading(true);
+    Promise.all(selectedCalendars.map(id => getCalendarEvents(id)))
+      .then(results => {
+        // Flatten and merge all events
+        setCalendarEvents(results.flat());
+      })
+      .catch(e => {
+        setCalendarEvents([]);
+        console.error('Error loading calendar events', e);
+      })
+      .finally(() => setEventsLoading(false));
+  }, [selectedCalendars]);
+
+  const handleAddCalendar = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newCalendarName.trim()) return;
+    setAddingCalendar(true);
+    try {
+      const cal = await createCalendar({ name: newCalendarName, color: newCalendarColor, type: 'custom' });
+      setCalendars([...calendars, cal]);
+      setSelectedCalendars([...selectedCalendars, cal.id]);
+      setShowAddCalendar(false);
+      setNewCalendarName('');
+      setNewCalendarColor('#3b82f6');
+    } catch (e) {
+      alert('Failed to add calendar');
+    } finally {
+      setAddingCalendar(false);
+    }
+  };
+
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [shifts, setShifts] = useState<Shift[]>([]);
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
@@ -36,10 +89,30 @@ export default function MonthlyScheduleCalendar() {
   const [selectedShift, setSelectedShift] = useState<Shift | null>(null);
   const [showAddEmployee, setShowAddEmployee] = useState(false);
 
+
+  // Place loadAllCalendars above useEffect to avoid dependency warning
   useEffect(() => {
     loadEmployees();
     loadShifts();
+    loadAllCalendars();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const loadAllCalendars = async () => {
+    setCalendarLoading(true);
+    try {
+      const cals = await getCalendars();
+      setCalendars(cals);
+      // Auto-select first calendar if none selected
+      if (cals.length && selectedCalendars.length === 0) {
+        setSelectedCalendars([cals[0].id]);
+      }
+    } catch (e) {
+      console.error('Error loading calendars', e);
+    } finally {
+      setCalendarLoading(false);
+    }
+  };
 
   const loadEmployees = async () => {
     try {
@@ -127,9 +200,14 @@ export default function MonthlyScheduleCalendar() {
     }
   };
 
-  const getShiftsForDate = (date: Date) => {
+  // Combine legacy shifts and new calendar events for now, tagging type
+  const getEventsForDate = (date: Date) => {
     const dateStr = date.toISOString().split('T')[0];
-    return shifts.filter(shift => shift.date === dateStr);
+    // Calendar events (from selected calendars)
+    const events = calendarEvents.filter(ev => ev.start.split('T')[0] === dateStr).map(ev => ({ ...ev, _type: 'calendar' as const }));
+    // Legacy shifts (for backward compatibility)
+    const legacy = shifts.filter(shift => shift.date === dateStr).map(shift => ({ ...shift, _type: 'shift' as const }));
+    return [...events, ...legacy];
   };
 
   const monthNames = [
@@ -148,11 +226,88 @@ export default function MonthlyScheduleCalendar() {
     setCurrentDate(newDate);
   };
 
+  // Calendar selection UI (simple dropdown for now)
   return (
-    <div className="flex h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900">
+    <div className="flex flex-col md:flex-row h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900">
+      {/* Calendar Selection */}
+      <div className="w-full md:w-80 bg-black/30 border-b md:border-b-0 md:border-r border-white/10 p-4">
+        <div className="mb-4">
+          <div className="flex items-center justify-between mb-2">
+            <label className="block text-white font-semibold">Select Calendars</label>
+            <button
+              className="text-xs px-2 py-1 rounded bg-blue-600 text-white hover:bg-blue-700"
+              onClick={() => setShowAddCalendar(true)}
+              type="button"
+            >
+              + Add New
+            </button>
+          </div>
+          <select
+            multiple
+            className="w-full rounded p-2 bg-slate-800 text-white border border-white/20"
+            value={selectedCalendars}
+            onChange={e => {
+              const options = Array.from(e.target.selectedOptions).map(o => o.value);
+              setSelectedCalendars(options);
+            }}
+            disabled={calendarLoading}
+          >
+            {calendars.map(cal => (
+              <option key={cal.id} value={cal.id} style={{ color: cal.color || undefined }}>
+                {cal.name}
+              </option>
+            ))}
+          </select>
+          {calendarLoading && <div className="text-xs text-gray-300 mt-1">Loading calendars...</div>}
+        </div>
+
+        {/* Add Calendar Modal */}
+        <Dialog open={showAddCalendar} onOpenChange={setShowAddCalendar}>
+          <form onSubmit={handleAddCalendar} className="bg-white p-6 rounded shadow max-w-xs mx-auto">
+            <h2 className="font-bold mb-4">Add New Calendar</h2>
+            <div className="mb-3">
+              <Label htmlFor="calendar-name">Name</Label>
+              <Input
+                id="calendar-name"
+                value={newCalendarName}
+                onChange={e => setNewCalendarName(e.target.value)}
+                required
+                className="w-full"
+              />
+            </div>
+            <div className="mb-3">
+              <Label htmlFor="calendar-color">Color</Label>
+              <Input
+                id="calendar-color"
+                type="color"
+                value={newCalendarColor}
+                onChange={e => setNewCalendarColor(e.target.value)}
+                className="w-12 h-8 p-0 border-none bg-transparent"
+              />
+            </div>
+            <div className="flex gap-2 mt-4">
+              <button
+                type="button"
+                className="flex-1 py-2 rounded bg-gray-200 hover:bg-gray-300"
+                onClick={() => setShowAddCalendar(false)}
+                disabled={addingCalendar}
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="flex-1 py-2 rounded bg-blue-600 text-white hover:bg-blue-700"
+                disabled={addingCalendar}
+              >
+                {addingCalendar ? 'Adding...' : 'Add'}
+              </button>
+            </div>
+          </form>
+        </Dialog>
+      </div>
       {/* Employee Sidebar */}
-      <div className="w-80 bg-black/20 backdrop-blur-sm border-r border-white/10 p-4">
-        <Card className="bg-black/20 backdrop-blur-sm border-white/10 h-full">
+      <div className="w-full md:w-80 bg-black/20 backdrop-blur-sm border-b md:border-b-0 md:border-r border-white/10 p-4">
+  <Card className="bg-transparent backdrop-blur-sm border-white/10 h-full">
           <CardHeader>
             <CardTitle className="text-white flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -227,7 +382,7 @@ export default function MonthlyScheduleCalendar() {
             </div>
           </CardHeader>
           <CardContent className="p-0">
-            <div className="grid grid-cols-7 gap-1 p-4">
+            <div className="grid grid-cols-4 sm:grid-cols-7 gap-1 p-2 sm:p-4 bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 rounded-lg">
               {/* Day headers */}
               {dayNames.map(day => (
                 <div key={day} className="text-center text-white font-medium p-2">
@@ -239,7 +394,7 @@ export default function MonthlyScheduleCalendar() {
               {days.map((day, index) => (
                 <div
                   key={index}
-                  className={`min-h-[120px] border border-white/10 rounded-lg p-1 ${
+                  className={`aspect-square border border-white/10 rounded-lg p-1 flex flex-col ${
                     day ? 'bg-white/5' : ''
                   }`}
                 >
@@ -248,23 +403,37 @@ export default function MonthlyScheduleCalendar() {
                       <div className="text-white text-sm font-medium mb-1">
                         {day.getDate()}
                       </div>
-                       <div className="space-y-1">
-                        {getShiftsForDate(day).map(shift => (
-                          <div 
-                            key={shift.id} 
-                            onClick={() => {
-                              const employee = employees.find(emp => emp.id === shift.employeeId);
-                              setSelectedEmployee(employee || null);
-                              setSelectedShift(shift);
-                              setSelectedDateForPopup(day.toISOString().split('T')[0]);
-                              setShowPopup(true);
-                            }}
-                            className="text-xs p-1 rounded bg-green-500/30 text-green-200 cursor-pointer hover:bg-green-500/40"
-                          >
-                            <div className="font-medium">{shift.employeeName}</div>
-                            <div>{shift.startTime} - {shift.endTime}</div>
-                          </div>
-                        ))}
+                      <div className="space-y-1">
+                        {eventsLoading ? (
+                          <div className="text-xs text-gray-400">Loading...</div>
+                        ) : getEventsForDate(day).length === 0 ? null : (
+                          getEventsForDate(day).map(ev => {
+                            if (ev._type === 'calendar') {
+                              return (
+                                <div
+                                  key={ev.id}
+                                  className="text-xs p-1 rounded bg-blue-500/30 text-blue-100 cursor-pointer hover:bg-blue-500/40"
+                                >
+                                  <div className="font-medium">{ev.title}</div>
+                                  <div>
+                                    {new Date(ev.start).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - {new Date(ev.end).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                  </div>
+                                </div>
+                              );
+                            } else {
+                              // shift
+                              return (
+                                <div
+                                  key={ev.id}
+                                  className="text-xs p-1 rounded bg-green-500/30 text-green-200 cursor-pointer hover:bg-green-500/40"
+                                >
+                                  <div className="font-medium">{ev.employeeName}</div>
+                                  <div>{ev.startTime} - {ev.endTime}</div>
+                                </div>
+                              );
+                            }
+                          })
+                        )}
                       </div>
                     </>
                   )}

@@ -140,7 +140,7 @@ export default function AutoFixSystem() {
   const fixedIssues = issues.filter(i => i.status === 'fixed').length;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 px-2 py-2 sm:px-6 sm:py-6 max-w-full overflow-x-hidden">
       <Card className="bg-black/20 backdrop-blur-sm border-orange-500/30">
         <CardHeader>
           <div className="flex items-center justify-between">
@@ -171,7 +171,7 @@ export default function AutoFixSystem() {
           </div>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <div className="grid grid-cols-1 gap-2 md:grid-cols-3 md:gap-4 mb-4 md:mb-6">
             <Card className="bg-black/30 border-red-500/30">
               <CardContent className="p-4">
                 <div className="flex items-center gap-2">
@@ -209,26 +209,26 @@ export default function AutoFixSystem() {
             </Card>
           </div>
 
-          <div className="space-y-4">
+          <div className="space-y-2 md:space-y-4">
             {issues.map((issue) => (
               <Card key={issue.id} className="bg-black/30 border-gray-600/30">
                 <CardContent className="p-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
+                  <div className="flex flex-wrap items-start justify-between gap-2">
+                    <div className="flex items-start gap-3 flex-1 min-w-0">
                       {getTypeIcon(issue.type)}
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-1">
-                          <h4 className="text-white font-medium">{issue.description}</h4>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex flex-wrap items-center gap-2 mb-1">
+                          <h4 className="text-white font-medium break-words max-w-[140px] sm:max-w-none">{issue.description}</h4>
                           <Badge className={getSeverityColor(issue.severity)}>
                             {issue.severity}
                           </Badge>
                         </div>
                         {issue.solution && (
-                          <p className="text-sm text-gray-300">{issue.solution}</p>
+                          <p className="text-sm text-gray-300 break-words max-w-[180px] sm:max-w-none">{issue.solution}</p>
                         )}
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-col sm:flex-row items-end gap-2 flex-shrink-0">
                       {getStatusBadge(issue.status)}
                       {issue.autoFixable && issue.status === 'detected' && (
                         <Button

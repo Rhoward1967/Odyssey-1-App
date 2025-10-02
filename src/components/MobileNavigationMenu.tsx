@@ -8,6 +8,16 @@ import {
 
 const MobileNavigationMenu: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
+
+  // Scroll lock logic
+  React.useEffect(() => {
+    if (!isOpen) return;
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, [isOpen]);
   const location = useLocation();
   const navigate = useNavigate();
 

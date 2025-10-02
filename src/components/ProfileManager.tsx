@@ -227,7 +227,7 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({ onClose }) => {
                 <div className="flex gap-3">
                   <Button variant="outline">Change Plan</Button>
                   <Button variant="outline" className="text-red-400 border-red-400 hover:bg-red-400 hover:text-white">
-                    Cancel Subscription
+                    <span className="md:hidden">Cancel</span><span className="hidden md:inline">Cancel Subscription</span>
                   </Button>
                 </div>
               </CardContent>

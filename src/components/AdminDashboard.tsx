@@ -24,61 +24,72 @@ export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('control');
 
   return (
-    <div className="space-y-6">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold text-white mb-2">
-          ODYSSEY-1 Administrative Control Center
+    <div className="space-y-4 px-2 py-2 sm:px-4 sm:py-6 max-w-full overflow-x-hidden">
+      <div className="text-center space-y-2">
+        <h1 className="font-bold text-white mb-1 md:mb-2 break-words text-xl md:text-4xl">
+          <span className="block md:hidden">Admin Center</span>
+          <span className="hidden md:block">ODYSSEY-1 Administrative Control Center</span>
         </h1>
-        <p className="text-xl text-gray-300">
+        <p className="hidden md:block text-xl text-gray-300 break-words">
           Autonomous AI System Management & Operations
         </p>
-        <Badge className="mt-2 bg-green-600/20 text-green-300">
+        <Badge className="mt-1 md:mt-2 bg-green-600/20 text-green-300 text-xs md:text-base">
           FULLY OPERATIONAL
         </Badge>
       </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-        <TabsList className="bg-slate-800/50 grid grid-cols-5 w-full">
-          <TabsTrigger value="control" className="flex items-center gap-2">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-2 md:space-y-4">
+        <TabsList className="bg-slate-800/50 grid grid-cols-5 w-full text-xs md:text-sm">
+          <TabsTrigger value="control" className="flex flex-col items-center gap-0.5 py-1 md:py-2">
             <Settings className="w-4 h-4" />
-            Control Panel
+            <span className="md:hidden">Ctrl</span><span className="hidden md:inline">Control Panel</span>
           </TabsTrigger>
-          <TabsTrigger value="autonomous" className="flex items-center gap-2">
+          <TabsTrigger value="autonomous" className="flex flex-col items-center gap-0.5 py-1 md:py-2">
             <Brain className="w-4 h-4" />
-            Autonomous
+            <span className="md:hidden">Auto</span><span className="hidden md:inline">Autonomous</span>
           </TabsTrigger>
-          <TabsTrigger value="core" className="flex items-center gap-2">
+          <TabsTrigger value="core" className="flex flex-col items-center gap-0.5 py-1 md:py-2">
             <Zap className="w-4 h-4" />
-            ODYSSEY Core
+            <span className="md:hidden">Core</span><span className="hidden md:inline">ODYSSEY Core</span>
           </TabsTrigger>
-          <TabsTrigger value="autofix" className="flex items-center gap-2">
+          <TabsTrigger value="autofix" className="flex flex-col items-center gap-0.5 py-1 md:py-2">
             <AlertTriangle className="w-4 h-4" />
-            Auto-Fix
+            <span className="md:hidden">Fix</span><span className="hidden md:inline">Auto-Fix</span>
           </TabsTrigger>
-          <TabsTrigger value="evolution" className="flex items-center gap-2">
+          <TabsTrigger value="evolution" className="flex flex-col items-center gap-0.5 py-1 md:py-2">
             <CheckCircle className="w-4 h-4" />
-            Evolution
+            <span className="md:hidden">Evo</span><span className="hidden md:inline">Evolution</span>
           </TabsTrigger>
         </TabsList>
 
         <TabsContent value="control">
-          <AdminControlPanel />
+          <div className="w-full max-w-full overflow-x-auto">
+            <AdminControlPanel />
+          </div>
         </TabsContent>
 
         <TabsContent value="autonomous">
-          <AutonomousSystemActivator />
+          <div className="w-full max-w-full overflow-x-auto">
+            <AutonomousSystemActivator />
+          </div>
         </TabsContent>
 
         <TabsContent value="core">
-          <AutonomousOdysseyCore />
+          <div className="w-full max-w-full overflow-x-auto">
+            <AutonomousOdysseyCore />
+          </div>
         </TabsContent>
 
         <TabsContent value="autofix">
-          <AutoFixSystem />
+          <div className="w-full max-w-full overflow-x-auto">
+            <AutoFixSystem />
+          </div>
         </TabsContent>
 
         <TabsContent value="evolution">
-          <SelfEvolutionEngine />
+          <div className="w-full max-w-full overflow-x-auto">
+            <SelfEvolutionEngine />
+          </div>
         </TabsContent>
       </Tabs>
     </div>

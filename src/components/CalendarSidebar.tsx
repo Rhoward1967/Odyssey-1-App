@@ -55,7 +55,7 @@ const CalendarSidebar: React.FC<CalendarSidebarProps> = ({ onDateSelect }) => {
   const today = new Date();
 
   return (
-    <div className="h-full bg-white p-4">
+    <div className="h-full bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 p-4">
       <div className="mb-4">
         <div className="flex items-center justify-between mb-4">
           <h3 className="font-semibold flex items-center gap-2">
