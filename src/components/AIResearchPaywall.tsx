@@ -1,193 +1,137 @@
+
 import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { CreditCard, Zap, Check, Star } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { useAuth } from './AuthProvider';
 
-interface AIResearchPaywallProps {
-  onClose: () => void;
-  userEmail?: string;
-}
+// Standalone CheckoutForm for Stripe Elements
+const CheckoutForm: React.FC = () => {
+  const stripe = useStripe();
+  const elements = useElements();
+  const [error, setError] = useState<string | null>(null);
+  const [processing, setProcessing] = useState(false);
+  const [succeeded, setSucceeded] = useState(false);
 
-export default function AIResearchPaywall({ onClose, userEmail }: AIResearchPaywallProps) {
-  const [loading, setLoading] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState<'monthly' | 'yearly' | 'payperuse'>('monthly');
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    setProcessing(true);
 
-  const plans = {
-    monthly: {
-      name: 'AI Research Pro',
-      price: '$9.97',
-      period: '/month',
-      description: 'Unlimited AI research queries',
-      features: [
-        'Unlimited research queries',
-        'Advanced AI models',
-        'Priority processing',
-        'Export research data',
-        'Email support'
-      ],
-      popular: true
-    },
-    yearly: {
-      name: 'AI Research Pro Annual',
-      price: '$99.97',
-      period: '/year',
-      description: 'Save 17% with annual billing',
-      features: [
-        'Everything in monthly plan',
-        'Save $19.67 per year',
-        'Priority customer support',
-        'Early access to new features',
-        'Advanced analytics'
-      ],
-      popular: false
-    },
-    payperuse: {
-      name: 'Pay-per-Query Pack',
-      price: '$5.00',
-      period: 'for 10 queries',
-      description: 'Perfect for occasional research',
-      features: [
-        '10 research queries',
-        'No monthly commitment',
-        'Same AI quality',
-        'Valid for 30 days',
-        'Email support'
-      ],
-      popular: false
-    }
-  };
-
-  const handlePayment = async () => {
-    if (!userEmail) {
-      alert('Please sign in to continue');
+    if (!stripe || !elements) {
+      setProcessing(false);
       return;
     }
 
-    setLoading(true);
-    try {
-      if (selectedPlan === 'payperuse') {
-        // Handle pay-per-use payment
-        const { data, error } = await supabase.functions.invoke('ai-research-payment-processor', {
-          body: {
-            action: 'create-usage-payment',
-            userEmail
-          }
-        });
-
-        if (error) throw error;
-
-        // In a real app, you'd integrate with Stripe Elements here
-        console.log('Payment intent created:', data);
-        alert('Payment processing would happen here with Stripe Elements');
-        
-      } else {
-        // Handle subscription payment
-        const { data, error } = await supabase.functions.invoke('ai-research-payment-processor', {
-          body: {
-            action: 'create-checkout-session',
-            planType: selectedPlan,
-            userEmail
-          }
-        });
-
-        if (error) throw error;
-
-        // Redirect to Stripe checkout
-        if (data.url) {
-          window.location.href = data.url;
-        }
-      }
-    } catch (error) {
-      console.error('Payment error:', error);
-      alert('Payment failed. Please try again.');
-    } finally {
-      setLoading(false);
+    const cardElement = elements.getElement(CardElement);
+    if (!cardElement) {
+      setError('Card element not found.');
+      setProcessing(false);
+      return;
     }
+
+    // Create a PaymentIntent on the server and get the clientSecret.
+    const response = await fetch('/functions/v1/create-payment-intent', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ items: [{ id: 'ai-research-access' }] }), // Example payload
+    });
+
+    if (!response.ok) {
+      setError('Failed to create payment intent.');
+      setProcessing(false);
+      return;
+    }
+
+    const { clientSecret } = await response.json();
+
+    if (!clientSecret) {
+      setError('Invalid client secret received from server.');
+      setProcessing(false);
+      return;
+    }
+
+    const { error: stripeError, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+      payment_method: {
+        card: cardElement,
+      },
+    });
+
+    if (stripeError) {
+      setError(stripeError.message ?? 'An unexpected error occurred.');
+      setSucceeded(false);
+    } else if (paymentIntent?.status === 'succeeded') {
+      setError(null);
+      setSucceeded(true);
+      // TODO: Call a Supabase function to update user's subscription status.
+    }
+
+    setProcessing(false);
   };
 
-  const currentPlan = plans[selectedPlan];
+  const cardElementOptions = {
+    style: {
+      base: {
+        color: '#ffffff',
+        fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+        fontSmoothing: 'antialiased',
+        fontSize: '16px',
+        '::placeholder': {
+          color: '#aab7c4',
+        },
+      },
+      invalid: {
+        color: '#fa755a',
+        iconColor: '#fa755a',
+      },
+    },
+  };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-      <Card className="w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-        <CardHeader className="text-center">
-          <div className="w-16 h-16 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Zap className="w-8 h-8 text-white" />
-          </div>
-          <CardTitle className="text-2xl">Unlock AI Research Power</CardTitle>
-          <p className="text-gray-600">
-            You've reached your free query limit. Choose a plan to continue researching.
-          </p>
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="p-4 bg-gray-800 rounded-md">
+        <CardElement options={cardElementOptions} />
+      </div>
+      <Button
+        type="submit"
+        disabled={!stripe || processing || succeeded}
+        className="w-full"
+      >
+        {processing ? 'Processing...' : succeeded ? 'Payment Successful' : 'Pay Now'}
+      </Button>
+      {error && <div className="text-red-500 text-sm mt-2">{error}</div>}
+      {succeeded && <div className="text-green-500 text-sm mt-2">Payment successful! You now have access to AI Research features.</div>}
+    </form>
+  );
+};
+
+const AIResearchPaywall: React.FC = () => {
+  const { user } = useAuth();
+
+  if (!user) {
+    return (
+      <Card className="w-full max-w-md mx-auto bg-gray-900 text-white border-gray-700">
+        <CardHeader>
+          <CardTitle>Authentication Required</CardTitle>
+          <CardDescription>Please sign in to access AI Research features.</CardDescription>
         </CardHeader>
-        
-        <CardContent className="space-y-6">
-          <Tabs value={selectedPlan} onValueChange={(value) => setSelectedPlan(value as any)}>
-            <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="monthly">Monthly</TabsTrigger>
-              <TabsTrigger value="yearly">Annual</TabsTrigger>
-              <TabsTrigger value="payperuse">Pay-per-Use</TabsTrigger>
-            </TabsList>
+      </Card>
+    );
+  }
 
-            {Object.entries(plans).map(([key, plan]) => (
-              <TabsContent key={key} value={key}>
-                <Card className={`relative ${plan.popular ? 'ring-2 ring-purple-500' : ''}`}>
-                  {plan.popular && (
-                    <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-purple-600">
-                      <Star className="w-3 h-3 mr-1" />
-                      Most Popular
-                    </Badge>
-                  )}
-                  <CardHeader className="text-center">
-                    <CardTitle className="text-xl">{plan.name}</CardTitle>
-                    <div className="text-3xl font-bold text-purple-600">
-                      {plan.price}
-                      <span className="text-lg font-normal text-gray-500">{plan.period}</span>
-                    </div>
-                    <p className="text-gray-600">{plan.description}</p>
-                  </CardHeader>
-                  <CardContent>
-                    <ul className="space-y-3">
-                      {plan.features.map((feature, index) => (
-                        <li key={index} className="flex items-center">
-                          <Check className="w-5 h-5 text-green-500 mr-3 flex-shrink-0" />
-                          <span>{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-            ))}
-          </Tabs>
-
-          <div className="flex gap-3">
-            <Button
-              variant="outline"
-              onClick={onClose}
-              className="flex-1"
-              disabled={loading}
-            >
-              Maybe Later
-            </Button>
-            <Button
-              onClick={handlePayment}
-              className="flex-1 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
-              disabled={loading}
-            >
-              <CreditCard className="w-4 h-4 mr-2" />
-              {loading ? 'Processing...' : `Get ${currentPlan.name}`}
-            </Button>
-          </div>
-
-          <div className="text-center text-sm text-gray-500">
-            <p>Secure payment powered by Stripe</p>
-            <p>Cancel anytime • 30-day money-back guarantee</p>
-          </div>
+  return (
+    <div className="flex justify-center items-center h-full p-4">
+      <Card className="w-full max-w-md bg-gray-900 text-white border-gray-700">
+        <CardHeader>
+          <CardTitle className="text-2xl">Unlock AI Research</CardTitle>
+          <CardDescription>
+            Gain unlimited access to our powerful AI research assistant for just $10/month.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <CheckoutForm />
         </CardContent>
       </Card>
     </div>
   );
-}
+};
+

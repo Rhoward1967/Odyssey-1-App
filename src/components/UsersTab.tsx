@@ -1,10 +1,20 @@
+  // ATLAS-IMPLEMENTATION-6: Create the Handler Function for Bulk Actions
+  const handleBulkAction = async (action: string, userIds: string[]) => {
+    // TODO: Implement backend API call for the specified bulk action.
+    console.log(`Bulk action '${action}' for user IDs: ${userIds.join(', ')} to be implemented.`);
+  };
+  // ATLAS-IMPLEMENTATION-5: Create the Handler Function for Suspend Users
+  const handleSuspendUsers = async (userIds: string[]) => {
+    // TODO: Implement backend API call to suspend the specified users.
+    console.log(`Suspend users functionality for user IDs: ${userIds.join(', ')} to be implemented.`);
+  };
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Users, UserPlus, UserCheck, UserX, Activity, Shield, Mail, Phone } from 'lucide-react';
+import { Users, UserPlus, UserCheck, UserX, Activity, Shield, Mail, Phone, CheckCircle } from 'lucide-react';
 
 export default function UsersTab() {
   const [isAddUserOpen, setIsAddUserOpen] = useState(false);
@@ -15,11 +25,20 @@ export default function UsersTab() {
     role: 'user'
   });
 
+  // Placeholder: selectedUserIds state for demonstration
+  const [selectedUserIds] = useState<string[]>([]);
+
   const handleAddUser = () => {
     // Add user logic here
     console.log('Adding user:', newUser);
     setIsAddUserOpen(false);
     setNewUser({ name: '', email: '', phone: '', role: 'user' });
+  };
+
+  // ATLAS-IMPLEMENTATION-4: Create the Handler Function for Approve Users
+  const handleApproveUsers = async (userIds: string[]) => {
+    // TODO: Implement backend API call to approve the specified users.
+    console.log(`Approve users functionality for user IDs: ${userIds.join(', ')} to be implemented.`);
   };
 
   return (
@@ -75,18 +94,19 @@ export default function UsersTab() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
             <Button 
               variant="outline" 
+              size="sm"
               className="border-green-600 text-green-400 hover:bg-green-600/20"
-              onClick={() => alert('Approve Users functionality')}
+              onClick={() => handleApproveUsers(selectedUserIds)}
             >
-              <UserCheck className="w-4 h-4 mr-2" />
+              <CheckCircle className="mr-2 h-4 w-4" />
               Approve Users
             </Button>
             <Button 
-              variant="outline" 
-              className="border-red-600 text-red-400 hover:bg-red-600/20"
-              onClick={() => alert('Suspend Users functionality')}
+              variant="destructive"
+              size="sm"
+              onClick={() => handleSuspendUsers(selectedUserIds)}
             >
-              <UserX className="w-4 h-4 mr-2" />
+              <UserX className="mr-2 h-4 w-4" />
               Suspend Users
             </Button>
             
@@ -143,9 +163,10 @@ export default function UsersTab() {
             </Dialog>
             
             <Button 
-              variant="outline" 
+              variant="outline"
+              size="sm"
               className="border-purple-600 text-purple-400 hover:bg-purple-600/20"
-              onClick={() => alert('Bulk Actions functionality')}
+              onClick={() => handleBulkAction('defaultAction', selectedUserIds)}
             >
               <Users className="w-4 h-4 mr-2" />
               Bulk Actions

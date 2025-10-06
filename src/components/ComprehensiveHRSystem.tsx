@@ -7,7 +7,37 @@ import { Textarea } from './ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { Badge } from './ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
-import { Users, DollarSign, Calendar, AlertTriangle, Heart, Shield, TrendingUp } from 'lucide-react';
+import { Users, DollarSign, Calendar, AlertTriangle, Heart, Shield, TrendingUp, CalendarDays, BookUser, HeartPulse, Smile, Plane, Send } from 'lucide-react';
+  // ATLAS-IMPLEMENTATION-14: Create the Handler Function for Notify All Employees
+  const handleNotifyAll = async () => {
+    // TODO: Implement backend API call to send a policy notification to all employees.
+    console.log("Notify All Employees functionality to be implemented.");
+  };
+  // ATLAS-IMPLEMENTATION-13: Create the Handler Function for Leave Requests
+  const handleLeaveRequests = async () => {
+    // TODO: Implement logic to open the leave request management dashboard.
+    console.log("Leave Requests functionality to be implemented.");
+  };
+  // ATLAS-IMPLEMENTATION-12: Create the Handler Function for Dental Insurance
+  const handleDentalInsurance = async () => {
+    // TODO: Implement logic to open enrollment management for dental benefits.
+    console.log("Dental Insurance functionality to be implemented.");
+  };
+  // ATLAS-IMPLEMENTATION-11: Create the Handler Function for Health Insurance
+  const handleHealthInsurance = async () => {
+    // TODO: Implement logic to open enrollment management for health benefits.
+    console.log("Health Insurance functionality to be implemented.");
+  };
+  // ATLAS-IMPLEMENTATION-10: Create the Handler Function for HR Policies
+  const handleHrPolicies = async () => {
+    // TODO: Implement logic to open the policy management dashboard.
+    console.log("HR Policies functionality to be implemented.");
+  };
+  // ATLAS-IMPLEMENTATION-9: Create the Handler Function for Schedule Setup
+  const handleScheduleSetup = async () => {
+    // TODO: Implement logic to open a modal or navigate to the employee scheduling interface.
+    console.log("Schedule Setup functionality to be implemented.");
+  };
 
 const ComprehensiveHRSystem: React.FC = () => {
   // Remove fake employee data - system ready for real employees
@@ -122,17 +152,17 @@ const ComprehensiveHRSystem: React.FC = () => {
               Bulk Import
             </Button>
             <Button 
-              className="bg-purple-600 hover:bg-purple-700"
-              onClick={() => alert('Schedule Setup: Opening employee scheduling interface...')}
+              variant="outline"
+              onClick={handleScheduleSetup}
             >
-              <Calendar className="h-4 w-4 mr-2" />
+              <CalendarDays className="mr-2 h-4 w-4" />
               Schedule Setup
             </Button>
             <Button 
-              className="bg-green-600 hover:bg-green-700"
-              onClick={() => alert('HR Policies: Opening policy management dashboard...')}
+              variant="outline"
+              onClick={handleHrPolicies}
             >
-              <AlertTriangle className="h-4 w-4 mr-2" />
+              <BookUser className="mr-2 h-4 w-4" />
               HR Policies
             </Button>
           </div>
@@ -171,9 +201,13 @@ const ComprehensiveHRSystem: React.FC = () => {
                   </div>
                 </div>
                 <Button 
-                  className="w-full mt-3 bg-blue-600 hover:bg-blue-700"
-                  onClick={() => alert('Health Insurance: Opening enrollment management for health benefits...')}
-                >Manage Enrollment</Button>
+                  variant="outline"
+                  className="w-full mt-3"
+                  onClick={handleHealthInsurance}
+                >
+                  <HeartPulse className="mr-2 h-4 w-4" />
+                  Health Insurance
+                </Button>
               </CardContent>
             </Card>
 
@@ -196,9 +230,13 @@ const ComprehensiveHRSystem: React.FC = () => {
                   </div>
                 </div>
                 <Button 
-                  className="w-full mt-3 bg-blue-600 hover:bg-blue-700"
-                  onClick={() => alert('Dental Insurance: Opening enrollment management for dental benefits...')}
-                >Manage Enrollment</Button>
+                  variant="outline"
+                  className="w-full mt-3"
+                  onClick={handleDentalInsurance}
+                >
+                  <Smile className="mr-2 h-4 w-4" />
+                  Dental Insurance
+                </Button>
               </CardContent>
             </Card>
           </div>
@@ -226,11 +264,12 @@ const ComprehensiveHRSystem: React.FC = () => {
               </div>
             </div>
             <Button 
-              className="w-full bg-purple-600 hover:bg-purple-700"
-              onClick={() => alert('Leave Requests: Opening leave request management dashboard...')}
+              variant="outline"
+              className="w-full"
+              onClick={handleLeaveRequests}
             >
-              <Calendar className="h-4 w-4 mr-2" />
-              Review Leave Requests
+              <Plane className="mr-2 h-4 w-4" />
+              Leave Requests
             </Button>
           </div>
         </CardContent>
@@ -303,9 +342,11 @@ const ComprehensiveHRSystem: React.FC = () => {
               }}
             >Save Policy</Button>
             <Button 
-              className="bg-green-600 hover:bg-green-700"
-              onClick={() => alert('Policy notification sent to all employees via email and system notifications.')}
-            >Notify All Employees</Button>
+              onClick={handleNotifyAll}
+            >
+              <Send className="mr-2 h-4 w-4" />
+              Notify All Employees
+            </Button>
           </div>
         </CardContent>
       </Card>

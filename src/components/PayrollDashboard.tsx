@@ -1,10 +1,15 @@
+  // ATLAS-IMPLEMENTATION-3: Create the Handler Function for Process Payment
+  const handleProcessPayment = async (scheduleId: string) => {
+    // TODO: Implement backend API call to trigger payment processing for the specified schedule.
+    console.log(`Process payment functionality for schedule ${scheduleId} to be implemented.`);
+  };
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Calendar, DollarSign, Users, Clock, FileText, AlertTriangle, Building2, Brain } from 'lucide-react';
+import { Calendar, DollarSign, Users, Clock, FileText, AlertTriangle, Building2, Brain, Download, Bot } from 'lucide-react';
 import DirectDepositManager from './DirectDepositManager';
 import AIPayrollProcessor from './AIPayrollProcessor';
 import PayrollTutorialBot from './PayrollTutorialBot';
@@ -27,6 +32,18 @@ export default function PayrollDashboard() {
   const paySchedules: any[] = [];
   const complianceItems: any[] = [];
 
+  // Step 2.2: Create the Handler Function
+  const handleExportReports = async () => {
+    // TODO: Implement backend API call to generate and download payroll reports.
+    console.log("Export reports functionality to be implemented.");
+  };
+
+  // ATLAS-IMPLEMENTATION-2: Create the Handler Function for AI Payroll
+  const handleAiProcessPayroll = async () => {
+    // TODO: Implement backend API call to trigger AI-driven payroll processing.
+    console.log("AI payroll processing functionality to be implemented.");
+  };
+
   return (
     <div className="p-6 space-y-6">
       <div className="flex justify-between items-center">
@@ -42,12 +59,12 @@ export default function PayrollDashboard() {
               <SelectItem value="ytd">Year to Date</SelectItem>
             </SelectContent>
           </Select>
-          <Button variant="outline" onClick={() => alert('Export functionality will be implemented')}>
-            <FileText className="w-4 h-4 mr-2" />
+          <Button variant="outline" onClick={handleExportReports}>
+            <Download className="mr-2 h-4 w-4" />
             Export Reports
           </Button>
-          <Button onClick={() => alert('AI Payroll processing will be implemented')}>
-            <Brain className="w-4 h-4 mr-2" />
+          <Button onClick={handleAiProcessPayroll}>
+            <Bot className="mr-2 h-4 w-4" />
             AI Process Payroll
           </Button>
         </div>
@@ -189,7 +206,9 @@ export default function PayrollDashboard() {
                     </div>
                     <div className="text-right">
                       <p className="text-2xl font-bold">${schedule.amount.toLocaleString()}</p>
-                      <Button size="sm" className="mt-2">Process Payment</Button>
+                      <Button size="sm" className="mt-2" onClick={() => handleProcessPayment(schedule.id)}>
+                        Process Payment
+                      </Button>
                     </div>
                   </div>
                 </CardContent>

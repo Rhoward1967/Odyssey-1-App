@@ -1,3 +1,20 @@
+// Stripe Client Initialization (CHIMERA-1)
+import { Stripe, loadStripe } from '@stripe/stripe-js';
+
+const stripePublicKey = import.meta.env.VITE_STRIPE_PUBLIC_KEY;
+
+if (!stripePublicKey) {
+  throw new Error("VITE_STRIPE_PUBLIC_KEY is not set in the environment.");
+}
+
+let stripePromise: Promise<Stripe | null>;
+
+export const getStripe = () => {
+  if (!stripePromise) {
+    stripePromise = loadStripe(stripePublicKey);
+  }
+  return stripePromise;
+};
 // Stripe Product Configuration
 export const STRIPE_PRODUCTS = {
   basic: {

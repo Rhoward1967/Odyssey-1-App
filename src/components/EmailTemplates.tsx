@@ -96,7 +96,7 @@ export default function EmailTemplates({ onSelectTemplate }: EmailTemplatesProps
             <h2>Get 50% Off Your Next Purchase</h2>
             <p>Don't miss out on this incredible deal! Use code <strong>SAVE50</strong> at checkout.</p>
             <div style="text-align: center; margin: 30px 0;">
-              <a href="#" style="background: #2563eb; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold;">Shop Now</a>
+              <a href={template.ctaUrl || '#'} style="background: #2563eb; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold;">Shop Now</a>
             </div>
             <p><em>Offer expires in 48 hours. Terms and conditions apply.</em></p>
           </div>
