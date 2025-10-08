@@ -5,9 +5,10 @@ import Stripe from 'https://esm.sh/stripe@10.12.0?target=deno&no-check';
 
 // Get secret key safely for both Deno and Edge runtime
 // @ts-expect-error: Deno global is available at runtime in Supabase Edge Functions
-const STRIPE_SECRET_KEY = typeof Deno !== 'undefined' && Deno.env && typeof Deno.env.get === 'function'
-  ? Deno.env.get('STRIPE_SECRET_KEY')
-  : undefined;
+const STRIPE_SECRET_KEY =
+  typeof Deno !== 'undefined' && Deno.env && typeof Deno.env.get === 'function'
+    ? Deno.env.get('STRIPE_SECRET_KEY')
+    : undefined;
 
 if (!STRIPE_SECRET_KEY) {
   throw new Error('STRIPE_SECRET_KEY is not set in the environment.');
@@ -41,7 +42,12 @@ serve(async (req: Request): Promise<Response> => {
     );
   } catch (error) {
     let message = 'Unknown error';
-    if (error && typeof error === 'object' && 'message' in error && typeof (error as any).message === 'string') {
+    if (
+      error &&
+      typeof error === 'object' &&
+      'message' in error &&
+      typeof (error as any).message === 'string'
+    ) {
       message = (error as any).message;
     }
     return new Response(JSON.stringify({ error: message }), {
