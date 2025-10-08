@@ -1,5 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Button } from './ui/button';
 import { Textarea } from './ui/textarea';
 import { ScrollArea } from './ui/scroll-area';
@@ -25,7 +31,7 @@ const AIResearchAssistant = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [canQuery, setCanQuery] = useState(false);
-  
+
   const scrollAreaRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -34,18 +40,18 @@ const AIResearchAssistant = () => {
         setCanQuery(true);
         return; // Bypass all checks for super admin
       }
-      
+
       if (user) {
         // In a real app, you would fetch usage limits from your database here.
-        setCanQuery(true); 
+        setCanQuery(true);
       } else {
         setCanQuery(false);
-        setError("You must be signed in to use the AI Research Assistant.");
+        setError('You must be signed in to use the AI Research Assistant.');
       }
     };
     checkUsageStatus();
   }, [user, isSuperAdmin]);
-  
+
   useEffect(() => {
     if (scrollAreaRef.current) {
       scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight;
@@ -56,31 +62,42 @@ const AIResearchAssistant = () => {
     if (!query.trim() || isLoading || !canQuery) return;
 
     const userMessage: Message = { sender: 'user', text: query };
-    setMessages((prev) => [...prev, userMessage]);
+    setMessages(prev => [...prev, userMessage]);
     setIsLoading(true);
     setError(null);
     setQuery('');
 
     try {
       // --- LIVE AI BACKEND CALL ---
-      const { data, error: funcError } = await supabase.functions.invoke('ai-assistant-chat', {
-        body: { query },
-      });
+      const { data, error: funcError } = await supabase.functions.invoke(
+        'ai-assistant-chat',
+        {
+          body: { query },
+        }
+      );
 
       if (funcError) {
         throw new Error(funcError.message);
       }
 
       // Assuming the function returns an object like { reply: "..." }
-      const botResponse: Message = { sender: 'bot', text: data.reply || "Sorry, I couldn't generate a response." };
-      setMessages((prev) => [...prev, botResponse]);
-
+      const botResponse: Message = {
+        sender: 'bot',
+        text: data.reply || "Sorry, I couldn't generate a response.",
+      };
+      setMessages(prev => [...prev, botResponse]);
     } catch (err: any) {
-      console.error("Error invoking AI function:", err);
-      const errorText = err.context?.body?.message || err.message || 'An unknown error occurred.';
+      console.error('Error invoking AI function:', err);
+      const errorText =
+        err.context?.body?.message ||
+        err.message ||
+        'An unknown error occurred.';
       setError(errorText);
-      const errorMessage: Message = { sender: 'bot', text: `Sorry, an error occurred: ${errorText}` };
-      setMessages((prev) => [...prev, errorMessage]);
+      const errorMessage: Message = {
+        sender: 'bot',
+        text: `Sorry, an error occurred: ${errorText}`,
+      };
+      setMessages(prev => [...prev, errorMessage]);
     } finally {
       setIsLoading(false);
     }
@@ -94,32 +111,41 @@ const AIResearchAssistant = () => {
   };
 
   return (
-    <Card className="w-full max-w-2xl mx-auto h-[70vh] flex flex-col">
+    <Card className='w-full max-w-2xl mx-auto h-[70vh] flex flex-col'>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
+        <CardTitle className='flex items-center gap-2'>
           <Bot /> AI Research Assistant
         </CardTitle>
       </CardHeader>
-      <CardContent className="flex-grow overflow-hidden">
-        <ScrollArea className="h-full pr-4" ref={scrollAreaRef as any}>
-          <div className="space-y-4">
+      <CardContent className='flex-grow overflow-hidden'>
+        <ScrollArea className='h-full pr-4' ref={scrollAreaRef as any}>
+          <div className='space-y-4'>
             {messages.map((msg, index) => (
-              <div key={index} className={`flex items-start gap-3 ${msg.sender === 'user' ? 'justify-end' : ''}`}>
-                {msg.sender === 'bot' && <Bot className="h-6 w-6 text-gray-500" />}
-                <div className={`p-3 rounded-lg max-w-[80%] ${msg.sender === 'user' ? 'bg-blue-500 text-white' : 'bg-gray-100 dark:bg-gray-800'}`}>
-                  <p className="text-sm whitespace-pre-wrap">{msg.text}</p>
+              <div
+                key={index}
+                className={`flex items-start gap-3 ${msg.sender === 'user' ? 'justify-end' : ''}`}
+              >
+                {msg.sender === 'bot' && (
+                  <Bot className='h-6 w-6 text-gray-500' />
+                )}
+                <div
+                  className={`p-3 rounded-lg max-w-[80%] ${msg.sender === 'user' ? 'bg-blue-500 text-white' : 'bg-gray-100 dark:bg-gray-800'}`}
+                >
+                  <p className='text-sm whitespace-pre-wrap'>{msg.text}</p>
                 </div>
-                {msg.sender === 'user' && <User className="h-6 w-6 text-gray-500" />}
+                {msg.sender === 'user' && (
+                  <User className='h-6 w-6 text-gray-500' />
+                )}
               </div>
             ))}
             {isLoading && (
-              <div className="flex items-start gap-3">
-                <Bot className="h-6 w-6 text-gray-500" />
-                <div className="p-3 rounded-lg bg-gray-100 dark:bg-gray-800">
-                  <div className="flex items-center gap-2">
-                    <span className="h-2 w-2 bg-gray-400 rounded-full animate-pulse delay-0"></span>
-                    <span className="h-2 w-2 bg-gray-400 rounded-full animate-pulse delay-150"></span>
-                    <span className="h-2 w-2 bg-gray-400 rounded-full animate-pulse delay-300"></span>
+              <div className='flex items-start gap-3'>
+                <Bot className='h-6 w-6 text-gray-500' />
+                <div className='p-3 rounded-lg bg-gray-100 dark:bg-gray-800'>
+                  <div className='flex items-center gap-2'>
+                    <span className='h-2 w-2 bg-gray-400 rounded-full animate-pulse delay-0'></span>
+                    <span className='h-2 w-2 bg-gray-400 rounded-full animate-pulse delay-150'></span>
+                    <span className='h-2 w-2 bg-gray-400 rounded-full animate-pulse delay-300'></span>
                   </div>
                 </div>
               </div>
@@ -128,27 +154,33 @@ const AIResearchAssistant = () => {
         </ScrollArea>
       </CardContent>
       <CardFooter>
-        <div className="w-full relative">
+        <div className='w-full relative'>
           <Textarea
-            placeholder={canQuery ? "Type your research query..." : "Please sign in or upgrade your plan to ask questions."}
+            placeholder={
+              canQuery
+                ? 'Type your research query...'
+                : 'Please sign in or upgrade your plan to ask questions.'
+            }
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={e => setQuery(e.target.value)}
             onKeyDown={handleKeyDown}
-            className="pr-20"
+            className='pr-20'
             disabled={isLoading || !canQuery}
           />
           <Button
-            type="submit"
-            size="icon"
-            className="absolute top-1/2 right-3 -translate-y-1/2"
+            type='submit'
+            size='icon'
+            className='absolute top-1/2 right-3 -translate-y-1/2'
             onClick={handleSearch}
             disabled={isLoading || !query.trim() || !canQuery}
           >
-            <CornerDownLeft className="h-4 w-4" />
+            <CornerDownLeft className='h-4 w-4' />
           </Button>
-          {error && <p className="text-red-500 text-xs mt-2">{error}</p>}
+          {error && <p className='text-red-500 text-xs mt-2'>{error}</p>}
           {!isSuperAdmin && !canQuery && user && (
-             <p className="text-yellow-500 text-xs mt-2">You have reached your query limit for this period.</p>
+            <p className='text-yellow-500 text-xs mt-2'>
+              You have reached your query limit for this period.
+            </p>
           )}
         </div>
       </CardFooter>

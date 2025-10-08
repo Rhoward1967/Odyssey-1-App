@@ -1,4 +1,10 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from 'react';
 import { supabase } from '@/lib/supabase';
 import { User, Session } from '@supabase/supabase-js';
 
@@ -25,12 +31,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     // --- DEVELOPER BYPASS LOGIC ---
     if (ARCHITECT_EMAIL) {
-      console.warn(`%cARCHITECT MODE ACTIVE: Simulating super admin login for ${ARCHITECT_EMAIL}`, 'color: yellow; font-weight: bold;');
-      const architectUser = { id: 'architect-bypass-uuid', email: ARCHITECT_EMAIL } as User;
+      console.warn(
+        `%cARCHITECT MODE ACTIVE: Simulating super admin login for ${ARCHITECT_EMAIL}`,
+        'color: yellow; font-weight: bold;'
+      );
+      const architectUser = {
+        id: 'architect-bypass-uuid',
+        email: ARCHITECT_EMAIL,
+      } as User;
       setUser(architectUser);
       setIsSuperAdmin(true);
       setLoading(false);
-      return; 
+      return;
     }
 
     // --- STANDARD AUTHENTICATION FLOW ---
@@ -44,7 +56,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           if (error) throw error;
           setIsSuperAdmin(isAdmin);
         } catch (error) {
-          console.error("Error checking super admin status:", error);
+          console.error('Error checking super admin status:', error);
           setIsSuperAdmin(false);
         }
       } else {
@@ -57,7 +69,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       checkSessionAndSetUser(session);
     });
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
       checkSessionAndSetUser(session);
     });
 
@@ -118,7 +132,7 @@ const MASTER_USER: AuthUser = {
   aud: 'authenticated',
   created_at: new Date().toISOString(),
   app_metadata: {},
-  user_metadata: { name: 'Rickey A. Howard', role: 'master' }
+  user_metadata: { name: 'Rickey A. Howard', role: 'master' },
 };
 
 interface AuthProviderProps {
@@ -138,19 +152,21 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setUser({
           ...session.user,
           role: session.user.user_metadata?.role || 'user',
-          name: session.user.user_metadata?.name || session.user.email
+          name: session.user.user_metadata?.name || session.user.email,
         });
       }
     });
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
       setSession(session);
       if (session?.user) {
         setUser({
           ...session.user,
           role: session.user.user_metadata?.role || 'user',
-          name: session.user.user_metadata?.name || session.user.email
+          name: session.user.user_metadata?.name || session.user.email,
         });
       } else {
         setUser(MASTER_USER); // Fallback to master
@@ -165,7 +181,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
-        password
+        password,
       });
       if (error) throw error;
     } catch (error) {
@@ -184,8 +200,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         email,
         password,
         options: {
-          data: { name, role: 'user' }
-        }
+          data: { name, role: 'user' },
+        },
       });
       if (error) throw error;
     } catch (error) {
@@ -212,12 +228,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     signUp,
     signOut,
     isMaster: user?.role === 'master' || user?.id === 'master-rickey-howard',
-    session
+    session,
   };
 
   return (
-    <AuthContext.Provider value={authValue}>
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={authValue}>{children}</AuthContext.Provider>
   );
 };
