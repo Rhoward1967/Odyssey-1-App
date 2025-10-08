@@ -11,7 +11,14 @@ const Input = (props) => <input {...props} />;
 const Label = ({ children, ...props }) => <label {...props}>{children}</label>;
 const Select = ({ children, ...props }) => <select {...props}>{children}</select>;
 
-export default function AppointmentForm({ onSubmit, initialData = {} }) {
+interface AppointmentData {
+  title?: string;
+  status?: string;
+  start_time?: string;
+  end_time?: string;
+}
+
+export default function AppointmentForm({ onSubmit, initialData = {} }: { onSubmit: (data: any) => void; initialData?: AppointmentData }) {
   const [title, setTitle] = useState(initialData.title || '');
   const [status, setStatus] = useState(initialData.status || 'Confirmed');
   const [startTime, setStartTime] = useState<Date | undefined>(initialData.start_time ? new Date(initialData.start_time) : undefined);

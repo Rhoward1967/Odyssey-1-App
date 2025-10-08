@@ -4,7 +4,8 @@ import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 // Set your SendGrid API key in the environment as SENDGRID_API_KEY
 
 const SENDGRID_API_KEY = Deno.env.get('SENDGRID_API_KEY');
-const FROM_EMAIL = Deno.env.get('SENDGRID_FROM_EMAIL') || 'no-reply@example.com';
+const FROM_EMAIL =
+  Deno.env.get('SENDGRID_FROM_EMAIL') || 'no-reply@example.com';
 
 if (!SENDGRID_API_KEY) {
   throw new Error('SENDGRID_API_KEY is not set in the environment.');
@@ -16,7 +17,9 @@ serve(async (req: Request): Promise<Response> => {
   }
 
   try {
-    let to: string | undefined, subject: string | undefined, content: string | undefined;
+    let to: string | undefined,
+      subject: string | undefined,
+      content: string | undefined;
     try {
       const body = await req.json();
       if (typeof body !== 'object' || body === null) {
@@ -51,7 +54,7 @@ serve(async (req: Request): Promise<Response> => {
     const resp = await fetch('https://api.sendgrid.com/v3/mail/send', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${SENDGRID_API_KEY}`,
+        Authorization: `Bearer ${SENDGRID_API_KEY}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(emailData),

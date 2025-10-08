@@ -3,7 +3,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { User, Wrench, FileText } from 'lucide-react';
 
@@ -37,7 +43,7 @@ const SimpleBidderForm: React.FC<SimpleBidderFormProps> = ({ onSubmit }) => {
     phone: '',
     city: '',
     state: '',
-    zipcode: ''
+    zipcode: '',
   });
 
   const [serviceSpecs, setServiceSpecs] = useState<ServiceSpecs>({
@@ -45,17 +51,31 @@ const SimpleBidderForm: React.FC<SimpleBidderFormProps> = ({ onSubmit }) => {
     frequency: '',
     contractType: 'monthly',
     squareFootage: '',
-    specialRequirements: []
+    specialRequirements: [],
   });
 
   const availableServices = [
-    'Standard Office Cleaning', 'Premium Office Cleaning', 'Executive Office Suite',
-    'Medical Facility Cleaning', 'Dental Office Cleaning', 'Hospital Cleaning',
-    'School Cleaning', 'University Cleaning', 'Daycare Center Cleaning',
-    'Retail Store Cleaning', 'Restaurant Cleaning', 'Hotel Cleaning',
-    'Warehouse Cleaning', 'Manufacturing Facility', 'Government Building',
-    'Post-Construction Cleanup', 'Deep Cleaning Service', 'Carpet Cleaning',
-    'Floor Stripping & Waxing', 'Window Cleaning', 'Pressure Washing'
+    'Standard Office Cleaning',
+    'Premium Office Cleaning',
+    'Executive Office Suite',
+    'Medical Facility Cleaning',
+    'Dental Office Cleaning',
+    'Hospital Cleaning',
+    'School Cleaning',
+    'University Cleaning',
+    'Daycare Center Cleaning',
+    'Retail Store Cleaning',
+    'Restaurant Cleaning',
+    'Hotel Cleaning',
+    'Warehouse Cleaning',
+    'Manufacturing Facility',
+    'Government Building',
+    'Post-Construction Cleanup',
+    'Deep Cleaning Service',
+    'Carpet Cleaning',
+    'Floor Stripping & Waxing',
+    'Window Cleaning',
+    'Pressure Washing',
   ];
 
   const specialRequirements = [
@@ -68,7 +88,7 @@ const SimpleBidderForm: React.FC<SimpleBidderFormProps> = ({ onSubmit }) => {
     'Food service area cleaning',
     'Computer/electronics cleaning',
     'Biohazard handling capability',
-    'OSHA compliance required'
+    'OSHA compliance required',
   ];
 
   const frequencyOptions = [
@@ -76,7 +96,7 @@ const SimpleBidderForm: React.FC<SimpleBidderFormProps> = ({ onSubmit }) => {
     { value: 'weekly', label: 'Weekly' },
     { value: 'bi-weekly', label: 'Bi-Weekly' },
     { value: 'monthly', label: 'Monthly' },
-    { value: 'one-time', label: 'One-time Service' }
+    { value: 'one-time', label: 'One-time Service' },
   ];
 
   const handleServiceToggle = (service: string) => {
@@ -84,7 +104,7 @@ const SimpleBidderForm: React.FC<SimpleBidderFormProps> = ({ onSubmit }) => {
       ...prev,
       services: prev.services.includes(service)
         ? prev.services.filter(s => s !== service)
-        : [...prev.services, service]
+        : [...prev.services, service],
     }));
   };
 
@@ -93,7 +113,7 @@ const SimpleBidderForm: React.FC<SimpleBidderFormProps> = ({ onSubmit }) => {
       ...prev,
       specialRequirements: prev.specialRequirements.includes(requirement)
         ? prev.specialRequirements.filter(r => r !== requirement)
-        : [...prev.specialRequirements, requirement]
+        : [...prev.specialRequirements, requirement],
     }));
   };
 
@@ -103,148 +123,188 @@ const SimpleBidderForm: React.FC<SimpleBidderFormProps> = ({ onSubmit }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <Card className="bg-slate-800/50 border-slate-700">
+    <form onSubmit={handleSubmit} className='space-y-6'>
+      <Card className='bg-slate-800/50 border-slate-700'>
         <CardHeader>
-          <CardTitle className="text-white flex items-center">
-            <User className="w-5 h-5 mr-2" />
+          <CardTitle className='text-white flex items-center'>
+            <User className='w-5 h-5 mr-2' />
             Bidder Information
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
+        <CardContent className='space-y-4'>
+          <div className='grid grid-cols-2 gap-4'>
             <div>
-              <Label htmlFor="name" className="text-slate-300">Full Name</Label>
+              <Label htmlFor='name' className='text-slate-300'>
+                Full Name
+              </Label>
               <Input
-                id="name"
+                id='name'
                 required
                 value={bidderInfo.name}
-                onChange={(e) => setBidderInfo({...bidderInfo, name: e.target.value})}
-                className="bg-slate-700 border-slate-600 text-white"
-                placeholder="John Doe"
+                onChange={e =>
+                  setBidderInfo({ ...bidderInfo, name: e.target.value })
+                }
+                className='bg-slate-700 border-slate-600 text-white'
+                placeholder='John Doe'
               />
             </div>
             <div>
-              <Label htmlFor="email" className="text-slate-300">Email</Label>
+              <Label htmlFor='email' className='text-slate-300'>
+                Email
+              </Label>
               <Input
-                id="email"
-                type="email"
+                id='email'
+                type='email'
                 required
                 value={bidderInfo.email}
-                onChange={(e) => setBidderInfo({...bidderInfo, email: e.target.value})}
-                className="bg-slate-700 border-slate-600 text-white"
-                placeholder="john@example.com"
+                onChange={e =>
+                  setBidderInfo({ ...bidderInfo, email: e.target.value })
+                }
+                className='bg-slate-700 border-slate-600 text-white'
+                placeholder='john@example.com'
               />
             </div>
           </div>
 
           <div>
-            <Label htmlFor="address" className="text-slate-300">Address</Label>
+            <Label htmlFor='address' className='text-slate-300'>
+              Address
+            </Label>
             <Input
-              id="address"
+              id='address'
               required
               value={bidderInfo.address}
-              onChange={(e) => setBidderInfo({...bidderInfo, address: e.target.value})}
-              className="bg-slate-700 border-slate-600 text-white"
-              placeholder="123 Main Street"
+              onChange={e =>
+                setBidderInfo({ ...bidderInfo, address: e.target.value })
+              }
+              className='bg-slate-700 border-slate-600 text-white'
+              placeholder='123 Main Street'
             />
           </div>
 
-          <div className="grid grid-cols-3 gap-4">
+          <div className='grid grid-cols-3 gap-4'>
             <div>
-              <Label htmlFor="city" className="text-slate-300">City</Label>
+              <Label htmlFor='city' className='text-slate-300'>
+                City
+              </Label>
               <Input
-                id="city"
+                id='city'
                 required
                 value={bidderInfo.city}
-                onChange={(e) => setBidderInfo({...bidderInfo, city: e.target.value})}
-                className="bg-slate-700 border-slate-600 text-white"
-                placeholder="New York"
+                onChange={e =>
+                  setBidderInfo({ ...bidderInfo, city: e.target.value })
+                }
+                className='bg-slate-700 border-slate-600 text-white'
+                placeholder='New York'
               />
             </div>
             <div>
-              <Label htmlFor="state" className="text-slate-300">State</Label>
+              <Label htmlFor='state' className='text-slate-300'>
+                State
+              </Label>
               <Input
-                id="state"
+                id='state'
                 required
                 value={bidderInfo.state}
-                onChange={(e) => setBidderInfo({...bidderInfo, state: e.target.value})}
-                className="bg-slate-700 border-slate-600 text-white"
-                placeholder="NY"
+                onChange={e =>
+                  setBidderInfo({ ...bidderInfo, state: e.target.value })
+                }
+                className='bg-slate-700 border-slate-600 text-white'
+                placeholder='NY'
               />
             </div>
             <div>
-              <Label htmlFor="zipcode" className="text-slate-300">Zip Code</Label>
+              <Label htmlFor='zipcode' className='text-slate-300'>
+                Zip Code
+              </Label>
               <Input
-                id="zipcode"
+                id='zipcode'
                 required
                 value={bidderInfo.zipcode}
-                onChange={(e) => setBidderInfo({...bidderInfo, zipcode: e.target.value})}
-                className="bg-slate-700 border-slate-600 text-white"
-                placeholder="10001"
+                onChange={e =>
+                  setBidderInfo({ ...bidderInfo, zipcode: e.target.value })
+                }
+                className='bg-slate-700 border-slate-600 text-white'
+                placeholder='10001'
               />
             </div>
           </div>
 
           <div>
-            <Label htmlFor="phone" className="text-slate-300">Phone</Label>
+            <Label htmlFor='phone' className='text-slate-300'>
+              Phone
+            </Label>
             <Input
-              id="phone"
+              id='phone'
               required
               value={bidderInfo.phone}
-              onChange={(e) => setBidderInfo({...bidderInfo, phone: e.target.value})}
-              className="bg-slate-700 border-slate-600 text-white"
-              placeholder="(555) 123-4567"
+              onChange={e =>
+                setBidderInfo({ ...bidderInfo, phone: e.target.value })
+              }
+              className='bg-slate-700 border-slate-600 text-white'
+              placeholder='(555) 123-4567'
             />
           </div>
         </CardContent>
       </Card>
 
-      <Card className="bg-slate-800/50 border-slate-700">
+      <Card className='bg-slate-800/50 border-slate-700'>
         <CardHeader>
-          <CardTitle className="text-white flex items-center">
-            <Wrench className="w-5 h-5 mr-2" />
+          <CardTitle className='text-white flex items-center'>
+            <Wrench className='w-5 h-5 mr-2' />
             Service Requirements
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-6">
+        <CardContent className='space-y-6'>
           <div>
-            <Label className="text-slate-300 mb-3 block">Services Required (Select all that apply)</Label>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 max-h-60 overflow-y-auto">
+            <Label className='text-slate-300 mb-3 block'>
+              Services Required (Select all that apply)
+            </Label>
+            <div className='grid grid-cols-1 lg:grid-cols-2 gap-2 max-h-60 overflow-y-auto'>
               {availableServices.map(service => (
-                <div key={service} className="flex items-center space-x-2">
+                <div key={service} className='flex items-center space-x-2'>
                   <Checkbox
                     id={service}
                     checked={serviceSpecs.services.includes(service)}
                     onCheckedChange={() => handleServiceToggle(service)}
                   />
-                  <Label htmlFor={service} className="text-sm text-slate-300">{service}</Label>
+                  <Label htmlFor={service} className='text-sm text-slate-300'>
+                    {service}
+                  </Label>
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <div className='grid grid-cols-1 lg:grid-cols-3 gap-4'>
             <div>
-              <Label className="text-slate-300">Square Footage</Label>
+              <Label className='text-slate-300'>Square Footage</Label>
               <Input
-                placeholder="Total square footage"
+                placeholder='Total square footage'
                 value={serviceSpecs.squareFootage}
-                onChange={(e) => setServiceSpecs({...serviceSpecs, squareFootage: e.target.value})}
-                className="bg-slate-700 border-slate-600 text-white"
+                onChange={e =>
+                  setServiceSpecs({
+                    ...serviceSpecs,
+                    squareFootage: e.target.value,
+                  })
+                }
+                className='bg-slate-700 border-slate-600 text-white'
               />
             </div>
 
             <div>
-              <Label className="text-slate-300">Service Frequency</Label>
-              <Select value={serviceSpecs.frequency} onValueChange={(value) => 
-                setServiceSpecs({...serviceSpecs, frequency: value})
-              }>
-                <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
-                  <SelectValue placeholder="Select frequency" />
+              <Label className='text-slate-300'>Service Frequency</Label>
+              <Select
+                value={serviceSpecs.frequency}
+                onValueChange={value =>
+                  setServiceSpecs({ ...serviceSpecs, frequency: value })
+                }
+              >
+                <SelectTrigger className='bg-slate-700 border-slate-600 text-white'>
+                  <SelectValue placeholder='Select frequency' />
                 </SelectTrigger>
                 <SelectContent>
-                  {frequencyOptions.map((option) => (
+                  {frequencyOptions.map(option => (
                     <SelectItem key={option.value} value={option.value}>
                       {option.label}
                     </SelectItem>
@@ -252,45 +312,61 @@ const SimpleBidderForm: React.FC<SimpleBidderFormProps> = ({ onSubmit }) => {
                 </SelectContent>
               </Select>
             </div>
-            
+
             <div>
-              <Label className="text-slate-300">Contract Type</Label>
-              <Select value={serviceSpecs.contractType} onValueChange={(value: 'one-time' | 'monthly') => 
-                setServiceSpecs({...serviceSpecs, contractType: value})
-              }>
-                <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
-                  <SelectValue placeholder="Select contract type" />
+              <Label className='text-slate-300'>Contract Type</Label>
+              <Select
+                value={serviceSpecs.contractType}
+                onValueChange={(value: 'one-time' | 'monthly') =>
+                  setServiceSpecs({ ...serviceSpecs, contractType: value })
+                }
+              >
+                <SelectTrigger className='bg-slate-700 border-slate-600 text-white'>
+                  <SelectValue placeholder='Select contract type' />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="one-time">One-time Service</SelectItem>
-                  <SelectItem value="monthly">Monthly Contract</SelectItem>
+                  <SelectItem value='one-time'>One-time Service</SelectItem>
+                  <SelectItem value='monthly'>Monthly Contract</SelectItem>
                 </SelectContent>
               </Select>
             </div>
           </div>
 
           <div>
-            <Label className="text-slate-300 mb-3 block">Special Requirements (Select all that apply)</Label>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+            <Label className='text-slate-300 mb-3 block'>
+              Special Requirements (Select all that apply)
+            </Label>
+            <div className='grid grid-cols-1 lg:grid-cols-2 gap-2'>
               {specialRequirements.map(requirement => (
-                <div key={requirement} className="flex items-center space-x-2">
+                <div key={requirement} className='flex items-center space-x-2'>
                   <Checkbox
                     id={requirement}
-                    checked={serviceSpecs.specialRequirements.includes(requirement)}
+                    checked={serviceSpecs.specialRequirements.includes(
+                      requirement
+                    )}
                     onCheckedChange={() => handleRequirementToggle(requirement)}
                   />
-                  <Label htmlFor={requirement} className="text-sm text-slate-300">{requirement}</Label>
+                  <Label
+                    htmlFor={requirement}
+                    className='text-sm text-slate-300'
+                  >
+                    {requirement}
+                  </Label>
                 </div>
               ))}
             </div>
           </div>
 
-          <Button 
-            type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700"
-            disabled={!bidderInfo.name || !bidderInfo.email || serviceSpecs.services.length === 0}
+          <Button
+            type='submit'
+            className='w-full bg-blue-600 hover:bg-blue-700'
+            disabled={
+              !bidderInfo.name ||
+              !bidderInfo.email ||
+              serviceSpecs.services.length === 0
+            }
           >
-            <FileText className="w-4 h-4 mr-2" />
+            <FileText className='w-4 h-4 mr-2' />
             Submit to Odyssey-1 for Processing
           </Button>
         </CardContent>

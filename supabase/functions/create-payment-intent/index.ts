@@ -1,6 +1,6 @@
 // Add Deno global type for TypeScript (Edge Functions)
 // @ts-ignore
-declare const Deno: typeof import('deno')['Deno'];
+declare const Deno: (typeof import('deno'))['Deno'];
 // @ts-expect-error: Supabase Edge Functions provide global serve and Deno types at runtime
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 // @ts-expect-error: Stripe import for Deno Edge Functions, types provided at runtime
