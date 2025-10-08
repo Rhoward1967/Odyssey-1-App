@@ -6,11 +6,12 @@ import { format } from 'date-fns';
 // For this fix, we are ensuring the component structure is valid.
 
 // Mock UI components for structure validation
-const Button = ({ children, ...props }) => <button {...props}>{children}</button>;
-const Input = (props) => <input {...props} />;
-const Label = ({ children, ...props }) => <label {...props}>{children}</label>;
-const Select = ({ children, ...props }) => <select {...props}>{children}</select>;
+const Button = ({ children, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) => <button {...props}>{children}</button>;
+const Input = (props: React.InputHTMLAttributes<HTMLInputElement>) => <input {...props} />;
+const Label = ({ children, ...props }: React.LabelHTMLAttributes<HTMLLabelElement>) => <label {...props}>{children}</label>;
+const Select = ({ children, ...props }: React.SelectHTMLAttributes<HTMLSelectElement>) => <select {...props}>{children}</select>;
 
+// Define a type for the initial data to ensure type safety
 interface AppointmentData {
   title?: string;
   status?: string;
@@ -18,7 +19,13 @@ interface AppointmentData {
   end_time?: string;
 }
 
-export default function AppointmentForm({ onSubmit, initialData = {} }: { onSubmit: (data: any) => void; initialData?: AppointmentData }) {
+// Define the types for the component's props
+interface AppointmentFormProps {
+  onSubmit: (formData: { title: string; status: string; start_time: string; end_time: string }) => void;
+  initialData?: AppointmentData;
+}
+
+export default function AppointmentForm({ onSubmit, initialData = {} }: AppointmentFormProps) {
   const [title, setTitle] = useState(initialData.title || '');
   const [status, setStatus] = useState(initialData.status || 'Confirmed');
   const [startTime, setStartTime] = useState<Date | undefined>(initialData.start_time ? new Date(initialData.start_time) : undefined);
@@ -110,5 +117,5 @@ export default function AppointmentForm({ onSubmit, initialData = {} }: { onSubm
       </div>
     </form>
   );
-} // The extra brace was here, now it is removed.
+}
 
