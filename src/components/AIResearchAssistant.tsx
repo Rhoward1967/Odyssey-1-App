@@ -36,6 +36,7 @@ export default function AIResearchAssistant() {
   }, []);
   const [error, setError] = useState<string | null>(null);
 
+  // Patched: Always allow queries for authenticated users (owner override)
   const checkUsageStatus = async () => {
     try {
       const {
@@ -51,7 +52,25 @@ export default function AIResearchAssistant() {
       setIsAuthenticated(true);
       setAuthError(null);
 
-      // Try to get user's subscription tier (with fallback for missing table)
+      // Check for super admin role (from user metadata or RLS claim)
+      // Adjust this logic to match your actual RLS/role storage
+      const isSuperAdmin =
+        user.role === 'super_admin' ||
+        user.app_metadata?.role === 'super_admin' ||
+        (user.user_metadata && user.user_metadata.role === 'super_admin');
+
+      if (isSuperAdmin) {
+        setUsage({
+          tier: 'super_admin',
+          free_queries_remaining: Infinity,
+          pro_queries_remaining: Infinity,
+          ultimate_queries_remaining: Infinity,
+        });
+        setCanQuery(true);
+        return;
+      }
+
+      // Fallback to original usage/tier logic for regular users
       try {
         const { data: subscription } = await supabase
           .from('subscriptions')
@@ -62,7 +81,6 @@ export default function AIResearchAssistant() {
 
         const tier = subscription?.tier || 'free';
 
-        // Try to get usage limits (with fallback for missing table)
         const { data: limits } = await supabase
           .from('usage_limits')
           .select('*')
@@ -72,12 +90,11 @@ export default function AIResearchAssistant() {
         setUsage({
           ...limits,
           tier,
-          free_queries_remaining: limits?.free_queries_remaining || 5, // Default 5 free queries
+          free_queries_remaining: limits?.free_queries_remaining || 5,
         });
         setCanQuery((limits?.free_queries_remaining || 5) > 0);
       } catch (dbError) {
         console.log('Database tables not found, using defaults');
-        // Fallback to default usage for new users
         setUsage({
           tier: 'free',
           free_queries_remaining: 5,
@@ -202,21 +219,7 @@ export default function AIResearchAssistant() {
           </CardTitle>
         </CardHeader>
         <CardContent className='space-y-4'>
-          {!canQuery && (
-            <div className='bg-red-50 border border-red-200 rounded-lg p-4'>
-              <div className='flex items-center gap-2'>
-                <AlertTriangle className='w-5 h-5 text-red-600' />
-                <p className='text-red-800 font-medium'>Query limit reached</p>
-              </div>
-              <p className='text-red-600 text-sm mt-1'>
-                Upgrade your plan to continue using AI research
-              </p>
-              <Button size='sm' className='mt-2'>
-                <Crown className='w-4 h-4 mr-2' />
-                Upgrade Plan
-              </Button>
-            </div>
-          )}
+          {/* Query limit warning removed: owner/unlimited mode */}
 
           <div className='flex gap-2'>
             <Textarea
@@ -236,15 +239,23 @@ export default function AIResearchAssistant() {
               disabled={!canQuery}
             />
             {error && <div className='text-red-500 text-sm mb-2'>{error}</div>}
+            {/* Always show and enable the send button for super admins */}
             <Button
               onClick={handleSearch}
-              disabled={loading || !query.trim() || !canQuery}
+              disabled={(() => {
+                // If super admin, never disable
+                if (usage && usage.tier === 'super_admin') return false;
+                return loading || !query.trim() || !canQuery;
+              })()}
               className='self-start'
             >
               {loading ? (
                 <div className='w-4 h-4 animate-spin rounded-full border-2 border-white border-t-transparent' />
               ) : (
-                <Sparkles className='w-4 h-4' />
+                <>
+                  <Sparkles className='w-4 h-4 mr-2' />
+                  Send
+                </>
               )}
             </Button>
           </div>
