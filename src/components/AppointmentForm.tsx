@@ -11,6 +11,12 @@ const Input = (props: React.InputHTMLAttributes<HTMLInputElement>) => <input {..
 const Label = ({ children, ...props }: React.LabelHTMLAttributes<HTMLLabelElement>) => <label {...props}>{children}</label>;
 const Select = ({ children, ...props }: React.SelectHTMLAttributes<HTMLSelectElement>) => <select {...props}>{children}</select>;
 
+// Define a type for validation errors to provide specific feedback
+interface FormErrors {
+  title?: string;
+  dates?: string;
+}
+
 // Define a type for the initial data to ensure type safety
 interface AppointmentData {
   title?: string;
@@ -30,21 +36,31 @@ export default function AppointmentForm({ onSubmit, initialData = {} }: Appointm
   const [status, setStatus] = useState(initialData.status || 'Confirmed');
   const [startTime, setStartTime] = useState<Date | undefined>(initialData.start_time ? new Date(initialData.start_time) : undefined);
   const [endTime, setEndTime] = useState<Date | undefined>(initialData.end_time ? new Date(initialData.end_time) : undefined);
+  const [errors, setErrors] = useState<FormErrors>({});
+
+  const validateForm = (): boolean => {
+    const newErrors: FormErrors = {};
+    if (!title.trim()) {
+      newErrors.title = 'Title is required.';
+    }
+    if (!startTime || !endTime || startTime >= endTime) {
+      newErrors.dates = 'Please ensure the start time is before the end time.';
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    // Basic client-side validation
-    if (!startTime || !endTime || startTime >= endTime) {
-      alert('Please ensure the start time is before the end time.');
-      return;
+    if (!validateForm()) {
+      return; // Stop submission if validation fails
     }
 
     const formData = {
       title,
       status,
-      start_time: startTime.toISOString(),
-      end_time: endTime.toISOString(),
+      start_time: startTime!.toISOString(),
+      end_time: endTime!.toISOString(),
     };
     onSubmit(formData);
   };
@@ -63,6 +79,7 @@ export default function AppointmentForm({ onSubmit, initialData = {} }: Appointm
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
           required
         />
+        {errors.title && <p className="mt-2 text-sm text-red-600">{errors.title}</p>}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -93,6 +110,8 @@ export default function AppointmentForm({ onSubmit, initialData = {} }: Appointm
           />
         </div>
       </div>
+      {errors.dates && <p className="text-sm text-red-600 -mt-4">{errors.dates}</p>}
+
 
       <div>
         <Label htmlFor="status" className="block text-sm font-medium text-gray-700">
