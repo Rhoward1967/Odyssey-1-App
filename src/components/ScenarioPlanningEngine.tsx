@@ -143,7 +143,7 @@ export const ScenarioPlanningEngine: React.FC = () => {
                   </Badge>
                 </div>
                 <div className="text-xs space-y-1 text-gray-300">
-                  <div>Compliance: {(sim.compliance * 100).toFixed(1)}%</div>
+                  <div>Compliance: {(typeof sim.compliance === 'number' && !isNaN(sim.compliance) ? sim.compliance * 100 : 0).toFixed(1)}%</div>
                   <div>Cost: ${sim.adaptationCost.toLocaleString()}</div>
                   <div>Timeline: {sim.timeToImplement} days</div>
                 </div>
@@ -155,7 +155,7 @@ export const ScenarioPlanningEngine: React.FC = () => {
             <div className="grid grid-cols-2 gap-4">
               <div className="bg-black/20 p-3 rounded-lg">
                 <div className="text-sm font-medium mb-1">Inflation Impact</div>
-                <div className="text-xl font-bold text-red-400">{(economicModels.inflationImpact * 100).toFixed(1)}%</div>
+                <div className="text-xl font-bold text-red-400">{(typeof economicModels.inflationImpact === 'number' && !isNaN(economicModels.inflationImpact) ? economicModels.inflationImpact * 100 : 0).toFixed(1)}%</div>
               </div>
               <div className="bg-black/20 p-3 rounded-lg">
                 <div className="text-sm font-medium mb-1">Market Volatility</div>

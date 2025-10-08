@@ -17,7 +17,7 @@ interface BudgetComparison {
 export function OdysseyBudgetAnalysis() {
   const [comparisons, setComparisons] = useState<BudgetComparison[]>([]);
   const [totalVariance, setTotalVariance] = useState(0);
-  const [sustainabilityScore, setSustainabilityScore] = useState(0);
+  const [sustainabilityScore, setSustainabilityScore] = useState<number>(0);
 
   useEffect(() => {
     generateAnalysis();
@@ -84,14 +84,17 @@ export function OdysseyBudgetAnalysis() {
     ];
 
     setComparisons(budgetData);
-    
+
     const variance = budgetData.reduce((sum, item) => sum + item.variance, 0);
     setTotalVariance(variance);
-    
+
     // Calculate sustainability score based on revenue vs costs
     const totalCosts = budgetData.filter(item => item.variance > 0).reduce((sum, item) => sum + Math.abs(item.currentPlan), 0);
     const totalRevenue = Math.abs(budgetData.find(item => item.category === 'Revenue Generation')?.odysseyPlan || 0);
-    const score = Math.min(100, (totalRevenue / totalCosts) * 100);
+    let score = 0;
+    if (totalCosts > 0) {
+      score = Math.min(100, (totalRevenue / totalCosts) * 100);
+    }
     setSustainabilityScore(score);
   };
 
@@ -126,7 +129,7 @@ export function OdysseyBudgetAnalysis() {
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-blue-600">
-                {sustainabilityScore.toFixed(1)}%
+                {typeof sustainabilityScore === 'number' && !isNaN(sustainabilityScore) ? sustainabilityScore.toFixed(1) : '0.0'}%
               </div>
               <p className="text-sm text-blue-700">Sustainability Score</p>
             </div>

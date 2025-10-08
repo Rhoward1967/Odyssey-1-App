@@ -12,13 +12,13 @@ interface PricingCalculation {
   bidderCommission: number;
   customerDailyRate: number;
   contractType: 'one-time' | 'monthly';
-  frequency: number;
+  frequency: string;
 }
 
 interface OdysseyPricingEngineProps {
   specs: string;
   services: string[];
-  frequency: number;
+  frequency: string;
   contractType: 'one-time' | 'monthly';
 }
 
@@ -34,21 +34,21 @@ const OdysseyPricingEngine: React.FC<OdysseyPricingEngineProps> = ({
     const baseLaborRate = 17.00; // Base rate maintained for consistency
     const specComplexity = specs.length / 50; // Complexity factor
     const serviceMultiplier = services.length * 0.15; // Service scaling
-    
+
     // Quantum-enhanced estimation using QARE principles
     const estimatedHours = Math.max(2, Math.ceil(
       specComplexity + serviceMultiplier + (Math.random() * 0.5) // QARE uncertainty principle
     ));
-    
+
     // Dynamic supply cost calculation with market intelligence
     const baseSupplyCost = services.length * 25;
     const marketAdjustment = 1 + (Math.sin(Date.now() / 100000) * 0.1); // Market fluctuation simulation
     const supplyCost = baseSupplyCost * marketAdjustment;
-    
+
     // QARE-optimized overhead and profit calculations
     const overhead = 0.35 + (Math.random() * 0.05); // 35-40% overhead with quantum variance
     const profitMargin = 0.5 + (Math.random() * 0.2); // 50-70% profit margin
-    
+
     // Real-time bidding calculations
     const laborCost = estimatedHours * baseLaborRate;
     const totalCost = laborCost + supplyCost;
@@ -56,15 +56,16 @@ const OdysseyPricingEngine: React.FC<OdysseyPricingEngineProps> = ({
     const subtotalWithOverhead = totalCost + overheadAmount;
     const profitAmount = subtotalWithOverhead * profitMargin;
     const finalPrice = subtotalWithOverhead + profitAmount;
-    
-    // Frequency-adjusted pricing for contracts
-    const customerDailyRate = contractType === 'monthly' 
-      ? finalPrice / frequency 
+
+    // Frequency-adjusted pricing for contracts (if needed, can parse string to number)
+    const freqNum = Number(frequency);
+    const customerDailyRate = contractType === 'monthly' && !isNaN(freqNum) && freqNum > 0
+      ? finalPrice / freqNum
       : finalPrice;
-    
+
     // Commission structure (10% to bidder)
     const bidderCommission = finalPrice * 0.10;
-    
+
     return {
       laborHours: estimatedHours,
       laborRate: baseLaborRate,
@@ -80,9 +81,19 @@ const OdysseyPricingEngine: React.FC<OdysseyPricingEngineProps> = ({
 
   const pricing = calculatePricing();
 
+  // Refactored: Customer Payment calculation moved out of JSX
+  const customerPayment = (() => {
+    const freqNum = Number(pricing.frequency);
+    const dailyRate = typeof pricing.customerDailyRate === 'number' && !isNaN(pricing.customerDailyRate) ? pricing.customerDailyRate : 0;
+    const safeFreq = !isNaN(freqNum) && freqNum > 0 ? freqNum : 1;
+    const payment = dailyRate * safeFreq;
+    return typeof payment === 'number' && isFinite(payment) && !isNaN(payment) ? payment.toFixed(2) : '0.00';
+  })();
+
   // QARE Real-time Validation and Accuracy Check
   const validatePricing = (calc: PricingCalculation) => {
-    const totalRevenue = calc.customerDailyRate * calc.frequency;
+  const freqNum = Number(calc.frequency);
+  const totalRevenue = !isNaN(freqNum) && freqNum > 0 ? calc.customerDailyRate * freqNum : calc.customerDailyRate;
     const totalCosts = (calc.laborHours * calc.laborRate) + calc.supplyCost;
     const actualProfit = totalRevenue - totalCosts - calc.bidderCommission;
     
@@ -147,7 +158,7 @@ const OdysseyPricingEngine: React.FC<OdysseyPricingEngineProps> = ({
                 ${pricing.customerDailyRate.toFixed(2)}
               </p>
               <p className="text-slate-400 text-sm mt-1">
-                {contractType === 'monthly' ? `${frequency} visits/month` : 'One-time service'}
+                {contractType === 'monthly' ? `${frequency} service frequency` : 'One-time service'}
               </p>
             </div>
           </div>
@@ -212,9 +223,16 @@ const OdysseyPricingEngine: React.FC<OdysseyPricingEngineProps> = ({
             <div className="bg-slate-800/50 p-4 rounded-lg">
               <h4 className="text-green-300 font-semibold mb-2">Revenue Analysis</h4>
               <div className="space-y-1 text-sm text-white">
-                <p>Customer Payment: ${(pricing.customerDailyRate * pricing.frequency).toFixed(2)}</p>
+                <p>Customer Payment: {customerPayment}</p>
                 <p>Bidder Commission: ${pricing.bidderCommission.toFixed(2)}</p>
-                <p>Net Revenue: ${((pricing.customerDailyRate * pricing.frequency) - pricing.bidderCommission).toFixed(2)}</p>
+                <p>Net Revenue: {(() => {
+                  const freqNum = Number(pricing.frequency);
+                  const dailyRate = typeof pricing.customerDailyRate === 'number' && !isNaN(pricing.customerDailyRate) ? pricing.customerDailyRate : 0;
+                  const safeFreq = !isNaN(freqNum) && freqNum > 0 ? freqNum : 1;
+                  const commission = typeof pricing.bidderCommission === 'number' && isFinite(pricing.bidderCommission) && !isNaN(pricing.bidderCommission) ? pricing.bidderCommission : 0;
+                  const netRevenue = (dailyRate * safeFreq) - commission;
+                  return typeof netRevenue === 'number' && isFinite(netRevenue) && !isNaN(netRevenue) ? netRevenue.toFixed(2) : '0.00';
+                })()}</p>
               </div>
             </div>
             
@@ -222,7 +240,13 @@ const OdysseyPricingEngine: React.FC<OdysseyPricingEngineProps> = ({
               <h4 className="text-purple-300 font-semibold mb-2">ROI Metrics</h4>
               <div className="space-y-1 text-sm text-white">
                 <p>Gross Margin: {((pricing.profitMargin + pricing.overhead) / 2).toFixed(1)}%</p>
-                <p>Contract Value: ${contractType === 'monthly' ? (pricing.customerDailyRate * pricing.frequency * 12).toFixed(2) : pricing.customerDailyRate.toFixed(2)}</p>
+                <p>Contract Value: {contractType === 'monthly' ? (() => {
+                  const freqNum = Number(pricing.frequency);
+                  const dailyRate = typeof pricing.customerDailyRate === 'number' && !isNaN(pricing.customerDailyRate) ? pricing.customerDailyRate : 0;
+                  const safeFreq = !isNaN(freqNum) && freqNum > 0 ? freqNum : 1;
+                  const contractValue = dailyRate * safeFreq * 12;
+                  return typeof contractValue === 'number' && isFinite(contractValue) && !isNaN(contractValue) ? contractValue.toFixed(2) : '0.00';
+                })() : (typeof pricing.customerDailyRate === 'number' && !isNaN(pricing.customerDailyRate) ? pricing.customerDailyRate.toFixed(2) : '0.00')}</p>
                 <p>Annual ROI: {(pricing.profitMargin * 2).toFixed(1)}%</p>
               </div>
             </div>

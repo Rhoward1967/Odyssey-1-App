@@ -136,7 +136,7 @@ export const ReinforcementCore: React.FC = () => {
                     <span className="text-gray-200 text-sm font-medium">{metric.name}</span>
                   </div>
                   <span className={`text-sm font-mono ${getValueColor(metric.value, metric.name)}`}>
-                    {metric.name === 'Truth Adherence' ? `${metric.value.toFixed(1)}%` : metric.value.toFixed(0)}
+                    {metric.name === 'Truth Adherence' ? `${(typeof metric.value === 'number' && !isNaN(metric.value) ? metric.value : 0).toFixed(1)}%` : (typeof metric.value === 'number' && !isNaN(metric.value) ? metric.value : 0).toFixed(0)}
                   </span>
                 </div>
                 <p className="text-gray-400 text-xs">{metric.description}</p>

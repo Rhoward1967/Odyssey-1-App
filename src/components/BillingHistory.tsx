@@ -19,7 +19,7 @@ const BillingHistory: React.FC = () => {
   const { user } = useAuth();
   const [billingHistory, setBillingHistory] = useState<BillingRecord[]>([]);
   const [loading, setLoading] = useState(true);
-
+  
   useEffect(() => {
     if (user) {
       fetchBillingHistory();
@@ -57,7 +57,8 @@ const BillingHistory: React.FC = () => {
   };
 
   const formatAmount = (amount: number) => {
-    return `$${(amount / 100).toFixed(2)}`;
+    const safeAmount = typeof amount === 'number' && !isNaN(amount) ? amount : 0;
+    return `$${(safeAmount / 100).toFixed(2)}`;
   };
 
   const getPlanName = (planId: string) => {

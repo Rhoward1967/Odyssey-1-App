@@ -1,10 +1,12 @@
+// Add Deno global type for TypeScript (Edge Functions)
+// @ts-ignore
+declare const Deno: typeof import('deno')['Deno'];
 // @ts-expect-error: Supabase Edge Functions provide global serve and Deno types at runtime
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 // @ts-expect-error: Stripe import for Deno Edge Functions, types provided at runtime
 import Stripe from 'https://esm.sh/stripe@10.12.0?target=deno&no-check';
 
 // Get secret key safely for both Deno and Edge runtime
-// @ts-expect-error: Deno global is available at runtime in Supabase Edge Functions
 const STRIPE_SECRET_KEY =
   typeof Deno !== 'undefined' && Deno.env && typeof Deno.env.get === 'function'
     ? Deno.env.get('STRIPE_SECRET_KEY')

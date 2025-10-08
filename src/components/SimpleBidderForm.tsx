@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Checkbox } from '@/components/ui/checkbox';
 import { User, Wrench, FileText } from 'lucide-react';
 
-interface BidderInfo {
+export interface BidderInfo {
   name: string;
   address: string;
   email: string;
@@ -17,7 +17,7 @@ interface BidderInfo {
   zipcode: string;
 }
 
-interface ServiceSpecs {
+export interface ServiceSpecs {
   services: string[];
   frequency: string;
   contractType: 'one-time' | 'monthly';

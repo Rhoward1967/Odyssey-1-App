@@ -18,8 +18,8 @@ interface BudgetLimit {
 
 export default function BudgetLimitManager() {
   const [budgetLimits, setBudgetLimits] = useState<BudgetLimit[]>([]);
-  const [monthlyBudget, setMonthlyBudget] = useState(1000);
-  const [totalSpending, setTotalSpending] = useState(0);
+  const [monthlyBudget, setMonthlyBudget] = useState<number>(1000);
+  const [totalSpending, setTotalSpending] = useState<number>(0);
   const [newCategory, setNewCategory] = useState('');
   const [newLimit, setNewLimit] = useState('');
 
@@ -87,7 +87,9 @@ export default function BudgetLimitManager() {
     }
   };
 
-  const budgetUsedPercentage = (totalSpending / monthlyBudget) * 100;
+  const safeTotalSpending = typeof totalSpending === 'number' && isFinite(totalSpending) ? totalSpending : 0;
+  const safeMonthlyBudget = typeof monthlyBudget === 'number' && isFinite(monthlyBudget) && monthlyBudget > 0 ? monthlyBudget : 1;
+  const budgetUsedPercentage = (safeTotalSpending / safeMonthlyBudget) * 100;
   const isOverBudget = budgetUsedPercentage > 100;
   const isNearLimit = budgetUsedPercentage > 80;
 
@@ -104,8 +106,8 @@ export default function BudgetLimitManager() {
         <CardContent>
           <div className="space-y-4">
             <div className="flex justify-between text-sm">
-              <span>Spent: ${totalSpending.toFixed(2)}</span>
-              <span>Remaining: ${(monthlyBudget - totalSpending).toFixed(2)}</span>
+              <span>Spent: {isFinite(safeTotalSpending) ? safeTotalSpending.toFixed(2) : '0.00'}</span>
+              <span>Remaining: {isFinite(safeMonthlyBudget - safeTotalSpending) ? (safeMonthlyBudget - safeTotalSpending).toFixed(2) : '0.00'}</span>
             </div>
             <Progress 
               value={Math.min(budgetUsedPercentage, 100)} 
@@ -115,7 +117,7 @@ export default function BudgetLimitManager() {
               <Alert className="border-red-200 bg-red-50">
                 <AlertTriangle className="h-4 w-4 text-red-600" />
                 <AlertDescription className="text-red-800">
-                  Budget exceeded by ${(totalSpending - monthlyBudget).toFixed(2)}
+                  Budget exceeded by {isFinite(safeTotalSpending - safeMonthlyBudget) ? (safeTotalSpending - safeMonthlyBudget).toFixed(2) : '0.00'}
                 </AlertDescription>
               </Alert>
             )}
@@ -123,7 +125,7 @@ export default function BudgetLimitManager() {
               <Alert className="border-yellow-200 bg-yellow-50">
                 <AlertTriangle className="h-4 w-4 text-yellow-600" />
                 <AlertDescription className="text-yellow-800">
-                  Approaching budget limit ({budgetUsedPercentage.toFixed(1)}% used)
+                  Approaching budget limit ({isFinite(budgetUsedPercentage) ? budgetUsedPercentage.toFixed(1) : '0.0'}% used)
                 </AlertDescription>
               </Alert>
             )}
@@ -185,7 +187,9 @@ export default function BudgetLimitManager() {
       {/* Category Budget Status */}
       <div className="grid gap-4">
         {budgetLimits.map((limit) => {
-          const percentage = (limit.current_spending / limit.monthly_limit) * 100;
+          const currentSpending = typeof limit.current_spending === 'number' && isFinite(limit.current_spending) ? limit.current_spending : 0;
+          const monthlyLimit = typeof limit.monthly_limit === 'number' && isFinite(limit.monthly_limit) && limit.monthly_limit > 0 ? limit.monthly_limit : 1;
+          const percentage = (currentSpending / monthlyLimit) * 100;
           const isOverLimit = percentage > 100;
           const isNearThreshold = percentage > limit.alert_threshold;
 
@@ -195,7 +199,7 @@ export default function BudgetLimitManager() {
                 <div className="flex justify-between items-center mb-2">
                   <h4 className="font-medium">{limit.category}</h4>
                   <span className="text-sm text-gray-600">
-                    ${limit.current_spending.toFixed(2)} / ${limit.monthly_limit.toFixed(2)}
+                    {isFinite(currentSpending) ? currentSpending.toFixed(2) : '0.00'} / {isFinite(monthlyLimit) ? monthlyLimit.toFixed(2) : '0.00'}
                   </span>
                 </div>
                 <Progress 
@@ -204,7 +208,7 @@ export default function BudgetLimitManager() {
                 />
                 {isOverLimit && (
                   <p className="text-xs text-red-600 mt-1">
-                    Over budget by ${(limit.current_spending - limit.monthly_limit).toFixed(2)}
+                    Over budget by {isFinite(currentSpending - monthlyLimit) ? (currentSpending - monthlyLimit).toFixed(2) : '0.00'}
                   </p>
                 )}
               </CardContent>

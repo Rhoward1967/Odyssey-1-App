@@ -119,7 +119,27 @@ const EmailStudio = () => {
               <div className="lg:col-span-3">
                 <EmailEditor 
                   onSave={(email) => console.log('Saving email:', email)}
-                  onSend={(email) => console.log('Sending email:', email)}
+                  onSend={async (email) => {
+                    try {
+                      const response = await fetch('/functions/v1/send-email', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                          to: email.to,
+                          subject: email.subject,
+                          content: email.content || email.htmlContent || ''
+                        })
+                      });
+                      if (!response.ok) {
+                        const error = await response.text();
+                        alert('Failed to send email: ' + error);
+                      } else {
+                        alert('Email sent successfully!');
+                      }
+                    } catch (err) {
+                      alert('Error sending email: ' + (err.message || err));
+                    }
+                  }}
                 />
               </div>
               <div className="space-y-4">

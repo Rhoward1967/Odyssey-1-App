@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -33,12 +33,8 @@ export const AutomatedInvoicing: React.FC = () => {
   });
   const { toast } = useToast();
 
-  useEffect(() => {
-    loadInvoices();
-    loadContacts();
-  }, []);
 
-  const loadInvoices = async () => {
+  const loadInvoices = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from('invoices')
@@ -49,7 +45,12 @@ export const AutomatedInvoicing: React.FC = () => {
     } catch (error) {
       toast({ title: "Error", description: "Failed to load invoices", variant: "destructive" });
     }
-  };
+  }, [toast]);
+
+  useEffect(() => {
+    loadInvoices();
+    loadContacts();
+  }, [loadInvoices]);
 
   const loadContacts = async () => {
     try {
@@ -226,7 +227,7 @@ export const AutomatedInvoicing: React.FC = () => {
                         <div className="col-span-2">
                           <Label>Total</Label>
                           <div className="p-2 bg-gray-50 rounded text-sm">
-                            ${(item.quantity * item.unit_price).toFixed(2)}
+                            ${(typeof item.quantity === 'number' && typeof item.unit_price === 'number' && !isNaN(item.quantity) && !isNaN(item.unit_price) ? item.quantity * item.unit_price : 0).toFixed(2)}
                           </div>
                         </div>
                       </div>
@@ -234,7 +235,7 @@ export const AutomatedInvoicing: React.FC = () => {
                     
                     <div className="text-right">
                       <div className="text-lg font-semibold">
-                        Total: ${calculateTotal().toFixed(2)}
+                        Total: ${((typeof calculateTotal() === 'number' && !isNaN(calculateTotal())) ? calculateTotal() : 0).toFixed(2)}
                       </div>
                     </div>
                   </div>

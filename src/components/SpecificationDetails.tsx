@@ -171,7 +171,7 @@ const SpecificationDetails: React.FC<SpecificationDetailsProps> = ({
               <div className="flex justify-between items-center">
                 <span className="text-slate-300">Specification Total:</span>
                 <span className="text-green-400 font-semibold text-lg">
-                  ${calculateSpecTotal(spec).toFixed(2)}
+      ${((typeof calculateSpecTotal(spec) === 'number' && !isNaN(calculateSpecTotal(spec))) ? calculateSpecTotal(spec) : 0).toFixed(2)}
                 </span>
               </div>
             </div>
@@ -184,7 +184,7 @@ const SpecificationDetails: React.FC<SpecificationDetailsProps> = ({
           <div className="flex justify-between items-center">
             <span className="text-white text-lg font-semibold">Total Estimate:</span>
             <span className="text-green-400 font-bold text-2xl">
-              ${getTotalEstimate().toFixed(2)}
+              ${((typeof getTotalEstimate() === 'number' && !isNaN(getTotalEstimate())) ? getTotalEstimate() : 0).toFixed(2)}
             </span>
           </div>
         </CardContent>

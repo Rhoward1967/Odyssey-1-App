@@ -345,6 +345,7 @@ export default function BiddingCalculatorForm() {
                   <div>
                     <span className="text-blue-600">Total Estimate:</span>
                     <div className="font-semibold text-lg">${bidResults.totalEstimate}</div>
+                    <div className="font-semibold text-lg">${(typeof bidResults.totalEstimate === 'number' && !isNaN(bidResults.totalEstimate) ? bidResults.totalEstimate : 0).toFixed(2)}</div>
                   </div>
                 </div>
               </div>
