@@ -1,6 +1,8 @@
-import React, { useState, useEffect, useState as useReactState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import AppointmentForm from './AppointmentForm';
 import { toast } from './ui/sonner';
-import { Calendar, Clock, Plus, Users } from 'lucide-react';
+import { Calendar, Plus } from 'lucide-react';
+import AppointmentItem from './AppointmentItem';
 import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
@@ -44,7 +46,7 @@ export default function AppointmentWidget({
   });
   const [editId, setEditId] = useState<string|null>(null);
 
-  const fetchAppointments = async () => {
+  const fetchAppointments = useCallback(async () => {
     setLoading(true);
     setErrorMsg(null);
     const { data, error } = await supabase
@@ -58,11 +60,11 @@ export default function AppointmentWidget({
       toast.error('Failed to load appointments from the server.');
     }
     setLoading(false);
-  };
+  }, []);
 
   useEffect(() => {
     fetchAppointments();
-  }, []);
+  }, [fetchAppointments]);
 
   const getTypeColor = (status: string) => {
     switch (status) {
@@ -73,31 +75,26 @@ export default function AppointmentWidget({
     }
   };
 
-  const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleCreateOrUpdate = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleFormSubmit = async (form: typeof formData) => {
     setLoading(true);
-    const attendeesArr = formData.attendees.split(',').map(a => a.trim()).filter(Boolean);
+    const attendeesArr = form.attendees.split(',').map(a => a.trim()).filter(Boolean);
     if (editId) {
       // Update
       await supabase.from('appointments').update({
-        title: formData.title,
-        start_time: formData.start_time,
-        end_time: formData.end_time,
+        title: form.title,
+        start_time: form.start_time,
+        end_time: form.end_time,
         attendees: attendeesArr,
-        status: formData.status,
+        status: form.status,
       }).eq('id', editId);
     } else {
       // Create
       await supabase.from('appointments').insert({
-        title: formData.title,
-        start_time: formData.start_time,
-        end_time: formData.end_time,
+        title: form.title,
+        start_time: form.start_time,
+        end_time: form.end_time,
         attendees: attendeesArr,
-        status: formData.status,
+        status: form.status,
       });
     }
     setShowForm(false);
@@ -180,78 +177,45 @@ export default function AppointmentWidget({
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
-        {showForm && (
-          <form onSubmit={handleCreateOrUpdate} className="bg-white/5 rounded-lg p-4 mb-2 space-y-2">
-            <div className="flex flex-col gap-1">
-              <label className="text-xs text-white">Title</label>
-              <input name="title" value={formData.title} onChange={handleFormChange} required className="rounded px-2 py-1 text-black" />
-            </div>
-            <div className="flex flex-col gap-1">
-              <label className="text-xs text-white">Start Time</label>
-              <input name="start_time" type="datetime-local" value={formData.start_time} onChange={handleFormChange} required className="rounded px-2 py-1 text-black" />
-            </div>
-            <div className="flex flex-col gap-1">
-              <label className="text-xs text-white">End Time</label>
-              <input name="end_time" type="datetime-local" value={formData.end_time} onChange={handleFormChange} required className="rounded px-2 py-1 text-black" />
-            </div>
-            <div className="flex flex-col gap-1">
-              <label className="text-xs text-white">Attendees (comma separated)</label>
-              <input name="attendees" value={formData.attendees} onChange={handleFormChange} className="rounded px-2 py-1 text-black" />
-            </div>
-            <div className="flex flex-col gap-1">
-              <label className="text-xs text-white">Status</label>
-              <select name="status" value={formData.status} onChange={handleFormChange} className="rounded px-2 py-1 text-black">
-                <option value="scheduled">Scheduled</option>
-                <option value="completed">Completed</option>
-                <option value="cancelled">Cancelled</option>
-              </select>
-            </div>
-            <div className="flex gap-2 pt-2">
-              <Button type="submit" size="sm" className="bg-blue-600 hover:bg-blue-700">
-                {editId ? 'Update' : 'Create'}
-              </Button>
-              <Button type="button" size="sm" variant="outline" onClick={() => { setShowForm(false); setEditId(null); }}>
-                Cancel
-              </Button>
-            </div>
-          </form>
-        )}
+{showForm && (
+  <div className="bg-white/5 rounded-lg p-4 mb-2">
+    <AppointmentForm
+      initialData={editId ? formData : undefined}
+      loading={loading}
+      onSubmit={handleFormSubmit}
+      onCancel={() => { setShowForm(false); setEditId(null); }}
+    />
+  </div>
+)}
         {loading ? (
-          <div className="text-gray-400">Loading appointments...</div>
+          <div className="space-y-3">
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="flex items-center space-x-3 p-3 bg-white/10 rounded-lg animate-pulse">
+                <div className="w-3 h-3 rounded-full bg-gray-400/50" />
+                <div className="flex-1">
+                  <div className="h-4 bg-gray-400/40 rounded w-1/3 mb-2" />
+                  <div className="h-3 bg-gray-400/30 rounded w-2/3" />
+                </div>
+                <div className="flex gap-1">
+                  <div className="h-7 w-12 bg-gray-400/30 rounded" />
+                  <div className="h-7 w-12 bg-gray-400/30 rounded" />
+                </div>
+              </div>
+            ))}
+          </div>
         ) : errorMsg ? (
           <div className="text-red-500 bg-red-100 border border-red-300 rounded p-2 text-center">{errorMsg}</div>
         ) : appointments.length === 0 ? (
           <div className="text-gray-400">No appointments found.</div>
-        ) : appointments.map((apt) => {
-          const start = new Date(apt.start_time);
-          const end = new Date(apt.end_time);
-          return (
-            <div key={apt.id} className="flex items-center space-x-3 p-3 bg-white/5 rounded-lg">
-              <div className={`w-3 h-3 rounded-full ${getTypeColor(apt.status)}`} />
-              <div className="flex-1">
-                <div className="text-white font-medium">{apt.title}</div>
-                <div className="flex items-center space-x-2 text-sm text-gray-300">
-                  <Clock className="w-3 h-3" />
-                  <span>{start.toLocaleDateString()} {start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - {end.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                  {apt.attendees && apt.attendees.length > 0 && (
-                    <>
-                      <Users className="w-3 h-3 ml-2" />
-                      <span>{apt.attendees.join(', ')}</span>
-                    </>
-                  )}
-                </div>
-              </div>
-              <div className="flex gap-1">
-                <Button size="sm" variant="outline" onClick={() => handleEdit(apt)}>
-                  Edit
-                </Button>
-                <Button size="sm" variant="destructive" onClick={() => handleDelete(apt.id)}>
-                  Delete
-                </Button>
-              </div>
-            </div>
-          );
-        })}
+        ) : appointments.map((apt) => (
+          <AppointmentItem
+            key={apt.id}
+            appointment={apt}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+            getTypeColor={getTypeColor}
+          />
+        ))}
         {showQuickSchedule && (
           <div className="p-3 bg-white/5 rounded-lg border border-blue-500/30">
             <div className="text-sm text-white mb-2">Quick Schedule</div>
