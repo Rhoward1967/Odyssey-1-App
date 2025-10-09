@@ -19,7 +19,6 @@ const supabase = createClient(
   import.meta.env.VITE_SUPABASE_ANON_KEY!
 );
 
-
 // --- Type Definitions ---
 type CalculationInputs = {
   materialCost: number;
@@ -48,7 +47,7 @@ const BiddingCalculator: React.FC = () => {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   const calculateBid = () => {
-    const totalCost = inputs.materialCost + (inputs.laborHours * 50);
+    const totalCost = inputs.materialCost + inputs.laborHours * 50;
     const costWithOverhead = totalCost * (1 + inputs.overheadRate / 100);
     const finalBid = costWithOverhead * (1 + inputs.profitMargin / 100);
     setBidAmount(parseFloat(finalBid.toFixed(2)));
@@ -56,14 +55,14 @@ const BiddingCalculator: React.FC = () => {
 
   const handleSaveBid = async () => {
     if (bidAmount === null) {
-      setError("Please calculate a bid before saving.");
+      setError('Please calculate a bid before saving.');
       return;
     }
     setIsSaving(true);
     setError(null);
     setSuccessMessage(null);
     const submissionData: BidSubmission = {
-      title: "New Calculated Bid",
+      title: 'New Calculated Bid',
       status: 'draft',
       bid_amount: bidAmount,
       calculation_inputs: inputs,
@@ -73,20 +72,19 @@ const BiddingCalculator: React.FC = () => {
       .insert([submissionData]);
     setIsSaving(false);
     if (insertError) {
-      console.error("Error saving bid:", insertError);
+      console.error('Error saving bid:', insertError);
       setError(`Failed to save bid: ${insertError.message}`);
     } else {
-      setSuccessMessage("Bid successfully saved!");
+      setSuccessMessage('Bid successfully saved!');
     }
   };
 
   return (
-    <div className="p-4">
+    <div className='p-4'>
       {/* ...existing UI for the bidding calculator... */}
       {/* Add your form, calculation, and save UI here */}
     </div>
   );
-}
+};
 
 export default BiddingCalculator;
-
