@@ -1,362 +1,151 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
-import { FileText, Plus, DollarSign, Calendar, Send } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
-import { useToast } from '@/hooks/use-toast';
 
-interface Invoice {
-  id: string;
+import React, { useState } from 'react';
+import { createClient } from '@supabase/supabase-js';
+
+// This should be initialized from your central Supabase client instance
+const supabase = createClient(
+  import.meta.env.VITE_SUPABASE_URL!,
+  import.meta.env.VITE_SUPABASE_ANON_KEY!
+);
+
+// --- Type Definitions ---
+type LineItem = {
+  description: string;
+  amount: number;
+};
+
+type InvoiceSubmission = {
   invoice_number: string;
-  status: string;
-  issue_date: string;
-  due_date: string;
+  due_date: string; // YYYY-MM-DD format
   total_amount: number;
-  contact_id: string;
-}
+  status: 'draft' | 'sent' | 'paid' | 'void';
+  line_items: LineItem[];
+};
 
-export const AutomatedInvoicing: React.FC = () => {
-  const [invoices, setInvoices] = useState<Invoice[]>([]);
-  const [contacts, setContacts] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [formData, setFormData] = useState({
-    contact_id: '',
-    issue_date: new Date().toISOString().split('T')[0],
-    due_date: '',
-    items: [{ description: '', quantity: 1, unit_price: 0 }],
-  });
-  const { toast } = useToast();
+export default function AutomatedInvoicing() {
+  const [lineItems, setLineItems] = useState<LineItem[]>([
+    { description: '', amount: 0 }
+  ]);
+  const [dueDate, setDueDate] = useState('');
+  const [status, setStatus] = useState<'draft' | 'sent' | 'paid' | 'void'>('draft');
+  
+  const [isSaving, setIsSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  const loadInvoices = useCallback(async () => {
-    try {
-      const { data, error } = await supabase
-        .from('invoices')
-        .select('*')
-        .order('created_at', { ascending: false });
-      if (error) throw error;
-      setInvoices(data || []);
-    } catch (error) {
-      toast({
-        title: 'Error',
-        description: 'Failed to load invoices',
-        variant: 'destructive',
-      });
+  const handleLineItemChange = (index: number, field: keyof LineItem, value: string | number) => {
+    const updatedLineItems = [...lineItems];
+    if (field === 'amount') {
+      updatedLineItems[index].amount = typeof value === 'number' ? value : parseFloat(value as string) || 0;
+    } else if (field === 'description') {
+      updatedLineItems[index].description = value as string;
     }
-  }, [toast]);
-
-  useEffect(() => {
-    loadInvoices();
-    loadContacts();
-  }, [loadInvoices]);
-
-  const loadContacts = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('crm_contacts')
-        .select('id, first_name, last_name, company');
-      if (error) throw error;
-      setContacts(data || []);
-    } catch (error) {
-      console.error('Failed to load contacts');
-    }
+    setLineItems(updatedLineItems);
   };
 
-  const generateInvoiceNumber = () => {
-    return `INV-${Date.now()}`;
+  const addLineItem = () => {
+    setLineItems([...lineItems, { description: '', amount: 0 }]);
+  };
+
+  const removeLineItem = (index: number) => {
+    const updatedLineItems = lineItems.filter((_, i) => i !== index);
+    setLineItems(updatedLineItems);
   };
 
   const calculateTotal = () => {
-    return formData.items.reduce(
-      (sum, item) => sum + item.quantity * item.unit_price,
-      0
-    );
+    return lineItems.reduce((total, item) => total + item.amount, 0);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!formData.contact_id) return;
+  const handleGenerateInvoice = async () => {
+    setIsSaving(true);
+    setError(null);
+    setSuccessMessage(null);
 
-    try {
-      setLoading(true);
-      const total = calculateTotal();
-      const invoiceNumber = generateInvoiceNumber();
+    const totalAmount = calculateTotal();
+    if (totalAmount <= 0) {
+      setError("Cannot generate an invoice with a total of $0.");
+      setIsSaving(false);
+      return;
+    }
 
-      const { data: invoice, error: invoiceError } = await supabase
-        .from('invoices')
-        .insert({
-          invoice_number: invoiceNumber,
-          contact_id: formData.contact_id,
-          issue_date: formData.issue_date,
-          due_date: formData.due_date,
-          total_amount: total,
-          status: 'draft',
-        })
-        .select()
-        .single();
+    const submissionData: InvoiceSubmission = {
+      invoice_number: `INV-${Date.now()}`,
+      due_date: dueDate,
+      total_amount: totalAmount,
+      status: status,
+      line_items: lineItems,
+    };
 
-      if (invoiceError) throw invoiceError;
+    const { error: insertError } = await supabase
+      .from('invoices')
+      .insert([submissionData]);
 
-      const itemsData = formData.items.map(item => ({
-        invoice_id: invoice.id,
-        description: item.description,
-        quantity: item.quantity,
-        unit_price: item.unit_price,
-        total: item.quantity * item.unit_price,
-      }));
+    setIsSaving(false);
 
-      const { error: itemsError } = await supabase
-        .from('invoice_items')
-        .insert(itemsData);
-
-      if (itemsError) throw itemsError;
-
-      toast({ title: 'Success', description: 'Invoice created successfully' });
-      setIsDialogOpen(false);
-      loadInvoices();
-    } catch (error) {
-      toast({
-        title: 'Error',
-        description: 'Failed to create invoice',
-        variant: 'destructive',
-      });
-    } finally {
-      setLoading(false);
+    if (insertError) {
+      console.error("Error saving invoice:", insertError);
+      setError(`Failed to save invoice: ${insertError.message}`);
+    } else {
+      setSuccessMessage(`Invoice ${submissionData.invoice_number} successfully saved!`);
+      // Reset form
+      setLineItems([{ description: '', amount: 0 }]);
+      setDueDate('');
     }
   };
 
-  const addItem = () => {
-    setFormData({
-      ...formData,
-      items: [
-        ...formData.items,
-        { description: '', quantity: 1, unit_price: 0 },
-      ],
-    });
-  };
-
-  const updateItem = (index: number, field: string, value: any) => {
-    const newItems = [...formData.items];
-    newItems[index] = { ...newItems[index], [field]: value };
-    setFormData({ ...formData, items: newItems });
-  };
-
   return (
-    <div className='space-y-6'>
-      <Card>
-        <CardHeader>
-          <CardTitle className='flex items-center justify-between'>
-            <div className='flex items-center gap-2'>
-              <FileText className='h-5 w-5' />
-              Automated Invoicing
-            </div>
-            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-              <DialogTrigger asChild>
-                <Button>
-                  <Plus className='h-4 w-4 mr-2' />
-                  Create Invoice
-                </Button>
-              </DialogTrigger>
-              <DialogContent className='max-w-4xl'>
-                <DialogHeader>
-                  <DialogTitle>Create New Invoice</DialogTitle>
-                </DialogHeader>
-                <form onSubmit={handleSubmit} className='space-y-4'>
-                  <div className='grid grid-cols-3 gap-4'>
-                    <div className='space-y-2'>
-                      <Label>Client</Label>
-                      <Select
-                        value={formData.contact_id}
-                        onValueChange={value =>
-                          setFormData({ ...formData, contact_id: value })
-                        }
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder='Select client' />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {contacts.map(contact => (
-                            <SelectItem key={contact.id} value={contact.id}>
-                              {contact.first_name} {contact.last_name} -{' '}
-                              {contact.company}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className='space-y-2'>
-                      <Label>Issue Date</Label>
-                      <Input
-                        type='date'
-                        value={formData.issue_date}
-                        onChange={e =>
-                          setFormData({
-                            ...formData,
-                            issue_date: e.target.value,
-                          })
-                        }
-                      />
-                    </div>
-                    <div className='space-y-2'>
-                      <Label>Due Date</Label>
-                      <Input
-                        type='date'
-                        value={formData.due_date}
-                        onChange={e =>
-                          setFormData({ ...formData, due_date: e.target.value })
-                        }
-                      />
-                    </div>
-                  </div>
+    <div className="p-4 md:p-6 bg-white rounded-lg shadow-md">
+      <h2 className="text-xl font-bold mb-4">Generate New Invoice</h2>
+      
+      {error && <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg">{error}</div>}
+      {successMessage && <div className="mb-4 p-3 bg-green-100 text-green-700 rounded-lg">{successMessage}</div>}
 
-                  <div className='space-y-4'>
-                    <div className='flex justify-between items-center'>
-                      <h3 className='text-lg font-semibold'>Invoice Items</h3>
-                      <Button type='button' onClick={addItem} size='sm'>
-                        <Plus className='h-4 w-4 mr-2' />
-                        Add Item
-                      </Button>
-                    </div>
-
-                    {formData.items.map((item, index) => (
-                      <div
-                        key={index}
-                        className='grid grid-cols-12 gap-2 items-end'
-                      >
-                        <div className='col-span-6'>
-                          <Label>Description</Label>
-                          <Input
-                            value={item.description}
-                            onChange={e =>
-                              updateItem(index, 'description', e.target.value)
-                            }
-                            placeholder='Service description'
-                          />
-                        </div>
-                        <div className='col-span-2'>
-                          <Label>Qty</Label>
-                          <Input
-                            type='number'
-                            value={item.quantity}
-                            onChange={e =>
-                              updateItem(
-                                index,
-                                'quantity',
-                                parseFloat(e.target.value)
-                              )
-                            }
-                          />
-                        </div>
-                        <div className='col-span-2'>
-                          <Label>Price</Label>
-                          <Input
-                            type='number'
-                            step='0.01'
-                            value={item.unit_price}
-                            onChange={e =>
-                              updateItem(
-                                index,
-                                'unit_price',
-                                parseFloat(e.target.value)
-                              )
-                            }
-                          />
-                        </div>
-                        <div className='col-span-2'>
-                          <Label>Total</Label>
-                          <div className='p-2 bg-gray-50 rounded text-sm'>
-                            $
-                            {(typeof item.quantity === 'number' &&
-                            typeof item.unit_price === 'number' &&
-                            !isNaN(item.quantity) &&
-                            !isNaN(item.unit_price)
-                              ? item.quantity * item.unit_price
-                              : 0
-                            ).toFixed(2)}
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-
-                    <div className='text-right'>
-                      <div className='text-lg font-semibold'>
-                        Total: $
-                        {(typeof calculateTotal() === 'number' &&
-                        !isNaN(calculateTotal())
-                          ? calculateTotal()
-                          : 0
-                        ).toFixed(2)}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className='flex justify-end gap-2'>
-                    <Button
-                      type='button'
-                      variant='outline'
-                      onClick={() => setIsDialogOpen(false)}
-                    >
-                      Cancel
-                    </Button>
-                    <Button type='submit' disabled={loading}>
-                      Create Invoice
-                    </Button>
-                  </div>
-                </form>
-              </DialogContent>
-            </Dialog>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className='grid gap-4'>
-            {invoices.map(invoice => (
-              <Card key={invoice.id}>
-                <CardContent className='p-4'>
-                  <div className='flex justify-between items-center'>
-                    <div>
-                      <h3 className='font-semibold'>
-                        {invoice.invoice_number}
-                      </h3>
-                      <p className='text-sm text-gray-600'>
-                        Due: {new Date(invoice.due_date).toLocaleDateString()}
-                      </p>
-                    </div>
-                    <div className='text-right'>
-                      <div className='text-lg font-semibold'>
-                        ${invoice.total_amount.toFixed(2)}
-                      </div>
-                      <Badge
-                        variant={
-                          invoice.status === 'paid' ? 'default' : 'secondary'
-                        }
-                      >
-                        {invoice.status}
-                      </Badge>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+      <div className="space-y-4">
+        {lineItems.map((item, index) => (
+          <div key={index} className="flex items-center space-x-2">
+            <input
+              type="text"
+              placeholder="Description"
+              value={item.description}
+              onChange={(e) => handleLineItemChange(index, 'description', e.target.value)}
+              className="p-2 w-full border rounded-md"
+            />
+            <input
+              type="number"
+              placeholder="Amount"
+              value={item.amount}
+              onChange={(e) => handleLineItemChange(index, 'amount', e.target.value)}
+              className="p-2 w-40 border rounded-md"
+            />
+            <button onClick={() => removeLineItem(index)} className="p-2 text-red-500 hover:text-red-700">✕</button>
           </div>
-        </CardContent>
-      </Card>
+        ))}
+        <button onClick={addLineItem} className="text-sm text-blue-600 hover:underline">+ Add Line Item</button>
+      </div>
+
+      <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label htmlFor="dueDate" className="block text-sm font-medium">Due Date</label>
+          <input type="date" id="dueDate" value={dueDate} onChange={(e) => setDueDate(e.target.value)} className="mt-1 p-2 w-full border rounded-md"/>
+        </div>
+        <div>
+          <label htmlFor="status" className="block text-sm font-medium">Status</label>
+           <select id="status" value={status} onChange={(e) => setStatus(e.target.value as any)} className="mt-1 p-2 w-full border rounded-md">
+             <option value="draft">Draft</option>
+             <option value="sent">Sent</option>
+           </select>
+        </div>
+      </div>
+      
+      <div className="mt-6 border-t pt-4">
+        <h3 className="text-lg font-semibold text-right">Total: ${calculateTotal().toFixed(2)}</h3>
+      </div>
+      
+      <div className="mt-4">
+        <button onClick={handleGenerateInvoice} disabled={isSaving} className="w-full py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-blue-300">
+          {isSaving ? 'Saving Invoice...' : 'Generate and Save Invoice'}
+        </button>
+      </div>
     </div>
   );
-};
+}

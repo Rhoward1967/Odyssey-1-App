@@ -74,4 +74,16 @@ const BiddingCalculator: React.FC = () => {
     setIsSaving(false);
     if (insertError) {
       console.error("Error saving bid:", insertError);
+      setError(`Failed to save bid: ${insertError.message}`);
+    } else {
+      setSuccessMessage("Bid successfully saved!");
+    }
+  };
+
+  return (
+    <div className="p-4">
+      {/* ...existing UI for the bidding calculator... */}
+      {/* Add your form, calculation, and save UI here */}
+    </div>
+  );
 

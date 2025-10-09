@@ -15,6 +15,7 @@ const Navigation: React.FC = () => {
     { path: '/control-panel', label: 'Control Panel', icon: BarChart3 },
     { path: '/media-workstation', label: 'Media Room', icon: Monitor },
     { path: '/budget', label: 'Budget', icon: DollarSign },
+    { path: '/invoicing', label: 'Invoicing', icon: CreditCard },
     { path: '/help', label: 'Help', icon: HelpCircle },
     { path: '/subscription', label: 'Subscription', icon: CreditCard },
     { path: '/appointments', label: 'Appointments', icon: Calendar }

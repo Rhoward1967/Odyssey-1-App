@@ -16,6 +16,7 @@ import I9ComplianceSystem from './I9ComplianceSystem';
 import ContactPhoneBook from './ContactPhoneBook';
 import EmployeeProfileSystem from './EmployeeProfileSystem';
 import AdminDashboard from './AdminDashboard';
+import AutomatedInvoicing from './AutomatedInvoicing';
 
 export default function AppLayout() {
   const [activeTab, setActiveTab] = useState('admin');
@@ -43,7 +44,20 @@ export default function AppLayout() {
 
       <div className='w-full'>
         <Tabs value={activeTab} onValueChange={setActiveTab} className='w-full'>
-          <TabsList className='grid w-full grid-cols-3 md:grid-cols-7 bg-white border-b gap-1'>
+          <TabsList className='grid w-full grid-cols-4 md:grid-cols-8 bg-white border-b gap-1'>
+            <TabsTrigger
+              value='invoicing'
+              className='flex items-center gap-1 md:gap-2 text-xs md:text-sm px-1 md:px-2 bg-green-100'
+            >
+              <ClipboardList className='w-3 h-3 md:w-4 md:h-4' />
+              <span className='hidden md:inline'>Invoicing</span>
+              <span className='md:hidden'>💸</span>
+            </TabsTrigger>
+          <TabsContent value='invoicing' className='m-0 p-0'>
+            <div className='bg-gradient-to-br from-slate-900 via-green-900 to-slate-900 min-h-screen p-6'>
+              <AutomatedInvoicing />
+            </div>
+          </TabsContent>
             <TabsTrigger
               value='admin'
               className='flex items-center gap-1 md:gap-2 text-xs md:text-sm px-1 md:px-2 bg-red-100'
