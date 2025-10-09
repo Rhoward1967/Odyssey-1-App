@@ -53,11 +53,11 @@ export default function AppLayout() {
               <span className='hidden md:inline'>Invoicing</span>
               <span className='md:hidden'>💸</span>
             </TabsTrigger>
-          <TabsContent value='invoicing' className='m-0 p-0'>
-            <div className='bg-gradient-to-br from-slate-900 via-green-900 to-slate-900 min-h-screen p-6'>
-              <AutomatedInvoicing />
-            </div>
-          </TabsContent>
+            <TabsContent value='invoicing' className='m-0 p-0'>
+              <div className='bg-gradient-to-br from-slate-900 via-green-900 to-slate-900 min-h-screen p-6'>
+                <AutomatedInvoicing />
+              </div>
+            </TabsContent>
             <TabsTrigger
               value='admin'
               className='flex items-center gap-1 md:gap-2 text-xs md:text-sm px-1 md:px-2 bg-red-100'
