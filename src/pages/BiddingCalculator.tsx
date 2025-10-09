@@ -86,4 +86,7 @@ const BiddingCalculator: React.FC = () => {
       {/* Add your form, calculation, and save UI here */}
     </div>
   );
+}
+
+export default BiddingCalculator;
 
