@@ -1,11 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { createClient } from '@supabase/supabase-js';
+import CustomerProfile, { CustomerProfileData } from './customers/CustomerProfile';
+import { supabase } from '@/lib/supabase';
 
-// This should be initialized from your central Supabase client instance
-const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL!,
-  import.meta.env.VITE_SUPABASE_ANON_KEY!
-);
+// Use shared supabase client
 
 // --- Type Definitions based on your template ---
 type CompanyProfile = { company_name: string; address: string; };
@@ -175,45 +172,61 @@ function InvoiceListView({ invoices, onCreateNew, onEdit, onDelete, onManageCust
 
 // --- Customer Management View ---
 function CustomerManager({ customers, onSaveSuccess, onBack }: any) {
-    const [form, setForm] = useState({ name: '', email: '', address: '', phone: '' });
-    const [isSaving, setIsSaving] = useState(false);
-    const [error, setError] = useState<string | null>(null);
+  const [form, setForm] = useState({ name: '', email: '', address: '', phone: '' });
+  const [isSaving, setIsSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedCustomer, setSelectedCustomer] = useState<CustomerProfileData | null>(null);
 
-    const handleAddCustomer = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setError(null);
-        if (!form.name) return setError('Customer name is required.');
-        setIsSaving(true);
-        const { error: insertError } = await supabase.from('customers').insert([{ customer_name: form.name, email: form.email, address: form.address, phone: form.phone }]);
-        setIsSaving(false);
-        if (insertError) setError(`Failed to add customer: ${insertError.message}`);
-        else {
-            setForm({ name: '', email: '', address: '', phone: '' });
-            onSaveSuccess();
-        }
-    };
-    return (
-        <div className="bg-white p-8 rounded-lg shadow-lg">
-            <button onClick={onBack} className="mb-6 text-sm font-medium text-gray-600 hover:text-gray-900 flex items-center">
-                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                Back to Invoices
-            </button>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Manage Customers</h2>
-            {error && <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg">{error}</div>}
-            <form onSubmit={handleAddCustomer} className="p-4 border rounded-lg mb-6 space-y-4 bg-gray-50">
-                <h3 className="font-semibold text-lg">Add New Customer</h3>
-                <input type="text" value={form.name} onChange={(e) => setForm({...form, name: e.target.value})} placeholder="Full Name or Company" className="p-2 w-full border rounded-md"/>
-                <input type="email" value={form.email} onChange={(e) => setForm({...form, email: e.target.value})} placeholder="Email" className="p-2 w-full border rounded-md"/>
-                <input type="text" value={form.address} onChange={(e) => setForm({...form, address: e.target.value})} placeholder="Address" className="p-2 w-full border rounded-md"/>
-                <input type="text" value={form.phone} onChange={(e) => setForm({...form, phone: e.target.value})} placeholder="Phone" className="p-2 w-full border rounded-md"/>
-                <button type="submit" disabled={isSaving} className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-blue-300">{isSaving ? 'Saving...' : 'Add Customer'}</button>
-            </form>
-            <h3 className="font-bold mb-2 text-lg">Existing Customers:</h3>
-            <ul className="list-disc list-inside bg-gray-50 p-4 rounded-lg">
-                {customers.map((c: Customer) => <li key={c.id} className="text-gray-700">{c.customer_name} ({c.email})</li>)}
-            </ul>
-        </div>
-    );
+  const handleAddCustomer = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    if (!form.name) return setError('Customer name is required.');
+    setIsSaving(true);
+    const { error: insertError } = await supabase.from('customers').insert([{ customer_name: form.name, email: form.email, address: form.address, phone: form.phone }]);
+    setIsSaving(false);
+    if (insertError) setError(`Failed to add customer: ${insertError.message}`);
+    else {
+      setForm({ name: '', email: '', address: '', phone: '' });
+      onSaveSuccess();
+    }
+  };
+
+  return (
+    <div className="flex flex-col md:flex-row gap-8 bg-white p-8 rounded-lg shadow-lg">
+      <div className="md:w-1/3 w-full">
+        <button onClick={onBack} className="mb-6 text-sm font-medium text-gray-600 hover:text-gray-900 flex items-center">
+          <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+          Back to Invoices
+        </button>
+        <h2 className="text-2xl font-bold text-gray-900 mb-4">Clients</h2>
+        <form onSubmit={handleAddCustomer} className="p-4 border rounded-lg mb-6 space-y-4 bg-gray-50">
+          <h3 className="font-semibold text-lg">Add New Client</h3>
+          <input type="text" value={form.name} onChange={(e) => setForm({...form, name: e.target.value})} placeholder="Full Name or Company" className="p-2 w-full border rounded-md"/>
+          <input type="email" value={form.email} onChange={(e) => setForm({...form, email: e.target.value})} placeholder="Email" className="p-2 w-full border rounded-md"/>
+          <input type="text" value={form.address} onChange={(e) => setForm({...form, address: e.target.value})} placeholder="Address" className="p-2 w-full border rounded-md"/>
+          <input type="text" value={form.phone} onChange={(e) => setForm({...form, phone: e.target.value})} placeholder="Phone" className="p-2 w-full border rounded-md"/>
+          <button type="submit" disabled={isSaving} className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-blue-300">{isSaving ? 'Saving...' : 'Add Client'}</button>
+        </form>
+        {error && <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg">{error}</div>}
+        <h3 className="font-bold mb-2 text-lg">All Clients</h3>
+        <ul className="divide-y divide-gray-200 bg-gray-50 rounded-lg overflow-hidden">
+          {customers.map((c: any) => (
+            <li key={c.id} className={`p-3 cursor-pointer hover:bg-blue-50 ${selectedCustomer?.id === c.id ? 'bg-blue-100' : ''}`} onClick={() => setSelectedCustomer({ ...c })}>
+              <div className="font-medium text-gray-900">{c.customer_name}</div>
+              <div className="text-xs text-gray-500">{c.email}</div>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div className="md:w-2/3 w-full">
+        {selectedCustomer ? (
+          <CustomerProfile customer={selectedCustomer} />
+        ) : (
+          <div className="flex items-center justify-center h-full min-h-[300px] text-gray-400">Select a client to view full profile</div>
+        )}
+      </div>
+    </div>
+  );
 }
 
 // --- Invoice Form View (Built EXACTLY to your template) ---
