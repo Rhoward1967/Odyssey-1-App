@@ -26,7 +26,7 @@ type Invoice = {
 };
 
 // --- Main Dashboard Component ---
-export default function InvoiceDashboard() {
+export default function AutomatedInvoicing() {
   const [view, setView] = useState<'list' | 'invoice_form' | 'customer_form'>(
     'list'
   );
