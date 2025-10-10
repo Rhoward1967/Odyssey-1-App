@@ -2,9 +2,18 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
-import { 
-  BookOpen, User, Calculator, Calendar, FileText, 
-  Settings, HelpCircle, Play, CheckCircle, Users, DollarSign
+import {
+  BookOpen,
+  User,
+  Calculator,
+  Calendar,
+  FileText,
+  Settings,
+  HelpCircle,
+  Play,
+  CheckCircle,
+  Users,
+  DollarSign,
 } from 'lucide-react';
 
 interface ManualSection {
@@ -28,13 +37,25 @@ export const UserManual: React.FC = () => {
         'Real-time document processing and government contracting tools',
         'Supabase backend with edge functions for scalable operations',
         'OpenAI/Anthropic integrations for genuine AI responses',
-        'Advanced features in R&D phase: quantum computing (15% complete), distributed systems (8% complete)'
+        'Advanced features in R&D phase: quantum computing (15% complete), distributed systems (8% complete)',
       ],
       steps: [
-        { title: 'Login', description: 'Use Google OAuth or master credentials to access the system' },
-        { title: 'Dashboard', description: 'Review system status and recent activities on the main dashboard' },
-        { title: 'Navigation', description: 'Use the tab navigation to access different system modules' }
-      ]
+        {
+          title: 'Login',
+          description:
+            'Use Google OAuth or master credentials to access the system',
+        },
+        {
+          title: 'Dashboard',
+          description:
+            'Review system status and recent activities on the main dashboard',
+        },
+        {
+          title: 'Navigation',
+          description:
+            'Use the tab navigation to access different system modules',
+        },
+      ],
     },
     {
       id: 'document-management',
@@ -44,13 +65,24 @@ export const UserManual: React.FC = () => {
         'Upload and organize all your business documents securely',
         'Categorize documents by type (contracts, invoices, proposals, etc.)',
         'Search through documents using keywords and filters',
-        'Share documents with team members with proper access control'
+        'Share documents with team members with proper access control',
       ],
       steps: [
-        { title: 'Upload Documents', description: 'Drag and drop files or click to browse and upload documents' },
-        { title: 'Categorize', description: 'Select document type and add tags for easy organization' },
-        { title: 'Search & Access', description: 'Use the search bar to quickly find specific documents' }
-      ]
+        {
+          title: 'Upload Documents',
+          description:
+            'Drag and drop files or click to browse and upload documents',
+        },
+        {
+          title: 'Categorize',
+          description:
+            'Select document type and add tags for easy organization',
+        },
+        {
+          title: 'Search & Access',
+          description: 'Use the search bar to quickly find specific documents',
+        },
+      ],
     },
     {
       id: 'crm-system',
@@ -60,13 +92,22 @@ export const UserManual: React.FC = () => {
         'Manage all your business contacts and client relationships',
         'Track lead status and conversion progress',
         'Store company information and contact details',
-        'Monitor communication history and follow-ups'
+        'Monitor communication history and follow-ups',
       ],
       steps: [
-        { title: 'Add Contacts', description: 'Create new contact entries with complete information' },
-        { title: 'Update Lead Status', description: 'Track prospects through your sales pipeline' },
-        { title: 'Manage Relationships', description: 'View contact history and schedule follow-ups' }
-      ]
+        {
+          title: 'Add Contacts',
+          description: 'Create new contact entries with complete information',
+        },
+        {
+          title: 'Update Lead Status',
+          description: 'Track prospects through your sales pipeline',
+        },
+        {
+          title: 'Manage Relationships',
+          description: 'View contact history and schedule follow-ups',
+        },
+      ],
     },
     {
       id: 'invoicing',
@@ -76,13 +117,24 @@ export const UserManual: React.FC = () => {
         'Create professional invoices with line items and calculations',
         'Automatically calculate totals, taxes, and discounts',
         'Track payment status and send reminders',
-        'Generate reports for accounting and tax purposes'
+        'Generate reports for accounting and tax purposes',
       ],
       steps: [
-        { title: 'Create Invoice', description: 'Select client and add line items with descriptions and amounts' },
-        { title: 'Review & Send', description: 'Preview invoice and send directly to client' },
-        { title: 'Track Payments', description: 'Monitor payment status and follow up on overdue invoices' }
-      ]
+        {
+          title: 'Create Invoice',
+          description:
+            'Select client and add line items with descriptions and amounts',
+        },
+        {
+          title: 'Review & Send',
+          description: 'Preview invoice and send directly to client',
+        },
+        {
+          title: 'Track Payments',
+          description:
+            'Monitor payment status and follow up on overdue invoices',
+        },
+      ],
     },
     {
       id: 'bidding',
@@ -92,13 +144,24 @@ export const UserManual: React.FC = () => {
         'AI-powered bid calculation with real-time cost analysis',
         'Automated compliance checking and requirement analysis',
         'Historical bid data for improved accuracy',
-        'Export capabilities for proposal documentation'
+        'Export capabilities for proposal documentation',
       ],
       steps: [
-        { title: 'Create Bid', description: 'Navigate to Bidding Calculator and enter project requirements' },
-        { title: 'AI Analysis', description: 'System analyzes requirements and suggests optimal pricing' },
-        { title: 'Review & Submit', description: 'Review calculations and export for proposal submission' }
-      ]
+        {
+          title: 'Create Bid',
+          description:
+            'Navigate to Bidding Calculator and enter project requirements',
+        },
+        {
+          title: 'AI Analysis',
+          description:
+            'System analyzes requirements and suggests optimal pricing',
+        },
+        {
+          title: 'Review & Submit',
+          description: 'Review calculations and export for proposal submission',
+        },
+      ],
     },
     {
       id: 'appointments',
@@ -108,8 +171,8 @@ export const UserManual: React.FC = () => {
         'Integrated calendar system with Google Calendar sync',
         'Automated scheduling with conflict detection',
         'Meeting reminders and notifications',
-        'Client communication integration'
-      ]
+        'Client communication integration',
+      ],
     },
     {
       id: 'research',
@@ -119,75 +182,97 @@ export const UserManual: React.FC = () => {
         'Intelligent document analysis and summarization',
         'Market research and competitive intelligence',
         'Compliance requirement extraction',
-        'Automated report generation'
-      ]
-    }
+        'Automated report generation',
+      ],
+    },
   ];
 
   return (
-    <div className="space-y-6">
-      <Card className="bg-gradient-to-r from-green-900/50 to-blue-900/50 border-green-500/30">
-        <CardHeader className="text-center">
-          <CardTitle className="text-3xl font-bold text-white flex items-center justify-center gap-3">
-            <BookOpen className="h-8 w-8 text-green-400" />
+    <div className='space-y-6'>
+      <Card className='bg-gradient-to-r from-green-900/50 to-blue-900/50 border-green-500/30'>
+        <CardHeader className='text-center'>
+          <CardTitle className='text-3xl font-bold text-white flex items-center justify-center gap-3'>
+            <BookOpen className='h-8 w-8 text-green-400' />
             ODYSSEY-1 USER MANUAL
           </CardTitle>
-          <Badge className="mx-auto bg-green-600/20 text-green-300 text-lg px-4 py-2">
+          <Badge className='mx-auto bg-green-600/20 text-green-300 text-lg px-4 py-2'>
             COMPLETE USER GUIDE
           </Badge>
         </CardHeader>
       </Card>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 bg-slate-800/50 gap-1">
-          <TabsTrigger value="getting-started" className="text-xs md:text-sm px-1 md:px-3">
-            <span className="hidden md:inline">Getting Started</span>
-            <span className="md:hidden">Start</span>
+        <TabsList className='grid w-full grid-cols-2 md:grid-cols-4 bg-slate-800/50 gap-1'>
+          <TabsTrigger
+            value='getting-started'
+            className='text-xs md:text-sm px-1 md:px-3'
+          >
+            <span className='hidden md:inline'>Getting Started</span>
+            <span className='md:hidden'>Start</span>
           </TabsTrigger>
-          <TabsTrigger value="bidding" className="text-xs md:text-sm px-1 md:px-3">
-            <span className="hidden md:inline">Bidding</span>
-            <span className="md:hidden">Bid</span>
+          <TabsTrigger
+            value='bidding'
+            className='text-xs md:text-sm px-1 md:px-3'
+          >
+            <span className='hidden md:inline'>Bidding</span>
+            <span className='md:hidden'>Bid</span>
           </TabsTrigger>
-          <TabsTrigger value="appointments" className="text-xs md:text-sm px-1 md:px-3">
-            <span className="hidden md:inline">Calendar</span>
-            <span className="md:hidden">Cal</span>
+          <TabsTrigger
+            value='appointments'
+            className='text-xs md:text-sm px-1 md:px-3'
+          >
+            <span className='hidden md:inline'>Calendar</span>
+            <span className='md:hidden'>Cal</span>
           </TabsTrigger>
-          <TabsTrigger value="research" className="text-xs md:text-sm px-1 md:px-3">
-            <span className="hidden md:inline">Research</span>
-            <span className="md:hidden">AI</span>
+          <TabsTrigger
+            value='research'
+            className='text-xs md:text-sm px-1 md:px-3'
+          >
+            <span className='hidden md:inline'>Research</span>
+            <span className='md:hidden'>AI</span>
           </TabsTrigger>
         </TabsList>
 
         {sections.map(section => (
-          <TabsContent key={section.id} value={section.id} className="space-y-4">
-            <Card className="bg-slate-800/50 border-green-500/20">
+          <TabsContent
+            key={section.id}
+            value={section.id}
+            className='space-y-4'
+          >
+            <Card className='bg-slate-800/50 border-green-500/20'>
               <CardHeader>
-                <CardTitle className="flex items-center gap-3 text-white">
-                  <section.icon className="h-6 w-6 text-green-400" />
+                <CardTitle className='flex items-center gap-3 text-white'>
+                  <section.icon className='h-6 w-6 text-green-400' />
                   {section.title}
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-3">
+              <CardContent className='space-y-4'>
+                <div className='space-y-3'>
                   {section.content.map((item, idx) => (
-                    <div key={idx} className="flex items-start gap-3">
-                      <CheckCircle className="h-5 w-5 text-green-400 mt-0.5 flex-shrink-0" />
-                      <p className="text-gray-300">{item}</p>
+                    <div key={idx} className='flex items-start gap-3'>
+                      <CheckCircle className='h-5 w-5 text-green-400 mt-0.5 flex-shrink-0' />
+                      <p className='text-gray-300'>{item}</p>
                     </div>
                   ))}
                 </div>
-                
+
                 {section.steps && (
-                  <div className="space-y-3 border-t border-green-500/20 pt-4">
-                    <h4 className="font-semibold text-green-300">Step-by-Step Guide:</h4>
+                  <div className='space-y-3 border-t border-green-500/20 pt-4'>
+                    <h4 className='font-semibold text-green-300'>
+                      Step-by-Step Guide:
+                    </h4>
                     {section.steps.map((step, idx) => (
-                      <div key={idx} className="flex items-start gap-3">
-                        <div className="w-6 h-6 rounded-full bg-green-600/20 text-green-300 flex items-center justify-center text-sm font-semibold flex-shrink-0">
+                      <div key={idx} className='flex items-start gap-3'>
+                        <div className='w-6 h-6 rounded-full bg-green-600/20 text-green-300 flex items-center justify-center text-sm font-semibold flex-shrink-0'>
                           {idx + 1}
                         </div>
                         <div>
-                          <h5 className="font-medium text-white">{step.title}</h5>
-                          <p className="text-gray-400 text-sm">{step.description}</p>
+                          <h5 className='font-medium text-white'>
+                            {step.title}
+                          </h5>
+                          <p className='text-gray-400 text-sm'>
+                            {step.description}
+                          </p>
                         </div>
                       </div>
                     ))}
