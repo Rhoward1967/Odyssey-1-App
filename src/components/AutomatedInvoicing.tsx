@@ -1,200 +1,192 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { createClient } from '@supabase/supabase-js';
 
-// This should be initialized from your central Supabase client instance
 const supabase = createClient(
   import.meta.env.VITE_SUPABASE_URL!,
   import.meta.env.VITE_SUPABASE_ANON_KEY!
 );
 
-// --- Type Definitions ---
+type CompanyProfile = {
+  company_name: string;
+  address: string;
+  phone?: string;
+  email?: string;
+};
+
+type Customer = {
+  id: string;
+  customer_name: string;
+  email?: string;
+  address?: string;
+};
+
 type LineItem = {
   description: string;
   amount: number;
 };
 
-type InvoiceSubmission = {
-  invoice_number: string;
-  due_date: string; // YYYY-MM-DD format
-  total_amount: number;
-  status: 'draft' | 'sent' | 'paid' | 'void';
-  line_items: LineItem[];
-};
-
 export default function AutomatedInvoicing() {
-  const [lineItems, setLineItems] = useState<LineItem[]>([
-    { description: '', amount: 0 },
-  ]);
+  const [companyProfile, setCompanyProfile] = useState<CompanyProfile | null>(null);
+  const [customers, setCustomers] = useState<Customer[]>([]);
+  const [selectedCustomer, setSelectedCustomer] = useState<string>('');
+  const [lineItems, setLineItems] = useState<LineItem[]>([{ description: '', amount: 0 }]);
   const [dueDate, setDueDate] = useState('');
-  const [status, setStatus] = useState<'draft' | 'sent' | 'paid' | 'void'>(
-    'draft'
-  );
-
+  const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  const handleLineItemChange = (
-    index: number,
-    field: keyof LineItem,
-    value: string | number
-  ) => {
-    const updatedLineItems = [...lineItems];
-    if (field === 'amount') {
-      updatedLineItems[index].amount =
-        typeof value === 'number' ? value : parseFloat(value as string) || 0;
-    } else if (field === 'description') {
-      updatedLineItems[index].description = value as string;
+  // Fetch company profile and customers
+  const fetchData = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const { data: profileData, error: profileError } = await supabase
+        .from('company_profiles')
+        .select('*')
+        .single();
+      if (profileError) throw profileError;
+      setCompanyProfile(profileData);
+
+      const { data: customerData, error: customerError } = await supabase
+        .from('customers')
+        .select('*');
+      if (customerError) throw customerError;
+      setCustomers(customerData || []);
+    } catch (err: any) {
+      setError(`Failed to load data: ${err.message}`);
+    } finally {
+      setLoading(false);
     }
-    setLineItems(updatedLineItems);
-  };
+  }, []);
 
-  const addLineItem = () => {
-    setLineItems([...lineItems, { description: '', amount: 0 }]);
-  };
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
-  const removeLineItem = (index: number) => {
-    const updatedLineItems = lineItems.filter((_, i) => i !== index);
-    setLineItems(updatedLineItems);
+  const addLineItem = () => setLineItems([...lineItems, { description: '', amount: 0 }]);
+  const removeLineItem = (index: number) => setLineItems(lineItems.filter((_, i) => i !== index));
+  const handleLineItemChange = (index: number, field: keyof LineItem, value: string | number) => {
+    const items = [...lineItems];
+    const item = items[index];
+    if (typeof item[field] === 'number') {
+      items[index] = { ...item, [field]: parseFloat(value as string) || 0 };
+    } else {
+      items[index] = { ...item, [field]: value as string };
+    }
+    setLineItems(items);
   };
+  const calculateTotal = () => lineItems.reduce((total, item) => total + item.amount, 0);
 
-  const calculateTotal = () => {
-    return lineItems.reduce((total, item) => total + item.amount, 0);
-  };
-
-  const handleGenerateInvoice = async () => {
+  const handleSaveInvoice = async () => {
+    if (!selectedCustomer) {
+      setError('Please select a customer.');
+      return;
+    }
+    if (calculateTotal() <= 0) {
+      setError('Invoice total must be greater than $0.');
+      return;
+    }
     setIsSaving(true);
     setError(null);
     setSuccessMessage(null);
-
-    const totalAmount = calculateTotal();
-    if (totalAmount <= 0) {
-      setError('Cannot generate an invoice with a total of $0.');
-      setIsSaving(false);
-      return;
-    }
-
-    const submissionData: InvoiceSubmission = {
+    const invoiceData = {
+      customer_id: selectedCustomer,
       invoice_number: `INV-${Date.now()}`,
       due_date: dueDate,
-      total_amount: totalAmount,
-      status: status,
+      total_amount: calculateTotal(),
       line_items: lineItems,
+      status: 'draft',
     };
-
-    const { error: insertError } = await supabase
-      .from('invoices')
-      .insert([submissionData]);
-
+    const { error: insertError } = await supabase.from('invoices').insert([invoiceData]);
     setIsSaving(false);
-
     if (insertError) {
-      console.error('Error saving invoice:', insertError);
       setError(`Failed to save invoice: ${insertError.message}`);
     } else {
-      setSuccessMessage(
-        `Invoice ${submissionData.invoice_number} successfully saved!`
-      );
-      // Reset form
+      setSuccessMessage(`Invoice ${invoiceData.invoice_number} saved successfully!`);
       setLineItems([{ description: '', amount: 0 }]);
+      setSelectedCustomer('');
       setDueDate('');
     }
   };
 
+  if (loading) {
+    return <div>Loading Invoicing Module...</div>;
+  }
+
   return (
-    <div className='p-4 md:p-6 bg-white rounded-lg shadow-md'>
-      <h2 className='text-xl font-bold mb-4'>Generate New Invoice</h2>
+    <div className="p-4 md:p-8 bg-gray-50">
+      <div className="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-lg">
+        {error && <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg">{error}</div>}
+        {successMessage && <div className="mb-4 p-3 bg-green-100 text-green-700 rounded-lg">{successMessage}</div>}
 
-      {error && (
-        <div className='mb-4 p-3 bg-red-100 text-red-700 rounded-lg'>
-          {error}
-        </div>
-      )}
-      {successMessage && (
-        <div className='mb-4 p-3 bg-green-100 text-green-700 rounded-lg'>
-          {successMessage}
-        </div>
-      )}
-
-      <div className='space-y-4'>
-        {lineItems.map((item, index) => (
-          <div key={index} className='flex items-center space-x-2'>
-            <input
-              type='text'
-              placeholder='Description'
-              value={item.description}
-              onChange={e =>
-                handleLineItemChange(index, 'description', e.target.value)
-              }
-              className='p-2 w-full border rounded-md'
-            />
-            <input
-              type='number'
-              placeholder='Amount'
-              value={item.amount}
-              onChange={e =>
-                handleLineItemChange(index, 'amount', e.target.value)
-              }
-              className='p-2 w-40 border rounded-md'
-            />
-            <button
-              onClick={() => removeLineItem(index)}
-              className='p-2 text-red-500 hover:text-red-700'
-            >
-              ✕
-            </button>
+        {/* Invoice Header */}
+        <div className="flex justify-between items-start mb-8">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-800">{companyProfile?.company_name || 'Your Company'}</h1>
+            <p className="text-gray-500">{companyProfile?.address || 'Your Address'}</p>
           </div>
-        ))}
-        <button
-          onClick={addLineItem}
-          className='text-sm text-blue-600 hover:underline'
-        >
-          + Add Line Item
-        </button>
-      </div>
-
-      <div className='mt-6 grid grid-cols-1 md:grid-cols-2 gap-4'>
-        <div>
-          <label htmlFor='dueDate' className='block text-sm font-medium'>
-            Due Date
-          </label>
-          <input
-            type='date'
-            id='dueDate'
-            value={dueDate}
-            onChange={e => setDueDate(e.target.value)}
-            className='mt-1 p-2 w-full border rounded-md'
-          />
+          <h2 className="text-4xl font-light text-gray-400">INVOICE</h2>
         </div>
-        <div>
-          <label htmlFor='status' className='block text-sm font-medium'>
-            Status
-          </label>
-          <select
-            id='status'
-            value={status}
-            onChange={e => setStatus(e.target.value as any)}
-            className='mt-1 p-2 w-full border rounded-md'
-          >
-            <option value='draft'>Draft</option>
-            <option value='sent'>Sent</option>
-          </select>
+
+        {/* Customer & Dates */}
+        <div className="grid grid-cols-2 gap-8 mb-8">
+          <div>
+            <h3 className="font-bold text-gray-500 mb-2">BILL TO</h3>
+            <select value={selectedCustomer} onChange={(e) => setSelectedCustomer(e.target.value)} className="p-2 w-full border rounded-md">
+              <option value="">Select a Customer</option>
+              {customers.map(c => <option key={c.id} value={c.id}>{c.customer_name}</option>)}
+            </select>
+          </div>
+          <div>
+            <div className="flex justify-between items-center mb-2">
+              <span className="font-bold text-gray-500">Invoice #</span>
+              <span>INV-{Date.now()}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="font-bold text-gray-500">Due Date</span>
+              <input type="date" value={dueDate} onChange={(e) => setDueDate(e.target.value)} className="p-1 border rounded-md text-right"/>
+            </div>
+          </div>
         </div>
-      </div>
 
-      <div className='mt-6 border-t pt-4'>
-        <h3 className='text-lg font-semibold text-right'>
-          Total: ${calculateTotal().toFixed(2)}
-        </h3>
-      </div>
+        {/* Line Items Table */}
+        <table className="w-full mb-8">
+          <thead>
+            <tr className="border-b-2 border-gray-200">
+              <th className="text-left font-bold text-gray-500 p-2">DESCRIPTION</th>
+              <th className="text-right font-bold text-gray-500 p-2">AMOUNT</th>
+              <th className="w-10"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {lineItems.map((item, index) => (
+              <tr key={index}>
+                <td><input type="text" value={item.description} onChange={(e) => handleLineItemChange(index, 'description', e.target.value)} className="p-2 w-full" placeholder="Service or Product"/></td>
+                <td><input type="number" value={item.amount} onChange={(e) => handleLineItemChange(index, 'amount', e.target.value)} className="p-2 w-full text-right" placeholder="0.00"/></td>
+                <td><button onClick={() => removeLineItem(index)} className="text-red-500 p-2">✕</button></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <button onClick={addLineItem} className="text-sm text-blue-600 hover:underline mb-8">+ Add Line Item</button>
 
-      <div className='mt-4'>
-        <button
-          onClick={handleGenerateInvoice}
-          disabled={isSaving}
-          className='w-full py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-blue-300'
-        >
-          {isSaving ? 'Saving Invoice...' : 'Generate and Save Invoice'}
+        {/* Total */}
+        <div className="flex justify-end mb-8">
+          <div className="w-64">
+            <div className="flex justify-between items-center p-2">
+              <span className="font-bold text-gray-500">Subtotal</span>
+              <span className="text-gray-800">${calculateTotal().toFixed(2)}</span>
+            </div>
+            <div className="flex justify-between items-center p-2 bg-gray-100 rounded-lg">
+              <span className="font-bold text-xl text-gray-800">Total</span>
+              <span className="font-bold text-xl text-gray-800">${calculateTotal().toFixed(2)}</span>
+            </div>
+          </div>
+        </div>
+        {/* Save Button */}
+        <button onClick={handleSaveInvoice} disabled={isSaving} className="w-full py-3 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-blue-300 font-bold">
+          {isSaving ? 'Saving...' : 'Save Invoice'}
         </button>
       </div>
     </div>
