@@ -17,6 +17,9 @@ interface AuthContextType {
   user: User | null;
   isSuperAdmin: boolean;
   loading: boolean;
+  signIn: (email: string, password: string) => Promise<void>;
+  signUp: (email: string, password: string, name?: string) => Promise<void>;
+  signOut: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -28,6 +31,45 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isSuperAdmin, setIsSuperAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  // --- AUTH METHODS ---
+  const signIn = async (email: string, password: string) => {
+    setLoading(true);
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) {
+      setLoading(false);
+      throw error;
+    }
+    setUser(data.user);
+    setLoading(false);
+  };
+
+  const signUp = async (email: string, password: string, name?: string) => {
+    setLoading(true);
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: name ? { data: { name } } : undefined,
+    });
+    if (error) {
+      setLoading(false);
+      throw error;
+    }
+    setUser(data.user);
+    setLoading(false);
+  };
+
+  const signOut = async () => {
+    setLoading(true);
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      setLoading(false);
+      throw error;
+    }
+    setUser(null);
+    setIsSuperAdmin(false);
+    setLoading(false);
+  };
+
   useEffect(() => {
     // --- DEVELOPER BYPASS LOGIC ---
     if (ARCHITECT_EMAIL) {
@@ -38,6 +80,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const architectUser = {
         id: 'architect-bypass-uuid',
         email: ARCHITECT_EMAIL,
+        user_metadata: { name: 'Architect' },
+        app_metadata: { provider: 'email' },
+        aud: 'authenticated',
+        created_at: new Date().toISOString(),
       } as User;
       setUser(architectUser);
       setIsSuperAdmin(true);
@@ -80,7 +126,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
   }, []);
 
-  const value = { user, isSuperAdmin, loading };
+  const value = { user, isSuperAdmin, loading, signIn, signUp, signOut };
 
   return (
     <AuthContext.Provider value={value}>

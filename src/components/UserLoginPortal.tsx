@@ -3,10 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/components/AuthProvider';
-import { isHJSAdmin, getHJSRole } from '@/lib/adminPrivileges';
-import { Shield, Users, Eye, EyeOff, LogIn, UserPlus } from 'lucide-react';
+import { Shield, Eye, EyeOff, LogIn, UserPlus } from 'lucide-react';
 
 const UserLoginPortal: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -33,9 +31,6 @@ const UserLoginPortal: React.FC = () => {
     }
   };
 
-  const hjsRole = user?.email ? getHJSRole(user.email) : null;
-  const isHJSUser = user?.email ? isHJSAdmin(user.email) : false;
-
   if (user && !loading) {
     return (
       <div className="max-w-2xl mx-auto space-y-6">
@@ -49,18 +44,8 @@ const UserLoginPortal: React.FC = () => {
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-white font-medium">{user.name || user.email}</p>
+                <p className="text-white font-medium">{user.user_metadata?.name || user.email}</p>
                 <p className="text-gray-400 text-sm">{user.email}</p>
-              </div>
-              <div className="flex gap-2">
-                {isHJSUser && (
-                  <Badge variant="secondary" className="bg-purple-600 text-white">
-                    HJS {hjsRole}
-                  </Badge>
-                )}
-                <Badge variant="outline" className="border-slate-600 text-gray-300">
-                  {user.role || 'user'}
-                </Badge>
               </div>
             </div>
             <Button 
