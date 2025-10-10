@@ -18,7 +18,7 @@ type Invoice = {
   total_amount: number;
   due_date: string;
   status: 'draft' | 'sent' | 'paid' | 'void';
-  customers: { customer_name: string }; // For displaying customer name in list
+  customers: { customer_name: string } | null; // For displaying customer name in list
 };
 
 // --- Main Dashboard Component ---
@@ -54,11 +54,16 @@ export default function InvoiceDashboard() {
         // OPTIMIZATION: Narrow select and add ordering/limit
         const { data: invoiceData, error: invoiceError } = await supabase
             .from('invoices')
-            .select('id, invoice_number, customer_id, total_amount, due_date, status, customers(customer_name)')
+            .select('id, invoice_number, customer_id, total_amount, due_date, status, customers:customers(customer_name)')
             .order('created_at', { ascending: false })
             .limit(100);
         if (invoiceError) throw invoiceError;
-        setInvoices(invoiceData || []);
+        // Supabase returns customers as array, but we want a single object or null
+        const normalizedInvoices = (invoiceData || []).map((inv: any) => ({
+          ...inv,
+          customers: Array.isArray(inv.customers) ? inv.customers[0] || null : inv.customers || null
+        }));
+        setInvoices(normalizedInvoices);
 
         // OPTIMIZATION: Narrow select and add ordering/limit
         const { data: customerData, error: customerError } = await supabase
