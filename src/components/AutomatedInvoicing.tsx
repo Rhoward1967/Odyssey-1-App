@@ -362,39 +362,198 @@ function InvoiceForm({
   onSaveSuccess: () => void;
   onCancel: () => void;
 }) {
-  // A full implementation of the professional form would go here.
-  // This is a placeholder to show the structure.
-  return (
-    <div>
-      <button
-        onClick={onCancel}
-        className='mb-4 text-sm text-gray-600 hover:underline'
-      >
-        ← Back to Invoice List
-      </button>
-      <div className='bg-white p-8 rounded-lg shadow-lg'>
-        <div className='flex justify-between items-start mb-8'>
-          <div>
-            <h1 className='text-3xl font-bold text-gray-800'>
-              {companyProfile?.company_name || 'Your Company'}
-            </h1>
-            <p className='text-gray-500'>
-              {companyProfile?.address || 'Your Address'}
-            </p>
-          </div>
-          <h2 className='text-4xl font-light text-gray-400'>INVOICE</h2>
-        </div>
-        <h2 className='text-2xl font-bold mb-4'>
-          {initialInvoice
-            ? `Edit Invoice #${initialInvoice.invoice_number}`
-            : 'Create New Invoice'}
-        </h2>
-        <p>
-          A full professional invoice form would be rendered here, allowing
-          selection from the customer list.
-        </p>
-        {/* Full form UI from previous steps would be integrated here */}
-      </div>
-    </div>
-  );
+   // --- Professional Invoice Form Implementation ---
+   const [client, setClient] = useState(initialInvoice?.customers?.customer_name || '');
+   const [terms, setTerms] = useState('Net 30');
+   const [invoiceDate, setInvoiceDate] = useState(initialInvoice?.due_date || new Date().toISOString().split('T')[0]);
+   const [dueDate, setDueDate] = useState(initialInvoice?.due_date || new Date(Date.now() + 30*24*60*60*1000).toISOString().split('T')[0]);
+  // po_number is not present on Invoice type; use blank or add to form only
+  const [poNumber, setPoNumber] = useState('');
+   const [creditCard, setCreditCard] = useState('');
+   const [vendorDetails, setVendorDetails] = useState('');
+   // line_items is not present on Invoice type; use default blank line item
+   const [lineItems, setLineItems] = useState([
+     {
+       id: 1,
+       serviceDate: invoiceDate,
+       product: '',
+       sku: '',
+       description: '',
+       qty: 1,
+       rate: 0,
+       amount: 0,
+       tax: 0,
+     },
+   ]);
+   const [notes, setNotes] = useState('Thank You for your Business. Please Make Checks Payable to HJS SERVICES LLC SEND TO P. O BOX 80054 ATHENS GA 30608');
+   const [customerNote, setCustomerNote] = useState('We Appreciate your Business and look forward to working with you again.');
+   const [internalNotes, setInternalNotes] = useState('');
+   const [memo, setMemo] = useState('');
+   const [attachments, setAttachments] = useState<File[]>([]);
+   const [shipping, setShipping] = useState(0);
+   const [deposit, setDeposit] = useState(0);
+   const [taxRate, setTaxRate] = useState(0);
+
+   // Helper functions
+   const handleLineItemChange = (index: number, field: string, value: any) => {
+     const items = [...lineItems];
+     items[index][field] = value;
+     if (field === 'qty' || field === 'rate') {
+       items[index].amount = (items[index].qty || 0) * (items[index].rate || 0);
+     }
+     setLineItems(items);
+   };
+   const addLineItem = () => setLineItems([...lineItems, {
+     id: lineItems.length + 1,
+     serviceDate: invoiceDate,
+     product: '',
+     sku: '',
+     description: '',
+     qty: 1,
+     rate: 0,
+     amount: 0,
+     tax: 0,
+   }]);
+   const removeLineItem = (index: number) => setLineItems(lineItems.filter((_, i) => i !== index));
+
+   // Calculations
+   const subtotal = lineItems.reduce((sum, item) => sum + item.amount, 0);
+   const taxableSubtotal = lineItems.reduce((sum, item) => sum + (item.tax ? item.amount : 0), 0);
+   const salesTax = taxRate ? taxableSubtotal * (taxRate / 100) : 0;
+   const total = subtotal + salesTax + shipping;
+   const balanceDue = total - deposit;
+
+   return (
+     <div>
+       <button
+         onClick={onCancel}
+         className='mb-4 text-sm text-gray-600 hover:underline'
+       >
+         ← Back to Invoice List
+       </button>
+       <div className='bg-white p-8 rounded-lg shadow-lg'>
+         <div className='flex justify-between items-start mb-8'>
+           <div>
+             <h1 className='text-3xl font-bold text-gray-800'>
+               {companyProfile?.company_name || 'Your Company'}
+             </h1>
+             <p className='text-gray-500'>
+               {companyProfile?.address || 'Your Address'}
+             </p>
+           </div>
+           <h2 className='text-4xl font-light text-gray-400'>INVOICE</h2>
+         </div>
+
+         {/* Client & Terms Section */}
+         <div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-6'>
+           <div>
+             <label className='block font-medium'>Add client</label>
+             <input className='w-full border p-2 rounded' value={client} onChange={e => setClient(e.target.value)} placeholder='Client name' />
+           </div>
+           <div>
+             <label className='block font-medium'>Terms</label>
+             <select className='w-full border p-2 rounded' value={terms} onChange={e => setTerms(e.target.value)}>
+               <option>Net 30</option>
+               <option>Net 15</option>
+               <option>Due on receipt</option>
+             </select>
+           </div>
+           <div>
+             <label className='block font-medium'>Invoice date</label>
+             <input type='date' className='w-full border p-2 rounded' value={invoiceDate} onChange={e => setInvoiceDate(e.target.value)} />
+           </div>
+           <div>
+             <label className='block font-medium'>Due date</label>
+             <input type='date' className='w-full border p-2 rounded' value={dueDate} onChange={e => setDueDate(e.target.value)} />
+           </div>
+           <div>
+             <label className='block font-medium'>PO Number</label>
+             <input className='w-full border p-2 rounded' value={poNumber} onChange={e => setPoNumber(e.target.value)} />
+           </div>
+           <div>
+             <label className='block font-medium'>Credit Card</label>
+             <input className='w-full border p-2 rounded' value={creditCard} onChange={e => setCreditCard(e.target.value)} />
+           </div>
+           <div className='md:col-span-2'>
+             <label className='block font-medium'>Vendor Details</label>
+             <input className='w-full border p-2 rounded' value={vendorDetails} onChange={e => setVendorDetails(e.target.value)} />
+           </div>
+         </div>
+
+         {/* Line Items Table */}
+         <div className='mb-6'>
+           <table className='w-full border mb-2'>
+             <thead>
+               <tr className='bg-gray-100'>
+                 <th className='p-2'>#</th>
+                 <th className='p-2'>Service Date</th>
+                 <th className='p-2'>Product/Service</th>
+                 <th className='p-2'>SKU</th>
+                 <th className='p-2'>Description</th>
+                 <th className='p-2'>Qty</th>
+                 <th className='p-2'>Rate</th>
+                 <th className='p-2'>Amount</th>
+                 <th className='p-2'>Tax</th>
+                 <th></th>
+               </tr>
+             </thead>
+             <tbody>
+               {lineItems.map((item, idx) => (
+                 <tr key={item.id}>
+                   <td className='p-2 text-center'>{idx + 1}</td>
+                   <td className='p-2'><input type='date' className='border p-1 rounded' value={item.serviceDate} onChange={e => handleLineItemChange(idx, 'serviceDate', e.target.value)} /></td>
+                   <td className='p-2'><input className='border p-1 rounded' value={item.product} onChange={e => handleLineItemChange(idx, 'product', e.target.value)} placeholder='Product/Service' /></td>
+                   <td className='p-2'><input className='border p-1 rounded' value={item.sku} onChange={e => handleLineItemChange(idx, 'sku', e.target.value)} placeholder='SKU' /></td>
+                   <td className='p-2'><input className='border p-1 rounded' value={item.description} onChange={e => handleLineItemChange(idx, 'description', e.target.value)} placeholder='Description' /></td>
+                   <td className='p-2'><input type='number' className='border p-1 rounded w-16' value={item.qty} min={1} onChange={e => handleLineItemChange(idx, 'qty', parseInt(e.target.value) || 1)} /></td>
+                   <td className='p-2'><input type='number' className='border p-1 rounded w-24' value={item.rate} min={0} step={0.01} onChange={e => handleLineItemChange(idx, 'rate', parseFloat(e.target.value) || 0)} /></td>
+                   <td className='p-2 text-right'>${item.amount.toFixed(2)}</td>
+                   <td className='p-2'><input type='checkbox' checked={!!item.tax} onChange={e => handleLineItemChange(idx, 'tax', e.target.checked ? 1 : 0)} /></td>
+                   <td className='p-2'><button onClick={() => removeLineItem(idx)} className='text-red-500'>✕</button></td>
+                 </tr>
+               ))}
+             </tbody>
+           </table>
+           <button onClick={addLineItem} className='text-blue-600 hover:underline'>+ Add line item</button>
+         </div>
+
+         {/* Notes & Attachments */}
+         <div className='mb-6 grid grid-cols-1 md:grid-cols-2 gap-4'>
+           <div>
+             <label className='block font-medium'>Thank You Message</label>
+             <textarea className='w-full border p-2 rounded' value={notes} onChange={e => setNotes(e.target.value)} />
+           </div>
+           <div>
+             <label className='block font-medium'>Note to customer</label>
+             <textarea className='w-full border p-2 rounded' value={customerNote} onChange={e => setCustomerNote(e.target.value)} />
+           </div>
+           {/* Hidden fields for internal notes and memo */}
+           {/* <div><label>Internal customer notes (hidden)</label><textarea className='w-full border p-2 rounded' value={internalNotes} onChange={e => setInternalNotes(e.target.value)} /></div> */}
+           {/* <div><label>Memo on statement (hidden)</label><textarea className='w-full border p-2 rounded' value={memo} onChange={e => setMemo(e.target.value)} /></div> */}
+         </div>
+         <div className='mb-6'>
+           <label className='block font-medium'>Attachments</label>
+           <input type='file' multiple onChange={e => setAttachments(e.target.files ? Array.from(e.target.files) : [])} />
+           <div className='text-xs text-gray-500 mt-1'>Max file size: 20 MB</div>
+         </div>
+
+         {/* Totals Section */}
+         <div className='bg-gray-50 p-4 rounded-lg mb-4'>
+           <div className='flex justify-between mb-2'><span>Subtotal</span><span>${subtotal.toFixed(2)}</span></div>
+           <div className='flex justify-between mb-2'><span>Taxable subtotal</span><span>${taxableSubtotal.toFixed(2)}</span></div>
+           <div className='flex justify-between mb-2'>
+             <span>Select sales tax rate</span>
+             <input type='number' className='border p-1 rounded w-24' value={taxRate} min={0} max={100} step={0.01} onChange={e => setTaxRate(parseFloat(e.target.value) || 0)} />
+             <span>Automatic Calculation</span>
+           </div>
+           <div className='flex justify-between mb-2'><span>Sales tax</span><span>${salesTax.toFixed(2)}</span></div>
+           <div className='flex justify-between mb-2'><span>Shipping</span><input type='number' className='border p-1 rounded w-24' value={shipping} min={0} step={0.01} onChange={e => setShipping(parseFloat(e.target.value) || 0)} /></div>
+           <div className='flex justify-between mb-2 font-bold text-lg'><span>Invoice total</span><span>${total.toFixed(2)}</span></div>
+           <div className='flex justify-between mb-2'><span>Deposit</span><input type='number' className='border p-1 rounded w-24' value={deposit} min={0} step={0.01} onChange={e => setDeposit(parseFloat(e.target.value) || 0)} /></div>
+           {/* <div className='flex justify-between mb-2'><span>Balance due (hidden)</span><span>${balanceDue.toFixed(2)}</span></div> */}
+           <button className='mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700'>Edit totals</button>
+         </div>
+       </div>
+     </div>
+   );
 }
