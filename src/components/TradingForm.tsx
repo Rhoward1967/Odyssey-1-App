@@ -38,25 +38,51 @@ const TradingForm: React.FC<TradingFormProps> = ({
     'function transfer(address to, uint256 amount) public returns (bool)'
   ];
 
+  const [status, setStatus] = useState<string | null>(null);
+  const [statusType, setStatusType] = useState<'success' | 'error' | 'info' | null>(null);
+
   const handleWeb3Trade = async () => {
+    setStatus(null);
+    setStatusType(null);
     if (!wallet.connected || !window.ethereum) {
-      alert('Please connect MetaMask first.');
+      setStatus('Please connect MetaMask first.');
+      setStatusType('error');
       return;
     }
     if (!amount) {
-      alert('Enter an amount to trade.');
+      setStatus('Enter an amount to trade.');
+      setStatusType('error');
       return;
     }
     try {
+      setStatus('Sending Web3 transaction...');
+      setStatusType('info');
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
       const contract = new ethers.Contract(WXRP_ADDRESS, WXRP_ABI, signer);
+      // Fetch gas price from env or fallback
+      let gasPrice = undefined;
+      try {
+        const apiKey = import.meta.env.VITE_GAS_API_KEY;
+        const res = await fetch(`https://api.blocknative.com/gasprices/blockprices`, {
+          headers: { Authorization: apiKey }
+        });
+        const data = await res.json();
+        const gwei = data?.blockPrices?.[0]?.estimatedPrices?.[0]?.price;
+        if (gwei) {
+          gasPrice = ethers.parseUnits(gwei.toString(), 'gwei');
+        }
+      } catch {}
       // For demo: send to self (replace with recipient for real trading)
-      const tx = await contract.transfer(wallet.address, ethers.parseUnits(amount, 18));
+      const tx = await contract.transfer(wallet.address, ethers.parseUnits(amount, 18), { gasPrice });
+      setStatus('Transaction sent. Waiting for confirmation...');
+      setStatusType('info');
       await tx.wait();
-      alert('Web3 XRP transfer successful!');
+      setStatus('Web3 XRP transfer successful!');
+      setStatusType('success');
     } catch (err: any) {
-      alert('Web3 trade failed: ' + (err.message || err));
+      setStatus('Web3 trade failed: ' + (err.message || err));
+      setStatusType('error');
     }
   };
   const [orderType, setOrderType] = useState<'market' | 'limit'>('market');
@@ -70,10 +96,13 @@ const TradingForm: React.FC<TradingFormProps> = ({
   const estimatedTotal = parseFloat(amount) * (orderType === 'market' ? currentPrice : parseFloat(price) || 0);
 
   const handleSubmitOrder = async () => {
+    setStatus(null);
+    setStatusType(null);
     if (!amount || (orderType === 'limit' && !price)) return;
-    
     setLoading(true);
     try {
+      setStatus('Placing order...');
+      setStatusType('info');
       const { data, error } = await supabase.functions.invoke('coinbase-trading-engine', {
         body: {
           action: 'placeOrder',
@@ -84,18 +113,19 @@ const TradingForm: React.FC<TradingFormProps> = ({
           ...(orderType === 'limit' && { price })
         }
       });
-      
       if (error) throw error;
-      
       if (data.success) {
         setAmount('');
         setPrice('');
-        alert('Order placed successfully!');
+        setStatus('Order placed successfully!');
+        setStatusType('success');
       } else {
-        alert(`Error: ${data.error}`);
+        setStatus(`Error: ${data.error}`);
+        setStatusType('error');
       }
     } catch (error: any) {
-      alert('Failed to place order: ' + (error.message || error));
+      setStatus('Failed to place order: ' + (error.message || error));
+      setStatusType('error');
     } finally {
       setLoading(false);
     }
@@ -106,8 +136,21 @@ const TradingForm: React.FC<TradingFormProps> = ({
       <Card>
         <CardHeader>
           <CardTitle>Place Order</CardTitle>
+          {/* Wallet connection indicator */}
+          <div className="mt-2 flex items-center gap-2">
+            <span className={`w-2 h-2 rounded-full ${wallet.connected ? 'bg-green-500' : 'bg-gray-400'}`}></span>
+            <span className="text-xs text-gray-600">
+              {wallet.connected ? `Wallet Connected: ${wallet.address.slice(0, 6)}...${wallet.address.slice(-4)}` : 'Wallet Not Connected'}
+            </span>
+          </div>
         </CardHeader>
         <CardContent className="space-y-4">
+          {/* Status message */}
+          {status && (
+            <div className={`rounded px-3 py-2 text-xs mb-2 ${statusType === 'success' ? 'bg-green-100 text-green-700' : statusType === 'error' ? 'bg-red-100 text-red-700' : 'bg-blue-50 text-blue-700'}`}>
+              {status}
+            </div>
+          )}
           <div className="space-y-2">
             <Label>Trading Pair</Label>
             <Select value={selectedProduct} onValueChange={onProductChange}>

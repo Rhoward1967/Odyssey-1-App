@@ -1,10 +1,83 @@
+// AI Trading API integration
+async function submitAITrade({ symbol, side, amount, price, orderType, meta }) {
+  try {
+    const res = await fetch('/api/aiTrade', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ symbol, side, amount, price, orderType, meta })
+    });
+    return await res.json();
+  } catch (err) {
+    return { success: false, error: err.message || err };
+  }
+}
+
+// Admin review UI for AI trade logs (scaffold)
+const AITradeLogAdmin: React.FC = () => {
+  const [logs, setLogs] = React.useState<any[]>([]);
+  const [loading, setLoading] = React.useState(false);
+  React.useEffect(() => {
+    async function fetchLogs() {
+      setLoading(true);
+      try {
+        const res = await fetch('/api/aiTradeLog');
+        const data = await res.json();
+        setLogs(data.logs || []);
+      } catch {}
+      setLoading(false);
+    }
+    fetchLogs();
+  }, []);
+  return (
+    <div className="my-8">
+      <h2 className="text-lg font-bold mb-2">AI Trade Log (Admin)</h2>
+      {loading ? <div>Loading...</div> : (
+        <div className="overflow-x-auto max-h-64 border rounded bg-white">
+          <table className="min-w-full text-xs">
+            <thead>
+              <tr className="bg-gray-100">
+                <th className="px-2 py-1">Time</th>
+                <th className="px-2 py-1">Symbol</th>
+                <th className="px-2 py-1">Side</th>
+                <th className="px-2 py-1">Amount</th>
+                <th className="px-2 py-1">Price</th>
+                <th className="px-2 py-1">OrderType</th>
+                <th className="px-2 py-1">Simulation</th>
+                <th className="px-2 py-1">Tx</th>
+                <th className="px-2 py-1">Error</th>
+              </tr>
+            </thead>
+            <tbody>
+              {logs.map((log, i) => (
+                <tr key={i} className="border-b">
+                  <td className="px-2 py-1 whitespace-nowrap">{log.timestamp}</td>
+                  <td className="px-2 py-1">{log.symbol}</td>
+                  <td className="px-2 py-1">{log.side}</td>
+                  <td className="px-2 py-1">{log.amount}</td>
+                  <td className="px-2 py-1">{log.price}</td>
+                  <td className="px-2 py-1">{log.orderType}</td>
+                  <td className="px-2 py-1">{log.simulation ? 'Yes' : 'No'}</td>
+                  <td className="px-2 py-1">{log.tx || '-'}</td>
+                  <td className="px-2 py-1 text-red-600">{log.error || '-'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  );
+};
+import AIExpertAdvisor from './AIExpertAdvisor';
 import React, { useState, useEffect } from 'react';
+import CoinGecko from 'coingecko-api';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Activity, Wallet, TrendingUp, DollarSign } from 'lucide-react';
-import { TradingAdvisorFixed } from './TradingAdvisorFixed';
+import TradingAdvisorFixed from './TradingAdvisorFixed';
+import ResearchTab from './ResearchTab';
 import { AdvancedTradingAI } from './AdvancedTradingAI';
 import { PortfolioOverview } from './PortfolioOverview';
 import { OrderBook } from './OrderBook';
@@ -40,19 +113,38 @@ const TradingDashboard: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedProduct, setSelectedProduct] = useState<string>('BTC-USD');
+  const [gasPrice, setGasPrice] = useState<string>('');
+  const [useCoinGecko, setUseCoinGecko] = useState<boolean>(true); // Toggle for CoinGecko or legacy
+
+  useEffect(() => {
+    const fetchGas = async () => {
+      try {
+        const apiKey = import.meta.env.VITE_GAS_API_KEY;
+        const res = await fetch(`https://api.blocknative.com/gasprices/blockprices`, {
+          headers: { Authorization: apiKey }
+        });
+        const data = await res.json();
+        // Use estimated base fee (Gwei)
+        setGasPrice(data?.blockPrices?.[0]?.estimatedPrices?.[0]?.price || '');
+      } catch (e) {
+        setGasPrice('');
+      }
+    };
+    fetchGas();
+  }, []);
   useEffect(() => {
     fetchAccountData();
-    fetchMarketData();
-  }, []);
+    if (useCoinGecko) {
+      fetchCoinGeckoData();
+    } else {
+      fetchMarketData();
+    }
+  }, [useCoinGecko]);
+
   const fetchAccountData = async () => {
     try {
-      const {
-        data,
-        error
-      } = await supabase.functions.invoke('coinbase-trading-engine', {
-        body: {
-          action: 'getAccounts'
-        }
+      const { data, error } = await supabase.functions.invoke('coinbase-trading-engine', {
+        body: { action: 'getAccounts' }
       });
       if (error) throw error;
       if (data.success) {
@@ -64,15 +156,39 @@ const TradingDashboard: React.FC = () => {
       setError('Failed to fetch account data: ' + (err.message || err));
     }
   };
-  const fetchMarketData = async () => {
+
+  // Fetch live crypto listings from CoinGecko
+  const fetchCoinGeckoData = async () => {
+    setLoading(true);
     try {
-      const {
-        data,
-        error
-      } = await supabase.functions.invoke('coinbase-trading-engine', {
-        body: {
-          action: 'getProducts'
-        }
+      const CoinGeckoClient = new CoinGecko();
+      // Top 100 coins by market cap, USD
+      const res = await CoinGeckoClient.coins.markets({ vs_currency: 'usd', order: 'market_cap_desc', per_page: 100, page: 1, price_change_percentage: '24h' });
+      if (res.success && Array.isArray(res.data)) {
+        const mapped = res.data.map((coin: any) => ({
+          id: coin.symbol.toUpperCase() + '-USD',
+          display_name: coin.name,
+          base_currency: coin.symbol.toUpperCase(),
+          quote_currency: 'USD',
+          price: coin.current_price?.toString() || '0',
+          price_change_24h: coin.price_change_percentage_24h?.toString() || '0',
+        }));
+        setProducts(mapped);
+      } else {
+        setError('Failed to fetch CoinGecko data');
+      }
+    } catch (err: any) {
+      setError('Failed to fetch CoinGecko data: ' + (err.message || err));
+    }
+    setLoading(false);
+  };
+
+  // Legacy: fetch from Supabase/coinbase-trading-engine
+  const fetchMarketData = async () => {
+    setLoading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('coinbase-trading-engine', {
+        body: { action: 'getProducts' }
       });
       if (error) throw error;
       if (data.success) {
@@ -80,21 +196,40 @@ const TradingDashboard: React.FC = () => {
       } else {
         setError(data.error);
       }
-      setLoading(false);
     } catch (err: any) {
       setError('Failed to fetch market data: ' + (err.message || err));
-      setLoading(false);
     }
+    setLoading(false);
   };
   const totalBalance = accounts.reduce((sum, account) => {
     return sum + (parseFloat(account.balance) || 0);
   }, 0);
   if (loading) {
     return <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-      </div>;
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+    </div>;
   }
-  return <div className="p-6 space-y-6">
+
+  // Toggle between CoinGecko and legacy data
+  const handleToggleSource = () => setUseCoinGecko((prev) => !prev);
+
+  return (
+    <div className="p-6 space-y-6">
+    {/* Special AI Expert Advisor */}
+    <div className="mb-6">
+      <AIExpertAdvisor />
+    </div>
+    <div className="mb-2 flex items-center gap-4">
+      {gasPrice && (
+        <span className="text-sm text-blue-700">Current Gas Price: {gasPrice} Gwei</span>
+      )}
+      <Button size="sm" variant="outline" onClick={handleToggleSource}>
+        {useCoinGecko ? 'Switch to Legacy Markets' : 'Switch to Live Crypto Listings'}
+      </Button>
+    </div>
+    {gasPrice && (
+      <div className="mb-2 text-sm text-blue-700">Current Gas Price: {gasPrice} Gwei</div>
+    )}
     {/* MetaMask Wallet Connection */}
     <div className="mb-6">
       <MetaMaskConnector />
@@ -161,21 +296,23 @@ const TradingDashboard: React.FC = () => {
 
       {/* AI Trading Assistant - Always Visible */}
       <div className="mb-6">
-        <AdvancedTradingAI symbol={selectedProduct} context="market" data={{
-        accounts,
-        products,
-        totalBalance
-      }} />
+        <AdvancedTradingAI symbol={selectedProduct} market="crypto" portfolio={accounts} />
       </div>
 
       <Tabs defaultValue="portfolio" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-5">
+        <TabsList className="grid w-full grid-cols-6">
           <TabsTrigger value="portfolio">Portfolio</TabsTrigger>
           <TabsTrigger value="trade">Trade</TabsTrigger>
           <TabsTrigger value="orders">Orders</TabsTrigger>
           <TabsTrigger value="market">Market</TabsTrigger>
           <TabsTrigger value="advisor">Advisor</TabsTrigger>
+          <TabsTrigger value="research">Research</TabsTrigger>
         </TabsList>
+        <TabsContent value="research">
+          <React.Suspense fallback={<div className="p-8 text-center">Loading research tools...</div>}>
+            <ResearchTab />
+          </React.Suspense>
+        </TabsContent>
 
         <TabsContent value="portfolio" className="space-y-4">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -185,10 +322,7 @@ const TradingDashboard: React.FC = () => {
               </React.Suspense>
             </div>
             <div>
-              <AdvancedTradingAI symbol={selectedProduct} context="portfolio" data={{
-              accounts,
-              totalBalance
-            }} />
+              <AdvancedTradingAI symbol={selectedProduct} market="crypto" portfolio={accounts} />
             </div>
           </div>
         </TabsContent>
@@ -201,10 +335,7 @@ const TradingDashboard: React.FC = () => {
               </React.Suspense>
             </div>
             <div>
-              <AdvancedTradingAI symbol={selectedProduct} context="trade" data={{
-              selectedProduct,
-              products
-            }} />
+              <AdvancedTradingAI symbol={selectedProduct} market="crypto" portfolio={accounts} />
             </div>
           </div>
         </TabsContent>
@@ -217,9 +348,7 @@ const TradingDashboard: React.FC = () => {
               </React.Suspense>
             </div>
             <div>
-              <AdvancedTradingAI symbol={selectedProduct} context="orders" data={{
-              accounts
-            }} />
+              <AdvancedTradingAI symbol={selectedProduct} market="crypto" portfolio={accounts} />
             </div>
           </div>
         </TabsContent>
@@ -232,19 +361,21 @@ const TradingDashboard: React.FC = () => {
               </React.Suspense>
             </div>
             <div>
-              <AdvancedTradingAI symbol={selectedProduct} context="market" data={{
-              products
-            }} />
+              <AdvancedTradingAI symbol={selectedProduct} market="crypto" portfolio={accounts} />
             </div>
           </div>
         </TabsContent>
 
         <TabsContent value="advisor">
           <React.Suspense fallback={<div className="p-8 text-center">Loading AI advisor...</div>}>
-            <TradingAdvisor />
+            <TradingAdvisorFixed />
           </React.Suspense>
         </TabsContent>
       </Tabs>
-    </div>;
+    <footer className="mt-12 text-center text-xs text-gray-500 opacity-80">
+      Powered by <span className="font-bold text-blue-700">Odyssey-1</span> — Your AI Trading & Research Platform
+    </footer>
+  </div>
+  );
 };
 export default TradingDashboard;
