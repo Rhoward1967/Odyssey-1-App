@@ -1,3 +1,4 @@
+import { Analytics } from '@vercel/analytics/react';
 import { Toaster } from '@/components/ui/toaster';
 import { Toaster as Sonner } from '@/components/ui/sonner';
 import { TooltipProvider } from '@/components/ui/tooltip';
@@ -53,172 +54,33 @@ const App = () => {
             <BrowserRouter>
               <Routes>
                 <Route path='/login' element={<UserLoginPortal />} />
-                <Route
-                  path='/'
-                  element={
-                    <AuthRoute>
-                      <Index />
-                    </AuthRoute>
-                  }
-                />
-                <Route
-                  path='/subscription'
-                  element={
-                    <AuthRoute>
-                      <Subscription />
-                    </AuthRoute>
-                  }
-                />
-                <Route
-                  path='/control-panel'
-                  element={
-                    <AuthRoute>
-                      <ControlPanel />
-                    </AuthRoute>
-                  }
-                />
-                <Route
-                  path='/bidding-calculator'
-                  element={
-                    <AuthRoute>
-                      <BiddingCalculator />
-                    </AuthRoute>
-                  }
-                />
-                <Route
-                  path='/research'
-                  element={
-                    <AuthRoute>
-                      <Research />
-                    </AuthRoute>
-                  }
-                />
-                <Route
-                  path='/ai-research'
-                  element={
-                    <AuthRoute>
-                      <AIResearch />
-                    </AuthRoute>
-                  }
-                />
-                <Route
-                  path='/research-notes'
-                  element={
-                    <AuthRoute>
-                      <ResearchNotes />
-                    </AuthRoute>
-                  }
-                />
-                <Route
-                  path='/web3'
-                  element={
-                    <AuthRoute>
-                      <Web3 />
-                    </AuthRoute>
-                  }
-                />
-                <Route
-                  path='/email-studio'
-                  element={
-                    <AuthRoute>
-                      <EmailStudio />
-                    </AuthRoute>
-                  }
-                />
-                <Route
-                  path='/appointments'
-                  element={
-                    <AuthRoute>
-                      <Appointments />
-                    </AuthRoute>
-                  }
-                />
-                <Route
-                  path='/media-workstation'
-                  element={
-                    <AuthRoute>
-                      <MediaWorkstation />
-                    </AuthRoute>
-                  }
-                />
-                <Route
-                  path='/profile'
-                  element={
-                    <AuthRoute>
-                      <Profile />
-                    </AuthRoute>
-                  }
-                />
-                <Route
-                  path='/budget'
-                  element={
-                    <AuthRoute>
-                      <Budget />
-                    </AuthRoute>
-                  }
-                />
-                <Route
-                  path='/odyssey'
-                  element={
-                    <AuthRoute>
-                      <Odyssey />
-                    </AuthRoute>
-                  }
-                />
-                <Route
-                  path='/help'
-                  element={
-                    <AuthRoute>
-                      <Help />
-                    </AuthRoute>
-                  }
-                />
-                <Route
-                  path='/terms'
-                  element={
-                    <AuthRoute>
-                      <Terms />
-                    </AuthRoute>
-                  }
-                />
-                <Route
-                  path='/privacy'
-                  element={
-                    <AuthRoute>
-                      <Privacy />
-                    </AuthRoute>
-                  }
-                />
-                <Route
-                  path='/cleaning-quote'
-                  element={
-                    <AuthRoute>
-                      <CleaningQuoteForm />
-                    </AuthRoute>
-                  }
-                />
-                <Route
-                  path='/invoicing'
-                  element={
-                    <AuthRoute>
-                      <Invoicing />
-                    </AuthRoute>
-                  }
-                />
-                <Route
-                  path='/services'
-                  element={
-                    <AuthRoute>
-                      <ServiceManager />
-                    </AuthRoute>
-                  }
-                />
+                <Route path='/' element={<AuthRoute><Index /></AuthRoute>} />
+                <Route path='/subscription' element={<AuthRoute><Subscription /></AuthRoute>} />
+                <Route path='/control-panel' element={<AuthRoute><ControlPanel /></AuthRoute>} />
+                <Route path='/bidding-calculator' element={<AuthRoute><BiddingCalculator /></AuthRoute>} />
+                <Route path='/research' element={<AuthRoute><Research /></AuthRoute>} />
+                <Route path='/ai-research' element={<AuthRoute><AIResearch /></AuthRoute>} />
+                <Route path='/research-notes' element={<AuthRoute><ResearchNotes /></AuthRoute>} />
+                <Route path='/web3' element={<AuthRoute><Web3 /></AuthRoute>} />
+                <Route path='/email-studio' element={<AuthRoute><EmailStudio /></AuthRoute>} />
+                <Route path='/appointments' element={<AuthRoute><Appointments /></AuthRoute>} />
+                <Route path='/media-workstation' element={<AuthRoute><MediaWorkstation /></AuthRoute>} />
+                <Route path='/profile' element={<AuthRoute><Profile /></AuthRoute>} />
+                <Route path='/budget' element={<AuthRoute><Budget /></AuthRoute>} />
+                <Route path='/odyssey' element={<AuthRoute><Odyssey /></AuthRoute>} />
+                <Route path='/help' element={<AuthRoute><Help /></AuthRoute>} />
+                <Route path='/terms' element={<AuthRoute><Terms /></AuthRoute>} />
+                <Route path='/privacy' element={<AuthRoute><Privacy /></AuthRoute>} />
+                <Route path='/cleaning-quote' element={<AuthRoute><CleaningQuoteForm /></AuthRoute>} />
+                <Route path='/invoicing' element={<AuthRoute><Invoicing /></AuthRoute>} />
+                <Route path='/services' element={<AuthRoute><ServiceManager /></AuthRoute>} />
                 <Route path='*' element={<NotFound />} />
               </Routes>
             </BrowserRouter>
           </TooltipProvider>
         </AuthProvider>
       </QueryClientProvider>
+      <Analytics />
     </ThemeProvider>
   );
 };

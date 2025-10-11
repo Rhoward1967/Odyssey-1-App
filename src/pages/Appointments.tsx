@@ -3,7 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Calendar, Clock, MapPin, Users, Plus, Settings, RefreshCw } from 'lucide-react';
+import { Calendar, Clock, MapPin, Users, Plus, Settings, RefreshCw, Home } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { AppointmentScheduler } from '@/components/AppointmentScheduler';
 import { GoogleCalendarSync } from '@/components/GoogleCalendarSync';
 import { CalendarSelector } from '@/components/CalendarSelector';
@@ -98,7 +99,15 @@ const Appointments: React.FC = () => {
             Manage your appointments and sync with Google Calendar
           </p>
         </div>
-        <AppointmentScheduler onAppointmentCreated={loadAppointments} />
+        <div className="flex items-center gap-2">
+          <AppointmentScheduler onAppointmentCreated={loadAppointments} />
+          <Link to="/" className="ml-2">
+            <Button variant="outline" className="flex items-center gap-1">
+              <Home className="w-4 h-4" />
+              Return Home
+            </Button>
+          </Link>
+        </div>
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
