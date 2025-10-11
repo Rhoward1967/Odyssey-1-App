@@ -23,25 +23,18 @@ jobs:
           sudo apt-get install -y curl ca-certificates
 
       - name: Install Supabase CLI
-        shell: bash
         run: |
           curl -sL https://github.com/supabase/cli/releases/latest/download/install.sh | sh
           echo "$HOME/.supabase/bin" >> "$GITHUB_PATH"
-            export PATH="$HOME/.supabase/bin:$PATH"
-            supabase --version
+          $HOME/.supabase/bin/supabase --version
 
-      - name: Verify Supabase CLI
-        run: |
-          which supabase || true
-          supabase --version
+      # Removed redundant verify step
 
       - name: Authenticate with Supabase
-        env:
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-        run: supabase login --token "$SUPABASE_ACCESS_TOKEN"
+        run: $HOME/.supabase/bin/supabase login --token ${{ secrets.SUPABASE_ACCESS_TOKEN }}
 
       - name: Deploy ai-calculator function
-        run: supabase functions deploy ai-calculator
+        run: $HOME/.supabase/bin/supabase functions deploy ai-calculator
 
       - name: Deploy smarty-address-validation function
-        run: supabase functions deploy smarty-address-validation
+        run: $HOME/.supabase/bin/supabase functions deploy smarty-address-validation
