@@ -18,10 +18,23 @@ export const UIHive: React.FC<UIHiveProps> = ({ onQuarantineAgent }) => {
   const [activeAgents, setActiveAgents] = useState<Agent[]>([]);
   const [taskQueue, setTaskQueue] = useState<string[]>([]);
   const [systemHealth, setSystemHealth] = useState(100);
+  const [isActive, setIsActive] = useState(true);
+  const [simulationCycles, setSimulationCycles] = useState(0);
+  const [maxSimulationCycles, setMaxSimulationCycles] = useState(50);
 
   useEffect(() => {
-    // Simulate agent activity
+    if (!isActive) return;
+    
+    // Simulate agent activity with circuit breaker
     const interval = setInterval(() => {
+      setSimulationCycles(prev => {
+        if (prev >= maxSimulationCycles) {
+          setIsActive(false); // Auto-stop when max cycles reached
+          return prev;
+        }
+        return prev + 1;
+      });
+      
       if (activeAgents.length > 0) {
         setActiveAgents(prev => prev.map(agent => {
           // Simulate random health changes
@@ -40,7 +53,7 @@ export const UIHive: React.FC<UIHiveProps> = ({ onQuarantineAgent }) => {
     }, 3000);
 
     return () => clearInterval(interval);
-  }, [activeAgents, onQuarantineAgent]);
+  }, [activeAgents, onQuarantineAgent, isActive, maxSimulationCycles]);
 
   const runTask = (taskName: string) => {
     console.log(`HIVE: Running task '${taskName}'`);
@@ -127,6 +140,20 @@ export const UIHive: React.FC<UIHiveProps> = ({ onQuarantineAgent }) => {
           >
             Queue Task
           </Button>
+          <Button 
+            size="sm" 
+            variant="outline" 
+            className={`border-yellow-500 ${isActive ? 'text-red-300' : 'text-green-300'}`}
+            onClick={() => setIsActive(!isActive)}
+          >
+            {isActive ? 'Stop' : 'Start'} Simulation
+          </Button>
+        </div>
+        
+        <div className="text-xs text-emerald-300 mt-2">
+          Simulation: {isActive ? 'Active' : 'Stopped'} 
+          ({simulationCycles}/{maxSimulationCycles} cycles)
+          {simulationCycles >= maxSimulationCycles && ' - Max cycles reached'}
         </div>
       </CardContent>
     </Card>
