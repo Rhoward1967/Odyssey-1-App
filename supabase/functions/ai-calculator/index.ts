@@ -30,7 +30,7 @@ async function aiAnswer(query: string): Promise<string> {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${OPENAI_API_KEY}`,
+      Authorization: `Bearer ${OPENAI_API_KEY}`,
     },
     body: JSON.stringify({
       model: 'gpt-3.5-turbo',
@@ -43,17 +43,24 @@ async function aiAnswer(query: string): Promise<string> {
   return data.choices?.[0]?.message?.content?.trim() || 'No answer from AI.';
 }
 
-serve(async (req) => {
+serve(async req => {
   const { query } = await req.json();
   if (!query || typeof query !== 'string') {
-    return new Response(JSON.stringify({ error: 'Missing or invalid query.' }), { status: 400 });
+    return new Response(
+      JSON.stringify({ error: 'Missing or invalid query.' }),
+      { status: 400 }
+    );
   }
   // Try math evaluation first
   const mathResult = safeEval(query);
   if (!isNaN(Number(mathResult))) {
-    return new Response(JSON.stringify({ answer: mathResult }), { headers: { 'Content-Type': 'application/json' } });
+    return new Response(JSON.stringify({ answer: mathResult }), {
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
   // Fallback to AI if not a pure math expression
   const aiResult = await aiAnswer(query);
-  return new Response(JSON.stringify({ answer: aiResult }), { headers: { 'Content-Type': 'application/json' } });
+  return new Response(JSON.stringify({ answer: aiResult }), {
+    headers: { 'Content-Type': 'application/json' },
+  });
 });
