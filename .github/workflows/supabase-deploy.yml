@@ -42,5 +42,4 @@ jobs:
         run: supabase functions deploy ai-calculator
 
       - name: Deploy smarty-address-validation function
-        run: supabase functions deploy smarty-address-validation       run: supabase functions deploy smarty-address-validation
-
+        run: supabase functions deploy smarty-address-validation
