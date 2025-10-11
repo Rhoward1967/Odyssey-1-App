@@ -17,24 +17,16 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Install prerequisites
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y curl ca-certificates
-
       - name: Install Supabase CLI
         run: |
           curl -sL https://github.com/supabase/cli/releases/latest/download/install.sh | sh
-          echo "$HOME/.supabase/bin" >> "$GITHUB_PATH"
-          $HOME/.supabase/bin/supabase --version
-
-      # Removed redundant verify step
+          echo "$HOME/.supabase/bin" >> $GITHUB_PATH
 
       - name: Authenticate with Supabase
-        run: $HOME/.supabase/bin/supabase login --token ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: supabase login --token ${{ secrets.SUPABASE_ACCESS_TOKEN }}
 
       - name: Deploy ai-calculator function
-        run: $HOME/.supabase/bin/supabase functions deploy ai-calculator
+        run: supabase functions deploy ai-calculator
 
       - name: Deploy smarty-address-validation function
-        run: $HOME/.supabase/bin/supabase functions deploy smarty-address-validation
+        run: supabase functions deploy smarty-address-validation
