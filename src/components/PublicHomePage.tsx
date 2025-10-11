@@ -4,7 +4,15 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Brain, Zap, Eye, Network, ArrowRight, CheckCircle } from 'lucide-react';
 
+import OdysseyGalaxyDemo from './OdysseyGalaxyDemo';
+
 export default function PublicHomePage() {
+  const vrDemoRef = React.useRef<HTMLDivElement>(null);
+  const handleWatchDemo = () => {
+    if (vrDemoRef.current) {
+      vrDemoRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-blue-900">
       {/* Hero Section */}
@@ -29,12 +37,24 @@ export default function PublicHomePage() {
                 Start Free Trial
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
-              <Button size="lg" variant="outline" className="border-purple-400 text-purple-400 hover:bg-purple-400 hover:text-white px-8 py-4 text-lg">
+              <Button
+                size="lg"
+                variant="outline"
+                className="border-purple-400 text-purple-400 hover:bg-purple-400 hover:text-white px-8 py-4 text-lg"
+                onClick={handleWatchDemo}
+              >
                 Watch Demo
               </Button>
             </div>
           </div>
         </div>
+      </section>
+
+      {/* VR Demo Section */}
+      <section className="max-w-7xl mx-auto px-4" ref={vrDemoRef}>
+        <h2 className="text-3xl font-bold text-white text-center mb-6 mt-8">Odyssey-1: The AI Core & Hive</h2>
+        <p className="text-center text-gray-300 mb-4 max-w-2xl mx-auto">A glowing AI orb, surrounded by the Hive, with a smaller orb in perpetual orbit. Click any element to learn more.</p>
+  <OdysseyGalaxyDemo />
       </section>
 
       {/* Features Grid */}

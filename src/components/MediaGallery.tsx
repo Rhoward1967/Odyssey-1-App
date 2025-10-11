@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { supabase } from '@/lib/supabaseClient';
 import { Heart, MessageCircle, Share2, Download, Upload, Eye, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -26,36 +27,33 @@ interface MediaItem {
 }
 
 export default function MediaGallery({ onBack }: MediaGalleryProps = {}) {
-  const [mediaItems, setMediaItems] = useState<MediaItem[]>([
-    {
-      id: '1',
-      user_id: '1',
-      title: 'Beautiful Sunset',
-      description: 'Captured this amazing sunset yesterday',
-      file_url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400',
-      file_type: 'image',
-      likes_count: 15,
-      comments_count: 3,
-      views_count: 45,
-      created_at: new Date().toISOString(),
-      profiles: { full_name: 'Sarah Johnson' },
-      user_liked: false
-    },
-    {
-      id: '2',
-      user_id: '2',
-      title: 'Team Meeting',
-      description: 'Great discussion today',
-      file_url: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=400',
-      file_type: 'image',
-      likes_count: 8,
-      comments_count: 2,
-      views_count: 23,
-      created_at: new Date().toISOString(),
-      profiles: { full_name: 'Mike Chen' },
-      user_liked: true
-    }
-  ]);
+  const [mediaItems, setMediaItems] = useState<MediaItem[]>([]);
+
+  useEffect(() => {
+    // Fetch the public URL for the Howard Janitorial commercial from Supabase Storage
+    const fetchVideo = async () => {
+      // Use the exact filename as in Supabase Storage
+      const videoPath = 'HowardJanitorial ADVERTISEMENT TV.mp4';
+      const { data } = supabase.storage.from('media-workstation').getPublicUrl(videoPath);
+      setMediaItems([
+        {
+          id: 'howard-janitorial',
+          user_id: '0',
+          title: 'Howard Janitorial Commercial',
+          description: 'Our official commercial!',
+          file_url: data.publicUrl,
+          file_type: 'video',
+          likes_count: 0,
+          comments_count: 0,
+          views_count: 0,
+          created_at: new Date().toISOString(),
+          profiles: { full_name: 'Howard Janitorial' },
+          user_liked: false
+        }
+      ]);
+    };
+    fetchVideo();
+  }, []);
   const [isUploading, setIsUploading] = useState(false);
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -165,12 +163,42 @@ export default function MediaGallery({ onBack }: MediaGalleryProps = {}) {
 
             {/* Media Content */}
             <div className="relative bg-gray-100">
-              <img
-                src={item.file_url}
-                alt={item.title}
-                className="w-full h-64 object-cover"
-                loading="lazy"
-              />
+              {item.file_type === 'video' ? (
+                <video
+                  src={item.file_url}
+                  controls
+                  loop
+                  muted
+                  className="w-full h-64 object-cover bg-black"
+                  style={{ background: '#000' }}
+                  preload="metadata"
+                  poster="/placeholder.svg"
+                  onError={e => {
+                    const target = e.target as HTMLVideoElement;
+                    target.style.display = 'none';
+                    const fallback = document.createElement('div');
+                    fallback.textContent = 'Video failed to load.';
+                    fallback.style.background = '#222';
+                    fallback.style.color = '#fff';
+                    fallback.style.width = '100%';
+                    fallback.style.height = '16rem';
+                    fallback.style.display = 'flex';
+                    fallback.style.alignItems = 'center';
+                    fallback.style.justifyContent = 'center';
+                    fallback.style.fontSize = '1.1rem';
+                    target.parentElement?.appendChild(fallback);
+                  }}
+                >
+                  Sorry, your browser does not support embedded videos.
+                </video>
+              ) : (
+                <img
+                  src={item.file_url}
+                  alt={item.title}
+                  className="w-full h-64 object-cover"
+                  loading="lazy"
+                />
+              )}
             </div>
 
             {/* Content & Actions */}
