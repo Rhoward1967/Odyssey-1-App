@@ -3,7 +3,16 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Calendar, Clock, MapPin, Users, Plus, Settings, RefreshCw, Home } from 'lucide-react';
+import {
+  Calendar,
+  Clock,
+  MapPin,
+  Users,
+  Plus,
+  Settings,
+  RefreshCw,
+  Home,
+} from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { AppointmentScheduler } from '@/components/AppointmentScheduler';
 import { GoogleCalendarSync } from '@/components/GoogleCalendarSync';
@@ -50,39 +59,53 @@ const Appointments: React.FC = () => {
     loadAppointments();
   }, []);
 
-  const AppointmentCard: React.FC<{ appointment: Appointment }> = ({ appointment }) => {
+  const AppointmentCard: React.FC<{ appointment: Appointment }> = ({
+    appointment,
+  }) => {
     const startTime = new Date(appointment.start_time);
     const endTime = new Date(appointment.end_time);
-    
+
     return (
-      <div className="border rounded-lg p-4 hover:bg-muted/50 transition-colors">
-        <div className="flex items-start justify-between">
-          <div className="space-y-2">
-            <h3 className="font-semibold">{appointment.title}</h3>
+      <div className='border rounded-lg p-4 hover:bg-muted/50 transition-colors'>
+        <div className='flex items-start justify-between'>
+          <div className='space-y-2'>
+            <h3 className='font-semibold'>{appointment.title}</h3>
             {appointment.description && (
-              <p className="text-sm text-muted-foreground">{appointment.description}</p>
+              <p className='text-sm text-muted-foreground'>
+                {appointment.description}
+              </p>
             )}
-            <div className="flex items-center gap-4 text-sm text-muted-foreground">
-              <div className="flex items-center gap-1">
-                <Clock className="h-3 w-3" />
-                {startTime.toLocaleDateString()} {startTime.toLocaleTimeString()} - {endTime.toLocaleTimeString()}
+            <div className='flex items-center gap-4 text-sm text-muted-foreground'>
+              <div className='flex items-center gap-1'>
+                <Clock className='h-3 w-3' />
+                {startTime.toLocaleDateString()}{' '}
+                {startTime.toLocaleTimeString()} -{' '}
+                {endTime.toLocaleTimeString()}
               </div>
               {appointment.location && (
-                <div className="flex items-center gap-1">
-                  <MapPin className="h-3 w-3" />
+                <div className='flex items-center gap-1'>
+                  <MapPin className='h-3 w-3' />
                   {appointment.location}
                 </div>
               )}
               {appointment.attendees && appointment.attendees.length > 0 && (
-                <div className="flex items-center gap-1">
-                  <Users className="h-3 w-3" />
-                  {appointment.attendees.length} attendee{appointment.attendees.length > 1 ? 's' : ''}
+                <div className='flex items-center gap-1'>
+                  <Users className='h-3 w-3' />
+                  {appointment.attendees.length} attendee
+                  {appointment.attendees.length > 1 ? 's' : ''}
                 </div>
               )}
             </div>
           </div>
-          <Badge variant={appointment.status === 'scheduled' ? 'default' : 
-                         appointment.status === 'completed' ? 'secondary' : 'destructive'}>
+          <Badge
+            variant={
+              appointment.status === 'scheduled'
+                ? 'default'
+                : appointment.status === 'completed'
+                  ? 'secondary'
+                  : 'destructive'
+            }
+          >
             {appointment.status}
           </Badge>
         </div>
@@ -91,19 +114,19 @@ const Appointments: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
-      <div className="flex items-center justify-between">
+    <div className='container mx-auto p-6 space-y-6'>
+      <div className='flex items-center justify-between'>
         <div>
-          <h1 className="text-3xl font-bold">Appointments</h1>
-          <p className="text-muted-foreground">
+          <h1 className='text-3xl font-bold'>Appointments</h1>
+          <p className='text-muted-foreground'>
             Manage your appointments and sync with Google Calendar
           </p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className='flex items-center gap-2'>
           <AppointmentScheduler onAppointmentCreated={loadAppointments} />
-          <Link to="/" className="ml-2">
-            <Button variant="outline" className="flex items-center gap-1">
-              <Home className="w-4 h-4" />
+          <Link to='/' className='ml-2'>
+            <Button variant='outline' className='flex items-center gap-1'>
+              <Home className='w-4 h-4' />
               Return Home
             </Button>
           </Link>
@@ -111,44 +134,56 @@ const Appointments: React.FC = () => {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="appointments" className="flex items-center gap-2">
-            <Calendar className="h-4 w-4" />
+        <TabsList className='grid w-full grid-cols-3'>
+          <TabsTrigger value='appointments' className='flex items-center gap-2'>
+            <Calendar className='h-4 w-4' />
             My Appointments
           </TabsTrigger>
-          <TabsTrigger value="google-calendar" className="flex items-center gap-2">
-            <RefreshCw className="h-4 w-4" />
+          <TabsTrigger
+            value='google-calendar'
+            className='flex items-center gap-2'
+          >
+            <RefreshCw className='h-4 w-4' />
             Google Calendar
           </TabsTrigger>
-          <TabsTrigger value="settings" className="flex items-center gap-2">
-            <Settings className="h-4 w-4" />
+          <TabsTrigger value='settings' className='flex items-center gap-2'>
+            <Settings className='h-4 w-4' />
             Calendar Settings
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="appointments" className="space-y-4">
+        <TabsContent value='appointments' className='space-y-4'>
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center justify-between">
+              <CardTitle className='flex items-center justify-between'>
                 <span>Upcoming Appointments ({appointments.length})</span>
-                <Badge variant="outline">
-                  {appointments.filter(apt => apt.status === 'scheduled').length} Scheduled
+                <Badge variant='outline'>
+                  {
+                    appointments.filter(apt => apt.status === 'scheduled')
+                      .length
+                  }{' '}
+                  Scheduled
                 </Badge>
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
+              <div className='space-y-4'>
                 {appointments.length === 0 ? (
-                  <div className="text-center py-8">
-                    <Calendar className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                    <p className="text-muted-foreground">No appointments scheduled</p>
-                    <p className="text-sm text-muted-foreground">
+                  <div className='text-center py-8'>
+                    <Calendar className='h-12 w-12 mx-auto text-muted-foreground mb-4' />
+                    <p className='text-muted-foreground'>
+                      No appointments scheduled
+                    </p>
+                    <p className='text-sm text-muted-foreground'>
                       Create your first appointment to get started
                     </p>
                   </div>
                 ) : (
-                  appointments.map((appointment) => (
-                    <AppointmentCard key={appointment.id} appointment={appointment} />
+                  appointments.map(appointment => (
+                    <AppointmentCard
+                      key={appointment.id}
+                      appointment={appointment}
+                    />
                   ))
                 )}
               </div>
@@ -156,12 +191,12 @@ const Appointments: React.FC = () => {
           </Card>
         </TabsContent>
 
-        <TabsContent value="google-calendar" className="space-y-4">
+        <TabsContent value='google-calendar' className='space-y-4'>
           <GoogleCalendarSync />
         </TabsContent>
 
-        <TabsContent value="settings" className="space-y-4">
-          <CalendarSelector 
+        <TabsContent value='settings' className='space-y-4'>
+          <CalendarSelector
             onCalendarSelect={setSelectedCalendar}
             selectedCalendar={selectedCalendar}
             accessToken={googleAccessToken}
