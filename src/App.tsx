@@ -1,3 +1,12 @@
+import Trading from './pages/Trading';
+                <Route
+                  path='/trading'
+                  element={
+                    <AuthRoute>
+                      <Trading />
+                    </AuthRoute>
+                  }
+                />
 import { Analytics } from '@vercel/analytics/react';
 import { Toaster } from '@/components/ui/toaster';
 import { Toaster as Sonner } from '@/components/ui/sonner';
