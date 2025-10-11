@@ -4,7 +4,7 @@ import { Checkbox } from './ui/checkbox';
 import { Label } from './ui/label';
 import { Badge } from './ui/badge';
 import { Separator } from './ui/separator';
-import { CheckSquare, Clock, Droplets, Vacuum, Sparkles } from 'lucide-react';
+import { CheckSquare, Clock, Droplets, Broom, Sparkles } from 'lucide-react';
 
 interface ServiceSpec {
   id: string;
@@ -86,7 +86,7 @@ const ServiceSpecifications: React.FC<ServiceSpecificationsProps> = ({ selectedS
         {categories.map(category => (
           <div key={category}>
             <h3 className="text-lg font-semibold text-slate-200 mb-3 flex items-center gap-2">
-              {category === 'Daily Cleaning' && <Vacuum className="w-4 h-4" />}
+              {category === 'Daily Cleaning' && <Broom className="w-4 h-4" />}
               {category === 'Weekly Services' && <Clock className="w-4 h-4" />}
               {category === 'Monthly Services' && <Sparkles className="w-4 h-4" />}
               {category === 'Specialized' && <Droplets className="w-4 h-4" />}
