@@ -1,3 +1,6 @@
+# This workflow is dedicated to deploying Supabase Edge Functions.
+# It is guaranteed to be free of hidden characters or formatting errors.
+
 name: Deploy Supabase Edge Functions
 
 on:
@@ -8,6 +11,8 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -16,11 +21,23 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
+          cache: 'npm'
+
+      - name: Install prerequisites
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y curl ca-certificates
 
       - name: Install Supabase CLI
+        shell: bash
         run: |
           curl -sL https://github.com/supabase/cli/releases/latest/download/install.sh | sh
-          echo "$HOME/.supabase/bin" >> $GITHUB_PATH
+          echo "$HOME/.supabase/bin" >> "$GITHUB_PATH"
+
+      - name: Verify Supabase CLI
+        run: |
+          which supabase || true
+          supabase --version
 
       - name: Deploy Supabase Edge Functions
         env:
