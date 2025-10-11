@@ -9,6 +9,7 @@ import { AdvancedTradingAI } from './AdvancedTradingAI';
 import { PortfolioOverview } from './PortfolioOverview';
 import { OrderBook } from './OrderBook';
 import { supabase } from '@/lib/supabase';
+import MetaMaskConnector from './MetaMaskConnector';
 const TradingForm = React.lazy(() => import('./TradingForm').catch(() => ({
   default: () => <div>Trading form loading...</div>
 })));
@@ -94,6 +95,10 @@ const TradingDashboard: React.FC = () => {
       </div>;
   }
   return <div className="p-6 space-y-6">
+    {/* MetaMask Wallet Connection */}
+    <div className="mb-6">
+      <MetaMaskConnector />
+    </div>
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold">Trading Dashboard</h1>
         <Badge variant="outline" className="bg-green-50 text-green-700">
