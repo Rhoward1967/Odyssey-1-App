@@ -28,6 +28,7 @@ import { CleaningQuoteForm } from './components/CleaningQuoteForm';
 import Invoicing from './pages/Invoicing';
 import UserLoginPortal from './components/UserLoginPortal';
 import { useAuth } from './components/AuthProvider';
+import ServiceManager from './components/ServiceManager';
 
 // AuthRoute: Only render children if user is authenticated, else redirect to /login
 import { Navigate, useLocation } from 'react-router-dom';
@@ -201,6 +202,14 @@ const App = () => {
                   element={
                     <AuthRoute>
                       <Invoicing />
+                    </AuthRoute>
+                  }
+                />
+                <Route
+                  path='/services'
+                  element={
+                    <AuthRoute>
+                      <ServiceManager />
                     </AuthRoute>
                   }
                 />
