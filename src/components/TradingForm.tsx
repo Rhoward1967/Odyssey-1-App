@@ -8,6 +8,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Badge } from './ui/badge';
 import { AlertTriangle, TrendingUp, TrendingDown } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
+import { ethers } from 'ethers';
+import { useMetaMaskWallet } from './useMetaMaskWallet';
 
 interface Product {
   id: string;
@@ -29,6 +31,34 @@ const TradingForm: React.FC<TradingFormProps> = ({
   onProductChange, 
   products 
 }) => {
+  const wallet = useMetaMaskWallet();
+  // Example: Wrapped XRP (wXRP) contract address on Ethereum mainnet
+  const WXRP_ADDRESS = '0x39fBBABf11738317a448031930706cd3e612e1B9';
+  const WXRP_ABI = [
+    'function transfer(address to, uint256 amount) public returns (bool)'
+  ];
+
+  const handleWeb3Trade = async () => {
+    if (!wallet.connected || !window.ethereum) {
+      alert('Please connect MetaMask first.');
+      return;
+    }
+    if (!amount) {
+      alert('Enter an amount to trade.');
+      return;
+    }
+    try {
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
+      const contract = new ethers.Contract(WXRP_ADDRESS, WXRP_ABI, signer);
+      // For demo: send to self (replace with recipient for real trading)
+      const tx = await contract.transfer(wallet.address, ethers.parseUnits(amount, 18));
+      await tx.wait();
+      alert('Web3 XRP transfer successful!');
+    } catch (err: any) {
+      alert('Web3 trade failed: ' + (err.message || err));
+    }
+  };
   const [orderType, setOrderType] = useState<'market' | 'limit'>('market');
   const [side, setSide] = useState<'buy' | 'sell'>('buy');
   const [amount, setAmount] = useState('');
@@ -150,6 +180,17 @@ const TradingForm: React.FC<TradingFormProps> = ({
           >
             {loading ? 'Placing Order...' : `${side.toUpperCase()} ${currentProduct?.base_currency}`}
           </Button>
+          {/* Web3 XRP transfer button, only for XRP or wXRP trading pair */}
+          {currentProduct?.base_currency.toUpperCase() === 'XRP' && (
+            <Button 
+              onClick={handleWeb3Trade}
+              variant="outline"
+              className="w-full mt-2 border-blue-500 text-blue-700"
+              disabled={!wallet.connected}
+            >
+              {wallet.connected ? 'Web3 Trade (MetaMask XRP)' : 'Connect MetaMask for Web3 Trade'}
+            </Button>
+          )}
         </CardContent>
       </Card>
 
