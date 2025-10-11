@@ -1,0 +1,32 @@
+name: Deploy Supabase Edge Functions
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install Supabase CLI
+        run: |
+          curl -sL https://github.com/supabase/cli/releases/latest/download/install.sh | sh
+          echo "$HOME/.supabase/bin" >> $GITHUB_PATH
+
+      - name: Authenticate with Supabase
+        run: supabase login --token ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+
+      - name: Deploy ai-calculator function
+        run: supabase functions deploy ai-calculator
+
+      - name: Deploy smarty-address-validation function
+        run: supabase functions deploy smarty-address-validation
