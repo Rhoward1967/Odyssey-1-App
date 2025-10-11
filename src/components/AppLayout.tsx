@@ -52,7 +52,11 @@ export default function AppLayout() {
               <ClipboardList className='w-3 h-3 md:w-4 md:h-4' />
               <span>Invoicing</span>
             </TabsTrigger>
-            <TabsContent value='invoicing' className='hidden data-[state=active]:block m-0 p-0' forceMount>
+            <TabsContent
+              value='invoicing'
+              className='hidden data-[state=active]:block m-0 p-0'
+              forceMount
+            >
               <div className='bg-gradient-to-br from-slate-900 via-green-900 to-slate-900 p-6'>
                 <AutomatedInvoicing />
               </div>
@@ -108,33 +112,61 @@ export default function AppLayout() {
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value='admin' className='hidden data-[state=active]:block m-0 p-0' forceMount>
+          <TabsContent
+            value='admin'
+            className='hidden data-[state=active]:block m-0 p-0'
+            forceMount
+          >
             <div className='bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-6'>
               <AdminDashboard />
             </div>
           </TabsContent>
 
-          <TabsContent value='schedule' className='hidden data-[state=active]:block m-0 p-0' forceMount>
+          <TabsContent
+            value='schedule'
+            className='hidden data-[state=active]:block m-0 p-0'
+            forceMount
+          >
             <MainScheduleWithSidebar />
           </TabsContent>
 
-          <TabsContent value='timeclock' className='hidden data-[state=active]:block m-0 p-0' forceMount>
+          <TabsContent
+            value='timeclock'
+            className='hidden data-[state=active]:block m-0 p-0'
+            forceMount
+          >
             <TimeClockManagement />
           </TabsContent>
 
-          <TabsContent value='onboarding' className='hidden data-[state=active]:block m-0 p-0' forceMount>
+          <TabsContent
+            value='onboarding'
+            className='hidden data-[state=active]:block m-0 p-0'
+            forceMount
+          >
             <EmployeeOnboardingSystem />
           </TabsContent>
 
-          <TabsContent value='compliance' className='hidden data-[state=active]:block m-0 p-0' forceMount>
+          <TabsContent
+            value='compliance'
+            className='hidden data-[state=active]:block m-0 p-0'
+            forceMount
+          >
             <I9ComplianceSystem />
           </TabsContent>
 
-          <TabsContent value='profiles' className='hidden data-[state=active]:block m-0 p-0' forceMount>
+          <TabsContent
+            value='profiles'
+            className='hidden data-[state=active]:block m-0 p-0'
+            forceMount
+          >
             <EmployeeProfileSystem />
           </TabsContent>
 
-          <TabsContent value='contacts' className='hidden data-[state=active]:block m-0 p-0' forceMount>
+          <TabsContent
+            value='contacts'
+            className='hidden data-[state=active]:block m-0 p-0'
+            forceMount
+          >
             <ContactPhoneBook />
           </TabsContent>
         </Tabs>
