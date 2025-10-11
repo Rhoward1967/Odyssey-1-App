@@ -1,6 +1,9 @@
 # This workflow is dedicated to deploying Supabase Edge Functions.
 # It is guaranteed to be free of hidden characters or formatting errors.
 
+# This workflow is dedicated to deploying Supabase Edge Functions.
+# It is guaranteed to be free of hidden characters or formatting errors.
+
 name: Deploy Supabase Edge Functions
 
 on:
