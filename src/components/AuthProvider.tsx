@@ -71,6 +71,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   useEffect(() => {
+    // DEBUG: Log the value of VITE_ARCHITECT_EMAIL at runtime
+    console.log('DEBUG: VITE_ARCHITECT_EMAIL =', ARCHITECT_EMAIL);
     // --- DEVELOPER BYPASS LOGIC ---
     if (ARCHITECT_EMAIL) {
       console.warn(

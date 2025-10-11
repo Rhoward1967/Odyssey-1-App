@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useAuth } from './AuthProvider';
 // Service type for cleaning/janitorial services/products
 type Service = { id: string; name: string; sku?: string; default_rate?: number; };
 import CustomerProfile, { CustomerProfileData } from './customers/CustomerProfile';
@@ -30,6 +31,7 @@ type Invoice = {
 
 // --- Main Dashboard Component ---
 export default function InvoiceDashboard() {
+  const { user, signIn, loading: authLoading } = useAuth();
   const [view, setView] = useState<'list' | 'invoice_form' | 'customer_manager'>('list');
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [customers, setCustomers] = useState<Customer[]>([]);
@@ -66,9 +68,15 @@ export default function InvoiceDashboard() {
   }, []);
 
   useEffect(() => {
-    if (view === 'list') {
-      fetchData();
-    }
+    let isMounted = true;
+    const checkAndFetch = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user && isMounted && view === 'list') {
+        fetchData();
+      }
+    };
+    checkAndFetch();
+    return () => { isMounted = false; };
   }, [view, fetchData]);
 
   const handleDeleteInvoice = async (invoiceId: string) => {
@@ -88,14 +96,55 @@ export default function InvoiceDashboard() {
     setCustomers(updatedCustomers);
   };
 
-  if(loading) return <div className="p-8 text-center animate-pulse">Loading Invoicing Module...</div>
+
+  // Loading timeout fallback
+  const [loadingTimeout, setLoadingTimeout] = useState(false);
+  useEffect(() => {
+    if (loading) {
+      const timer = setTimeout(() => setLoadingTimeout(true), 7000);
+      return () => clearTimeout(timer);
+    } else {
+      setLoadingTimeout(false);
+    }
+  }, [loading]);
+
+  if (authLoading) return <div className="p-8 text-center animate-pulse">Checking authentication...</div>;
+  if (!user) {
+    return (
+      <div className="p-8 text-center">
+        <div className="mb-4 text-red-700">Not authenticated. Please log in to access invoicing.</div>
+        <a href="/login" className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Go to Login</a>
+      </div>
+    );
+  }
+  if (loading && !loadingTimeout) return <div className="p-8 text-center animate-pulse">Loading Invoicing Module...</div>;
+  if (loading && loadingTimeout) return (
+    <div className="p-8 text-center">
+      <div className="mb-4 animate-pulse">Still loading...<br/>If this takes too long, click below to retry.</div>
+      <button
+        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+        onClick={() => { setLoading(true); setLoadingTimeout(false); fetchData(); }}
+      >
+        Retry Loading
+      </button>
+    </div>
+  );
 
   return (
-    <div className="p-4 md:p-6 bg-gray-100 min-h-screen">
+    <div className="p-4 md:p-6 bg-gray-100">
       <div className="max-w-7xl mx-auto">
-        {error && <div className="mb-4 p-4 bg-red-100 text-red-800 rounded-lg shadow">{error}</div>}
-        
-        {view === 'list' && (
+        {error && (
+          <div className="mb-4 p-4 bg-red-100 text-red-800 rounded-lg shadow flex flex-col items-center">
+            <div>{error}</div>
+            <button
+              className="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+              onClick={() => fetchData()}
+            >
+              Retry
+            </button>
+          </div>
+        )}
+        {view === 'list' && !error && (
           <InvoiceListView 
             invoices={invoices} 
             onCreateNew={() => showForm()}
@@ -104,7 +153,7 @@ export default function InvoiceDashboard() {
             onManageCustomers={() => setView('customer_manager')}
           />
         )}
-        {view === 'invoice_form' && (
+        {view === 'invoice_form' && !error && (
           <InvoiceForm 
             initialInvoice={editingInvoice}
             customers={customers}
@@ -114,7 +163,7 @@ export default function InvoiceDashboard() {
             onCustomerAdded={handleCustomerAdded}
           />
         )}
-        {view === 'customer_manager' && (
+        {view === 'customer_manager' && !error && (
           <CustomerManager 
             customers={customers}
             onSaveSuccess={fetchData} 
