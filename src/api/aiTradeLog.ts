@@ -3,11 +3,22 @@
 
 import { supabase } from '@/lib/supabase';
 
-export async function logAITrade(trade) {
-  // trade: { timestamp, symbol, side, amount, price, orderType, meta, simulation, tx?, error? }
-  const { data, error } = await supabase.from('ai_trade_logs').insert([trade]);
-  if (error) {
-    console.error('Failed to log AI trade:', error);
+// POST: log a trade, GET: fetch all logs
+export default async function aiTradeLogHandler(req, res) {
+  if (req.method === 'POST') {
+    const trade = req.body;
+    const { error } = await supabase.from('ai_trade_logs').insert([trade]);
+    if (error) {
+      return res.status(500).json({ error: error.message || error });
+    }
+    return res.json({ success: true });
+  } else if (req.method === 'GET') {
+    const { data, error } = await supabase.from('ai_trade_logs').select('*').order('timestamp', { ascending: false });
+    if (error) {
+      return res.status(500).json({ error: error.message || error });
+    }
+    return res.json({ logs: data });
+  } else {
+    return res.status(405).json({ error: 'Method not allowed' });
   }
-  return { data, error };
 }

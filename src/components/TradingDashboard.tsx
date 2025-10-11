@@ -20,7 +20,7 @@ const AITradeLogAdmin: React.FC = () => {
     async function fetchLogs() {
       setLoading(true);
       try {
-        const res = await fetch('/api/aiTradeLog');
+        const res = await fetch('/api/aiTradeLog', { method: 'GET' });
         const data = await res.json();
         setLogs(data.logs || []);
       } catch {}
@@ -28,6 +28,21 @@ const AITradeLogAdmin: React.FC = () => {
     }
     fetchLogs();
   }, []);
+  // Admin action handlers
+  async function updateTradeStatus(id, status) {
+    await fetch('/api/aiTradeLog', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, status, adminAction: true })
+    });
+    // Refresh logs
+    setLoading(true);
+    const res = await fetch('/api/aiTradeLog', { method: 'GET' });
+    const data = await res.json();
+    setLogs(data.logs || []);
+    setLoading(false);
+  }
+
   return (
     <div className="my-8">
       <h2 className="text-lg font-bold mb-2">AI Trade Log (Admin)</h2>
@@ -45,6 +60,8 @@ const AITradeLogAdmin: React.FC = () => {
                 <th className="px-2 py-1">Simulation</th>
                 <th className="px-2 py-1">Tx</th>
                 <th className="px-2 py-1">Error</th>
+                <th className="px-2 py-1">Status</th>
+                <th className="px-2 py-1">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -59,6 +76,19 @@ const AITradeLogAdmin: React.FC = () => {
                   <td className="px-2 py-1">{log.simulation ? 'Yes' : 'No'}</td>
                   <td className="px-2 py-1">{log.tx || '-'}</td>
                   <td className="px-2 py-1 text-red-600">{log.error || '-'}</td>
+                  <td className="px-2 py-1">{log.status || '-'}</td>
+                  <td className="px-2 py-1">
+                    <button
+                      className="bg-green-500 text-white px-2 py-1 rounded text-xs mr-1"
+                      onClick={() => updateTradeStatus(log.id, 'approved')}
+                      disabled={log.status === 'approved'}
+                    >Approve</button>
+                    <button
+                      className="bg-red-500 text-white px-2 py-1 rounded text-xs"
+                      onClick={() => updateTradeStatus(log.id, 'rejected')}
+                      disabled={log.status === 'rejected'}
+                    >Reject</button>
+                  </td>
                 </tr>
               ))}
             </tbody>
