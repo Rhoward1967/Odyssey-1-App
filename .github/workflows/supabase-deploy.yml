@@ -1,7 +1,10 @@
 # This is the single, definitive workflow for deploying Supabase Edge Functions.
 # It uses the correct 'supabase functions deploy' command without the '--project-id' flag
 # and relies on the 'SUPABASE_PROJECT_REF' secret for project linking.
-
+- name: Debug Project Ref
+  run: echo "Project ref is set? ${SUPABASE_PROJECT_REF:+yes}"
+  env:
+    SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
 name: Deploy Supabase Edge Functions
 
 on:
