@@ -21,18 +21,45 @@ jobs:
           node-version: '18'
 
       - name: Install Supabase CLI
+        shell: bash
         run: |
+          set -euxo pipefail
           curl -sL https://github.com/supabase/cli/releases/latest/download/install.sh | sh
           echo "$HOME/.supabase/bin" >> $GITHUB_PATH
+          echo "PATH before reload: $PATH"
 
-      - name: Verify Supabase CLI Installation
+      - name: Reload PATH
+        shell: bash
         run: |
-          which supabase
-          supabase --version
+          set -euxo pipefail
+          echo "PATH after GITHUB_PATH export: $PATH"
+          which supabase || true
+          $HOME/.supabase/bin/supabase --version
 
-      - name: Deploy Supabase Edge Functions
+      - name: Authenticate with Supabase
+        shell: bash
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          set -euxo pipefail
+          $HOME/.supabase/bin/supabase login --token "$SUPABASE_ACCESS_TOKEN"
+
+      - name: Deploy ai-calculator function
+        shell: bash
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
           SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
-        # Use the absolute path to the executable to guarantee it is found
-        run: $HOME/.supabase/bin/supabase functions deploy --project-id $SUPABASE_PROJECT_ID
+        run: |
+          set -euxo pipefail
+          which supabase
+          $HOME/.supabase/bin/supabase functions deploy ai-calculator --project-id $SUPABASE_PROJECT_ID
+
+      - name: Deploy smarty-address-validation function
+        shell: bash
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+        run: |
+          set -euxo pipefail
+          which supabase
+          $HOME/.supabase/bin/supabase functions deploy smarty-address-validation --project-id $SUPABASE_PROJECT_ID
