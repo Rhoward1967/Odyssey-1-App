@@ -1,11 +1,21 @@
 # This is the single, definitive workflow for deploying Supabase Edge Functions.
 # It uses the correct 'supabase functions deploy' command without the '--project-id' flag
 # and relies on the 'SUPABASE_PROJECT_REF' secret for project linking.
-- name: Debug Project Ref
-  run: echo "Project ref is set? ${SUPABASE_PROJECT_REF:+yes}"
+- name: Debug Secrets and Environment
+  if: always()
+  run: |
+    echo "--- DEBUGGING INFORMATION ---"
+    echo "Dumping environment state for analysis."
+    echo ""
+    echo "Step status: ${{ job.status }}"
+    echo ""
+    echo "Is SUPABASE_ACCESS_TOKEN set? Answer: ${{ env.SUPABASE_ACCESS_TOKEN != '' }}"
+    echo "Is SUPABASE_PROJECT_REF set? Answer: ${{ env.SUPABASE_PROJECT_REF != '' }}"
+    echo ""
+    echo "--- END DEBUGGING ---"
   env:
+    SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
     SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
-name: Deploy Supabase Edge Functions
 
 on:
   push:
