@@ -10,10 +10,11 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+    13|     runs-on: ubuntu-latest
+14|     steps:
+15|       - name: Checkout repository
+16|         uses: actions/checkout@v4
+...
 
       - name: Set up Supabase CLI
         uses: supabase/setup-cli@v1
