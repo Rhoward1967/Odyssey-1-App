@@ -1,5 +1,5 @@
 # This is the single, definitive workflow for deploying Supabase Edge Functions.
-# It uses a robust, multi-step installation process to permanently resolve all shell errors.
+# It uses the official Supabase GitHub Action to ensure a robust and reliable installation.
 
 name: Deploy Supabase Edge Functions
 
@@ -15,26 +15,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - name: Set up Supabase CLI
+        # This official action handles installation and PATH configuration automatically.
+        uses: supabase/setup-cli@v1
         with:
-          node-version: '18'
-
-      - name: Install Supabase CLI (Robust Method)
-        run: |
-          # Step 1: Download the installation script
-          curl -sL -o install.sh https://github.com/supabase/cli/releases/latest/download/install.sh
-          # Step 2: Make the script executable
-          chmod +x install.sh
-          # Step 3: Execute the script
-          ./install.sh
-          # Step 4: Add the CLI to the PATH for subsequent steps
-          echo "$HOME/.supabase/bin" >> $GITHUB_PATH
-
-      - name: Verify Supabase CLI Installation
-        run: |
-          which supabase
-          supabase --version
+          version: latest
 
       - name: Deploy All Edge Functions
         env:
