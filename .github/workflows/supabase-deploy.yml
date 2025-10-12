@@ -1,8 +1,5 @@
-# This workflow is dedicated to deploying Supabase Edge Functions.
-# It is guaranteed to be free of hidden characters or formatting errors.
-
-# This workflow is dedicated to deploying Supabase Edge Functions.
-# It is guaranteed to be free of hidden characters or formatting errors.
+# This is the single, definitive workflow for deploying Supabase Edge Functions.
+# It uses a robust NPM installation to bypass all previous curl/sh/PATH issues.
 
 name: Deploy Supabase Edge Functions
 
@@ -15,30 +12,27 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Set up Node.js
+        # This step is crucial as it provides the 'npm' command.
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-          cache: 'npm'
 
-      - name: Install prerequisites
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y curl ca-certificates
+      - name: Install Supabase CLI via NPM
+        # This is the new, robust installation method.
+        run: npm install -g supabase@latest
 
-      - name: Install Supabase CLI
-        shell: bash
-        run: |
-          curl -sL https://github.com/supabase/cli/releases/latest/download/install.sh | sh
-          echo "$HOME/.supabase/bin" >> "$GITHUB_PATH"
+      - name: Verify Supabase CLI Installation
+        # This step confirms the CLI is installed and available in the path.
+        run: supabase --version
 
-      - name: Verify Supabase CLI
-        run: |
-          which supabase || true
-          supabase --version
-
-      - name: Deploy Supabase Edge Functions
+      - name: Deploy All Edge Functions
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
           SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
-        run: supabase functions deploy
+        run: supabase functions deploy --project-id "$SUPABASE_PROJECT_ID"
+
+
