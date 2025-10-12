@@ -1,15 +1,6 @@
 # This is the single, definitive workflow for deploying Supabase Edge Functions.
 # It uses the correct 'supabase functions deploy' command without the '--project-id' flag
 # and relies on the 'SUPABASE_PROJECT_REF' secret for project linking.
-- name: Debug Project Ref
-  run: echo "SUPABASE_PROJECT_REF is ${SUPABASE_PROJECT_REF:+set}"
-  env:
-    SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
-
-- name: Debug Access Token
-  run: echo "SUPABASE_ACCESS_TOKEN is ${SUPABASE_ACCESS_TOKEN:+set}"
-  env:
-    SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
 name: Deploy Supabase Edge Functions
 
 on:
@@ -24,20 +15,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-
       - name: Install Supabase CLI
         uses: supabase/setup-cli@v1
-
-      - name: Verify Supabase CLI Installation
-        run: supabase --version
 
       - name: Deploy All Edge Functions
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
           SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
-        run: supabase functions deploy
-
+        run: supabase functions deploy --project-ref $SUPABASE_PROJECT_REF
