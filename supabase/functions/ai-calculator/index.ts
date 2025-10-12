@@ -29,9 +29,3 @@ const handler = async (_req: Request): Promise<Response> => {
 };
 
 serve(handler);
-  // Fallback to AI if not a pure math expression
-  const aiResult = await aiAnswer(query);
-  return new Response(JSON.stringify({ answer: aiResult }), {
-    headers: { 'Content-Type': 'application/json' },
-  });
-});
