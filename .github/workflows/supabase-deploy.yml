@@ -1,5 +1,6 @@
 # This is the single, definitive workflow for deploying Supabase Edge Functions.
-# It uses the official Supabase GitHub Action to ensure a robust and reliable installation.
+# It uses the correct 'supabase functions deploy' command without the '--project-id' flag
+# and relies on the 'SUPABASE_PROJECT_REF' secret for project linking.
 
 name: Deploy Supabase Edge Functions
 
@@ -21,8 +22,7 @@ jobs:
           node-version: '18'
 
       - name: Install Supabase CLI
-        # This official action handles installation and PATH configuration automatically,
-        # resolving all previous installation failures.
+        # This official action handles installation and PATH configuration automatically.
         uses: supabase/setup-cli@v1
 
       - name: Verify Supabase CLI Installation
@@ -31,5 +31,8 @@ jobs:
       - name: Deploy All Edge Functions
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
-        run: supabase functions deploy --project-id "$SUPABASE_PROJECT_ID"
+          # The CLI uses the Project Ref to link to the correct project.
+          SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
+        run: supabase functions deploy
+
+SE_PROJECT_ID"
