@@ -1,6 +1,6 @@
 // Supabase Edge Function: smarty-address-validation
 // Validates and standardizes addresses using SmartyStreets API
-import { serve } from 'std/server';
+import { serve } from "jsr:@std/http/server";
 
 const SMARTY_AUTH_ID = Deno.env.get('SMARTY_AUTH_ID');
 const SMARTY_AUTH_TOKEN = Deno.env.get('SMARTY_AUTH_TOKEN');
