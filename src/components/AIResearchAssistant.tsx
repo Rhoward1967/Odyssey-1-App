@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 import { useState, useEffect, useRef } from 'react';
 import {
   Card,
@@ -12,6 +13,15 @@ import { ScrollArea } from './ui/scroll-area';
 import { useAuth } from './AuthProvider';
 import { supabase } from '@/lib/supabase';
 import { Bot, User, CornerDownLeft } from 'lucide-react';
+=======
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Textarea } from '@/components/ui/textarea';
+import { supabase } from '@/lib/supabase';
+import { AlertTriangle, Crown, Search, Sparkles } from 'lucide-react';
+import { useEffect, useState } from 'react';
+>>>>>>> Stashed changes
 
 // Define the structure for a message in the chat
 interface Message {

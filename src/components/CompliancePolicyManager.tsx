@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { Button } from './ui/button';
+import { AlertTriangle, CheckCircle, FileText, Shield, Users } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { supabase } from '../lib/supabase';
 import { Badge } from './ui/badge';
-import { Textarea } from './ui/textarea';
+import { Button } from './ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
-import { supabase } from '../lib/supabase';
-import { Shield, AlertTriangle, CheckCircle, FileText, Users } from 'lucide-react';
+import { Textarea } from './ui/textarea';
 
 interface ComplianceItem {
   id: string;

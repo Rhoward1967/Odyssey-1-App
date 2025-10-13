@@ -1,18 +1,27 @@
-import React, { useState, useEffect } from 'react';
-import { useAuth } from './AuthProvider';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Separator } from '@/components/ui/separator';
-import { 
-  FileText, Upload, Search, Filter, Download, 
-  Share, Trash2, Eye, Edit, FolderOpen, 
-  Calendar, User, Tag, Star
-} from 'lucide-react';
 import { supabase } from '@/lib/supabase';
+import {
+    Calendar,
+    Download,
+    Edit,
+    Eye,
+    FileText,
+    Filter,
+    FolderOpen,
+    Search,
+    Share,
+    Star,
+    Tag,
+    Trash2,
+    Upload,
+    User
+} from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { useAuth } from './AuthProvider';
 
 interface Document {
   id: string;

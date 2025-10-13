@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { Building, Calendar, Mail, Phone, TrendingUp, Users } from 'lucide-react';
+import { useState } from 'react';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Input } from './ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { Users, TrendingUp, Calendar, Phone, Mail, Building } from 'lucide-react';
 
 interface Lead {
   id: string;

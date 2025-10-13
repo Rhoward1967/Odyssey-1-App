@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+<<<<<<< Updated upstream
 import {
   Clock,
   Users,
@@ -17,6 +17,17 @@ import ContactPhoneBook from './ContactPhoneBook';
 import EmployeeProfileSystem from './EmployeeProfileSystem';
 import AdminDashboard from './AdminDashboard';
 import AutomatedInvoicing from './AutomatedInvoicing';
+=======
+import { Calendar, ClipboardList, Clock, Phone, Settings, Shield, Users } from 'lucide-react';
+import { useState } from 'react';
+import AdminDashboard from './AdminDashboard';
+import ContactPhoneBook from './ContactPhoneBook';
+import EmployeeOnboardingSystem from './EmployeeOnboardingSystem';
+import EmployeeProfileSystem from './EmployeeProfileSystem';
+import I9ComplianceSystem from './I9ComplianceSystem';
+import MainScheduleWithSidebar from './MainScheduleWithSidebar';
+import TimeClockManagement from './TimeClockManagement';
+>>>>>>> Stashed changes
 
 export default function AppLayout() {
   const [activeTab, setActiveTab] = useState('admin');

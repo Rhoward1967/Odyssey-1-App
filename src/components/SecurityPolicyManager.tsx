@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Shield, Lock, Key, Users, AlertTriangle, CheckCircle } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
+import { AlertTriangle, CheckCircle, Lock, Shield } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 interface SecurityPolicy {
   id: string;

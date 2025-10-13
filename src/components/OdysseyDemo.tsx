@@ -1,10 +1,10 @@
 
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { Button } from './ui/button';
-import { Badge } from './ui/badge';
-import { Brain, Zap, BarChart3 } from 'lucide-react';
+import { BarChart3, Brain, Zap } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
+import { Badge } from './ui/badge';
+import { Button } from './ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 
 const industries = [
   {

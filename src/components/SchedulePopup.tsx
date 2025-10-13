@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { X, MapPin, Clock, FileText } from 'lucide-react';
+import { Clock, FileText, MapPin, X } from 'lucide-react';
+import { useState } from 'react';
 import { Button } from './ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 
 interface SchedulePopupProps {
   isOpen: boolean;

@@ -1,21 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import { useAuth } from './AuthProvider';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
 import { supabase } from '@/lib/supabase';
-import { 
-  Shield, 
-  Clock, 
-  AlertTriangle, 
-  CheckCircle, 
-  BarChart3,
-  Settings,
-  Zap,
-  Users
+import {
+    AlertTriangle,
+    BarChart3,
+    CheckCircle,
+    Clock,
+    Settings,
+    Shield,
+    Users,
+    Zap
 } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { useAuth } from './AuthProvider';
 
 interface RateLimitStatus {
   tier: 'default' | 'premium' | 'admin';

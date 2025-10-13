@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { supabase } from '@/lib/supabase';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { CheckCircle, ArrowRight, Calculator, Calendar, FileText } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { supabase } from '@/lib/supabase';
+import { CheckCircle } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
 
 interface IndustryDemoProps {
   isOpen: boolean;

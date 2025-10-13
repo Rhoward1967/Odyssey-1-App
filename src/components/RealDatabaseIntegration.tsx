@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
-import { Database, Server, Activity, Settings, Plus, Search, Filter, Download } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
+import { Activity, Database, Download, Plus, Server, Settings } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 interface DatabaseConnection {
   id: string;

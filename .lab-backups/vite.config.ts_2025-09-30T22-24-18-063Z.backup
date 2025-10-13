@@ -1,0 +1,7 @@
+{
+  "originalPath": "vite.config.ts",
+  "timestamp": "2025-09-30T22:24:18.063Z",
+  "hash": "5b4085394f0ff358bf7fd51c6fdfae3ca17fb582c40d13deec76337164272042",
+  "size": 1110,
+  "content": "/// <reference types=\"vitest\" />\r\nimport { defineConfig } from \"vite\";\r\nimport react from \"@vitejs/plugin-react-swc\";\r\nimport path from \"path\";\r\n\r\n// https://vitejs.dev/config/\r\nexport default defineConfig(({ mode }) => ({\r\n  plugins: [\r\n    react()\r\n  ].filter(Boolean),\r\n  resolve: {\r\n    alias: {\r\n      \"@\": path.resolve(__dirname, \"./src\"),\r\n    },\r\n  },\r\n  test: {\r\n    globals: true,\r\n    environment: 'jsdom',\r\n    setupFiles: './src/test/setup.ts',\r\n    css: true,\r\n    include: ['src/**/*.{test,spec}.{js,ts,jsx,tsx}'],\r\n    exclude: ['node_modules', 'dist'],\r\n    mockReset: true,\r\n    clearMocks: true,\r\n    restoreMocks: true\r\n  },\r\n  build: {\r\n    rollupOptions: {\r\n      output: {\r\n        manualChunks: {\r\n          vendor: ['react', 'react-dom'],\r\n          ui: ['lucide-react', 'recharts'],\r\n        },\r\n      },\r\n    },\r\n    chunkSizeWarningLimit: 1200,\r\n    modulePreload: {\r\n      polyfill: false,\r\n      resolveDependencies: () => []\r\n    },\r\n    target: 'esnext',\r\n    minify: mode === 'production' ? 'esbuild' : false,\r\n  },\r\n  ssr: {\r\n    noExternal: ['react', 'react-dom']\r\n  },\r\n}));"
+}

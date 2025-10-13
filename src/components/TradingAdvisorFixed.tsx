@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { Button } from './ui/button';
-import { Badge } from './ui/badge';
-import { Textarea } from './ui/textarea';
-import { Brain, TrendingUp, AlertTriangle, Lightbulb, MessageSquare } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
+import { AlertTriangle, Brain, Lightbulb, MessageSquare, TrendingUp } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { Badge } from './ui/badge';
+import { Button } from './ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { Textarea } from './ui/textarea';
 
 interface MarketInsight {
   type: 'bullish' | 'bearish' | 'neutral';

@@ -1,0 +1,7 @@
+{
+  "originalPath": "src\\types\\calendar.ts",
+  "timestamp": "2025-10-05T21:20:04.390Z",
+  "hash": "f494ce2e420309ff49d8690d7dc269b2fee7be1bc3f8e7f630d9db14cb0d3c34",
+  "size": 567,
+  "content": "// src/types/calendar.ts\r\n\r\nexport interface Calendar {\r\n  id: string;\r\n  name: string;\r\n  color?: string;\r\n  type: 'employee' | 'admin' | 'personal' | 'holidays' | 'custom';\r\n  description?: string;\r\n}\r\n\r\nexport type CalendarType = Calendar['type'];\r\n\r\nexport interface CalendarEvent {\r\n  id: string;\r\n  calendarId: string;\r\n  title: string;\r\n  description?: string;\r\n  start: string; // ISO string\r\n  end: string; // ISO string\r\n  type: 'work' | 'personal' | 'holiday' | 'birthday' | 'other';\r\n  location?: string;\r\n  attendees?: string[];\r\n  allDay?: boolean;\r\n}\r\n"
+}

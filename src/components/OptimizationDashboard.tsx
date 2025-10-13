@@ -1,10 +1,9 @@
-import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Settings, Zap, Database, DollarSign } from 'lucide-react';
+import { Database, DollarSign, Settings, Zap } from 'lucide-react';
 import APIOptimizer from './APIOptimizer';
-import DatabaseQueryAnalyzer from './DatabaseQueryAnalyzer';
 import CostAlertManager from './CostAlertManager';
+import DatabaseQueryAnalyzer from './DatabaseQueryAnalyzer';
 import RevenueTracker from './RevenueTracker';
 
 export default function OptimizationDashboard() {
