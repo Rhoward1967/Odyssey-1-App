@@ -1,6 +1,6 @@
 // @ts-nocheck
 
-import { serve } from "jsr:@std/http/server";
+import { serve } from "jsr:@std/http";
 
 const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY');
 
