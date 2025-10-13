@@ -1,0 +1,2 @@
+// No action needed, just a placeholder for Deno extension installation instructions.
+// Please install the official Deno extension in your code editor (e.g., VS Code) for proper type checking and error resolution.

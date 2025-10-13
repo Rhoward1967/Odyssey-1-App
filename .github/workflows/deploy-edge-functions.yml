@@ -1,43 +1,33 @@
-# .github/workflows/deploy-edge-functions.yml
+# This is the single, definitive workflow for deploying Supabase Edge Functions.
+# It uses a robust NPM installation and NPX to be independent of PATH issues.
+
 name: Deploy Supabase Edge Functions
 
 on:
   push:
-    branches:
-      - main
-    paths:
-      - 'supabase/functions/**'
+    branches: [main]
   workflow_dispatch:
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    name: Deploy Edge Functions
-    
+    permissions:
+      contents: read
     steps:
-      - name: Checkout Code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Supabase CLI
-        uses: supabase/setup-cli@v1
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          version: latest
+          node-version: '18'
+          cache: 'npm'
 
-      - name: Link Supabase Project
-        env:
-          # The link command needs the access token for authentication
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-        run: |
-          echo "Linking project to Supabase..."
-          supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_REF }}
-          echo "Project linked successfully."
+      - name: Install dependencies
+        run: npm ci
 
-      - name: Deploy Supabase Edge Functions
+      - name: Deploy All Edge Functions
         env:
-          # The deploy command also needs the access token
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-        run: |
-          echo "Starting deployment..."
-          # We will keep the project-ref here as a fallback
-          supabase functions deploy --project-ref ${{ secrets.SUPABASE_PROJECT_REF }}
-          echo "Deployment command finished."
+          SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
+        run: npx supabase functions deploy
