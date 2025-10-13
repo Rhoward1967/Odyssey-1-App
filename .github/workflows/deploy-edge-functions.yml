@@ -1,6 +1,4 @@
-# This is the single, definitive workflow for deploying Supabase Edge Functions.
-# It is guaranteed to be free of hidden characters or formatting errors.
-
+# .github/workflows/deploy-edge-functions.yml
 name: Deploy Supabase Edge Functions
 
 on:
@@ -25,14 +23,21 @@ jobs:
         with:
           version: latest
 
-      - name: Deploy Supabase Edge Functions
+      - name: Link Supabase Project
         env:
-          # The Access Token is still needed for authentication
+          # The link command needs the access token for authentication
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
         run: |
-          echo "Starting deployment with direct project-ref injection..."
-          
-          # The project ref is now passed directly as a command-line argument
-          npx supabase functions deploy --project-ref ${{ secrets.SUPABASE_PROJECT_REF }}
-          
+          echo "Linking project to Supabase..."
+          supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_REF }}
+          echo "Project linked successfully."
+
+      - name: Deploy Supabase Edge Functions
+        env:
+          # The deploy command also needs the access token
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          echo "Starting deployment..."
+          # We will keep the project-ref here as a fallback
+          supabase functions deploy --project-ref ${{ secrets.SUPABASE_PROJECT_REF }}
           echo "Deployment command finished."
