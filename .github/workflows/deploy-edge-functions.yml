@@ -15,10 +15,33 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     name: Deploy Edge Functions
+    
+    # If you found an environment in Step 2.1, you must specify its name here.
+    # For example:
+    # environment: production 
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+
+      - name: Verify Secrets are Accessible in this Workflow
+        env:
+          TEST_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          TEST_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
+        run: |
+          echo "Verifying secrets within the main deployment workflow..."
+          if [ -z "$TEST_REF" ]; then
+            echo "❌ FAILED: SUPABASE_PROJECT_REF is MISSING here."
+            exit 1
+          else
+            echo "✅ SUCCESS: SUPABASE_PROJECT_REF is present."
+          fi
+          if [ -z "$TEST_TOKEN" ]; then
+            echo "❌ FAILED: SUPABASE_ACCESS_TOKEN is MISSING here."
+            exit 1
+          else
+            echo "✅ SUCCESS: SUPABASE_ACCESS_TOKEN is present."
+          fi
 
       - name: Setup Supabase CLI
         uses: supabase/setup-cli@v1
