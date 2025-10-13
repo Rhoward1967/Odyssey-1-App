@@ -30,10 +30,10 @@ jobs:
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
         run: |
-          echo "Linking project to Supabase..."
-          supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_REF }}
+          echo "Linking project to Supabase using npx..."
+          npx supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_REF }}
           
-          echo "Starting deployment..."
-          supabase functions deploy
+          echo "Starting deployment using npx..."
+          npx supabase functions deploy
           
           echo "Deployment command finished."
