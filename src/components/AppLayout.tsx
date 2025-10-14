@@ -1,14 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-<<<<<<< Updated upstream
-import {
-  Clock,
-  Users,
-  Calendar,
-  Phone,
-  Shield,
-  ClipboardList,
-  Settings,
-} from 'lucide-react';
+import { Calendar, ClipboardList, Clock, Phone, Settings, Shield, Users } from 'lucide-react';
+import { useState } from 'react';
 import MainScheduleWithSidebar from './MainScheduleWithSidebar';
 import TimeClockManagement from './TimeClockManagement';
 import EmployeeOnboardingSystem from './EmployeeOnboardingSystem';
@@ -17,17 +9,6 @@ import ContactPhoneBook from './ContactPhoneBook';
 import EmployeeProfileSystem from './EmployeeProfileSystem';
 import AdminDashboard from './AdminDashboard';
 import AutomatedInvoicing from './AutomatedInvoicing';
-=======
-import { Calendar, ClipboardList, Clock, Phone, Settings, Shield, Users } from 'lucide-react';
-import { useState } from 'react';
-import AdminDashboard from './AdminDashboard';
-import ContactPhoneBook from './ContactPhoneBook';
-import EmployeeOnboardingSystem from './EmployeeOnboardingSystem';
-import EmployeeProfileSystem from './EmployeeProfileSystem';
-import I9ComplianceSystem from './I9ComplianceSystem';
-import MainScheduleWithSidebar from './MainScheduleWithSidebar';
-import TimeClockManagement from './TimeClockManagement';
->>>>>>> Stashed changes
 
 export default function AppLayout() {
   const [activeTab, setActiveTab] = useState('admin');
@@ -79,13 +60,34 @@ export default function AppLayout() {
               <Settings className='w-3 h-3 md:w-4 md:h-4' />
               <span>Admin</span>
             </TabsTrigger>
-            <TabsTrigger
-              value='schedule'
-              className='flex items-center gap-1 md:gap-2 text-xs md:text-sm px-1 md:px-2'
-            >
-              <Calendar className='w-3 h-3 md:w-4 md:h-4' />
-              <span>Schedule</span>
-            </TabsTrigger>
+              <TabsTrigger value="schedule" className="w-full justify-center flex items-center gap-2">
+                <Calendar className="w-4 h-4" />
+                Schedule
+              </TabsTrigger>
+              <TabsTrigger value="timeclock" className="w-full justify-center flex items-center gap-2">
+                <Clock className="w-4 h-4" />
+                Time Clock
+              </TabsTrigger>
+              <TabsTrigger value="onboarding" className="w-full justify-center flex items-center gap-2">
+                <Users className="w-4 h-4" />
+                Onboarding
+              </TabsTrigger>
+              <TabsTrigger value="compliance" className="w-full justify-center flex items-center gap-2">
+                <Shield className="w-4 h-4" />
+                I-9 Compliance
+              </TabsTrigger>
+              <TabsTrigger value="profiles" className="w-full justify-center flex items-center gap-2">
+                <ClipboardList className="w-4 h-4" />
+                Profiles
+              </TabsTrigger>
+              <TabsTrigger value="contacts" className="w-full justify-center flex items-center gap-2">
+                <Phone className="w-4 h-4" />
+                Contacts
+              </TabsTrigger>
+              <TabsTrigger value="admin" className="w-full justify-center flex items-center gap-2 bg-red-100">
+                <Settings className="w-4 h-4" />
+                Admin
+              </TabsTrigger>
             <TabsTrigger
               value='timeclock'
               className='flex items-center gap-1 md:gap-2 text-xs md:text-sm px-1 md:px-2'
