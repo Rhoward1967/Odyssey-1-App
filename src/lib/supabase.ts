@@ -1,5 +1,8 @@
 import { createClient } from '@supabase/supabase-js';
 
+// DIAGNOSTIC LOG
+console.log("DIAGNOSTIC - VITE_SUPABASE_URL:", import.meta.env.VITE_SUPABASE_URL);
+
 // Secure Supabase configuration - environment variables REQUIRED
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;

@@ -1,0 +1,7 @@
+{
+  "originalPath": "src\\App.tsx",
+  "timestamp": "2025-10-15T18:34:50.363Z",
+  "hash": "d7a13445591ea1ff543ec593af78a79501e01c90c42a7ce67046272f098bf102",
+  "size": 377,
+  "content": "function App() {\r\n  return (\r\n    <div style={{ padding: '2rem', fontFamily: 'sans-serif', color: 'black' }}>\r\n      <h1>Diagnostic Test: ACTIVE</h1>\r\n      <p>\r\n        If you can see this message, the core application is loading correctly.\r\n      </p>\r\n      <p>The failure is inside the previous, complex version of App.tsx.</p>\r\n    </div>\r\n  );\r\n}\r\n\r\nexport default App;\r\n"
+}

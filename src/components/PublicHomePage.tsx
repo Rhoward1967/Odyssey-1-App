@@ -1,8 +1,7 @@
-import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Brain, Zap, Eye, Network, ArrowRight, CheckCircle } from 'lucide-react';
+import { ArrowRight, Brain, CheckCircle, Eye, Network, Zap } from 'lucide-react';
+import React from 'react';
 
 import OdysseyGalaxyDemo from './OdysseyGalaxyDemo';
 

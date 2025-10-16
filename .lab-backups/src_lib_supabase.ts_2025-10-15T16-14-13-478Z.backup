@@ -1,0 +1,7 @@
+{
+  "originalPath": "src\\lib\\supabase.ts",
+  "timestamp": "2025-10-15T16:14:13.478Z",
+  "hash": "a27eb442b7b00c3565150dd551e4715e029a6a59d22c5a121da92767ac7ed1d1",
+  "size": 863,
+  "content": "import { createClient } from '@supabase/supabase-js';\r\n\r\n// DIAGNOSTIC LOG\r\nconsole.log(\"DIAGNOSTIC - VITE_SUPABASE_URL:\", import.meta.env.VITE_SUPABASE_URL);\r\n\r\n// Secure Supabase configuration - environment variables REQUIRED\r\nconst supabaseUrl = import.meta.env.VITE_SUPABASE_URL;\r\nconst supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;\r\n\r\n// Build-time validation: Fail if environment variables are missing\r\nif (!supabaseUrl || !supabaseKey) {\r\n  throw new Error(\r\n    'SECURITY ERROR: Missing required Supabase environment variables. ' +\r\n    'Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in your environment.'\r\n  );\r\n}\r\n\r\n// Initialize Supabase client\r\nconst supabase = createClient(supabaseUrl, supabaseKey, {\r\n  auth: {\r\n    autoRefreshToken: true,\r\n    persistSession: true,\r\n    detectSessionInUrl: true\r\n  }\r\n});\r\n\r\nexport { supabase };"
+}

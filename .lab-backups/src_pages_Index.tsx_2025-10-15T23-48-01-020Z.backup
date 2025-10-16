@@ -1,0 +1,7 @@
+{
+  "originalPath": "src\\pages\\Index.tsx",
+  "timestamp": "2025-10-15T23:48:01.020Z",
+  "hash": "aa345e8bab6391e0a061e8c85c2d1a01b141aa1e33c8d58734b125738addca7b",
+  "size": 507,
+  "content": "import React from 'react';\r\n// import PublicHomePage from '@/components/PublicHomePage';\r\nimport Navigation from '@/components/Navigation';\r\n// import { AppProvider } from '@/contexts/AppContext';\r\n\r\nconst Index: React.FC = () => {\r\n  return (\r\n    // <AppProvider>\r\n      <div className=\"min-h-screen\">\r\n        <Navigation />\r\n        <h1 className=\"text-2xl p-4\">Testing Navigation Component</h1>\r\n        {/* <PublicHomePage /> */}\r\n      </div>\r\n    // </AppProvider>\r\n  );\r\n};\r\n\r\nexport default Index;"
+}

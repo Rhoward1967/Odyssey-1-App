@@ -1,0 +1,7 @@
+{
+  "originalPath": "src\\components\\OdysseyLogo.tsx",
+  "timestamp": "2025-10-15T16:14:10.194Z",
+  "hash": "53bd5329b0f771e08231d463416fee3a99b5e80423794481c5194259300785ab",
+  "size": 485,
+  "content": "import React from 'react';\r\nimport OdysseyGalaxyDemo from '@/components/OdysseyGalaxyDemo';\r\n\r\n\r\nconst OdysseyLogo: React.FC<{ style?: React.CSSProperties; className?: string }> = ({ style, className }) => (\r\n  <div\r\n    style={{\r\n      aspectRatio: '1 / 1',\r\n      width: '100%',\r\n      height: '100%',\r\n      maxWidth: '100%',\r\n      maxHeight: '100%',\r\n      ...style,\r\n    }}\r\n    className={className}\r\n  >\r\n    <OdysseyGalaxyDemo />\r\n  </div>\r\n);\r\n\r\nexport default OdysseyLogo;\r\n"
+}

@@ -1,0 +1,7 @@
+{
+  "originalPath": "src\\pages\\Trading.tsx",
+  "timestamp": "2025-10-15T16:14:13.689Z",
+  "hash": "3269ea38776e55773e5833e9175c95c86ece94f3cbbbbc225c7c0efb4cc15604",
+  "size": 191,
+  "content": "import React from 'react';\r\nimport TradingDashboard from '@/components/TradingDashboard';\r\n\r\nconst Trading: React.FC = () => {\r\n  return <TradingDashboard />;\r\n};\r\n\r\nexport default Trading;\r\n"
+}

@@ -1,20 +1,14 @@
 /// <reference types="vitest" />
-import react from "@vitejs/plugin-react-swc";
-import path from "path";
-import { defineConfig } from "vite";
+import react from '@vitejs/plugin-react-swc';
+import path from 'path';
+import { defineConfig } from 'vite';
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
-  server: {
-    host: "::",
-    port: 8080,
-  },
-  plugins: [
-    react()
-  ].filter(Boolean),
+  plugins: [react()].filter(Boolean),
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
+      '@': path.resolve(__dirname, './src'),
     },
   },
   test: {
@@ -26,7 +20,7 @@ export default defineConfig(({ mode }) => ({
     exclude: ['node_modules', 'dist'],
     mockReset: true,
     clearMocks: true,
-    restoreMocks: true
+    restoreMocks: true,
   },
   build: {
     rollupOptions: {
@@ -37,18 +31,15 @@ export default defineConfig(({ mode }) => ({
         },
       },
     },
-    chunkSizeWarningLimit: 1200, // Increased limit for Phase 4 optimizations
-    // Fix preload warnings by disabling modulePreload for unused chunks
+    chunkSizeWarningLimit: 1200,
     modulePreload: {
       polyfill: false,
-      resolveDependencies: () => []
+      resolveDependencies: () => [],
     },
-    // Fix hydration errors by ensuring consistent builds
     target: 'esnext',
     minify: mode === 'production' ? 'esbuild' : false,
   },
-  // Add SSR configuration to prevent hydration mismatches
   ssr: {
-    noExternal: ['react', 'react-dom']
+    noExternal: ['react', 'react-dom'],
   },
 }));

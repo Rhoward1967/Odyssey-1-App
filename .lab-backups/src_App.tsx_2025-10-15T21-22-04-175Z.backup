@@ -1,0 +1,7 @@
+{
+  "originalPath": "src\\App.tsx",
+  "timestamp": "2025-10-15T21:22:04.176Z",
+  "hash": "ce7617cde141a0b7b239cb944f04b13834f891368051a0987bd11a7f9e7c82e5",
+  "size": 985,
+  "content": "import { Outlet } from 'react-router-dom';\r\n\r\nexport default function AppLayout() {\r\n  return (\r\n    <div className='min-h-screen bg-gray-50 p-8'>\r\n      <header className='mb-8'>\r\n        <h1 className='text-3xl font-bold text-gray-900'>Odyssey-1</h1>\r\n      </header>\r\n\r\n      <nav className='mb-8'>\r\n        <div className='flex gap-4'>\r\n          <a\r\n            href='/'\r\n            className='px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600'\r\n          >\r\n            Dashboard\r\n          </a>\r\n          <a\r\n            href='/profile'\r\n            className='px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600'\r\n          >\r\n            Profile\r\n          </a>\r\n          <a\r\n            href='/subscription'\r\n            className='px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600'\r\n          >\r\n            Subscription\r\n          </a>\r\n        </div>\r\n      </nav>\r\n\r\n      <main>\r\n        <Outlet />\r\n      </main>\r\n    </div>\r\n  );\r\n}\r\n"
+}

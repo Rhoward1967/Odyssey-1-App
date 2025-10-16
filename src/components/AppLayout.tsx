@@ -1,188 +1,165 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Calendar, ClipboardList, Clock, Phone, Settings, Shield, Users } from 'lucide-react';
+import { useAuth } from '@/components/AuthProvider';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import {
+  Bell,
+  Calendar,
+  CreditCard,
+  FileText,
+  Home,
+  Menu,
+  Search,
+  Settings,
+  User,
+  X,
+} from 'lucide-react';
 import { useState } from 'react';
-import MainScheduleWithSidebar from './MainScheduleWithSidebar';
-import TimeClockManagement from './TimeClockManagement';
-import EmployeeOnboardingSystem from './EmployeeOnboardingSystem';
-import I9ComplianceSystem from './I9ComplianceSystem';
-import ContactPhoneBook from './ContactPhoneBook';
-import EmployeeProfileSystem from './EmployeeProfileSystem';
-import AdminDashboard from './AdminDashboard';
-import AutomatedInvoicing from './AutomatedInvoicing';
+import { Link, Outlet, useLocation } from 'react-router-dom';
+
+const navigation = [
+  { name: 'Dashboard', href: '/', icon: Home },
+  { name: 'Profile', href: '/profile', icon: User },
+  { name: 'Calendar', href: '/calendar', icon: Calendar },
+  { name: 'Documents', href: '/documents', icon: FileText },
+  { name: 'Subscription', href: '/subscription', icon: CreditCard },
+  { name: 'Settings', href: '/settings', icon: Settings },
+];
 
 export default function AppLayout() {
-  const [activeTab, setActiveTab] = useState('admin');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const location = useLocation();
+  const { user, signOut } = useAuth();
 
   return (
     <div className='min-h-screen bg-gray-50'>
-      <header className='bg-blue-900 text-white p-4'>
-        <div className='flex justify-between items-center'>
-          <div>
-            <h1 className='font-bold text-lg md:text-2xl truncate max-w-[70vw]'>
-              Rhoward1967/Odyssey-1ai
-            </h1>
-            <p className='text-blue-200'>
-              ODYSSEY-1 Technology Platform - Powered by HJS SERVICES LLC
-            </p>
+      {/* Mobile sidebar overlay */}
+      {sidebarOpen && (
+        <div className='fixed inset-0 z-40 lg:hidden'>
+          <div
+            className='fixed inset-0 bg-gray-600 bg-opacity-75'
+            onClick={() => setSidebarOpen(false)}
+          />
+        </div>
+      )}
+
+      {/* Sidebar */}
+      <div
+        className={`fixed top-0 left-0 z-50 h-full w-64 transform bg-white shadow-xl transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 ${
+          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
+      >
+        {/* Sidebar header */}
+        <div className='flex h-16 items-center justify-between px-6 border-b border-gray-200'>
+          <div className='flex items-center'>
+            <div className='w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center'>
+              <span className='text-white font-bold text-sm'>O1</span>
+            </div>
+            <h1 className='ml-3 text-xl font-bold text-gray-900'>Odyssey-1</h1>
           </div>
-          <div className='text-right'>
-            <p className='text-sm'>24/7 Emergency Response</p>
-            <p className='text-xs text-blue-200'>
-              Federal • State • County Operations
-            </p>
+          <Button
+            variant='ghost'
+            size='sm'
+            className='lg:hidden'
+            onClick={() => setSidebarOpen(false)}
+          >
+            <X className='h-5 w-5' />
+          </Button>
+        </div>
+
+        {/* User profile section */}
+        <div className='p-6 border-b border-gray-200'>
+          <div className='flex items-center'>
+            <div className='w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center'>
+              <User className='h-5 w-5 text-gray-600' />
+            </div>
+            <div className='ml-3'>
+              <p className='text-sm font-medium text-gray-900'>
+                {user?.email || 'User'}
+              </p>
+              <p className='text-xs text-gray-500'>Premium Member</p>
+            </div>
           </div>
         </div>
-      </header>
 
-      <div className='w-full'>
-        <Tabs value={activeTab} onValueChange={setActiveTab} className='w-full'>
-          <TabsList className='grid w-full grid-cols-4 md:grid-cols-8 bg-white border-b gap-1'>
-            <TabsTrigger
-              value='invoicing'
-              className='flex items-center gap-1 md:gap-2 text-xs md:text-sm px-1 md:px-2 bg-green-100'
-            >
-              <ClipboardList className='w-3 h-3 md:w-4 md:h-4' />
-              <span>Invoicing</span>
-            </TabsTrigger>
-            <TabsContent
-              value='invoicing'
-              className='hidden data-[state=active]:block m-0 p-0'
-              forceMount
-            >
-              <div className='bg-gradient-to-br from-slate-900 via-green-900 to-slate-900 p-6'>
-                <AutomatedInvoicing />
+        {/* Navigation */}
+        <nav className='mt-6 px-3'>
+          <div className='space-y-1'>
+            {navigation.map(item => {
+              const Icon = item.icon;
+              const isActive = location.pathname === item.href;
+              return (
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  className={`flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors group ${
+                    isActive
+                      ? 'bg-blue-100 text-blue-900 border-r-2 border-blue-600'
+                      : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
+                  }`}
+                >
+                  <Icon
+                    className={`mr-3 h-5 w-5 ${
+                      isActive
+                        ? 'text-blue-600'
+                        : 'text-gray-500 group-hover:text-gray-700'
+                    }`}
+                  />
+                  {item.name}
+                </Link>
+              );
+            })}
+          </div>
+        </nav>
+
+        {/* Sidebar footer */}
+        <div className='absolute bottom-0 w-full p-4 border-t border-gray-200'>
+          <Button
+            variant='outline'
+            size='sm'
+            className='w-full'
+            onClick={signOut}
+          >
+            Sign Out
+          </Button>
+        </div>
+      </div>
+
+      {/* Main content */}
+      <div className='lg:pl-64'>
+        {/* Top header */}
+        <header className='bg-white shadow-sm border-b border-gray-200'>
+          <div className='flex h-16 items-center justify-between px-6'>
+            <div className='flex items-center'>
+              <Button
+                variant='ghost'
+                size='sm'
+                className='lg:hidden mr-4'
+                onClick={() => setSidebarOpen(true)}
+              >
+                <Menu className='h-5 w-5' />
+              </Button>
+
+              <div className='relative'>
+                <Search className='absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400' />
+                <Input placeholder='Search...' className='pl-10 w-64' />
               </div>
-            </TabsContent>
-            <TabsTrigger
-              value='admin'
-              className='flex items-center gap-1 md:gap-2 text-xs md:text-sm px-1 md:px-2 bg-red-100'
-            >
-              <Settings className='w-3 h-3 md:w-4 md:h-4' />
-              <span>Admin</span>
-            </TabsTrigger>
-              <TabsTrigger value="schedule" className="w-full justify-center flex items-center gap-2">
-                <Calendar className="w-4 h-4" />
-                Schedule
-              </TabsTrigger>
-              <TabsTrigger value="timeclock" className="w-full justify-center flex items-center gap-2">
-                <Clock className="w-4 h-4" />
-                Time Clock
-              </TabsTrigger>
-              <TabsTrigger value="onboarding" className="w-full justify-center flex items-center gap-2">
-                <Users className="w-4 h-4" />
-                Onboarding
-              </TabsTrigger>
-              <TabsTrigger value="compliance" className="w-full justify-center flex items-center gap-2">
-                <Shield className="w-4 h-4" />
-                I-9 Compliance
-              </TabsTrigger>
-              <TabsTrigger value="profiles" className="w-full justify-center flex items-center gap-2">
-                <ClipboardList className="w-4 h-4" />
-                Profiles
-              </TabsTrigger>
-              <TabsTrigger value="contacts" className="w-full justify-center flex items-center gap-2">
-                <Phone className="w-4 h-4" />
-                Contacts
-              </TabsTrigger>
-              <TabsTrigger value="admin" className="w-full justify-center flex items-center gap-2 bg-red-100">
-                <Settings className="w-4 h-4" />
-                Admin
-              </TabsTrigger>
-            <TabsTrigger
-              value='timeclock'
-              className='flex items-center gap-1 md:gap-2 text-xs md:text-sm px-1 md:px-2'
-            >
-              <Clock className='w-3 h-3 md:w-4 md:h-4' />
-              <span>Time Clock</span>
-            </TabsTrigger>
-            <TabsTrigger
-              value='onboarding'
-              className='flex items-center gap-1 md:gap-2 text-xs md:text-sm px-1 md:px-2'
-            >
-              <Users className='w-3 h-3 md:w-4 md:h-4' />
-              <span>Onboarding</span>
-            </TabsTrigger>
-            <TabsTrigger
-              value='compliance'
-              className='flex items-center gap-1 md:gap-2 text-xs md:text-sm px-1 md:px-2'
-            >
-              <Shield className='w-3 h-3 md:w-4 md:h-4' />
-              <span>I-9 Compliance</span>
-            </TabsTrigger>
-            <TabsTrigger
-              value='profiles'
-              className='flex items-center gap-1 md:gap-2 text-xs md:text-sm px-1 md:px-2'
-            >
-              <ClipboardList className='w-3 h-3 md:w-4 md:h-4' />
-              <span>Profiles</span>
-            </TabsTrigger>
-            <TabsTrigger
-              value='contacts'
-              className='flex items-center gap-1 md:gap-2 text-xs md:text-sm px-1 md:px-2'
-            >
-              <Phone className='w-3 h-3 md:w-4 md:h-4' />
-              <span>Contacts</span>
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent
-            value='admin'
-            className='hidden data-[state=active]:block m-0 p-0'
-            forceMount
-          >
-            <div className='bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-6'>
-              <AdminDashboard />
             </div>
-          </TabsContent>
 
-          <TabsContent
-            value='schedule'
-            className='hidden data-[state=active]:block m-0 p-0'
-            forceMount
-          >
-            <MainScheduleWithSidebar />
-          </TabsContent>
+            <div className='flex items-center space-x-4'>
+              <Button variant='ghost' size='sm'>
+                <Bell className='h-5 w-5' />
+              </Button>
+              <div className='text-sm text-gray-700'>
+                Welcome back, {user?.email?.split('@')[0] || 'User'}
+              </div>
+            </div>
+          </div>
+        </header>
 
-          <TabsContent
-            value='timeclock'
-            className='hidden data-[state=active]:block m-0 p-0'
-            forceMount
-          >
-            <TimeClockManagement />
-          </TabsContent>
-
-          <TabsContent
-            value='onboarding'
-            className='hidden data-[state=active]:block m-0 p-0'
-            forceMount
-          >
-            <EmployeeOnboardingSystem />
-          </TabsContent>
-
-          <TabsContent
-            value='compliance'
-            className='hidden data-[state=active]:block m-0 p-0'
-            forceMount
-          >
-            <I9ComplianceSystem />
-          </TabsContent>
-
-          <TabsContent
-            value='profiles'
-            className='hidden data-[state=active]:block m-0 p-0'
-            forceMount
-          >
-            <EmployeeProfileSystem />
-          </TabsContent>
-
-          <TabsContent
-            value='contacts'
-            className='hidden data-[state=active]:block m-0 p-0'
-            forceMount
-          >
-            <ContactPhoneBook />
-          </TabsContent>
-        </Tabs>
+        {/* Page content */}
+        <main className='p-6'>
+          <Outlet />
+        </main>
       </div>
     </div>
   );

@@ -1,0 +1,7 @@
+{
+  "originalPath": "src/main.tsx",
+  "timestamp": "2025-10-15T16:14:05.401Z",
+  "hash": "0903f92420a6501043a3f099a90d06e5c24c886d9272ce4c6f49135e637b9222",
+  "size": 802,
+  "content": "\r\nimport { StrictMode } from 'react';\r\nimport { createRoot } from 'react-dom/client';\r\nimport './index.css';\r\nimport App from './App.tsx';\r\nimport { ErrorBoundary } from './components/ErrorBoundary';\r\nimport { AuthProvider } from './components/AuthProvider';\r\nimport { ArchitectProvider } from './components/ArchitectRecognitionSystem';\r\nimport { Elements } from '@stripe/react-stripe-js';\r\nimport { getStripe } from './config/stripe';\r\n\r\nconst stripePromise = getStripe();\r\n\r\ncreateRoot(document.getElementById('root')!).render(\r\n  <StrictMode>\r\n    <ErrorBoundary>\r\n      <ArchitectProvider>\r\n        <AuthProvider>\r\n          <Elements stripe={stripePromise}>\r\n            <App />\r\n          </Elements>\r\n        </AuthProvider>\r\n      </ArchitectProvider>\r\n    </ErrorBoundary>\r\n  </StrictMode>,\r\n)"
+}

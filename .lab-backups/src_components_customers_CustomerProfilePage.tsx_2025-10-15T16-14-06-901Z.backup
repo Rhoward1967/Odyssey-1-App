@@ -1,0 +1,7 @@
+{
+  "originalPath": "src\\components\\customers\\CustomerProfilePage.tsx",
+  "timestamp": "2025-10-15T16:14:06.901Z",
+  "hash": "3196907691688c31496a8acaa9682e2e52599cbff49f73e5e3401fda3d22f66f",
+  "size": 525,
+  "content": "import React from 'react';\r\nimport CustomerProfile, { CustomerProfileData } from './CustomerProfile';\r\n\r\ninterface CustomerProfilePageProps {\r\n  customer: CustomerProfileData;\r\n}\r\n\r\nconst CustomerProfilePage: React.FC<CustomerProfilePageProps> = ({ customer }) => {\r\n  // In a real app, fetch all related data here (agreements, invoices, jobs, etc.)\r\n  return (\r\n    <div className=\"min-h-screen bg-gray-100 py-10\">\r\n      <CustomerProfile customer={customer} />\r\n    </div>\r\n  );\r\n};\r\n\r\nexport default CustomerProfilePage;\r\n"
+}

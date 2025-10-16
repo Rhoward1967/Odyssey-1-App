@@ -1,0 +1,7 @@
+{
+  "originalPath": "src\\App.tsx",
+  "timestamp": "2025-10-15T21:01:16.610Z",
+  "hash": "ef37e7661dcadc230a98f48683d1a1f49a33a4817f202b0f53d87ef7a2cd38ef",
+  "size": 625,
+  "content": "import AppLayout from '@/components/layout/AppLayout';\r\nimport Index from '@/pages/Index';\r\nimport Profile from '@/pages/Profile';\r\nimport Subscription from '@/pages/Subscription';\r\nimport { BrowserRouter, Route, Routes } from 'react-router-dom';\r\n\r\nfunction App() {\r\n  return (\r\n    <BrowserRouter>\r\n      <Routes>\r\n        <Route element={<AppLayout />}>\r\n          <Route path='/' element={<Index />} />\r\n          <Route path='/profile' element={<Profile />} />\r\n          <Route path='/subscription' element={<Subscription />} />\r\n        </Route>\r\n      </Routes>\r\n    </BrowserRouter>\r\n  );\r\n}\r\n\r\nexport default App;\r\n"
+}

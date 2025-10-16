@@ -1,0 +1,7 @@
+{
+  "originalPath": "src\\pages\\Invoicing.tsx",
+  "timestamp": "2025-10-15T16:14:13.612Z",
+  "hash": "c3a69f6deae7b00a3c8b9c03c563445cc19ffcb18cd8b5492c122c07bc16afa2",
+  "size": 201,
+  "content": "import React from 'react';\r\nimport AutomatedInvoicing from '@/components/AutomatedInvoicing';\r\n\r\nconst Invoicing: React.FC = () => {\r\n  return <AutomatedInvoicing />;\r\n};\r\n\r\nexport default Invoicing;\r\n"
+}

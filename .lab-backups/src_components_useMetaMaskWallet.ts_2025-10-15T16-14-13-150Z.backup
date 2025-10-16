@@ -1,0 +1,7 @@
+{
+  "originalPath": "src\\components\\useMetaMaskWallet.ts",
+  "timestamp": "2025-10-15T16:14:13.150Z",
+  "hash": "e0124e0b39f6cc5e89ca175cec7d9006f124ec2b648cf39bef72f17a9ed989c6",
+  "size": 1093,
+  "content": "import { useEffect, useState } from 'react';\r\n\r\nexport interface WalletState {\r\n  connected: boolean;\r\n  address: string;\r\n  balance: string;\r\n  chainId: string;\r\n  network: string;\r\n}\r\n\r\nexport function useMetaMaskWallet(): WalletState {\r\n  const [wallet, setWallet] = useState<WalletState>({\r\n    connected: false,\r\n    address: '',\r\n    balance: '',\r\n    chainId: '',\r\n    network: ''\r\n  });\r\n\r\n  useEffect(() => {\r\n    if (typeof window === 'undefined' || !window.ethereum) return;\r\n    const handleAccountsChanged = (accounts: string[]) => {\r\n      setWallet((prev) => ({ ...prev, address: accounts[0] || '', connected: accounts.length > 0 }));\r\n    };\r\n    window.ethereum.request({ method: 'eth_accounts' }).then((accounts: string[]) => {\r\n      if (accounts.length > 0) {\r\n        setWallet((prev) => ({ ...prev, address: accounts[0], connected: true }));\r\n      }\r\n    });\r\n    window.ethereum.on('accountsChanged', handleAccountsChanged);\r\n    return () => {\r\n      window.ethereum.removeListener('accountsChanged', handleAccountsChanged);\r\n    };\r\n  }, []);\r\n\r\n  return wallet;\r\n}\r\n"
+}

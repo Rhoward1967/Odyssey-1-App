@@ -1,0 +1,7 @@
+{
+  "originalPath": "src\\api\\aiTradeLog.ts",
+  "timestamp": "2025-10-15T16:14:05.482Z",
+  "hash": "72b6e11b25005ba218c2c8957f6d61aa151d150f7842038bd5d886485b579f04",
+  "size": 902,
+  "content": "// Simple persistent trade log using Supabase (or any DB)\r\n// Place in: /src/api/aiTradeLog.ts\r\n\r\nimport { supabase } from '@/lib/supabase';\r\n\r\n// POST: log a trade, GET: fetch all logs\r\nexport default async function aiTradeLogHandler(req, res) {\r\n  if (req.method === 'POST') {\r\n    const trade = req.body;\r\n    const { error } = await supabase.from('ai_trade_logs').insert([trade]);\r\n    if (error) {\r\n      return res.status(500).json({ error: error.message || error });\r\n    }\r\n    return res.json({ success: true });\r\n  } else if (req.method === 'GET') {\r\n    const { data, error } = await supabase.from('ai_trade_logs').select('*').order('timestamp', { ascending: false });\r\n    if (error) {\r\n      return res.status(500).json({ error: error.message || error });\r\n    }\r\n    return res.json({ logs: data });\r\n  } else {\r\n    return res.status(405).json({ error: 'Method not allowed' });\r\n  }\r\n}\r\n"
+}

@@ -1,16 +1,17 @@
 import React from 'react';
-import PublicHomePage from '@/components/PublicHomePage';
+// import PublicHomePage from '@/components/PublicHomePage';
 import Navigation from '@/components/Navigation';
-import { AppProvider } from '@/contexts/AppContext';
+// import { AppProvider } from '@/contexts/AppContext';
 
 const Index: React.FC = () => {
   return (
-    <AppProvider>
+    // <AppProvider>
       <div className="min-h-screen">
         <Navigation />
-        <PublicHomePage />
+        <h1 className="text-2xl p-4">Testing Navigation Component</h1>
+        {/* <PublicHomePage /> */}
       </div>
-    </AppProvider>
+    // </AppProvider>
   );
 };
 

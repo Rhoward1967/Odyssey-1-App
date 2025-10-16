@@ -1,0 +1,7 @@
+{
+  "originalPath": "src\\App.tsx",
+  "timestamp": "2025-10-15T19:54:38.020Z",
+  "hash": "3d1d7b7975fab5b53d9bb485919384338b481bab4b7f66c4df87c395a45b163e",
+  "size": 766,
+  "content": "import { Toaster } from '@/components/ui/sonner';\r\nimport { TooltipProvider } from '@/components/ui/tooltip';\r\nimport { QueryClient, QueryClientProvider } from '@tanstack/react-query';\r\nimport { BrowserRouter, Route, Routes } from 'react-router-dom';\r\nimport { navItems } from './nav-items';\r\n\r\nconst queryClient = new QueryClient();\r\n\r\nconst App = () => {\r\n  return (\r\n    <QueryClientProvider client={queryClient}>\r\n      <TooltipProvider>\r\n        <Toaster />\r\n        <BrowserRouter>\r\n          <Routes>\r\n            {navItems.map(({ to, page }) => (\r\n              <Route key={to} path={to} element={page} />\r\n            ))}\r\n          </Routes>\r\n        </BrowserRouter>\r\n      </TooltipProvider>\r\n    </QueryClientProvider>\r\n  );\r\n};\r\n\r\nexport default App;\r\n"
+}

@@ -1,20 +1,18 @@
-import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Link, useLocation } from 'react-router-dom';
 import {
-  Menu,
-  X,
-  User,
-  Home,
-  DollarSign,
-  HelpCircle,
-  CreditCard,
   BarChart3,
   Calendar,
+  CreditCard,
+  DollarSign,
+  HelpCircle,
+  Home,
   Monitor,
+  User
 } from 'lucide-react';
-import SocialMediaIcons from './SocialMediaIcons';
+import React, { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import MobileNavigationMenu from './MobileNavigationMenu';
+import SocialMediaIcons from './SocialMediaIcons';
 
 const Navigation: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -133,3 +131,4 @@ const Navigation: React.FC = () => {
 
 export default Navigation;
 export { Navigation };
+
