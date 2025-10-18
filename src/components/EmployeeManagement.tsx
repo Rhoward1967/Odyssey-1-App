@@ -1,250 +1,428 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { supabase } from '@/lib/supabase';
+import { useAuth } from '@/components/AuthProvider';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Users, Plus, Search, FileText, Clock, MapPin } from 'lucide-react';
+import { 
+  Users, 
+  UserPlus, 
+  Search, 
+  Filter,
+  Clock,
+  Shield,
+  AlertTriangle,
+  CheckCircle
+} from 'lucide-react';
 
-export default function EmployeeManagement() {
+// Employee interface matching our database schema
+interface Employee {
+  id: string;
+  user_id: string | null;
+  organization_id: number;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone: string | null;
+  position: string;
+  department: string;
+  hire_date: string;
+  employment_type: 'full-time' | 'part-time' | 'contractor' | 'on-call';
+  status: 'active' | 'inactive' | 'terminated' | 'on-leave';
+  hourly_rate: number | null;
+  salary: number | null;
+  supervisor_id: string | null;
+  profile_data: Record<string, any>;
+  created_at: string;
+  updated_at: string;
+}
+
+// User role type based on our RLS policies
+type UserRole = 'staff' | 'manager' | 'admin' | 'owner' | 'super-admin';
+
+function EmployeeManagement() {
+  const { user } = useAuth();
+  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [userRole, setUserRole] = useState<UserRole | null>(null);
+  const [organizationId, setOrganizationId] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedDepartment, setSelectedDepartment] = useState('all');
+  const [selectedDepartment, setSelectedDepartment] = useState<string>('all');
 
-  const employees = [
-    {
-      id: 1,
-      name: 'Maria Rodriguez',
-      position: 'Senior Cleaner',
-      department: 'Cleaning',
-      status: 'Active',
-      hireDate: '2022-03-15',
-      payRate: 18.50,
-      hoursThisWeek: 40,
-      phone: '(555) 123-4567',
-      email: 'maria.r@hjs.com'
-    },
-    {
-      id: 2,
-      name: 'James Wilson',
-      position: 'Team Lead',
-      department: 'Operations',
-      status: 'Active',
-      hireDate: '2021-08-22',
-      payRate: 22.00,
-      hoursThisWeek: 45,
-      phone: '(555) 234-5678',
-      email: 'james.w@hjs.com'
-    },
-    {
-      id: 3,
-      name: 'Sarah Chen',
-      position: 'Floor Specialist',
-      department: 'Cleaning',
-      status: 'Training',
-      hireDate: '2024-02-01',
-      payRate: 16.00,
-      hoursThisWeek: 32,
-      phone: '(555) 345-6789',
-      email: 'sarah.c@hjs.com'
+  // Get user's role and organization
+  const fetchUserRole = async () => {
+    if (!user) return;
+    
+    // Check if we're in bypass mode
+    if (import.meta.env.VITE_AUTH_BYPASS === "true") {
+      console.log('🚪 Using demo employee data (bypass mode)');
+      setUserRole('super-admin');
+      setOrganizationId(1);
+      setError("Demo Mode: Showing sample employee data");
+      return;
     }
-  ];
 
-  const onboardingTasks = [
-    { task: 'Complete I-9 Form', completed: true },
-    { task: 'Submit W-4', completed: true },
-    { task: 'Background Check', completed: false },
-    { task: 'Safety Training', completed: false },
-    { task: 'Equipment Assignment', completed: false }
-  ];
+    try {
+      const { data, error } = await supabase
+        .from('user_organizations')
+        .select('role, organization_id')
+        .eq('user_id', user.id)
+        .single();
+
+      if (error) throw error;
+      
+      setUserRole(data.role as UserRole);
+      setOrganizationId(data.organization_id);
+    } catch (err: any) {
+      console.error("Error fetching user role:", err);
+      setError("Could not determine user permissions");
+    }
+  };
+
+  // Fetch employees based on user role
+  const fetchEmployees = async () => {
+    if (!organizationId) return;
+    
+    setLoading(true);
+    try {
+      // Check if we're in bypass mode - use demo data
+      if (import.meta.env.VITE_AUTH_BYPASS === "true") {
+        const demoEmployees: Employee[] = [
+          {
+            id: '1',
+            user_id: 'dev-user-id',
+            organization_id: 1,
+            first_name: 'System',
+            last_name: 'Administrator',
+            email: 'admin@odyssey.local',
+            phone: '(555) 123-4567',
+            position: 'System Administrator',
+            department: 'IT',
+            hire_date: '2024-01-15',
+            employment_type: 'full-time',
+            status: 'active',
+            hourly_rate: null,
+            salary: 75000,
+            supervisor_id: null,
+            profile_data: { certifications: ['OSHA 30', 'HIPAA', 'Bloodborne Pathogens'] },
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          },
+          {
+            id: '2',
+            user_id: null,
+            organization_id: 1,
+            first_name: 'Jane',
+            last_name: 'Smith',
+            email: 'jane.smith@hjsservices.com',
+            phone: '(555) 234-5678',
+            position: 'NE GA Area Supervisor',
+            department: 'Operations',
+            hire_date: '2023-06-01',
+            employment_type: 'full-time',
+            status: 'active',
+            hourly_rate: 22.50,
+            salary: null,
+            supervisor_id: '1',
+            profile_data: { certifications: ['OSHA 30', 'HIPAA'] },
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          },
+          {
+            id: '3',
+            user_id: null,
+            organization_id: 1,
+            first_name: 'Mike',
+            last_name: 'Johnson',
+            email: 'mike.johnson@hjsservices.com',
+            phone: '(555) 345-6789',
+            position: 'Facility Manager',
+            department: 'Operations',
+            hire_date: '2023-09-15',
+            employment_type: 'part-time',
+            status: 'active',
+            hourly_rate: 18.00,
+            salary: null,
+            supervisor_id: '2',
+            profile_data: { certifications: ['OSHA 10'] },
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          },
+          {
+            id: '4',
+            user_id: null,
+            organization_id: 1,
+            first_name: 'Sarah',
+            last_name: 'Williams',
+            email: 'sarah.williams@hjsservices.com',
+            phone: '(555) 456-7890',
+            position: 'Custodian',
+            department: 'Cleaning',
+            hire_date: '2024-03-01',
+            employment_type: 'on-call',
+            status: 'active',
+            hourly_rate: 15.00,
+            salary: null,
+            supervisor_id: '3',
+            profile_data: { certifications: ['Bloodborne Pathogens'] },
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          }
+        ];
+        setEmployees(demoEmployees);
+        return;
+      }
+
+      // Live backend query - RLS policies will automatically filter based on user role
+      const { data, error } = await supabase
+        .from('employees')
+        .select('*')
+        .eq('organization_id', organizationId)
+        .order('last_name', { ascending: true });
+
+      if (error) throw error;
+      setEmployees(data || []);
+    } catch (err: any) {
+      console.error("Error fetching employees:", err);
+      setError(`Failed to load employees: ${err.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserRole();
+  }, [user]);
+
+  useEffect(() => {
+    if (organizationId && userRole) {
+      fetchEmployees();
+    }
+  }, [organizationId, userRole]);
+
+  // Filter employees based on search and department
+  const filteredEmployees = employees.filter(employee => {
+    const matchesSearch = 
+      employee.first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      employee.last_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      employee.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      employee.position.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    const matchesDepartment = selectedDepartment === 'all' || employee.department === selectedDepartment;
+    
+    return matchesSearch && matchesDepartment;
+  });
+
+  // Get unique departments for filter
+  const departments = ['all', ...new Set(employees.map(emp => emp.department))];
+
+  // Get status badge variant
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case 'active':
+        return <Badge variant="default" className="bg-green-500 text-white">Active</Badge>;
+      case 'inactive':
+        return <Badge variant="secondary">Inactive</Badge>;
+      case 'terminated':
+        return <Badge variant="destructive">Terminated</Badge>;
+      case 'on-leave':
+        return <Badge variant="outline">On Leave</Badge>;
+      default:
+        return <Badge variant="secondary">{status}</Badge>;
+    }
+  };
+
+  // Check if user can add employees (admin/owner roles only)
+  const canAddEmployees = userRole === 'admin' || userRole === 'owner' || userRole === 'super-admin';
 
   return (
-    <div className="p-6 space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">Employee Management</h1>
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button>
-              <Plus className="w-4 h-4 mr-2" />
+    <Card className="max-w-7xl mx-auto">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Users className="w-5 h-5" />
+          Employee Management System
+        </CardTitle>
+        <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Badge variant="outline">Role: {userRole || 'Loading...'}</Badge>
+            <Badge variant="outline">Total: {filteredEmployees.length}</Badge>
+          </div>
+          {canAddEmployees && (
+            <Button className="flex items-center gap-2">
+              <UserPlus className="w-4 h-4" />
               Add Employee
             </Button>
-          </DialogTrigger>
-          <DialogContent className="max-w-md">
-            <DialogHeader>
-              <DialogTitle>Add New Employee</DialogTitle>
-            </DialogHeader>
-            <div className="space-y-4">
-              <Input placeholder="Full Name" />
-              <Input placeholder="Email Address" />
-              <Input placeholder="Phone Number" />
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder="Department" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="cleaning">Cleaning</SelectItem>
-                  <SelectItem value="operations">Operations</SelectItem>
-                  <SelectItem value="admin">Administration</SelectItem>
-                </SelectContent>
-              </Select>
-              <Input placeholder="Position Title" />
-              <Input placeholder="Pay Rate" type="number" step="0.01" />
-              <Button className="w-full">Create Employee Profile</Button>
-            </div>
-          </DialogContent>
-        </Dialog>
-      </div>
-
-      <div className="flex gap-4 items-center">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-          <Input
-            placeholder="Search employees..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10"
-          />
+          )}
         </div>
-        <Select value={selectedDepartment} onValueChange={setSelectedDepartment}>
-          <SelectTrigger className="w-48">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Departments</SelectItem>
-            <SelectItem value="cleaning">Cleaning</SelectItem>
-            <SelectItem value="operations">Operations</SelectItem>
-            <SelectItem value="admin">Administration</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
+      </CardHeader>
 
-      <Tabs defaultValue="employees" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="employees">Employee Directory</TabsTrigger>
-          <TabsTrigger value="onboarding">Onboarding</TabsTrigger>
-          <TabsTrigger value="documents">HR Documents</TabsTrigger>
-        </TabsList>
+      <CardContent>
+        {error && (
+          <Alert variant={error.includes('Demo Mode') ? "default" : "destructive"} className="mb-4">
+            <AlertTriangle className="h-4 w-4" />
+            <AlertTitle>Notice</AlertTitle>
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
 
-        <TabsContent value="employees">
-          <div className="grid gap-4">
-            {employees.map((employee) => (
-              <Card key={employee.id}>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-4">
-                      <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                        <Users className="w-6 h-6 text-blue-600" />
-                      </div>
-                      <div>
-                        <h3 className="font-semibold text-lg">{employee.name}</h3>
-                        <p className="text-gray-600">{employee.position} • {employee.department}</p>
-                        <p className="text-sm text-gray-500">Hired: {employee.hireDate}</p>
-                      </div>
-                    </div>
-                    <div className="text-right space-y-2">
-                      <Badge variant={employee.status === 'Active' ? 'default' : 'secondary'}>
-                        {employee.status}
-                      </Badge>
-                      <div className="text-sm text-gray-600">
-                        <p>${employee.payRate}/hr</p>
-                        <p>{employee.hoursThisWeek}h this week</p>
-                      </div>
-                    </div>
-                    <div className="flex gap-2">
-                      <Button variant="outline" size="sm">
-                        <FileText className="w-4 h-4 mr-1" />
-                        Profile
-                      </Button>
-                      <Button variant="outline" size="sm">
-                        <Clock className="w-4 h-4 mr-1" />
-                        Timesheet
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+        {/* Search and Filter Controls */}
+        <div className="flex flex-col sm:flex-row gap-4 mb-6">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+            <Input
+              placeholder="Search employees..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10"
+            />
           </div>
-        </TabsContent>
+          <div className="flex items-center gap-2">
+            <Filter className="h-4 w-4 text-gray-400" />
+            <select
+              value={selectedDepartment}
+              onChange={(e) => setSelectedDepartment(e.target.value)}
+              className="px-3 py-2 border rounded-md"
+            >
+              {departments.map(dept => (
+                <option key={dept} value={dept}>
+                  {dept === 'all' ? 'All Departments' : dept}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
 
-        <TabsContent value="onboarding">
-          <Card>
-            <CardHeader>
-              <CardTitle>New Employee Onboarding</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-6">
-                <div className="flex items-center justify-between p-4 bg-blue-50 rounded-lg">
-                  <div>
-                    <h3 className="font-semibold">Sarah Chen</h3>
-                    <p className="text-sm text-gray-600">Floor Specialist • Started Feb 1, 2024</p>
-                  </div>
-                  <Badge variant="outline">In Progress</Badge>
-                </div>
-                
-                <div className="space-y-3">
-                  <h4 className="font-semibold">Onboarding Checklist:</h4>
-                  {onboardingTasks.map((item, index) => (
-                    <div key={index} className="flex items-center space-x-3">
-                      <div className={`w-4 h-4 rounded border-2 ${item.completed ? 'bg-green-500 border-green-500' : 'border-gray-300'}`}>
-                        {item.completed && <div className="w-2 h-2 bg-white rounded-full mx-auto mt-0.5"></div>}
-                      </div>
-                      <span className={item.completed ? 'line-through text-gray-500' : ''}>{item.task}</span>
-                    </div>
-                  ))}
-                </div>
-                
-                <Button className="w-full">Send Reminder Email</Button>
+        <Tabs defaultValue="grid" className="w-full">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="grid">Grid View</TabsTrigger>
+            <TabsTrigger value="table">Table View</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="grid" className="mt-6">
+            {loading ? (
+              <div className="flex items-center justify-center p-8">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                <span className="ml-2 text-gray-600">Loading employees...</span>
               </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {filteredEmployees.map((employee) => (
+                  <Card key={employee.id} className="hover:shadow-lg transition-shadow">
+                    <CardContent className="p-4">
+                      <div className="flex items-start justify-between mb-3">
+                        <div>
+                          <h3 className="font-semibold text-lg">
+                            {employee.first_name} {employee.last_name}
+                          </h3>
+                          <p className="text-sm text-gray-600">{employee.position}</p>
+                        </div>
+                        {getStatusBadge(employee.status)}
+                      </div>
+                      
+                      <div className="space-y-2 text-sm">
+                        <div className="flex items-center gap-2">
+                          <Shield className="w-4 h-4 text-gray-400" />
+                          <span>{employee.department}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Clock className="w-4 h-4 text-gray-400" />
+                          <span>{employee.employment_type}</span>
+                        </div>
+                        <div className="text-gray-600">
+                          <p>📧 {employee.email}</p>
+                          {employee.phone && <p>📞 {employee.phone}</p>}
+                        </div>
+                        {(employee.hourly_rate || employee.salary) && (
+                          <div className="text-sm font-medium text-green-600">
+                            {employee.salary 
+                              ? `$${employee.salary.toLocaleString()}/year`
+                              : `$${employee.hourly_rate}/hour`
+                            }
+                          </div>
+                        )}
+                      </div>
+                      
+                      <div className="mt-4 pt-3 border-t flex gap-2">
+                        <Button size="sm" variant="outline" className="flex-1">
+                          View Details
+                        </Button>
+                        {(userRole === 'admin' || userRole === 'owner' || userRole === 'manager' || userRole === 'super-admin') && (
+                          <Button size="sm" variant="outline">
+                            Edit
+                          </Button>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
+          </TabsContent>
 
-        <TabsContent value="documents">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Employee Forms</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <Button variant="outline" className="w-full justify-start">
-                  <FileText className="w-4 h-4 mr-2" />
-                  W-4 Tax Forms
-                </Button>
-                <Button variant="outline" className="w-full justify-start">
-                  <FileText className="w-4 h-4 mr-2" />
-                  I-9 Employment Forms
-                </Button>
-                <Button variant="outline" className="w-full justify-start">
-                  <FileText className="w-4 h-4 mr-2" />
-                  Direct Deposit Forms
-                </Button>
-              </CardContent>
-            </Card>
+          <TabsContent value="table" className="mt-6">
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse border border-gray-200">
+                <thead>
+                  <tr className="bg-gray-50">
+                    <th className="border border-gray-200 p-3 text-left">Name</th>
+                    <th className="border border-gray-200 p-3 text-left">Position</th>
+                    <th className="border border-gray-200 p-3 text-left">Department</th>
+                    <th className="border border-gray-200 p-3 text-left">Status</th>
+                    <th className="border border-gray-200 p-3 text-left">Employment</th>
+                    <th className="border border-gray-200 p-3 text-left">Compensation</th>
+                    <th className="border border-gray-200 p-3 text-left">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredEmployees.map((employee) => (
+                    <tr key={employee.id} className="hover:bg-gray-50">
+                      <td className="border border-gray-200 p-3">
+                        <div>
+                          <div className="font-medium">{employee.first_name} {employee.last_name}</div>
+                          <div className="text-sm text-gray-600">{employee.email}</div>
+                        </div>
+                      </td>
+                      <td className="border border-gray-200 p-3">{employee.position}</td>
+                      <td className="border border-gray-200 p-3">{employee.department}</td>
+                      <td className="border border-gray-200 p-3">{getStatusBadge(employee.status)}</td>
+                      <td className="border border-gray-200 p-3">{employee.employment_type}</td>
+                      <td className="border border-gray-200 p-3">
+                        {employee.salary 
+                          ? `$${employee.salary.toLocaleString()}/year`
+                          : employee.hourly_rate 
+                          ? `$${employee.hourly_rate}/hour`
+                          : 'N/A'
+                        }
+                      </td>
+                      <td className="border border-gray-200 p-3">
+                        <div className="flex gap-1">
+                          <Button size="sm" variant="outline">View</Button>
+                          {(userRole === 'admin' || userRole === 'owner' || userRole === 'manager' || userRole === 'super-admin') && (
+                            <Button size="sm" variant="outline">Edit</Button>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </TabsContent>
+        </Tabs>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>HR Policies</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <Button variant="outline" className="w-full justify-start">
-                  <FileText className="w-4 h-4 mr-2" />
-                  Employee Handbook
-                </Button>
-                <Button variant="outline" className="w-full justify-start">
-                  <FileText className="w-4 h-4 mr-2" />
-                  Safety Guidelines
-                </Button>
-                <Button variant="outline" className="w-full justify-start">
-                  <FileText className="w-4 h-4 mr-2" />
-                  Benefits Information
-                </Button>
-              </CardContent>
-            </Card>
+        {filteredEmployees.length === 0 && !loading && (
+          <div className="text-center py-8 text-gray-500">
+            <Users className="w-12 h-12 mx-auto mb-4 text-gray-300" />
+            <p>No employees found matching your criteria.</p>
           </div>
-        </TabsContent>
-      </Tabs>
-    </div>
+        )}
+      </CardContent>
+    </Card>
   );
 }
+
+export default EmployeeManagement;

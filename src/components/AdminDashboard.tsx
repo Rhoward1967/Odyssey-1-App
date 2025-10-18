@@ -15,6 +15,7 @@ import {
   CheckCircle,
   Clock,
   Flag,
+  FileText,
 } from 'lucide-react';
 import AdminControlPanel from './AdminControlPanel';
 import AutonomousSystemActivator from './AutonomousSystemActivator';
@@ -22,6 +23,8 @@ import AutonomousOdysseyCore from './AutonomousOdysseyCore';
 import AutoFixSystem from './AutoFixSystem';
 import { SelfEvolutionEngine } from './SelfEvolutionEngine';
 import FeatureFlagsManager from './FeatureFlagsManager';
+import EmployeeManagement from './EmployeeManagement';
+import CompanyHandbook from './CompanyHandbook';
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('control');
 
@@ -47,56 +50,81 @@ export default function AdminDashboard() {
         onValueChange={setActiveTab}
         className='space-y-2 md:space-y-4'
       >
-        <TabsList className='bg-slate-800/50 grid grid-cols-6 w-full text-xs md:text-sm'>
-          <TabsTrigger
-            value='control'
-            className='flex flex-col items-center gap-0.5 py-1 md:py-2'
-          >
-            <Settings className='w-4 h-4' />
-            <span className='md:hidden'>Ctrl</span>
-            <span className='hidden md:inline'>Control Panel</span>
-          </TabsTrigger>
-          <TabsTrigger
-            value='autonomous'
-            className='flex flex-col items-center gap-0.5 py-1 md:py-2'
-          >
-            <Brain className='w-4 h-4' />
-            <span className='md:hidden'>Auto</span>
-            <span className='hidden md:inline'>Autonomous</span>
-          </TabsTrigger>
-          <TabsTrigger
-            value='core'
-            className='flex flex-col items-center gap-0.5 py-1 md:py-2'
-          >
-            <Zap className='w-4 h-4' />
-            <span className='md:hidden'>Core</span>
-            <span className='hidden md:inline'>ODYSSEY Core</span>
-          </TabsTrigger>
-          <TabsTrigger
-            value='autofix'
-            className='flex flex-col items-center gap-0.5 py-1 md:py-2'
-          >
-            <AlertTriangle className='w-4 h-4' />
-            <span className='md:hidden'>Fix</span>
-            <span className='hidden md:inline'>Auto-Fix</span>
-          </TabsTrigger>
-          <TabsTrigger
-            value='evolution'
-            className='flex flex-col items-center gap-0.5 py-1 md:py-2'
-          >
-            <CheckCircle className='w-4 h-4' />
-            <span className='md:hidden'>Evo</span>
-            <span className='hidden md:inline'>Evolution</span>
-          </TabsTrigger>
-          <TabsTrigger
-            value='flags'
-            className='flex flex-col items-center gap-0.5 py-1 md:py-2'
-          >
-            <Flag className='w-4 h-4' />
-            <span className='md:hidden'>Flags</span>
-            <span className='hidden md:inline'>Feature Flags</span>
-          </TabsTrigger>
-        </TabsList>
+        {/* Mobile: Vertical Stack - Compact */}
+        <div className='block md:hidden'>
+          <TabsList className='bg-blue-900/30 flex flex-col gap-1 h-auto p-2 border border-blue-500/30 w-fit items-center'>
+            <TabsTrigger value='control' className='justify-start gap-2 py-2 px-3 bg-blue-600/20 hover:bg-blue-500/30 data-[state=active]:bg-blue-600 data-[state=active]:text-white text-blue-100 border border-blue-500/20 w-fit'>
+              <Settings className='w-4 h-4' />
+              <span className='text-sm'>Control</span>
+            </TabsTrigger>
+            <TabsTrigger value='autonomous' className='justify-start gap-2 py-2 px-3 bg-blue-600/20 hover:bg-blue-500/30 data-[state=active]:bg-blue-600 data-[state=active]:text-white text-blue-100 border border-blue-500/20 w-fit'>
+              <Brain className='w-4 h-4' />
+              <span className='text-sm'>Autonomous</span>
+            </TabsTrigger>
+            <TabsTrigger value='core' className='justify-start gap-2 py-2 px-3 bg-blue-600/20 hover:bg-blue-500/30 data-[state=active]:bg-blue-600 data-[state=active]:text-white text-blue-100 border border-blue-500/20 w-fit'>
+              <Zap className='w-4 h-4' />
+              <span className='text-sm'>Core</span>
+            </TabsTrigger>
+            <TabsTrigger value='autofix' className='justify-start gap-2 py-2 px-3 bg-blue-600/20 hover:bg-blue-500/30 data-[state=active]:bg-blue-600 data-[state=active]:text-white text-blue-100 border border-blue-500/20 w-fit'>
+              <AlertTriangle className='w-4 h-4' />
+              <span className='text-sm'>Auto-Fix</span>
+            </TabsTrigger>
+            <TabsTrigger value='evolution' className='justify-start gap-2 py-2 px-3 bg-blue-600/20 hover:bg-blue-500/30 data-[state=active]:bg-blue-600 data-[state=active]:text-white text-blue-100 border border-blue-500/20 w-fit'>
+              <CheckCircle className='w-4 h-4' />
+              <span className='text-sm'>Evolution</span>
+            </TabsTrigger>
+            <TabsTrigger value='flags' className='justify-start gap-2 py-2 px-3 bg-blue-600/20 hover:bg-blue-500/30 data-[state=active]:bg-blue-600 data-[state=active]:text-white text-blue-100 border border-blue-500/20 w-fit'>
+              <Flag className='w-4 h-4' />
+              <span className='text-sm'>Flags</span>
+            </TabsTrigger>
+            <TabsTrigger value='employees' className='justify-start gap-2 py-2 px-3 bg-blue-600/20 hover:bg-blue-500/30 data-[state=active]:bg-blue-600 data-[state=active]:text-white text-blue-100 border border-blue-500/20 w-fit'>
+              <Users className='w-4 h-4' />
+              <span className='text-sm'>Employees</span>
+            </TabsTrigger>
+            <TabsTrigger value='handbook' className='justify-start gap-2 py-2 px-3 bg-blue-600/20 hover:bg-blue-500/30 data-[state=active]:bg-blue-600 data-[state=active]:text-white text-blue-100 border border-blue-500/20 w-fit'>
+              <FileText className='w-4 h-4' />
+              <span className='text-sm'>Handbook</span>
+            </TabsTrigger>
+          </TabsList>
+        </div>
+
+        {/* Desktop: Compact Horizontal Flow */}
+        <div className='hidden md:block'>
+          <TabsList className='bg-blue-900/30 flex flex-wrap gap-1 p-2 border border-blue-500/30 w-fit mb-4 items-center'>
+            <TabsTrigger value='control' className='flex items-center gap-2 py-2 px-3 bg-blue-600/20 hover:bg-blue-500/30 data-[state=active]:bg-blue-600 data-[state=active]:text-white text-blue-100 border border-blue-500/20 text-sm'>
+              <Settings className='w-4 h-4' />
+              <span>Control</span>
+            </TabsTrigger>
+            <TabsTrigger value='autonomous' className='flex items-center gap-2 py-2 px-3 bg-blue-600/20 hover:bg-blue-500/30 data-[state=active]:bg-blue-600 data-[state=active]:text-white text-blue-100 border border-blue-500/20 text-sm'>
+              <Brain className='w-4 h-4' />
+              <span>Autonomous</span>
+            </TabsTrigger>
+            <TabsTrigger value='core' className='flex items-center gap-2 py-2 px-3 bg-blue-600/20 hover:bg-blue-500/30 data-[state=active]:bg-blue-600 data-[state=active]:text-white text-blue-100 border border-blue-500/20 text-sm'>
+              <Zap className='w-4 h-4' />
+              <span>Core</span>
+            </TabsTrigger>
+            <TabsTrigger value='autofix' className='flex items-center gap-2 py-2 px-3 bg-blue-600/20 hover:bg-blue-500/30 data-[state=active]:bg-blue-600 data-[state=active]:text-white text-blue-100 border border-blue-500/20 text-sm'>
+              <AlertTriangle className='w-4 h-4' />
+              <span>Auto-Fix</span>
+            </TabsTrigger>
+            <TabsTrigger value='evolution' className='flex items-center gap-2 py-2 px-3 bg-blue-600/20 hover:bg-blue-500/30 data-[state=active]:bg-blue-600 data-[state=active]:text-white text-blue-100 border border-blue-500/20 text-sm'>
+              <CheckCircle className='w-4 h-4' />
+              <span>Evolution</span>
+            </TabsTrigger>
+            <TabsTrigger value='flags' className='flex items-center gap-2 py-2 px-3 bg-blue-600/20 hover:bg-blue-500/30 data-[state=active]:bg-blue-600 data-[state=active]:text-white text-blue-100 border border-blue-500/20 text-sm'>
+              <Flag className='w-4 h-4' />
+              <span>Flags</span>
+            </TabsTrigger>
+            <TabsTrigger value='employees' className='flex items-center gap-2 py-2 px-3 bg-blue-600/20 hover:bg-blue-500/30 data-[state=active]:bg-blue-600 data-[state=active]:text-white text-blue-100 border border-blue-500/20 text-sm'>
+              <Users className='w-4 h-4' />
+              <span>Employees</span>
+            </TabsTrigger>
+            <TabsTrigger value='handbook' className='flex items-center gap-2 py-2 px-3 bg-blue-600/20 hover:bg-blue-500/30 data-[state=active]:bg-blue-600 data-[state=active]:text-white text-blue-100 border border-blue-500/20 text-sm'>
+              <FileText className='w-4 h-4' />
+              <span>Handbook</span>
+            </TabsTrigger>
+          </TabsList>
+        </div>
 
         <TabsContent value='control'>
           <div className='w-full max-w-full overflow-x-auto'>
@@ -131,6 +159,18 @@ export default function AdminDashboard() {
         <TabsContent value='flags'>
           <div className='w-full max-w-full overflow-x-auto'>
             <FeatureFlagsManager />
+          </div>
+        </TabsContent>
+
+        <TabsContent value='employees'>
+          <div className='w-full max-w-full overflow-x-auto'>
+            <EmployeeManagement />
+          </div>
+        </TabsContent>
+
+        <TabsContent value='handbook'>
+          <div className='w-full max-w-full overflow-x-auto'>
+            <CompanyHandbook />
           </div>
         </TabsContent>
       </Tabs>
