@@ -13,6 +13,7 @@ import {
   CheckCircle,
 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
+import UserRoleManager from './UserRoleManager';
 
 interface SystemStatus {
   database: 'healthy' | 'warning' | 'error';
@@ -218,35 +219,7 @@ export default function AdminControlPanel() {
         </TabsContent>
 
         <TabsContent value='users'>
-          <Card>
-            <CardHeader>
-              <CardTitle>User Management</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className='space-y-4'>
-                <div className='flex justify-between items-center'>
-                  <h3 className='text-lg font-medium'>Active Sessions</h3>
-                  <Button size='sm'>View All Users</Button>
-                </div>
-                <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-                  <div className='p-4 bg-blue-50 rounded-lg'>
-                    <h4 className='font-medium text-blue-800'>
-                      Administrators
-                    </h4>
-                    <p className='text-2xl font-bold text-blue-600'>3</p>
-                    <p className='text-sm text-blue-600'>Currently online</p>
-                  </div>
-                  <div className='p-4 bg-green-50 rounded-lg'>
-                    <h4 className='font-medium text-green-800'>Employees</h4>
-                    <p className='text-2xl font-bold text-green-600'>
-                      {activeUsers - 3}
-                    </p>
-                    <p className='text-sm text-green-600'>Currently online</p>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <UserRoleManager />
         </TabsContent>
 
         <TabsContent value='database'>

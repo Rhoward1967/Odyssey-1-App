@@ -12,6 +12,8 @@ import {
   BarChart3,
   Calendar,
   Monitor,
+  Settings,
+  Clock,
 } from 'lucide-react';
 import SocialMediaIcons from './SocialMediaIcons';
 import MobileNavigationMenu from './MobileNavigationMenu';
@@ -20,16 +22,12 @@ const Navigation: React.FC = () => {
   const location = useLocation();
 
   const navItems = [
-    { path: '/', label: 'Home', icon: Home },
-    { path: '/odyssey', label: 'ODYSSEY-1', icon: BarChart3 },
-    { path: '/control-panel', label: 'Control Panel', icon: BarChart3 },
-    { path: '/media-workstation', label: 'Media Room', icon: Monitor },
-    { path: '/trading', label: 'Trading', icon: DollarSign },
-    { path: '/budget', label: 'Budget', icon: DollarSign },
-    { path: '/invoicing', label: 'Invoicing', icon: CreditCard },
-    { path: '/help', label: 'Help', icon: HelpCircle },
+    { path: '/', label: 'Dashboard', icon: Home },
+    { path: '/admin', label: 'Admin Center', icon: Settings },
+    { path: '/timeclock', label: 'Time Clock', icon: Clock },
+    { path: '/schedule', label: 'Schedule', icon: Calendar },
+    { path: '/profile', label: 'Profile', icon: User },
     { path: '/subscription', label: 'Subscription', icon: CreditCard },
-    { path: '/appointments', label: 'Appointments', icon: Calendar },
   ];
 
   return (

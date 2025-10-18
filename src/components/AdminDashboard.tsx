@@ -14,12 +14,14 @@ import {
   AlertTriangle,
   CheckCircle,
   Clock,
+  Flag,
 } from 'lucide-react';
 import AdminControlPanel from './AdminControlPanel';
 import AutonomousSystemActivator from './AutonomousSystemActivator';
 import AutonomousOdysseyCore from './AutonomousOdysseyCore';
 import AutoFixSystem from './AutoFixSystem';
 import { SelfEvolutionEngine } from './SelfEvolutionEngine';
+import FeatureFlagsManager from './FeatureFlagsManager';
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('control');
 
@@ -45,7 +47,7 @@ export default function AdminDashboard() {
         onValueChange={setActiveTab}
         className='space-y-2 md:space-y-4'
       >
-        <TabsList className='bg-slate-800/50 grid grid-cols-5 w-full text-xs md:text-sm'>
+        <TabsList className='bg-slate-800/50 grid grid-cols-6 w-full text-xs md:text-sm'>
           <TabsTrigger
             value='control'
             className='flex flex-col items-center gap-0.5 py-1 md:py-2'
@@ -86,6 +88,14 @@ export default function AdminDashboard() {
             <span className='md:hidden'>Evo</span>
             <span className='hidden md:inline'>Evolution</span>
           </TabsTrigger>
+          <TabsTrigger
+            value='flags'
+            className='flex flex-col items-center gap-0.5 py-1 md:py-2'
+          >
+            <Flag className='w-4 h-4' />
+            <span className='md:hidden'>Flags</span>
+            <span className='hidden md:inline'>Feature Flags</span>
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value='control'>
@@ -115,6 +125,12 @@ export default function AdminDashboard() {
         <TabsContent value='evolution'>
           <div className='w-full max-w-full overflow-x-auto'>
             <SelfEvolutionEngine />
+          </div>
+        </TabsContent>
+
+        <TabsContent value='flags'>
+          <div className='w-full max-w-full overflow-x-auto'>
+            <FeatureFlagsManager />
           </div>
         </TabsContent>
       </Tabs>

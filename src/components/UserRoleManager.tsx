@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from './ui/alert-dialog';
 import { Shield, Users, Settings, Plus, Edit, Trash2, Crown, Key, Eye } from 'lucide-react';
+import { supabase } from '@/lib/supabase';
 
 interface User {
   id: string;
@@ -16,6 +17,16 @@ interface User {
   status: 'active' | 'inactive' | 'suspended';
   lastLogin: string;
   permissions: string[];
+}
+
+// Interface for user roles from database
+interface UserRole {
+  user_id: string;
+  email?: string;
+  full_name?: string;
+  role: string;
+  organization_id: string;
+  created_at: string;
 }
 
 interface Role {
@@ -28,26 +39,9 @@ interface Role {
 }
 
 export default function UserRoleManager() {
-  const [users, setUsers] = useState<User[]>([
-    {
-      id: '1',
-      email: 'admin@hjsservices.com',
-      name: 'HJS Admin',
-      role: 'hjs-internal',
-      status: 'active',
-      lastLogin: '2025-09-16T10:00:00Z',
-      permissions: ['all']
-    },
-    {
-      id: '2',
-      email: 'user@example.com',
-      name: 'Trial User',
-      role: 'trial',
-      status: 'active',
-      lastLogin: '2025-09-16T09:30:00Z',
-      permissions: ['basic_access']
-    }
-  ]);
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const [roles, setRoles] = useState<Role[]>([
     { id: 'trial', name: 'Trial User', level: 1, permissions: ['basic_access'], description: 'Limited access for trial period', userCount: 45 },
@@ -61,6 +55,123 @@ export default function UserRoleManager() {
 
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
+
+  // Fetch user roles from database
+  useEffect(() => {
+    const fetchUserRoles = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        // For now, we'll use the default organization ID from our migration
+        // TODO: Make this dynamic based on user context
+        const organizationId = '00000000-0000-0000-0000-000000000001'; // Default org ID
+
+        // Try to fetch from user_organizations table with profiles joined
+        const { data, error } = await supabase
+          .from('user_organizations')
+          .select(`
+            user_id,
+            role,
+            organization_id,
+            created_at,
+            profiles!inner (
+              id,
+              email,
+              full_name
+            )
+          `)
+          .eq('organization_id', organizationId);
+
+        if (error) {
+          console.error('Database error:', error);
+          // Fall back to enhanced demo data if database query fails
+          const enhancedMockUsers = [
+            {
+              id: '1',
+              email: 'architect@odyssey.local',
+              name: 'System Architect',
+              role: 'super-admin' as const,
+              status: 'active' as const,
+              lastLogin: new Date().toISOString(),
+              permissions: ['all']
+            },
+            {
+              id: '2',
+              email: 'admin@odyssey.local',
+              name: 'Database Administrator',
+              role: 'admin' as const,
+              status: 'active' as const,
+              lastLogin: new Date(Date.now() - 1800000).toISOString(), // 30 minutes ago
+              permissions: ['basic_access', 'email_tools', 'ai_features', 'user_management']
+            },
+            {
+              id: '3',
+              email: 'manager@odyssey.local',
+              name: 'Operations Manager',
+              role: 'pro' as const,
+              status: 'active' as const,
+              lastLogin: new Date(Date.now() - 3600000).toISOString(), // 1 hour ago
+              permissions: ['basic_access', 'email_tools', 'ai_features']
+            },
+            {
+              id: '4',
+              email: 'employee@odyssey.local',
+              name: 'Staff Member',
+              role: 'basic' as const,
+              status: 'active' as const,
+              lastLogin: new Date(Date.now() - 7200000).toISOString(), // 2 hours ago
+              permissions: ['basic_access', 'email_tools']
+            },
+            {
+              id: '5',
+              email: 'trial@odyssey.local',
+              name: 'Trial User',
+              role: 'trial' as const,
+              status: 'active' as const,
+              lastLogin: new Date(Date.now() - 86400000).toISOString(), // 1 day ago
+              permissions: ['basic_access']
+            }
+          ];
+          setUsers(enhancedMockUsers);
+          setError('Demo Mode: Showing sample role management data');
+          return;
+        }
+
+        // Process the data from Supabase
+        const formattedUsers: User[] = data?.map((item: any) => ({
+          id: item.user_id,
+          email: item.profiles?.email || 'unknown@email.com',
+          name: item.profiles?.full_name || 'Unknown User',
+          role: item.role as User['role'],
+          status: 'active' as const, // Default to active, could be enhanced
+          lastLogin: new Date().toISOString(), // Would need actual last login tracking
+          permissions: roles.find(r => r.id === item.role)?.permissions || ['basic_access']
+        })) || [];
+
+        setUsers(formattedUsers);
+
+      } catch (err: any) {
+        console.error("Error fetching user roles:", err);
+        setError(`Database error: ${err.message || 'Unknown error'}`);
+        // Fall back to mock data on error
+        setUsers([
+          {
+            id: '1',
+            email: 'admin@odyssey.local',
+            name: 'System Administrator',
+            role: 'super-admin',
+            status: 'active',
+            lastLogin: new Date().toISOString(),
+            permissions: ['all']
+          }
+        ]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserRoles();
+  }, [roles]); // Re-run if roles change
 
   const getRoleColor = (role: string) => {
     const colors = {
@@ -125,8 +236,22 @@ export default function UserRoleManager() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                {filteredUsers.map((user) => (
+              {error && (
+                <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-md">
+                  <p className="text-sm text-yellow-800">{error}</p>
+                </div>
+              )}
+              
+              {loading ? (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-center p-8">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                    <span className="ml-2 text-gray-600">Loading users...</span>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {filteredUsers.map((user) => (
                   <div key={user.id} className="flex items-center justify-between p-4 border rounded-lg">
                     <div className="flex items-center gap-4">
                       <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold">
@@ -163,7 +288,8 @@ export default function UserRoleManager() {
                     </div>
                   </div>
                 ))}
-              </div>
+                </div>
+              )}
             </CardContent>
           </Card>
         </TabsContent>
