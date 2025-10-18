@@ -1,144 +1,49 @@
-import {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  ReactNode,
-} from 'react';
+﻿import React, { createContext, useContext, useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
-import { User, Session } from '@supabase/supabase-js';
-
-// ARCHITECT'S NOTE (PROJECT RESTORATION - DEFINITIVE):
-// This is the restored, architecturally sound AuthProvider. It uses a centralized,
-// backend-driven call to `is_super_admin()` to determine administrative status.
-// This is the definitive blueprint for Directive RESTORATION-1.
 
 interface AuthContextType {
-  user: User | null;
-  isSuperAdmin: boolean;
+  user: { id: string; email: string } | null;
   loading: boolean;
-  signIn: (email: string, password: string) => Promise<void>;
-  signUp: (email: string, password: string, name?: string) => Promise<void>;
-  signOut: () => Promise<void>;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const AuthContext = createContext<AuthContextType>({ user: null, loading: true });
 
-const ARCHITECT_EMAIL = import.meta.env.VITE_ARCHITECT_EMAIL;
-
-export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [isSuperAdmin, setIsSuperAdmin] = useState(false);
+export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const [user, setUser] = useState<{ id: string; email: string } | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // --- AUTH METHODS ---
-  const signIn = async (email: string, password: string) => {
-    setLoading(true);
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-    if (error) {
-      setLoading(false);
-      throw error;
-    }
-    setUser(data.user);
-    setLoading(false);
-  };
-
-  const signUp = async (email: string, password: string, name?: string) => {
-    setLoading(true);
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: name ? { data: { name } } : undefined,
-    });
-    if (error) {
-      setLoading(false);
-      throw error;
-    }
-    setUser(data.user);
-    setLoading(false);
-  };
-
-  const signOut = async () => {
-    setLoading(true);
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      setLoading(false);
-      throw error;
-    }
-    setUser(null);
-    setIsSuperAdmin(false);
-    setLoading(false);
-  };
-
   useEffect(() => {
-    // DEBUG: Log the value of VITE_ARCHITECT_EMAIL at runtime
-    console.log('DEBUG: VITE_ARCHITECT_EMAIL =', ARCHITECT_EMAIL);
-    // --- DEVELOPER BYPASS LOGIC ---
-    if (ARCHITECT_EMAIL) {
-      console.warn(
-        `%cARCHITECT MODE ACTIVE: Simulating super admin login for ${ARCHITECT_EMAIL}`,
-        'color: yellow; font-weight: bold;'
-      );
-      const architectUser = {
-        id: 'architect-bypass-uuid',
-        email: ARCHITECT_EMAIL,
-        user_metadata: { name: 'Architect' },
-        app_metadata: { provider: 'email' },
-        aud: 'authenticated',
-        created_at: new Date().toISOString(),
-      } as User;
-      setUser(architectUser);
-      setIsSuperAdmin(true);
+    // --- THE ARCHITECT'S BACKDOOR ---
+    // If the bypass switch is on, create a fake user and stop.
+    if (import.meta.env.VITE_AUTH_BYPASS === "true") {
+      console.log('🚪 Architect backdoor activated - bypassing authentication');
+      setUser({ id: 'dev-user-id', email: 'architect@odyssey1.ai' });
       setLoading(false);
-      return;
+      return; // Stop the real auth logic from running
     }
 
-    // --- STANDARD AUTHENTICATION FLOW ---
-    const checkSessionAndSetUser = async (session: Session | null) => {
-      const authUser = session?.user ?? null;
-      setUser(authUser);
-
-      if (authUser) {
-        try {
-          const { data: isAdmin, error } = await supabase.rpc('is_super_admin');
-          if (error) throw error;
-          setIsSuperAdmin(isAdmin);
-        } catch (error) {
-          console.error('Error checking super admin status:', error);
-          setIsSuperAdmin(false);
-        }
-      } else {
-        setIsSuperAdmin(false);
-      }
+    // --- REAL SUPABASE AUTH LOGIC ---
+    // Check if user is already logged in
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      setUser(session?.user ? { id: session.user.id, email: session.user.email || '' } : null);
       setLoading(false);
     };
 
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      checkSessionAndSetUser(session);
+    checkAuth();
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      setUser(session?.user ? { id: session.user.id, email: session.user.email || '' } : null);
+      setLoading(false);
     });
 
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      checkSessionAndSetUser(session);
-    });
-
-    return () => {
-      subscription?.unsubscribe();
-    };
+    return () => subscription.unsubscribe();
   }, []);
 
-  const value = { user, isSuperAdmin, loading, signIn, signUp, signOut };
-
-  return (
-    <AuthContext.Provider value={value}>
-      {!loading && children}
-    </AuthContext.Provider>
-  );
-};
+  const value = { user, loading };
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+}
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
@@ -147,5 +52,3 @@ export const useAuth = () => {
   }
   return context;
 };
-
-// --- END OF DEFINITIVE IMPLEMENTATION ---

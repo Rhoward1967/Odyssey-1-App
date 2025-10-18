@@ -1,10 +1,10 @@
 // Stripe Client Initialization (CHIMERA-1)
 import { Stripe, loadStripe } from '@stripe/stripe-js';
 
-const stripePublicKey = import.meta.env.VITE_STRIPE_PUBLIC_KEY;
+const stripePublicKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
 
 if (!stripePublicKey) {
-  throw new Error("VITE_STRIPE_PUBLIC_KEY is not set in the environment.");
+  throw new Error("VITE_STRIPE_PUBLISHABLE_KEY is not set in the environment.");
 }
 
 let stripePromise: Promise<Stripe | null>;
@@ -20,8 +20,8 @@ export const STRIPE_PRODUCTS = {
   basic: {
     id: 'basic',
     name: 'ODYSSEY Basic',
-    priceId: 'price_1S2wIoDOc3gLU4sVwAodIGcS', // Basic plan Price ID
-    productId: 'prod_SyuAH597Go52Pu',
+    priceId: 'price_1SJO5TDPqeWRzwCXv8IxKMfG', // Updated from sync-stripe-products
+    productId: 'prod_TFtt6rchuEcLmY',
     amount: 99.00,
     currency: 'usd',
     interval: 'month'
@@ -29,8 +29,8 @@ export const STRIPE_PRODUCTS = {
   pro: {
     id: 'pro', 
     name: 'ODYSSEY Professional',
-    priceId: 'price_1S2wMDDOc3gLU4sVgoIt0iY1', // Professional plan Price ID
-    productId: 'prod_Syu9ANMgVt9Kda',
+    priceId: 'price_1SJO5TDPqeWRzwCXNnKe6WzE', // Updated from sync-stripe-products
+    productId: 'prod_TFttMiqtD7Vk3h',
     amount: 299.00,
     currency: 'usd',
     interval: 'month'
@@ -38,8 +38,8 @@ export const STRIPE_PRODUCTS = {
   enterprise: {
     id: 'enterprise',
     name: 'ODYSSEY Enterprise', 
-    priceId: 'price_1S2wKkDOc3gLU4sV3CJSBoBc', // Enterprise plan Price ID
-    productId: 'prod_Syu7v4mb0qO61J',
+    priceId: 'price_1SJO5UDPqeWRzwCX630n9LJF', // Updated from sync-stripe-products
+    productId: 'prod_TFttpS0y8zIG2p',
     amount: 999.00,
     currency: 'usd',
     interval: 'month'
