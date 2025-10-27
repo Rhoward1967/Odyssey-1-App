@@ -28,12 +28,12 @@ export const userSchema = z.object({
 export const profileSchema = z.object({
   name: z.string().min(2, 'Name required').max(100, 'Name too long'),
   company: z.string().max(200, 'Company name too long').optional(),
-  phone: z.string().regex(/^\+?[\d\s\-\(\)]{10,}$/, 'Invalid phone format').optional(),
+  phone: z.string().regex(/^\+?[\d\s\-()]{10,}$/, 'Invalid phone format').optional(),
   address: z.string().max(500, 'Address too long').optional()
 });
 
 // Validation helper functions
-export const validateData = <T>(schema: z.ZodSchema<T>, data: unknown): { success: boolean; data?: T; errors?: string[] } => {
+export const validateData = <T,>(schema: z.ZodSchema<T>, data: unknown): { success: boolean; data?: T; errors?: string[] } => {
   try {
     const result = schema.parse(data);
     return { success: true, data: result };

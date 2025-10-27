@@ -304,6 +304,7 @@ export default function ControlPanelLayout() {
               </div>
             </div>
           </div>
+        </section>
 
         {/* ODYSSEY-1 System Status Dashboard */}
         <section className="bg-gradient-to-r from-purple-900/40 to-blue-900/40 backdrop-blur-sm rounded-lg p-8 border border-purple-500/50">
