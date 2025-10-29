@@ -1,278 +1,498 @@
-import React, { useState, useEffect, Suspense, lazy } from 'react';
-// import CoinGecko from 'https://cdn.skypack.dev/coingecko-api'; // Removed to fix build error
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Activity, Wallet, TrendingUp, DollarSign } from 'lucide-react';
-// import { ethers } from 'https://cdn.skypack.dev/ethers'; // Removed to fix build error
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useFunding } from '@/contexts/FundingContext';
+import { AggregatedPosition, usePositionLots } from '@/contexts/PositionLotsProvider';
+import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/lib/supabase';
+import {
+  AlertTriangle,
+  Bot,
+  Cpu,
+  RefreshCw,
+  TrendingUp
+} from 'lucide-react';
+import React, { useCallback, useEffect, useState } from 'react';
 
-// --- Helper Components (assuming they exist elsewhere) ---
-// These are placeholder components. Replace with your actual implementations.
-const AIExpertAdvisor = () => <Card><CardHeader><CardTitle>AI Expert Advisor</CardTitle></CardHeader><CardContent><p>AI-powered trading insights will appear here.</p></CardContent></Card>;
-const TradingAdvisorFixed = () => <Card><CardHeader><CardTitle>Trading Advisor</CardTitle></CardHeader><CardContent><p>Fixed trading advice will appear here.</p></CardContent></Card>;
-const ResearchTab = () => <Card><CardHeader><CardTitle>Research</CardTitle></CardHeader><CardContent><p>Research tools and data will appear here.</p></CardContent></Card>;
-const AdvancedTradingAI = ({ symbol, market, portfolio }: { symbol: string, market: string, portfolio: any }) => <Card><CardHeader><CardTitle>Advanced Trading AI</CardTitle></CardHeader><CardContent><p>Advanced AI analysis for {symbol} in the {market} market.</p></CardContent></Card>;
-const PortfolioOverview = ({ walletAddress, walletBalance }: { walletAddress: string | null, walletBalance: string }) => (
-    <Card>
-        <CardHeader><CardTitle>Portfolio Overview</CardTitle></CardHeader>
-        <CardContent>
-            {walletAddress ? (
-                <div>
-                    <p className="text-sm text-muted-foreground">Wallet Address</p>
-                    <p className="font-mono break-all">{walletAddress}</p>
-                    <p className="text-sm text-muted-foreground mt-4">Balance</p>
-                    <p className="text-2xl font-bold">{parseFloat(walletBalance).toFixed(4)} ETH</p>
-                </div>
-            ) : (
-                <p>Please connect your wallet to view your portfolio.</p>
-            )}
-        </CardContent>
-    </Card>
-);
-const OrderBook = () => <Card><CardHeader><CardTitle>Order Book</CardTitle></CardHeader><CardContent><p>Live order book data will appear here.</p></CardContent></Card>;
-
-
-// --- MetaMask Connector ---
-// This component now handles connecting and passes the wallet info up
-const MetaMaskConnector = ({ onConnect }: { onConnect: (address: string, balance: string) => void }) => {
-    const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
-    const handleConnect = async () => {
-        if (typeof window.ethereum !== 'undefined') {
-            try {
-                // Request account access
-                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-                const address = accounts[0];
-
-                // Get balance
-                const balanceWei = await window.ethereum.request({ method: 'eth_getBalance', params: [address, 'latest'] });
-                // Manual conversion from Wei (hexadecimal) to ETH string, removing 'ethers' dependency
-                const balanceEth = (parseInt(balanceWei, 16) / 1e18).toString();
-                
-                onConnect(address, balanceEth);
-                setErrorMessage(null);
-            } catch (err: any) {
-                setErrorMessage(err.message || "An error occurred while connecting.");
-            }
-        } else {
-            setErrorMessage('MetaMask is not installed. Please install it to use this feature.');
-        }
-    };
-
-    return (
-        <Card>
-            <CardHeader>
-                <CardTitle>Connect Wallet</CardTitle>
-            </CardHeader>
-            <CardContent>
-                <Button onClick={handleConnect}>Connect to MetaMask</Button>
-                {errorMessage && <p className="text-red-600 mt-2 text-sm">{errorMessage}</p>}
-            </CardContent>
-        </Card>
-    );
-};
-
-
-// --- Main Trading Dashboard Component ---
-interface Product {
-  id: string;
-  display_name: string;
-  base_currency: string;
-  quote_currency: string;
-  price: string;
-  price_change_24h: string;
+interface LivePosition extends AggregatedPosition {
+  currentPrice: number;
+  currentValue: number;
+  pnl: number;
+  pnlPercent: number;
 }
 
-// Lazy load components for better performance
-const TradingForm = lazy(() => import('./TradingForm').catch(() => ({ default: () => <div>Trading form loading...</div> })));
-const MarketData = lazy(() => import('./MarketData').catch(() => ({ default: () => <div>Market data loading...</div> })));
+interface AIAdvice {
+  source: string;
+  analysis: string;
+  symbol?: string; 
+  news_analyzed?: { title: string, description: string }[];
+}
+
+interface Trade {
+  id: string;
+  symbol: string;
+  action: 'buy' | 'sell';
+  quantity: number;
+  price: number;
+  total: number;
+  timestamp: string;
+  status: 'PENDING' | 'EXECUTED' | 'FAILED';
+}
 
 const TradingDashboard: React.FC = () => {
-    // State for MetaMask wallet
-    const [walletAddress, setWalletAddress] = useState<string | null>(null);
-    const [walletBalance, setWalletBalance] = useState<string>('0.00');
+  const { toast } = useToast();
+  const { balance, adjustBalance } = useFunding();
+  const { addPositionLot, getAggregatedPositions } = usePositionLots(); 
+  
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [trading, setTrading] = useState(false);
+  const [activeTab, setActiveTab] = useState('dashboard');
+  
+  const [livePositions, setLivePositions] = useState<LivePosition[]>([]);
+  const [portfolioValue, setPortfolioValue] = useState(0);
+  const [totalPnl, setTotalPnl] = useState(0);
+  const [totalCost, setTotalCost] = useState(0);
+  
+  const [aiSignals, setAiSignals] = useState<AIAdvice[]>([]);
+  const [orders, setOrders] = useState<any[]>([]);
+  const [aiEnabled, setAiEnabled] = useState(true);
 
-    // State for market data
-    const [products, setProducts] = useState<Product[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-    const [selectedProduct, setSelectedProduct] = useState<string>('BTC-USD');
+  const [selectedAsset, setSelectedAsset] = useState('AAPL');
+  const [orderSide, setOrderSide] = useState<'buy' | 'sell'>('buy');
+  const [orderType, setOrderType] = useState<'market' | 'limit'>('market');
+  const [quantity, setQuantity] = useState('');
+  const [price, setPrice] = useState('');
 
-    // Callback function for MetaMaskConnector to update parent state
-    const handleWalletConnect = (address: string, balance: string) => {
-        setWalletAddress(address);
-        setWalletBalance(balance);
-    };
-    
-    useEffect(() => {
-        // Fetch live crypto listings directly from CoinGecko API
-        const fetchCoinGeckoData = async () => {
-            setLoading(true);
-            setError(null);
-            try {
-                const params = new URLSearchParams({
-                    vs_currency: 'usd',
-                    order: 'market_cap_desc',
-                    per_page: '100',
-                    page: '1',
-                    sparkline: 'false',
-                    price_change_percentage: '24h'
-                });
-                const response = await fetch(`https://api.coingecko.com/api/v3/coins/markets?${params.toString()}`);
-                if (!response.ok) {
-                    throw new Error(`API request failed with status ${response.status}`);
-                }
-                const data = await response.json();
+  const fetchLivePortfolioData = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const { data, error: funcError } = await supabase.functions.invoke('trade-orchestrator', {
+        body: { action: 'GET_LIVE_P_AND_L' }
+      });
 
-                if (Array.isArray(data)) {
-                    const mapped = data.map((coin: any) => ({
-                        id: coin.symbol.toUpperCase() + '-USD',
-                        display_name: coin.name,
-                        base_currency: coin.symbol.toUpperCase(),
-                        quote_currency: 'USD',
-                        price: coin.current_price?.toString() || '0',
-                        price_change_24h: coin.price_change_percentage_24h?.toString() || '0',
-                    }));
-                    setProducts(mapped);
-                } else {
-                    setError('Failed to fetch CoinGecko data. The API may be unavailable.');
-                }
-            } catch (err: any) {
-                setError('An error occurred while fetching CoinGecko data: ' + (err.message || 'Unknown error'));
-            }
-            setLoading(false);
-        };
+      if (funcError) throw funcError;
+      if (data.error) throw new Error(data.error);
 
-        fetchCoinGeckoData();
-    }, []);
+      const positions = data.positions.map((p: any) => ({
+        ...p,
+        averageCost: p.avgCost,
+        totalShares: p.totalShares,
+        pnlPercent: p.totalCost > 0 ? (p.pnl / p.totalCost) * 100 : 0
+      }));
 
-    const btcPrice = products.find(p => p.base_currency === 'BTC')?.price || '...';
-    const btcChange = products.find(p => p.base_currency === 'BTC')?.price_change_24h || '...';
+      setLivePositions(positions || []);
+      setPortfolioValue(data.totalValue || 0);
+      setTotalPnl(data.pnl || 0);
+      setTotalCost(data.totalCost || 0);
 
+    } catch (err: any) {
+      setError(`Failed to load portfolio: ${err.message}`);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const getAIAnalysis = useCallback(async (symbol: string) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const { data, error: funcError } = await supabase.functions.invoke('trade-orchestrator', {
+        body: { action: 'GET_AI_ADVICE', payload: { symbol } }
+      });
+      if (funcError) throw funcError;
+      if (data.error) throw new Error(data.error);
+      
+      setAiSignals(prev => [{...data, symbol}, ...prev].slice(0, 5));
+      toast({ title: `AI Analysis for ${symbol} Complete`, description: "Check the AI Signals tab."});
+    } catch (err: any) {
+      setError(`Failed to get AI analysis: ${err.message}`);
+    } finally {
+      setLoading(false);
+    }
+  }, [toast]);
+
+  const executePaperTrade = async () => {
+    if (!selectedAsset || !quantity || trading) return;
+    const tradeQuantity = parseFloat(quantity);
+    const tradePrice = orderType === 'limit' ? parseFloat(price) || 0 : 0; 
+    if (tradeQuantity <= 0) return;
+    if (orderType === 'limit' && tradePrice <= 0) return;
+
+    setTrading(true);
+    try {
+      const { data, error: funcError } = await supabase.functions.invoke('trade-orchestrator', {
+        body: { 
+          action: 'EXECUTE_PAPER_TRADE',
+          payload: {
+            symbol: selectedAsset,
+            side: orderSide,
+            quantity: tradeQuantity,
+            price: tradePrice,
+          }
+        }
+      });
+      if (funcError) throw funcError;
+      if (data.error) throw new Error(data.error);
+
+      addPositionLot(selectedAsset, orderSide === 'buy' ? tradeQuantity : -tradeQuantity, data.trade.price, `Paper Trade ${orderSide}`);
+      
+      adjustBalance(orderSide === 'buy' ? -data.trade.value : data.trade.value);
+      await fetchLivePortfolioData(); 
+      setQuantity('');
+      setPrice('');
+      toast({ title: `✅ Paper Trade Executed`, description: `${orderSide.toUpperCase()} ${tradeQuantity} ${selectedAsset} @ $${data.trade.price}` });
+      
+      const newTrade: Trade = {
+        id: data.trade.id,
+        symbol: data.trade.symbol,
+        action: data.trade.type as 'buy' | 'sell',
+        quantity: data.trade.quantity,
+        price: data.trade.price,
+        total: data.trade.value,
+        timestamp: data.trade.timestamp,
+        status: 'EXECUTED'
+      };
+      setOrders(prev => [newTrade, ...prev]);
+
+    } catch (error: any) {
+      setError(`Trade Execution Failed: ${error.message}`);
+      toast({ title: 'Trade Failed', description: error.message, variant: 'destructive'});
+    } finally {
+      setTrading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchLivePortfolioData();
+  }, [fetchLivePortfolioData]);
+
+  const formatCurrency = (value: number) => `$${value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  const formatPercent = (value: number) => `${value.toFixed(2)}%`;
+  const getChangeColor = (value: number) => value >= 0 ? 'text-green-400' : 'text-red-400';
+
+  if (loading && livePositions.length === 0 && !error) { 
     return (
-        <div className="p-6 space-y-6 bg-gray-50 min-h-screen">
-            <div className="flex items-center justify-between">
-                <h1 className="text-3xl font-bold text-gray-800">Trading Dashboard</h1>
-                <Badge variant="outline" className="bg-green-100 text-green-800 border-green-300">
-                    <Activity className="w-4 h-4 mr-2" />
-                    Live Market Data via CoinGecko
-                </Badge>
-            </div>
-
-            {error && (
-                <Card className="border-red-300 bg-red-100">
-                    <CardContent className="pt-6">
-                        <p className="text-red-700 font-semibold">Error:</p>
-                        <p className="text-red-700">{error}</p>
-                    </CardContent>
-                </Card>
-            )}
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                 <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Total Balance (ETH)</CardTitle>
-                        <Wallet className="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">{parseFloat(walletBalance).toFixed(4)}</div>
-                        <p className="text-xs text-muted-foreground">{walletAddress ? 'From connected wallet' : 'Connect wallet to see balance'}</p>
-                    </CardContent>
-                </Card>
-
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">BTC Price</CardTitle>
-                        <DollarSign className="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">${parseFloat(btcPrice).toLocaleString()}</div>
-                        <p className={`text-xs ${parseFloat(btcChange) >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                            {parseFloat(btcChange).toFixed(2)}% (24h)
-                        </p>
-                    </CardContent>
-                </Card>
-
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Active Orders</CardTitle>
-                        <Activity className="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">N/A</div>
-                        <p className="text-xs text-muted-foreground">To be implemented</p>
-                    </CardContent>
-                </Card>
-
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">24h P&L</CardTitle>
-                        <TrendingUp className="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">N/A</div>
-                        <p className="text-xs text-muted-foreground">To be implemented</p>
-                    </CardContent>
-                </Card>
-            </div>
-            
-            {/* Wallet Connection is now the primary source for account data */}
-            {!walletAddress && (
-                <MetaMaskConnector onConnect={handleWalletConnect} />
-            )}
-
-            <Tabs defaultValue="portfolio" className="space-y-4">
-                <TabsList className="grid w-full grid-cols-6">
-                    <TabsTrigger value="portfolio">Portfolio</TabsTrigger>
-                    <TabsTrigger value="trade">Trade</TabsTrigger>
-                    <TabsTrigger value="orders">Orders</TabsTrigger>
-                    <TabsTrigger value="market">Market</TabsTrigger>
-                    <TabsTrigger value="advisor">Advisor</TabsTrigger>
-                    <TabsTrigger value="research">Research</TabsTrigger>
-                </TabsList>
-
-                {loading ? (
-                    <div className="flex items-center justify-center h-64">
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                        <p className="ml-4 text-gray-600">Loading Market Data...</p>
-                    </div>
-                ) : (
-                    <>
-                        <TabsContent value="portfolio">
-                             <PortfolioOverview walletAddress={walletAddress} walletBalance={walletBalance} />
-                        </TabsContent>
-                        <TabsContent value="trade">
-                            <Suspense fallback={<div className="p-8 text-center">Loading trading form...</div>}>
-                                <TradingForm selectedProduct={selectedProduct} onProductChange={setSelectedProduct} products={products} />
-                            </Suspense>
-                        </TabsContent>
-                        <TabsContent value="orders">
-                            <Suspense fallback={<div className="p-8 text-center">Loading orders...</div>}>
-                                <OrderBook />
-                            </Suspense>
-                        </TabsContent>
-                        <TabsContent value="market">
-                            <Suspense fallback={<div className="p-8 text-center">Loading market data...</div>}>
-                                <MarketData products={products} />
-                            </Suspense>
-                        </TabsContent>
-                        <TabsContent value="advisor">
-                             <TradingAdvisorFixed />
-                        </TabsContent>
-                         <TabsContent value="research">
-                             <ResearchTab />
-                        </TabsContent>
-                    </>
-                )}
-            </Tabs>
-
-            <footer className="mt-12 text-center text-xs text-gray-500 opacity-80">
-                Powered by <span className="font-bold text-blue-700">Odyssey-1</span> — Your AI Trading & Research Platform
-            </footer>
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black">
+        <div className="text-center text-white">
+          <Cpu className="w-16 h-16 animate-spin mx-auto mb-4 text-blue-400" />
+          <h2 className="text-2xl font-bold mb-2">Initializing Trading Engine</h2>
+          <p className="text-gray-400">Loading portfolio data...</p>
         </div>
+      </div>
     );
+  }
+
+  const totalValue = balance + portfolioValue;
+  const totalPLPercent = totalCost > 0 ? (totalPnl / totalCost) * 100 : 0;
+
+  return (
+    <div className="p-6 space-y-6 bg-gradient-to-br from-gray-900 via-gray-800 to-black min-h-screen text-white">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-4">
+          <div className="w-12 h-12 bg-gradient-to-br from-blue-600 via-purple-600 to-cyan-500 rounded-xl flex items-center justify-center shadow-lg">
+            <TrendingUp className="w-7 h-7 text-white" />
+          </div>
+          <div>
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
+              Trading Cockpit
+            </h1>
+            <p className="text-gray-400 text-sm">Institutional-Grade Paper Trading Platform</p>
+          </div>
+        </div>
+        <div className="flex items-center space-x-4">
+          <Button onClick={fetchLivePortfolioData} variant="outline" size="sm" disabled={loading}>
+            <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+            Refresh
+          </Button>
+        </div>
+      </div>
+
+      {error && (
+        <Alert variant="destructive">
+          <AlertTriangle className="h-4 w-4" />
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
+
+      {/* Portfolio Summary */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <Card className="bg-gradient-to-br from-green-900 to-green-800 border-green-700">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-green-100">Cash Balance</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-white">{formatCurrency(balance)}</div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-gradient-to-br from-blue-900 to-blue-800 border-blue-700">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-blue-100">Portfolio Value</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-white">{formatCurrency(portfolioValue)}</div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-gradient-to-br from-purple-900 to-purple-800 border-purple-700">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-purple-100">Total Value</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-white">{formatCurrency(totalValue)}</div>
+          </CardContent>
+        </Card>
+
+        <Card className={`bg-gradient-to-br ${totalPnl >= 0 ? 'from-green-900 to-green-800 border-green-700' : 'from-red-900 to-red-800 border-red-700'}`}>
+          <CardHeader className="pb-2">
+            <CardTitle className={`text-sm font-medium ${totalPnl >= 0 ? 'text-green-100' : 'text-red-100'}`}>Total P&L</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-white">{formatCurrency(totalPnl)}</div>
+            <p className={`text-sm ${getChangeColor(totalPnl)}`}>{formatPercent(totalPLPercent)}</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Trading Interface */}
+      <Tabs defaultValue="trading" className="space-y-6">
+        <TabsList className="grid w-full grid-cols-4 bg-gray-800 border-gray-700">
+          <TabsTrigger value="trading" className="data-[state=active]:bg-blue-600">Trade</TabsTrigger>
+          <TabsTrigger value="positions" className="data-[state=active]:bg-blue-600">Positions</TabsTrigger>
+          <TabsTrigger value="ai" className="data-[state=active]:bg-blue-600">AI Signals</TabsTrigger>
+          <TabsTrigger value="orders" className="data-[state=active]:bg-blue-600">Orders</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="trading" className="space-y-6">
+          <Card className="bg-gray-800 border-gray-700">
+            <CardHeader>
+              <CardTitle className="text-white">Execute Trade</CardTitle>
+              <CardDescription className="text-gray-400">Paper trading with real market data</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div>
+                  <Label htmlFor="symbol" className="text-white">Symbol</Label>
+                  <Select value={selectedAsset} onValueChange={setSelectedAsset}>
+                    <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="AAPL">AAPL</SelectItem>
+                      <SelectItem value="GOOGL">GOOGL</SelectItem>
+                      <SelectItem value="MSFT">MSFT</SelectItem>
+                      <SelectItem value="AMZN">AMZN</SelectItem>
+                      <SelectItem value="TSLA">TSLA</SelectItem>
+                      <SelectItem value="NVDA">NVDA</SelectItem>
+                      <SelectItem value="META">META</SelectItem>
+                      <SelectItem value="SPY">SPY</SelectItem>
+                      <SelectItem value="QQQ">QQQ</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div>
+                  <Label htmlFor="side" className="text-white">Side</Label>
+                  <Select value={orderSide} onValueChange={(value: 'buy' | 'sell') => setOrderSide(value)}>
+                    <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="buy">Buy</SelectItem>
+                      <SelectItem value="sell">Sell</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div>
+                  <Label htmlFor="quantity" className="text-white">Quantity</Label>
+                  <Input
+                    id="quantity"
+                    type="number"
+                    value={quantity}
+                    onChange={(e) => setQuantity(e.target.value)}
+                    className="bg-gray-700 border-gray-600 text-white"
+                    placeholder="0"
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="orderType" className="text-white">Order Type</Label>
+                  <Select value={orderType} onValueChange={(value: 'market' | 'limit') => setOrderType(value)}>
+                    <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="market">Market</SelectItem>
+                      <SelectItem value="limit">Limit</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              {orderType === 'limit' && (
+                <div>
+                  <Label htmlFor="price" className="text-white">Limit Price</Label>
+                  <Input
+                    id="price"
+                    type="number"
+                    value={price}
+                    onChange={(e) => setPrice(e.target.value)}
+                    className="bg-gray-700 border-gray-600 text-white"
+                    placeholder="0.00"
+                  />
+                </div>
+              )}
+
+              <div className="flex space-x-4">
+                <Button 
+                  onClick={executePaperTrade}
+                  disabled={trading || !selectedAsset || !quantity}
+                  className="bg-blue-600 hover:bg-blue-700"
+                >
+                  {trading ? 'Executing...' : `${orderSide.toUpperCase()} ${selectedAsset}`}
+                </Button>
+                
+                <Button 
+                  onClick={() => getAIAnalysis(selectedAsset)}
+                  variant="outline"
+                  disabled={loading}
+                  className="border-purple-600 text-purple-400 hover:bg-purple-600"
+                >
+                  <Bot className="w-4 h-4 mr-2" />
+                  AI Analysis
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="positions" className="space-y-6">
+          <Card className="bg-gray-800 border-gray-700">
+            <CardHeader>
+              <CardTitle className="text-white">Live Portfolio Holdings</CardTitle>
+              <CardDescription className="text-gray-400">Real-time P&L based on live market data</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ScrollArea className="h-[400px]">
+                {livePositions.length === 0 ? (
+                  <p className="text-gray-500 text-center py-10">No positions held.</p>
+                ) : (
+                  <div className="space-y-3">
+                    {livePositions.map((pos) => (
+                      <div key={pos.symbol} className="p-4 border border-gray-700 rounded-lg bg-gray-900">
+                        <div className="flex justify-between items-center mb-2">
+                          <h3 className="text-xl font-bold text-white">{pos.symbol}</h3>
+                          <div className={`text-lg font-bold ${getChangeColor(pos.pnl)}`}>
+                            {formatCurrency(pos.pnl)} ({formatPercent(pos.pnlPercent)})
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
+                          <div>
+                            <p className="text-gray-400">Total Value</p>
+                            <p className="font-medium text-white">{formatCurrency(pos.currentValue)}</p>
+                          </div>
+                          <div>
+                            <p className="text-gray-400">Total Shares</p>
+                            <p className="font-medium text-white">{pos.totalShares.toFixed(6)}</p>
+                          </div>
+                          <div>
+                            <p className="text-gray-400">Avg. Cost</p>
+                            <p className="font-medium text-white">{formatCurrency(pos.averageCost)}</p>
+                          </div>
+                          <div>
+                            <p className="text-gray-400">Live Price</p>
+                            <p className="font-medium text-white">{formatCurrency(pos.currentPrice)}</p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </ScrollArea>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="ai" className="space-y-6">
+          <Card className="bg-gray-800 border-gray-700">
+            <CardHeader>
+              <CardTitle className="text-white">AI Analysis Archive</CardTitle>
+              <CardDescription className="text-gray-400">Educational market analysis from our AI engine</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ScrollArea className="h-[400px] p-4 bg-gray-900 rounded-lg border border-gray-700">
+                {aiSignals.length === 0 ? (
+                  <p className="text-sm text-gray-500 text-center py-10">No AI signals generated yet.</p>
+                ) : (
+                  aiSignals.map((signal, i) => (
+                    <div key={i} className="mb-4 pb-4 border-b border-gray-700">
+                      <p className="text-sm font-medium text-cyan-400">
+                        {signal.source} Analysis for {signal.symbol || 'N/A'}:
+                      </p>
+                      <p className="text-sm whitespace-pre-wrap text-gray-300 mt-2">
+                        {signal.analysis}
+                      </p>
+                    </div>
+                  ))
+                )}
+              </ScrollArea>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="orders" className="space-y-6">
+          <Card className="bg-gray-800 border-gray-700">
+            <CardHeader>
+              <CardTitle className="text-white">Order History</CardTitle>
+              <CardDescription className="text-gray-400">Recent trading activity</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ScrollArea className="h-[400px]">
+                {orders.length === 0 ? (
+                  <p className="text-gray-500 text-center py-10">No orders executed yet.</p>
+                ) : (
+                  <div className="space-y-3">
+                    {orders.map((order) => (
+                      <div key={order.id} className="p-4 border border-gray-700 rounded-lg bg-gray-900">
+                        <div className="flex justify-between items-center">
+                          <div>
+                            <p className="font-medium text-white">
+                              {order.action.toUpperCase()} {order.quantity} {order.symbol}
+                            </p>
+                            <p className="text-sm text-gray-400">
+                              @ {formatCurrency(order.price)} • Total: {formatCurrency(order.total)}
+                            </p>
+                          </div>
+                          <div className="text-right">
+                            <Badge variant={order.status === 'EXECUTED' ? 'default' : 'secondary'}>
+                              {order.status}
+                            </Badge>
+                            <p className="text-xs text-gray-400 mt-1">
+                              {new Date(order.timestamp).toLocaleString()}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </ScrollArea>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
 };
 
 export default TradingDashboard;
-

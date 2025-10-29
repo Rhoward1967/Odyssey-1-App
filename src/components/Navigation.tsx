@@ -1,33 +1,39 @@
-import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Link, useLocation } from 'react-router-dom';
 import {
-  Menu,
-  X,
-  User,
-  Home,
-  DollarSign,
-  HelpCircle,
+  BookOpen // NEW - For User Manual icon
+  ,
+
+
+
+
+
+
+
+  Calculator,
   CreditCard,
-  BarChart3,
-  Calendar,
-  Monitor,
+  Home,
   Settings,
-  Clock,
+  TrendingUp,
+  User,
+  Users
 } from 'lucide-react';
-import SocialMediaIcons from './SocialMediaIcons';
+import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import MobileNavigationMenu from './MobileNavigationMenu';
+import SocialMediaIcons from './SocialMediaIcons';
 
 const Navigation: React.FC = () => {
   const location = useLocation();
 
   const navItems = [
     { path: '/', label: 'Dashboard', icon: Home },
+    { path: '/trading', label: 'Trading', icon: TrendingUp },
+    { path: '/calculator', label: 'Calculator', icon: Calculator },
+    { path: '/workforce', label: 'Workforce', icon: Users },
     { path: '/admin', label: 'Admin Center', icon: Settings },
-    { path: '/timeclock', label: 'Time Clock', icon: Clock },
-    { path: '/schedule', label: 'Schedule', icon: Calendar },
-    { path: '/profile', label: 'Profile', icon: User },
+    { path: '/user-manual', label: 'Manual', icon: BookOpen }, // NEW - UserManual link
     { path: '/subscription', label: 'Subscription', icon: CreditCard },
+    // REMOVED: /clients and /schedule (broken routes)
   ];
 
   return (

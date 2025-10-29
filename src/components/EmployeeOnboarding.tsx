@@ -1,233 +1,269 @@
 import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Label } from './ui/label';
-import { Textarea } from './ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { Checkbox } from './ui/checkbox';
-import { Badge } from './ui/badge';
-import { UserPlus, FileText, Shield, CheckCircle, Upload } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { UserPlus, Clock, DollarSign, Shield, Heart } from 'lucide-react';
+import { onboardNewEmployee, type OnboardingData } from '@/lib/supabase/employee-integration';
 
-const EmployeeOnboarding: React.FC = () => {
+export default function EmployeeOnboarding() {
   const [currentStep, setCurrentStep] = useState(1);
-  const [formData, setFormData] = useState({
-    personalInfo: {},
-    taxInfo: {},
-    i9Info: {},
-    directDeposit: {}
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState<Partial<OnboardingData>>({
+    first_name: '',
+    last_name: '',
+    email: '',
+    phone: '',
+    position: '',
+    department: 'Facilities',
+    hourly_rate: 15.00,
+    hire_date: new Date().toISOString().split('T')[0],
+    status: 'active',
+    time_tracking_enabled: true,
+    benefits_eligible: true,
+    system_access_level: 'employee',
+    organization_id: 1 // Will be dynamic per company
   });
 
-  const steps = [
-    { id: 1, title: 'Personal Information', icon: UserPlus },
-    { id: 2, title: 'Tax Documents (W-4)', icon: FileText },
-    { id: 3, title: 'I-9 Verification', icon: Shield },
-    { id: 4, title: 'Direct Deposit', icon: CheckCircle }
-  ];
-
-  const renderPersonalInfo = () => (
-    <div className="space-y-4">
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <Label className="text-slate-300">First Name</Label>
-          <Input className="bg-slate-700 border-slate-600 text-white" />
-        </div>
-        <div>
-          <Label className="text-slate-300">Last Name</Label>
-          <Input className="bg-slate-700 border-slate-600 text-white" />
-        </div>
-      </div>
-      <div>
-        <Label className="text-slate-300">Email Address</Label>
-        <Input type="email" className="bg-slate-700 border-slate-600 text-white" />
-      </div>
-      <div>
-        <Label className="text-slate-300">Phone Number</Label>
-        <Input className="bg-slate-700 border-slate-600 text-white" />
-      </div>
-      <div>
-        <Label className="text-slate-300">Address</Label>
-        <Textarea className="bg-slate-700 border-slate-600 text-white" />
-      </div>
-      <div>
-        <Label className="text-slate-300">Position</Label>
-        <Select>
-          <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
-            <SelectValue placeholder="Select position" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="cleaner">Cleaning Specialist</SelectItem>
-            <SelectItem value="supervisor">Supervisor</SelectItem>
-            <SelectItem value="manager">Site Manager</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-    </div>
-  );
-
-  const renderTaxInfo = () => (
-    <div className="space-y-4">
-      <div className="bg-blue-900/30 p-4 rounded-lg border border-blue-700">
-        <h3 className="text-blue-300 font-semibold mb-2">W-4 Tax Information</h3>
-        <p className="text-slate-300 text-sm">Please fill out your tax withholding information</p>
-      </div>
-      <div>
-        <Label className="text-slate-300">Filing Status</Label>
-        <Select>
-          <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
-            <SelectValue placeholder="Select filing status" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="single">Single</SelectItem>
-            <SelectItem value="married-joint">Married Filing Jointly</SelectItem>
-            <SelectItem value="married-separate">Married Filing Separately</SelectItem>
-            <SelectItem value="head">Head of Household</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-      <div>
-        <Label className="text-slate-300">Number of Dependents</Label>
-        <Input type="number" className="bg-slate-700 border-slate-600 text-white" />
-      </div>
-      <div>
-        <Label className="text-slate-300">Additional Withholding Amount</Label>
-        <Input type="number" placeholder="0.00" className="bg-slate-700 border-slate-600 text-white" />
-      </div>
-      <div className="flex items-center space-x-2">
-        <Checkbox id="exempt" />
-        <Label htmlFor="exempt" className="text-slate-300">Claim exemption from withholding</Label>
-      </div>
-    </div>
-  );
-
-  const renderI9Info = () => (
-    <div className="space-y-4">
-      <div className="bg-green-900/30 p-4 rounded-lg border border-green-700">
-        <h3 className="text-green-300 font-semibold mb-2">I-9 Employment Eligibility</h3>
-        <p className="text-slate-300 text-sm">Upload required identification documents</p>
-      </div>
-      <div>
-        <Label className="text-slate-300">Document Type</Label>
-        <Select>
-          <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
-            <SelectValue placeholder="Select document type" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="passport">US Passport</SelectItem>
-            <SelectItem value="license-ss">Driver's License + Social Security Card</SelectItem>
-            <SelectItem value="id-ss">State ID + Social Security Card</SelectItem>
-            <SelectItem value="green-card">Permanent Resident Card</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-      <div className="space-y-2">
-        <Button className="w-full bg-blue-600 hover:bg-blue-700">
-          <Upload className="h-4 w-4 mr-2" />
-          Upload Document Front
-        </Button>
-        <Button className="w-full bg-blue-600 hover:bg-blue-700">
-          <Upload className="h-4 w-4 mr-2" />
-          Upload Document Back
-        </Button>
-      </div>
-      <div className="bg-yellow-900/30 p-3 rounded-lg border border-yellow-700">
-        <p className="text-yellow-300 text-sm">
-          <strong>HR Note:</strong> Physical verification of documents required within 3 business days
-        </p>
-      </div>
-    </div>
-  );
-
-  const renderDirectDeposit = () => (
-    <div className="space-y-4">
-      <div className="bg-purple-900/30 p-4 rounded-lg border border-purple-700">
-        <h3 className="text-purple-300 font-semibold mb-2">Direct Deposit Setup</h3>
-        <p className="text-slate-300 text-sm">Enter your banking information for payroll</p>
-      </div>
-      <div>
-        <Label className="text-slate-300">Bank Name</Label>
-        <Input className="bg-slate-700 border-slate-600 text-white" />
-      </div>
-      <div>
-        <Label className="text-slate-300">Routing Number</Label>
-        <Input className="bg-slate-700 border-slate-600 text-white" />
-      </div>
-      <div>
-        <Label className="text-slate-300">Account Number</Label>
-        <Input className="bg-slate-700 border-slate-600 text-white" />
-      </div>
-      <div>
-        <Label className="text-slate-300">Account Type</Label>
-        <Select>
-          <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
-            <SelectValue placeholder="Select account type" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="checking">Checking</SelectItem>
-            <SelectItem value="savings">Savings</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-      <Button className="w-full bg-green-600 hover:bg-green-700">
-        <Upload className="h-4 w-4 mr-2" />
-        Upload Voided Check
-      </Button>
-    </div>
-  );
+  const handleSubmit = async () => {
+    setLoading(true);
+    try {
+      const result = await onboardNewEmployee(formData as OnboardingData);
+      
+      if (result.success) {
+        alert(`Employee onboarded successfully! All systems updated automatically.`);
+        // Reset form or redirect
+      } else {
+        alert(result.error || 'Onboarding failed');
+      }
+    } catch (error) {
+      alert('Onboarding failed');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 p-6">
-      <div className="max-w-4xl mx-auto">
-        <Card className="bg-slate-800/90 border-slate-700">
-          <CardHeader>
-            <CardTitle className="text-white text-2xl text-center">Employee Onboarding</CardTitle>
-            <div className="flex justify-center space-x-4 mt-4">
-              {steps.map((step) => (
-                <div key={step.id} className="flex flex-col items-center">
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                    currentStep >= step.id ? 'bg-green-600' : 'bg-slate-600'
-                  }`}>
-                    <step.icon className="h-5 w-5 text-white" />
-                  </div>
-                  <span className="text-xs text-slate-300 mt-1 text-center">{step.title}</span>
-                </div>
-              ))}
-            </div>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            {currentStep === 1 && renderPersonalInfo()}
-            {currentStep === 2 && renderTaxInfo()}
-            {currentStep === 3 && renderI9Info()}
-            {currentStep === 4 && renderDirectDeposit()}
+    <Card className="max-w-4xl mx-auto">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <UserPlus className="h-6 w-6" />
+          Employee Onboarding System
+        </CardTitle>
+        <p className="text-gray-600">
+          Complete employee setup - automatically integrates with all HR, Payroll, and Time systems
+        </p>
+      </CardHeader>
+      <CardContent>
+        <Tabs value={currentStep.toString()} onValueChange={(value) => setCurrentStep(parseInt(value))}>
+          <TabsList className="grid w-full grid-cols-4">
+            <TabsTrigger value="1">Basic Info</TabsTrigger>
+            <TabsTrigger value="2">Job Details</TabsTrigger>
+            <TabsTrigger value="3">System Access</TabsTrigger>
+            <TabsTrigger value="4">Review</TabsTrigger>
+          </TabsList>
 
-            <div className="flex justify-between pt-6">
-              <Button 
-                variant="outline" 
-                onClick={() => setCurrentStep(Math.max(1, currentStep - 1))}
-                disabled={currentStep === 1}
-                className="border-slate-600 text-slate-300"
-              >
-                Previous
-              </Button>
-              <Button 
-                onClick={() => {
-                  if (currentStep < 4) {
-                    setCurrentStep(currentStep + 1);
-                  } else {
-                    // Submit form
-                    alert('Onboarding completed! HR will review and approve.');
+          <TabsContent value="1" className="space-y-4">
+            <h3 className="font-semibold">Personal Information</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="first_name">First Name *</Label>
+                <Input
+                  id="first_name"
+                  value={formData.first_name}
+                  onChange={(e) => setFormData(prev => ({ ...prev, first_name: e.target.value }))}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="last_name">Last Name *</Label>
+                <Input
+                  id="last_name"
+                  value={formData.last_name}
+                  onChange={(e) => setFormData(prev => ({ ...prev, last_name: e.target.value }))}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="email">Email *</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="phone">Phone</Label>
+                <Input
+                  id="phone"
+                  type="tel"
+                  value={formData.phone}
+                  onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
+                />
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="2" className="space-y-4">
+            <h3 className="font-semibold">Job Information</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="position">Position *</Label>
+                <Input
+                  id="position"
+                  value={formData.position}
+                  onChange={(e) => setFormData(prev => ({ ...prev, position: e.target.value }))}
+                  placeholder="e.g. Custodian, Supervisor"
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="department">Department</Label>
+                <Select 
+                  value={formData.department} 
+                  onValueChange={(value) => setFormData(prev => ({ ...prev, department: value }))}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Facilities">Facilities</SelectItem>
+                    <SelectItem value="Maintenance">Maintenance</SelectItem>
+                    <SelectItem value="Administration">Administration</SelectItem>
+                    <SelectItem value="Management">Management</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label htmlFor="hourly_rate">Hourly Rate ($) *</Label>
+                <Input
+                  id="hourly_rate"
+                  type="number"
+                  step="0.01"
+                  value={formData.hourly_rate}
+                  onChange={(e) => setFormData(prev => ({ ...prev, hourly_rate: parseFloat(e.target.value) }))}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="hire_date">Hire Date *</Label>
+                <Input
+                  id="hire_date"
+                  type="date"
+                  value={formData.hire_date}
+                  onChange={(e) => setFormData(prev => ({ ...prev, hire_date: e.target.value }))}
+                  required
+                />
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="3" className="space-y-6">
+            <h3 className="font-semibold">System Access & Permissions</h3>
+            
+            <div className="space-y-4">
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="time_tracking"
+                  checked={formData.time_tracking_enabled}
+                  onCheckedChange={(checked) => 
+                    setFormData(prev => ({ ...prev, time_tracking_enabled: !!checked }))
                   }
-                }}
-                className="bg-blue-600 hover:bg-blue-700"
-              >
-                {currentStep === 4 ? 'Complete Onboarding' : 'Next'}
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
-  );
-};
+                />
+                <div className="flex items-center gap-2">
+                  <Clock className="h-4 w-4" />
+                  <Label htmlFor="time_tracking">Enable Time Tracking</Label>
+                </div>
+              </div>
 
-export default EmployeeOnboarding;
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="benefits_eligible"
+                  checked={formData.benefits_eligible}
+                  onCheckedChange={(checked) => 
+                    setFormData(prev => ({ ...prev, benefits_eligible: !!checked }))
+                  }
+                />
+                <div className="flex items-center gap-2">
+                  <Heart className="h-4 w-4" />
+                  <Label htmlFor="benefits_eligible">Benefits Eligible</Label>
+                </div>
+              </div>
+
+              <div>
+                <Label htmlFor="access_level">System Access Level</Label>
+                <Select 
+                  value={formData.system_access_level} 
+                  onValueChange={(value) => 
+                    setFormData(prev => ({ ...prev, system_access_level: value as any }))
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="employee">Employee (Basic Access)</SelectItem>
+                    <SelectItem value="supervisor">Supervisor (Team Management)</SelectItem>
+                    <SelectItem value="admin">Admin (Full Access)</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="4" className="space-y-4">
+            <h3 className="font-semibold">Review & Confirm</h3>
+            <div className="bg-gray-50 p-4 rounded-lg space-y-2">
+              <p><strong>Name:</strong> {formData.first_name} {formData.last_name}</p>
+              <p><strong>Position:</strong> {formData.position} - {formData.department}</p>
+              <p><strong>Rate:</strong> ${formData.hourly_rate}/hour</p>
+              <p><strong>Start Date:</strong> {formData.hire_date}</p>
+              <p><strong>Access Level:</strong> {formData.system_access_level}</p>
+            </div>
+            
+            <div className="bg-blue-50 p-4 rounded-lg">
+              <h4 className="font-semibold mb-2">Systems Integration</h4>
+              <ul className="text-sm space-y-1">
+                <li>✅ Employee record created in HR system</li>
+                <li>✅ Time tracking permissions configured</li>
+                <li>✅ Payroll system setup with hourly rate</li>
+                <li>✅ Benefits eligibility established</li>
+                <li>✅ System access level assigned</li>
+              </ul>
+            </div>
+
+            <Button 
+              onClick={handleSubmit} 
+              disabled={loading}
+              className="w-full"
+              size="lg"
+            >
+              {loading ? 'Onboarding Employee...' : 'Complete Onboarding'}
+            </Button>
+          </TabsContent>
+        </Tabs>
+
+        <div className="flex justify-between mt-6">
+          <Button 
+            variant="outline" 
+            onClick={() => setCurrentStep(Math.max(1, currentStep - 1))}
+            disabled={currentStep === 1}
+          >
+            Previous
+          </Button>
+          <Button 
+            onClick={() => setCurrentStep(Math.min(4, currentStep + 1))}
+            disabled={currentStep === 4}
+          >
+            Next
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}

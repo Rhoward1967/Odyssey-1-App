@@ -11,10 +11,15 @@ interface Agent {
 }
 
 interface UIHiveProps {
-  onQuarantineAgent?: (agent: Agent) => void;
+  userIntent?: string; // Voice/text command
+  userContext: {
+    role: string;
+    recentActions: string[];
+    preferences: Record<string, any>;
+  };
 }
 
-export const UIHive: React.FC<UIHiveProps> = ({ onQuarantineAgent }) => {
+export const UIHive: React.FC<UIHiveProps> = ({ userIntent, userContext }) => {
   const [activeAgents, setActiveAgents] = useState<Agent[]>([]);
   const [taskQueue, setTaskQueue] = useState<string[]>([]);
   const [systemHealth, setSystemHealth] = useState(100);
@@ -31,7 +36,6 @@ export const UIHive: React.FC<UIHiveProps> = ({ onQuarantineAgent }) => {
               status: 'unhealthy' as const,
               errorLog: [...agent.errorLog, 'Runtime error detected']
             };
-            onQuarantineAgent?.(unhealthyAgent);
             return unhealthyAgent;
           }
           return agent;
@@ -40,7 +44,7 @@ export const UIHive: React.FC<UIHiveProps> = ({ onQuarantineAgent }) => {
     }, 3000);
 
     return () => clearInterval(interval);
-  }, [activeAgents, onQuarantineAgent]);
+  }, [activeAgents]);
 
   const runTask = (taskName: string) => {
     console.log(`HIVE: Running task '${taskName}'`);

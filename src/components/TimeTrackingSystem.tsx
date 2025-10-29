@@ -2,71 +2,144 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Clock, MapPin, Play, Square, Users, Calendar } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Clock, MapPin, Play, Square, Users, Edit, AlertTriangle, CheckCircle } from 'lucide-react';
+import { getEmployees, getTimeEntries, clockIn, clockOut, correctEmployeeTime, type Employee, type TimeEntry } from '@/lib/supabase/hr-actions';
 
 export default function TimeTrackingSystem() {
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [clockedIn, setClockedIn] = useState(false);
-  const [clockInTime, setClockInTime] = useState<Date | null>(null);
+  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [timeEntries, setTimeEntries] = useState<TimeEntry[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [editingEntry, setEditingEntry] = useState<TimeEntry | null>(null);
+  const [editForm, setEditForm] = useState({
+    clock_in: '',
+    clock_out: '',
+    reason: ''
+  });
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
 
-  const handleClockIn = () => {
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const loadData = async () => {
+    setLoading(true);
+    try {
+      const [employeesResult, timeEntriesResult] = await Promise.all([
+        getEmployees(),
+        getTimeEntries()
+      ]);
+
+      if (employeesResult.success && employeesResult.employees) {
+        setEmployees(employeesResult.employees);
+      }
+      
+      if (timeEntriesResult.success && timeEntriesResult.entries) {
+        setTimeEntries(timeEntriesResult.entries);
+      }
+    } catch (error) {
+      console.error('Failed to load data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleClockIn = async (employeeId: string) => {
+    setLoading(true);
+    
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        setClockedIn(true);
-        setClockInTime(new Date());
-        // In real app, would send GPS coordinates to server
-        console.log('Clocked in at:', position.coords.latitude, position.coords.longitude);
-      });
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const location = `${position.coords.latitude}, ${position.coords.longitude}`;
+          const result = await clockIn(employeeId, location);
+          
+          if (result.success) {
+            await loadData();
+          } else {
+            alert(result.error || 'Failed to clock in');
+          }
+          setLoading(false);
+        },
+        async () => {
+          const result = await clockIn(employeeId, 'Location unavailable');
+          if (result.success) {
+            await loadData();
+          } else {
+            alert(result.error || 'Failed to clock in');
+          }
+          setLoading(false);
+        }
+      );
     }
   };
 
-  const handleClockOut = () => {
-    setClockedIn(false);
-    setClockInTime(null);
+  const handleClockOut = async (employeeId: string) => {
+    setLoading(true);
+    const result = await clockOut(employeeId);
+    
+    if (result.success) {
+      await loadData();
+    } else {
+      alert(result.error || 'Failed to clock out');
+    }
+    setLoading(false);
   };
 
-  const timeEntries = [
-    {
-      id: 1,
-      employee: 'Maria Rodriguez',
-      date: '2024-03-15',
-      clockIn: '08:00 AM',
-      clockOut: '04:30 PM',
-      hours: 8.5,
-      location: 'Downtown Office Building',
-      status: 'Approved'
-    },
-    {
-      id: 2,
-      employee: 'James Wilson',
-      date: '2024-03-15',
-      clockIn: '07:30 AM',
-      clockOut: '05:00 PM',
-      hours: 9.5,
-      location: 'Medical Center',
-      status: 'Pending'
-    },
-    {
-      id: 3,
-      employee: 'Sarah Chen',
-      date: '2024-03-15',
-      clockIn: '09:00 AM',
-      clockOut: '03:00 PM',
-      hours: 6.0,
-      location: 'Retail Plaza',
-      status: 'Approved'
-    }
-  ];
+  const openEditDialog = (entry: TimeEntry) => {
+    setEditingEntry(entry);
+    setEditForm({
+      clock_in: new Date(entry.clock_in).toISOString().slice(0, 16),
+      clock_out: entry.clock_out ? new Date(entry.clock_out).toISOString().slice(0, 16) : '',
+      reason: ''
+    });
+  };
 
-  const getElapsedTime = () => {
-    if (!clockInTime) return '00:00:00';
-    const diff = currentTime.getTime() - clockInTime.getTime();
+  const handleTimeEdit = async () => {
+    if (!editingEntry) return;
+    
+    setLoading(true);
+    try {
+      const correction = {
+        employee_id: editingEntry.employee_id,
+        original_entry_id: editingEntry.id!,
+        new_clock_in: editForm.clock_in,
+        new_clock_out: editForm.clock_out || undefined,
+        correction_reason: editForm.reason
+      };
+
+      const result = await correctEmployeeTime(correction);
+      
+      if (result.success) {
+        alert('Time corrected successfully!');
+        setEditingEntry(null);
+        await loadData();
+      } else {
+        alert(result.error || 'Failed to correct time');
+      }
+    } catch (error) {
+      console.error('Time correction error:', error);
+      alert('Failed to correct time');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Get active time entries for sidebar
+  const activeEmployees = timeEntries.filter(entry => entry.status === 'active');
+  const getEmployeeName = (employeeId: string) => {
+    const emp = employees.find(e => e.id === employeeId);
+    return emp ? `${emp.first_name} ${emp.last_name}` : 'Unknown Employee';
+  };
+
+  const getElapsedTime = (clockInTime: string) => {
+    const diff = currentTime.getTime() - new Date(clockInTime).getTime();
     const hours = Math.floor(diff / (1000 * 60 * 60));
     const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((diff % (1000 * 60)) / 1000);
@@ -76,206 +149,252 @@ export default function TimeTrackingSystem() {
   return (
     <div className="p-6 space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">Time Tracking</h1>
+        <h1 className="text-3xl font-bold">Time Tracking & Management</h1>
         <div className="text-right">
           <p className="text-sm text-gray-600">Current Time</p>
           <p className="text-xl font-mono">{currentTime.toLocaleTimeString()}</p>
         </div>
       </div>
 
-      <Tabs defaultValue="clock" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="clock">Time Clock</TabsTrigger>
-          <TabsTrigger value="entries">Time Entries</TabsTrigger>
-          <TabsTrigger value="reports">Reports</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="clock">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Clock className="w-5 h-5" />
-                  Employee Time Clock
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="text-center">
-                  <div className="text-6xl font-mono font-bold text-blue-600 mb-2">
-                    {clockedIn ? getElapsedTime() : '00:00:00'}
-                  </div>
-                  <p className="text-gray-600">
-                    {clockedIn ? 'Currently clocked in' : 'Not clocked in'}
-                  </p>
-                </div>
-
-                <div className="flex justify-center">
-                  {!clockedIn ? (
-                    <Button 
-                      size="lg" 
-                      onClick={handleClockIn}
-                      className="w-32 h-32 rounded-full text-lg"
-                    >
-                      <div className="text-center">
-                        <Play className="w-8 h-8 mx-auto mb-2" />
-                        Clock In
-                      </div>
-                    </Button>
-                  ) : (
-                    <Button 
-                      size="lg" 
-                      variant="destructive"
-                      onClick={handleClockOut}
-                      className="w-32 h-32 rounded-full text-lg"
-                    >
-                      <div className="text-center">
-                        <Square className="w-8 h-8 mx-auto mb-2" />
-                        Clock Out
-                      </div>
-                    </Button>
-                  )}
-                </div>
-
-                {clockedIn && (
-                  <div className="bg-green-50 p-4 rounded-lg">
-                    <div className="flex items-center gap-2 text-green-700">
-                      <MapPin className="w-4 h-4" />
-                      <span className="text-sm">GPS Location Verified</span>
-                    </div>
-                    <p className="text-sm text-gray-600 mt-1">
-                      Clocked in at: {clockInTime?.toLocaleTimeString()}
-                    </p>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Today's Summary</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center p-3 bg-blue-50 rounded">
-                    <span>Total Hours Today</span>
-                    <span className="font-semibold">
-                      {clockedIn ? getElapsedTime().substring(0, 5) : '0:00'}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center p-3 bg-gray-50 rounded">
-                    <span>Regular Hours</span>
-                    <span className="font-semibold">8:00</span>
-                  </div>
-                  <div className="flex justify-between items-center p-3 bg-yellow-50 rounded">
-                    <span>Overtime Hours</span>
-                    <span className="font-semibold">0:00</span>
-                  </div>
-                  <div className="flex justify-between items-center p-3 bg-green-50 rounded">
-                    <span>Break Time</span>
-                    <span className="font-semibold">1:00</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="entries">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        {/* Main Time Clock Interface */}
+        <div className="lg:col-span-3 space-y-6">
+          {/* Employee Quick Clock In/Out */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Users className="w-5 h-5" />
-                Recent Time Entries
+                Employee Quick Actions
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                {timeEntries.map((entry) => (
-                  <div key={entry.id} className="flex items-center justify-between p-4 border rounded-lg">
-                    <div className="flex items-center space-x-4">
-                      <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                        <Users className="w-5 h-5 text-blue-600" />
-                      </div>
-                      <div>
-                        <p className="font-semibold">{entry.employee}</p>
-                        <p className="text-sm text-gray-600">{entry.date}</p>
-                        <div className="flex items-center gap-2 text-sm text-gray-500">
-                          <MapPin className="w-3 h-3" />
-                          {entry.location}
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                {employees.map((employee) => {
+                  const activeEntry = activeEmployees.find(entry => entry.employee_id === employee.id);
+                  const isActive = !!activeEntry;
+                  
+                  return (
+                    <div key={employee.id} className="border rounded-lg p-4">
+                      <div className="flex items-center justify-between mb-3">
+                        <div>
+                          <h3 className="font-semibold">{employee.first_name} {employee.last_name}</h3>
+                          <p className="text-sm text-gray-600">{employee.position}</p>
                         </div>
+                        <Badge variant={isActive ? 'default' : 'secondary'}>
+                          {isActive ? 'ACTIVE' : 'OFF'}
+                        </Badge>
+                      </div>
+                      
+                      {isActive && activeEntry && (
+                        <div className="mb-3 p-2 bg-green-50 rounded">
+                          <p className="text-sm font-mono text-green-700">
+                            {getElapsedTime(activeEntry.clock_in)}
+                          </p>
+                          <p className="text-xs text-gray-600">
+                            Started: {new Date(activeEntry.clock_in).toLocaleTimeString()}
+                          </p>
+                        </div>
+                      )}
+                      
+                      <div className="flex gap-2">
+                        {!isActive ? (
+                          <Button 
+                            size="sm" 
+                            onClick={() => handleClockIn(employee.id)}
+                            disabled={loading}
+                            className="flex-1"
+                          >
+                            <Play className="w-4 h-4 mr-1" />
+                            Clock In
+                          </Button>
+                        ) : (
+                          <Button 
+                            size="sm" 
+                            variant="destructive"
+                            onClick={() => handleClockOut(employee.id)}
+                            disabled={loading}
+                            className="flex-1"
+                          >
+                            <Square className="w-4 h-4 mr-1" />
+                            Clock Out
+                          </Button>
+                        )}
                       </div>
                     </div>
-                    <div className="text-center">
-                      <p className="font-semibold">{entry.hours} hours</p>
-                      <p className="text-sm text-gray-600">
-                        {entry.clockIn} - {entry.clockOut}
-                      </p>
+                  );
+                })}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Recent Time Entries with Edit Capability */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Recent Time Entries</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {timeEntries.slice(0, 10).map((entry) => (
+                  <div key={entry.id} className="flex items-center justify-between p-3 border rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <div className={`w-3 h-3 rounded-full ${
+                        entry.status === 'active' ? 'bg-green-500' :
+                        entry.status === 'pending' ? 'bg-orange-500' :
+                        entry.status === 'approved' ? 'bg-blue-500' : 'bg-gray-500'
+                      }`}></div>
+                      <div>
+                        <p className="font-medium">{getEmployeeName(entry.employee_id)}</p>
+                        <p className="text-sm text-gray-600">
+                          {new Date(entry.clock_in).toLocaleString()}
+                          {entry.clock_out && ` - ${new Date(entry.clock_out).toLocaleString()}`}
+                        </p>
+                        {entry.total_hours && (
+                          <p className="text-xs text-gray-500">{entry.total_hours} hours</p>
+                        )}
+                      </div>
                     </div>
-                    <Badge variant={entry.status === 'Approved' ? 'default' : 'secondary'}>
-                      {entry.status}
-                    </Badge>
+                    <div className="flex items-center gap-2">
+                      <Badge variant={
+                        entry.status === 'active' ? 'default' :
+                        entry.status === 'pending' ? 'secondary' :
+                        entry.status === 'approved' ? 'default' : 'outline'
+                      }>
+                        {entry.status.toUpperCase()}
+                      </Badge>
+                      
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button 
+                            size="sm" 
+                            variant="outline"
+                            onClick={() => openEditDialog(entry)}
+                          >
+                            <Edit className="w-3 h-3" />
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>
+                            <DialogTitle className="flex items-center gap-2">
+                              <AlertTriangle className="w-5 h-5 text-orange-500" />
+                              Edit Time Entry - {getEmployeeName(entry.employee_id)}
+                            </DialogTitle>
+                          </DialogHeader>
+                          <div className="space-y-4">
+                            <div className="bg-orange-50 p-3 rounded-lg">
+                              <p className="text-sm text-orange-800">
+                                <strong>Manager Override:</strong> This action will create an audit trail 
+                                and flag the original entry as corrected.
+                              </p>
+                            </div>
+                            
+                            <div>
+                              <Label htmlFor="clock_in">Clock In Time</Label>
+                              <Input
+                                id="clock_in"
+                                type="datetime-local"
+                                value={editForm.clock_in}
+                                onChange={(e) => setEditForm(prev => ({ ...prev, clock_in: e.target.value }))}
+                              />
+                            </div>
+                            
+                            <div>
+                              <Label htmlFor="clock_out">Clock Out Time</Label>
+                              <Input
+                                id="clock_out"
+                                type="datetime-local"
+                                value={editForm.clock_out}
+                                onChange={(e) => setEditForm(prev => ({ ...prev, clock_out: e.target.value }))}
+                              />
+                            </div>
+                            
+                            <div>
+                              <Label htmlFor="reason">Correction Reason *</Label>
+                              <Input
+                                id="reason"
+                                value={editForm.reason}
+                                onChange={(e) => setEditForm(prev => ({ ...prev, reason: e.target.value }))}
+                                placeholder="e.g., System malfunction, forgot to clock out"
+                                required
+                              />
+                            </div>
+                            
+                            <div className="flex gap-2">
+                              <Button 
+                                onClick={handleTimeEdit}
+                                disabled={loading || !editForm.reason}
+                                className="flex-1"
+                              >
+                                <CheckCircle className="w-4 h-4 mr-2" />
+                                {loading ? 'Correcting...' : 'Apply Correction'}
+                              </Button>
+                            </div>
+                          </div>
+                        </DialogContent>
+                      </Dialog>
+                    </div>
                   </div>
                 ))}
               </div>
             </CardContent>
           </Card>
-        </TabsContent>
+        </div>
 
-        <TabsContent value="reports">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Calendar className="w-5 h-5" />
-                  Weekly Summary
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  <div className="flex justify-between">
-                    <span>Total Hours:</span>
-                    <span className="font-semibold">187.5</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Regular Hours:</span>
-                    <span className="font-semibold">160.0</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Overtime Hours:</span>
-                    <span className="font-semibold">27.5</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Average per Employee:</span>
-                    <span className="font-semibold">7.8 hrs/day</span>
-                  </div>
+        {/* Live Employee Sidebar */}
+        <div className="lg:col-span-1">
+          <Card className="sticky top-4">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Clock className="w-5 h-5" />
+                Currently Active
+                <Badge variant="secondary">{activeEmployees.length}</Badge>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {activeEmployees.length === 0 ? (
+                <div className="text-center py-8 text-gray-500">
+                  <Clock className="w-8 h-8 mx-auto mb-2 text-gray-400" />
+                  <p className="text-sm">No employees clocked in</p>
                 </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>GPS Tracking</CardTitle>
-              </CardHeader>
-              <CardContent>
+              ) : (
                 <div className="space-y-3">
-                  <div className="flex items-center justify-between p-3 bg-green-50 rounded">
-                    <span className="text-sm">Location Accuracy</span>
-                    <Badge variant="default">98.5%</Badge>
-                  </div>
-                  <div className="flex items-center justify-between p-3 bg-blue-50 rounded">
-                    <span className="text-sm">On-Site Compliance</span>
-                    <Badge variant="default">100%</Badge>
-                  </div>
-                  <div className="flex items-center justify-between p-3 bg-yellow-50 rounded">
-                    <span className="text-sm">GPS Alerts</span>
-                    <Badge variant="outline">2 this week</Badge>
-                  </div>
+                  {activeEmployees.map((entry) => (
+                    <div key={entry.id} className="p-3 bg-green-50 rounded-lg">
+                      <div className="flex items-center justify-between mb-2">
+                        <h4 className="font-medium text-sm">{getEmployeeName(entry.employee_id)}</h4>
+                        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                      </div>
+                      <div className="space-y-1">
+                        <p className="text-xs text-gray-600">
+                          Started: {new Date(entry.clock_in).toLocaleTimeString()}
+                        </p>
+                        <p className="text-sm font-mono text-green-700">
+                          {getElapsedTime(entry.clock_in)}
+                        </p>
+                        {entry.location && (
+                          <div className="flex items-center gap-1 text-xs text-gray-500">
+                            <MapPin className="w-3 h-3" />
+                            GPS Verified
+                          </div>
+                        )}
+                      </div>
+                      <Button 
+                        size="sm" 
+                        variant="outline"
+                        onClick={() => handleClockOut(entry.employee_id)}
+                        disabled={loading}
+                        className="w-full mt-2"
+                      >
+                        <Square className="w-3 h-3 mr-1" />
+                        Clock Out
+                      </Button>
+                    </div>
+                  ))}
                 </div>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-      </Tabs>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+      </div>
     </div>
   );
 }

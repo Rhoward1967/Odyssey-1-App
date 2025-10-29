@@ -3,60 +3,59 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
 import { FileText, Upload, Download, Trash2, Search, Filter } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
-import { useToast } from '@/hooks/use-toast';
+import { DMSActions, type Document } from '@/lib/supabase/dms-actions';
 
-interface Document {
-  id: string;
-  title: string;
-  description: string;
-  file_path: string;
-  file_type: string;
-  file_size: number;
-  category: string;
-  tags: string[];
-  created_at: string;
-}
-
-export const DocumentManager: React.FC = () => {
+export default function DocumentManager() {
   const [documents, setDocuments] = useState<Document[]>([]);
+  const [filteredDocuments, setFilteredDocuments] = useState<Document[]>([]);
   const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [uploadForm, setUploadForm] = useState({
-    title: '',
-    description: '',
-    category: '',
-    tags: ''
-  });
-  const { toast } = useToast();
+  const [typeFilter, setTypeFilter] = useState('all');
+  const [documentTypes] = useState([
+    'HR_Contract',
+    'Bid_Proposal', 
+    'Compliance',
+    'Invoice',
+    'Report',
+    'Policy',
+    'Other'
+  ]);
 
-  const categories = ['contracts', 'proposals', 'invoices', 'reports', 'certificates', 'other'];
-
+  // Load documents on component mount
   useEffect(() => {
     loadDocuments();
   }, []);
 
-  const loadDocuments = async () => {
-    try {
-      setLoading(true);
-      const { data, error } = await supabase
-        .from('documents')
-        .select('*')
-        .order('created_at', { ascending: false });
+  // Filter documents based on search and type
+  useEffect(() => {
+    let filtered = documents;
 
-      if (error) throw error;
-      setDocuments(data || []);
+    if (searchTerm) {
+      filtered = filtered.filter(doc => 
+        doc.file_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        doc.document_type.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    if (typeFilter !== 'all') {
+      filtered = filtered.filter(doc => doc.document_type === typeFilter);
+    }
+
+    setFilteredDocuments(filtered);
+  }, [documents, searchTerm, typeFilter]);
+
+  const loadDocuments = async () => {
+    setLoading(true);
+    try {
+      const result = await DMSActions.getDocuments();
+      if (result.success) {
+        setDocuments(result.documents || []);
+      }
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to load documents",
-        variant: "destructive"
-      });
+      console.error('Error loading documents:', error);
     } finally {
       setLoading(false);
     }
@@ -64,189 +63,181 @@ export const DocumentManager: React.FC = () => {
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (!file || !uploadForm.title) return;
+    if (!file) return;
 
+    setUploading(true);
     try {
-      setLoading(true);
-      
-      // Upload file to storage
-      const fileName = `${Date.now()}_${file.name}`;
-      const { error: uploadError } = await supabase.storage
-        .from('documents')
-        .upload(fileName, file);
-
-      if (uploadError) throw uploadError;
-
-      // Save document metadata
-      const { error: dbError } = await supabase
-        .from('documents')
-        .insert({
-          title: uploadForm.title,
-          description: uploadForm.description,
-          file_path: fileName,
-          file_type: file.type,
-          file_size: file.size,
-          category: uploadForm.category,
-          tags: uploadForm.tags.split(',').map(tag => tag.trim()).filter(Boolean)
-        });
-
-      if (dbError) throw dbError;
-
-      toast({
-        title: "Success",
-        description: "Document uploaded successfully"
+      // For demo purposes, using default values - in real app these would come from user context
+      const result = await DMSActions.uploadDocument({
+        file,
+        document_type: 'Other',
+        tags: [],
+        organization_id: '1' // This should come from user's current organization
       });
 
-      setUploadForm({ title: '', description: '', category: '', tags: '' });
-      loadDocuments();
+      if (result.success) {
+        await loadDocuments(); // Refresh the list
+        event.target.value = ''; // Clear the input
+      } else {
+        console.error('Upload failed:', result.error);
+      }
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to upload document",
-        variant: "destructive"
-      });
+      console.error('Upload error:', error);
     } finally {
-      setLoading(false);
+      setUploading(false);
     }
   };
 
-  const filteredDocuments = documents.filter(doc => {
-    const matchesSearch = doc.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         doc.description?.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === 'all' || doc.category === selectedCategory;
-    return matchesSearch && matchesCategory;
-  });
+  const handleDownload = async (document: Document) => {
+    try {
+      const result = await DMSActions.downloadDocument(document.storage_path);
+      if (result.success && result.blob) {
+        // Create download link
+        const url = URL.createObjectURL(result.blob);
+        const a = window.document.createElement('a');
+        a.href = url;
+        a.download = document.file_name;
+        a.click();
+        URL.revokeObjectURL(url);
+      }
+    } catch (error) {
+      console.error('Download error:', error);
+    }
+  };
+
+  const handleDelete = async (document: Document) => {
+    if (!confirm(`Are you sure you want to delete "${document.file_name}"?`)) return;
+
+    try {
+      const result = await DMSActions.deleteDocument(document.id);
+      if (result.success) {
+        await loadDocuments(); // Refresh the list
+      }
+    } catch (error) {
+      console.error('Delete error:', error);
+    }
+  };
+
+  const formatFileSize = (bytes: number) => {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  };
 
   return (
-    <div className="space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <FileText className="h-5 w-5" />
-            Document Management
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {/* Upload Form */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 border rounded-lg">
-            <div className="space-y-2">
-              <Label htmlFor="title">Document Title</Label>
+    <Card className="w-full">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <FileText className="h-6 w-6" />
+          Document Management System
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-6">
+        {/* Upload Section */}
+        <div className="border-2 border-dashed border-gray-300 rounded-lg p-6">
+          <div className="text-center">
+            <Upload className="h-8 w-8 mx-auto text-gray-400 mb-2" />
+            <Label htmlFor="file-upload" className="cursor-pointer">
+              <span className="text-lg font-medium text-gray-700">
+                {uploading ? 'Uploading...' : 'Upload Document'}
+              </span>
               <Input
-                id="title"
-                value={uploadForm.title}
-                onChange={(e) => setUploadForm({...uploadForm, title: e.target.value})}
-                placeholder="Enter document title"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="category">Category</Label>
-              <Select value={uploadForm.category} onValueChange={(value) => setUploadForm({...uploadForm, category: value})}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select category" />
-                </SelectTrigger>
-                <SelectContent>
-                  {categories.map(cat => (
-                    <SelectItem key={cat} value={cat}>{cat}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2 md:col-span-2">
-              <Label htmlFor="description">Description</Label>
-              <Textarea
-                id="description"
-                value={uploadForm.description}
-                onChange={(e) => setUploadForm({...uploadForm, description: e.target.value})}
-                placeholder="Document description"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="tags">Tags (comma-separated)</Label>
-              <Input
-                id="tags"
-                value={uploadForm.tags}
-                onChange={(e) => setUploadForm({...uploadForm, tags: e.target.value})}
-                placeholder="tag1, tag2, tag3"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="file">Upload File</Label>
-              <Input
-                id="file"
+                id="file-upload"
                 type="file"
+                className="hidden"
                 onChange={handleFileUpload}
-                disabled={loading || !uploadForm.title}
+                disabled={uploading}
+                accept=".pdf,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg"
               />
-            </div>
+            </Label>
+            <p className="text-sm text-gray-500 mt-1">
+              PDF, Word, Excel, or Image files up to 10MB
+            </p>
           </div>
+        </div>
 
-          {/* Search and Filter */}
-          <div className="flex gap-4">
-            <div className="flex-1 relative">
-              <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+        {/* Search and Filter */}
+        <div className="flex gap-4 items-end">
+          <div className="flex-1">
+            <Label htmlFor="search">Search Documents</Label>
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
               <Input
-                placeholder="Search documents..."
+                id="search"
+                type="text"
+                placeholder="Search by filename or type..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10"
               />
             </div>
-            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-              <SelectTrigger className="w-48">
+          </div>
+          
+          <div className="w-48">
+            <Label>Filter by Type</Label>
+            <Select value={typeFilter} onValueChange={setTypeFilter}>
+              <SelectTrigger>
+                <Filter className="h-4 w-4 mr-2" />
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Categories</SelectItem>
-                {categories.map(cat => (
-                  <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+                <SelectItem value="all">All Types</SelectItem>
+                {documentTypes.map(type => (
+                  <SelectItem key={type} value={type}>
+                    {type.replace('_', ' ')}
+                  </SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </div>
+        </div>
 
-          {/* Documents List */}
-          <div className="grid gap-4">
-            {filteredDocuments.map(doc => (
-              <Card key={doc.id}>
-                <CardContent className="p-4">
-                  <div className="flex justify-between items-start">
-                    <div className="flex-1">
-                      <h3 className="font-semibold">{doc.title}</h3>
-                      <p className="text-sm text-gray-600 mt-1">{doc.description}</p>
-                      <div className="flex items-center gap-2 mt-2">
-                        <Badge variant="secondary">{doc.category}</Badge>
-                        <span className="text-xs text-gray-500">
-                          {new Date(doc.created_at).toLocaleDateString()}
-                        </span>
-                        <span className="text-xs text-gray-500">
-                          {(doc.file_size / 1024).toFixed(1)} KB
-                        </span>
-                      </div>
-                      {doc.tags && doc.tags.length > 0 && (
-                        <div className="flex gap-1 mt-2">
-                          {doc.tags.map(tag => (
-                            <Badge key={tag} variant="outline" className="text-xs">
-                              {tag}
-                            </Badge>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex gap-2">
-                      <Button size="sm" variant="outline">
-                        <Download className="h-4 w-4" />
-                      </Button>
-                      <Button size="sm" variant="outline">
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+        {/* Documents List */}
+        <div className="space-y-2">
+          {loading ? (
+            <div className="text-center py-8">Loading documents...</div>
+          ) : filteredDocuments.length === 0 ? (
+            <div className="text-center py-8 text-gray-500">
+              {documents.length === 0 ? 'No documents uploaded yet' : 'No documents match your search'}
+            </div>
+          ) : (
+            filteredDocuments.map((document) => (
+              <div key={document.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50">
+                <div className="flex items-center gap-3">
+                  <FileText className="h-5 w-5 text-blue-600" />
+                  <div>
+                    <div className="font-medium">{document.file_name}</div>
+                    <div className="text-sm text-gray-500">
+                      {document.document_type.replace('_', ' ')} • {formatFileSize(document.size_bytes)} • 
+                      {new Date(document.created_at).toLocaleDateString()}
                     </div>
                   </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+                </div>
+                
+                <div className="flex gap-2">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => handleDownload(document)}
+                  >
+                    <Download className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => handleDelete(document)}
+                    className="text-red-600 hover:text-red-700"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </CardContent>
+    </Card>
   );
-};
+}

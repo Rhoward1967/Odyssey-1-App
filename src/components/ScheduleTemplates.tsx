@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
-import { Copy, Edit, Trash2, Plus, Calendar, Users, Clock } from 'lucide-react';
+import { Calendar, Clock, Copy, Edit, Plus, Trash2, Users } from 'lucide-react';
+import React, { useState } from 'react';
 
 interface ScheduleTemplate {
   id: string;
@@ -137,16 +137,22 @@ const ScheduleTemplates: React.FC = () => {
   };
 
   const applyTemplate = (template: ScheduleTemplate) => {
-    // This would integrate with the main scheduler
-    alert(`Applied template: ${template.name}`);
+    // FIX: Removed blocking alert() that crashed the browser
+    console.log(`ACTION: Applied template: ${template.name}. Ready for scheduler integration.`);
+    // You would integrate a non-blocking toast or modal notification here instead of console.log
   };
 
   const calculateTotalHours = (shifts: TemplateShift[]) => {
     return shifts.reduce((total, shift) => {
+      // Safety check for valid time strings
       const start = new Date(`2000-01-01T${shift.startTime}`);
       const end = new Date(`2000-01-01T${shift.endTime}`);
+      
+      // Calculate hours difference. Ensure times are valid before calculation.
+      if (isNaN(start.getTime()) || isNaN(end.getTime())) return total; 
+      
       const hours = (end.getTime() - start.getTime()) / (1000 * 60 * 60);
-      return total + (hours * shift.employeeCount);
+      return total + (Math.max(0, hours) * shift.employeeCount); // Only count positive hours
     }, 0);
   };
 
@@ -245,7 +251,7 @@ const ScheduleTemplates: React.FC = () => {
                 {newTemplate.shifts.map((shift) => (
                   <div key={shift.id} className="flex items-center justify-between p-2 bg-gray-50 rounded">
                     <div className="flex items-center gap-4">
-                      <Badge variant="outline">{dayNames[shift.dayOfWeek]}</Badge>
+                      <Badge variant="secondary">{dayNames[shift.dayOfWeek]}</Badge>
                       <span className="text-sm">{shift.startTime} - {shift.endTime}</span>
                       <span className="text-sm font-medium">{shift.jobsite}</span>
                       <span className="text-sm">{shift.team} ({shift.employeeCount})</span>
@@ -258,7 +264,7 @@ const ScheduleTemplates: React.FC = () => {
                         shifts: prev.shifts?.filter(s => s.id !== shift.id) || []
                       }))}
                     >
-                      <Trash2 className="w-4 h-4" />
+                      <Trash2 className="w-4 h-4 text-red-500" />
                     </Button>
                   </div>
                 ))}
@@ -300,7 +306,7 @@ const ScheduleTemplates: React.FC = () => {
                 </div>
                 <div>
                   <Clock className="w-5 h-5 mx-auto mb-1 text-orange-500" />
-                  <div className="text-sm font-medium">{calculateTotalHours(template.shifts)}h</div>
+                  <div className="text-sm font-medium">{calculateTotalHours(template.shifts).toFixed(1)}h</div>
                   <div className="text-xs text-gray-500">Total</div>
                 </div>
               </div>
@@ -316,7 +322,7 @@ const ScheduleTemplates: React.FC = () => {
                   <Edit className="w-4 h-4" />
                 </Button>
                 <Button size="sm" variant="outline" onClick={() => deleteTemplate(template.id)}>
-                  <Trash2 className="w-4 h-4" />
+                  <Trash2 className="w-4 h-4 text-red-500" />
                 </Button>
               </div>
             </CardContent>

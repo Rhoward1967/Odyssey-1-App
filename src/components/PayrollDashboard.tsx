@@ -1,256 +1,188 @@
-  // ATLAS-IMPLEMENTATION-3: Create the Handler Function for Process Payment
-  const handleProcessPayment = async (scheduleId: string) => {
-    // TODO: Implement backend API call to trigger payment processing for the specified schedule.
-    console.log(`Process payment functionality for schedule ${scheduleId} to be implemented.`);
+/**
+ * ODYSSEY-1 Professional Payroll System
+ * 
+ * © 2025 Rickey A Howard. All Rights Reserved.
+ * Property of Rickey A Howard
+ * 
+ * Part of the ODYSSEY-1 Genesis Protocol - "The Female Plug"
+ * Workforce Management System with 4-step payroll workflow
+ */
+
+import React, { useState, useEffect, useCallback } from 'react';
+import { supabase } from '../lib/supabaseClient';
+import { Badge } from './ui/badge';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from './ui/card';
+import { Button } from './ui/button';
+import { Input } from './ui/input';
+import { Label } from './ui/label';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
+import { Alert, AlertDescription } from './ui/alert';
+import { useToast } from '@/hooks/use-toast';
+import {
+  DollarSign,
+  AlertCircle,
+  CheckCircle,
+  Edit,
+  Save,
+  RefreshCw,
+  UserPlus,
+  FileText,
+} from 'lucide-react';
+import { SovereignCoreOrchestrator } from '@/services/SovereignCoreOrchestrator';
+
+interface Employee {
+  id: string;
+  employee_id: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  organization_id: number;
+  hourly_rate?: number;
+  salary?: number;
+  employment_type?: string;
+  status: string;
+}
+
+interface Paystub {
+  id: string;
+  employee: string;
+  employee_name?: string;
+  payperiodstart: string;
+  payperiodend: string;
+  grosspay: number;
+  netpay: number;
+  regular_pay: number;
+  overtime_pay: number;
+  federal_tax: number;
+  state_tax: number;
+  fica_ss: number;
+  fica_medicare: number;
+  child_support: number;
+  garnishments: number;
+  benefits_cost: number;
+  bonus: number;
+  status: 'prepared' | 'approved' | 'processed' | 'voided';
+  notes?: string;
+}
+
+interface WorkforceManagementProps {
+  organizationId: number;
+  userId: string;
+}
+
+export const WorkforceManagementSystem: React.FC<WorkforceManagementProps> = ({ organizationId, userId }) => {
+  const { toast } = useToast();
+  const [activeTab, setActiveTab] = useState('prepare');
+  const [isLoading, setIsLoading] = useState(false);
+  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [paystubs, setPaystubs] = useState<Paystub[]>([]);
+  const [editingPaystubId, setEditingPaystubId] = useState<string | null>(null);
+  const [editedPaystub, setEditedPaystub] = useState<Partial<Paystub>>({});
+  const [payrollStartDate, setPayrollStartDate] = useState('');
+  const [payrollEndDate, setPayrollEndDate] = useState('');
+  const [currentPayrollRunId, setCurrentPayrollRunId] = useState<string | null>(null);
+  const [contractorId, setContractorId] = useState('');
+  const [contractorAmount, setContractorAmount] = useState('');
+
+  const fetchEmployees = useCallback(async () => {
+    const { data, error } = await supabase.from('employees').select('*').eq('organization_id', organizationId);
+    if (!error && data) setEmployees(data);
+  }, [organizationId]);
+
+  const fetchPreparedPaystubs = useCallback(async () => {
+    if (!payrollStartDate || !payrollEndDate) return;
+    const { data, error } = await supabase.from('paystubs').select('*, employees!inner(first_name, last_name)').eq('organization_id', organizationId).eq('payperiodstart', payrollStartDate).eq('payperiodend', payrollEndDate).eq('status', 'prepared');
+    if (!error && data) {
+      const enriched = data.map(stub => ({ ...stub, employee_name: `${stub.employees.first_name} ${stub.employees.last_name}` }));
+      setPaystubs(enriched);
+    }
+  }, [organizationId, payrollStartDate, payrollEndDate]);
+
+  useEffect(() => { fetchEmployees(); }, [fetchEmployees]);
+  useEffect(() => { if (activeTab === 'review') fetchPreparedPaystubs(); }, [activeTab, fetchPreparedPaystubs]);
+
+  const handlePreparePayroll = async () => {
+    if (!payrollStartDate || !payrollEndDate) { 
+      toast({ title: 'Missing Dates', description: 'Select pay period.', variant: 'destructive' }); 
+      return; 
+    }
+    
+    setIsLoading(true);
+    try {
+      // OPTION 1: Direct Supabase call (current implementation)
+      const { data, error } = await supabase.functions.invoke('run-payroll', { 
+        body: { organization_id: organizationId, period_start: payrollStartDate, period_end: payrollEndDate } 
+      });
+
+      // OPTION 2: Use R.O.M.A.N. Orchestrator (new capability)
+      // const result = await SovereignCoreOrchestrator.processIntent(
+      //   `Run payroll for ${payrollStartDate} to ${payrollEndDate}`,
+      //   userId,
+      //   organizationId
+      // );
+      // if (!result.success) throw new Error(result.message);
+      // const data = result.execution?.data;
+
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+      
+      toast({ title: 'Payroll Prepared', description: data.message });
+      setCurrentPayrollRunId(data.payroll_run_id);
+      setActiveTab('review');
+    } catch (err: any) { 
+      toast({ title: 'Error', description: err.message, variant: 'destructive' }); 
+    } finally { 
+      setIsLoading(false); 
+    }
   };
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Calendar, DollarSign, Users, Clock, FileText, AlertTriangle, Building2, Brain, Download, Bot } from 'lucide-react';
-import DirectDepositManager from './DirectDepositManager';
-import AIPayrollProcessor from './AIPayrollProcessor';
-import PayrollTutorialBot from './PayrollTutorialBot';
 
-export default function PayrollDashboard() {
-  const [payPeriod, setPayPeriod] = useState('current');
-  const [activeTab, setActiveTab] = useState('overview');
-
-  // Remove all fake data - system should be ready for real employees
-  const payrollStats = {
-    totalEmployees: 0,
-    contractors: 0,
-    totalHours: 0,
-    grossPay: 0,
-    netPay: 0,
-    taxes: 0,
-    benefits: 0
+  const startEditingPaystub = (paystub: Paystub) => { setEditingPaystubId(paystub.id); setEditedPaystub(paystub); };
+  const saveEditedPaystub = async () => {
+    if (!editingPaystubId) return;
+    const { error } = await supabase.from('paystubs').update(editedPaystub).eq('id', editingPaystubId);
+    if (error) toast({ title: 'Save Failed', description: error.message, variant: 'destructive' });
+    else { toast({ title: 'Saved', description: 'Paystub updated' }); setEditingPaystubId(null); fetchPreparedPaystubs(); }
   };
 
-  const paySchedules: any[] = [];
-  const complianceItems: any[] = [];
-
-  // Step 2.2: Create the Handler Function
-  const handleExportReports = async () => {
-    // TODO: Implement backend API call to generate and download payroll reports.
-    console.log("Export reports functionality to be implemented.");
+  const handleApprovePayroll = async () => {
+    const { error } = await supabase.from('paystubs').update({ status: 'approved', approved_by: userId, approved_at: new Date().toISOString() }).eq('payperiodstart', payrollStartDate).eq('payperiodend', payrollEndDate).eq('status', 'prepared');
+    if (error) toast({ title: 'Approval Failed', description: error.message, variant: 'destructive' });
+    else { toast({ title: 'Approved', description: 'All paystubs approved for processing' }); setActiveTab('process'); }
   };
 
-  // ATLAS-IMPLEMENTATION-2: Create the Handler Function for AI Payroll
-  const handleAiProcessPayroll = async () => {
-    // TODO: Implement backend API call to trigger AI-driven payroll processing.
-    console.log("AI payroll processing functionality to be implemented.");
+  const handleProcessPayments = async () => {
+    const { error } = await supabase.from('paystubs').update({ status: 'processed', processed_by: userId, processed_at: new Date().toISOString() }).eq('payperiodstart', payrollStartDate).eq('payperiodend', payrollEndDate).eq('status', 'approved');
+    if (error) toast({ title: 'Processing Failed', description: error.message, variant: 'destructive' });
+    else toast({ title: 'Processed', description: 'Payments processed successfully' });
   };
+
+  const handleAddContractor = async () => {
+    const amount = parseFloat(contractorAmount) || 0;
+    const { error } = await supabase.from('paystubs').insert({ employee: contractorId, payperiodstart: payrollStartDate, payperiodend: payrollEndDate, grosspay: amount, netpay: amount, regular_pay: amount, overtime_pay: 0, federal_tax: 0, state_tax: 0, fica_ss: 0, fica_medicare: 0, child_support: 0, garnishments: 0, benefits_cost: 0, bonus: 0, organization_id: organizationId, status: 'prepared', notes: 'Contractor - Manual Entry' });
+    if (error) toast({ title: 'Error', description: error.message, variant: 'destructive' });
+    else { toast({ title: 'Added', description: 'Contractor payment added' }); setContractorId(''); setContractorAmount(''); fetchPreparedPaystubs(); }
+  };
+
+  if (isLoading) return <div className="text-white p-4 flex items-center"><RefreshCw className="w-5 h-5 mr-2 animate-spin"/>Processing...</div>;
 
   return (
-    <div className="p-6 space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">Advanced Payroll System</h1>
-        <div className="flex gap-3">
-          <Select value={payPeriod} onValueChange={setPayPeriod}>
-            <SelectTrigger className="w-48">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="current">Current Period</SelectItem>
-              <SelectItem value="previous">Previous Period</SelectItem>
-              <SelectItem value="ytd">Year to Date</SelectItem>
-            </SelectContent>
-          </Select>
-          <Button variant="outline" onClick={handleExportReports}>
-            <Download className="mr-2 h-4 w-4" />
-            Export Reports
-          </Button>
-          <Button onClick={handleAiProcessPayroll}>
-            <Bot className="mr-2 h-4 w-4" />
-            AI Process Payroll
-          </Button>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600">Employees</p>
-                <p className="text-2xl font-bold">{payrollStats.totalEmployees}</p>
-                <p className="text-xs text-gray-500">+{payrollStats.contractors} contractors</p>
-              </div>
-              <Users className="w-8 h-8 text-blue-500" />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600">Total Hours</p>
-                <p className="text-2xl font-bold">{payrollStats.totalHours.toLocaleString()}</p>
-              </div>
-              <Clock className="w-8 h-8 text-green-500" />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600">Gross Pay</p>
-                <p className="text-2xl font-bold">${payrollStats.grossPay.toLocaleString()}</p>
-              </div>
-              <DollarSign className="w-8 h-8 text-purple-500" />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600">Net Pay</p>
-                <p className="text-2xl font-bold">${payrollStats.netPay.toLocaleString()}</p>
-              </div>
-              <Building2 className="w-8 h-8 text-orange-500" />
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList>
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="tutorial">Tutorial</TabsTrigger>
-          <TabsTrigger value="schedules">Pay Schedules</TabsTrigger>
-          <TabsTrigger value="deposits">Direct Deposit</TabsTrigger>
-          <TabsTrigger value="ai-processor">AI Processor</TabsTrigger>
-          <TabsTrigger value="compliance">Compliance</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="overview">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Pay Period Summary</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex justify-between">
-                  <span>Gross Pay:</span>
-                  <span className="font-semibold">${payrollStats.grossPay.toLocaleString()}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Federal Taxes:</span>
-                  <span className="font-semibold">-${(payrollStats.taxes * 0.6).toLocaleString()}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>State Taxes:</span>
-                  <span className="font-semibold">-${(payrollStats.taxes * 0.25).toLocaleString()}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>FICA:</span>
-                  <span className="font-semibold">-${(payrollStats.taxes * 0.15).toLocaleString()}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Benefits:</span>
-                  <span className="font-semibold">-${payrollStats.benefits.toLocaleString()}</span>
-                </div>
-                <div className="border-t pt-2 flex justify-between font-bold">
-                  <span>Net Pay:</span>
-                  <span>${payrollStats.netPay.toLocaleString()}</span>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Recent Activity</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between p-3 bg-green-50 rounded">
-                    <span className="text-sm">Payroll processed for 03/15/2024</span>
-                    <Badge variant="secondary">Completed</Badge>
-                  </div>
-                  <div className="flex items-center justify-between p-3 bg-yellow-50 rounded">
-                    <span className="text-sm">Tax filing due 04/15/2024</span>
-                    <Badge variant="outline">Upcoming</Badge>
-                  </div>
-                  <div className="flex items-center justify-between p-3 bg-blue-50 rounded">
-                    <span className="text-sm">New employee onboarded</span>
-                    <Badge>Recent</Badge>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="tutorial">
-          <PayrollTutorialBot />
-        </TabsContent>
-
-        <TabsContent value="schedules">
-          <div className="space-y-6">
-            {paySchedules.map((schedule, index) => (
-              <Card key={index}>
-                <CardContent className="p-6">
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <h3 className="font-semibold text-lg">{schedule.type}</h3>
-                      <p className="text-sm text-gray-600">{schedule.employees} employees</p>
-                      <p className="text-sm text-gray-500">Next payment: {schedule.nextDate}</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-2xl font-bold">${schedule.amount.toLocaleString()}</p>
-                      <Button size="sm" className="mt-2" onClick={() => handleProcessPayment(schedule.id)}>
-                        Process Payment
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
-
-        <TabsContent value="deposits">
-          <DirectDepositManager />
-        </TabsContent>
-
-        <TabsContent value="ai-processor">
-          <AIPayrollProcessor />
-        </TabsContent>
-
-        <TabsContent value="compliance">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <AlertTriangle className="w-5 h-5 text-orange-500" />
-                Compliance Dashboard
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {complianceItems.map((item, index) => (
-                  <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
-                    <div>
-                      <p className="font-semibold">{item.item}</p>
-                      <p className="text-sm text-gray-600">Due: {item.dueDate}</p>
-                    </div>
-                    <Badge variant={item.status === 'current' ? 'default' : 'destructive'}>
-                      {item.status}
-                    </Badge>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+    <div className="space-y-6 text-white p-4">
+      <Card className="border-blue-500/50 bg-slate-800/60">
+        <CardHeader><CardTitle className="flex items-center gap-2 text-blue-300"><DollarSign className="h-6 w-6"/>Professional Payroll System</CardTitle><CardDescription className="text-gray-400">Prepare, Review, Approve & Process Payroll</CardDescription></CardHeader>
+        <CardContent>
+          <Tabs value={activeTab} onValueChange={setActiveTab}>
+            <TabsList className="grid w-full grid-cols-4 mb-6 bg-slate-900/70"><TabsTrigger value="prepare">1. Prepare</TabsTrigger><TabsTrigger value="review">2. Review & Edit</TabsTrigger><TabsTrigger value="approve">3. Approve</TabsTrigger><TabsTrigger value="process">4. Process</TabsTrigger></TabsList>
+            <TabsContent value="prepare" className="space-y-4"><Card className="bg-slate-700/50"><CardHeader><CardTitle>Select Pay Period</CardTitle></CardHeader><CardContent className="space-y-4"><div className="grid grid-cols-2 gap-4"><div><Label>Start Date</Label><Input type="date" value={payrollStartDate} onChange={e => setPayrollStartDate(e.target.value)} className="bg-slate-800"/></div><div><Label>End Date</Label><Input type="date" value={payrollEndDate} onChange={e => setPayrollEndDate(e.target.value)} className="bg-slate-800"/></div></div><Button onClick={handlePreparePayroll} disabled={isLoading} className="w-full">{isLoading ? 'Preparing...' : 'Prepare Payroll'}</Button></CardContent></Card><Card className="bg-slate-700/50"><CardHeader><CardTitle className="flex items-center gap-2"><UserPlus className="h-5 w-5"/>Add Contractor Payment</CardTitle></CardHeader><CardContent className="space-y-4"><Select value={contractorId} onValueChange={setContractorId}><SelectTrigger className="bg-slate-800"><SelectValue placeholder="Select Contractor"/></SelectTrigger><SelectContent>{employees.filter(e => e.employment_type === 'Contractor').map(e => <SelectItem key={e.id} value={e.id}>{e.first_name} {e.last_name}</SelectItem>)}</SelectContent></Select><Input type="number" placeholder="Payment Amount" value={contractorAmount} onChange={e => setContractorAmount(e.target.value)} className="bg-slate-800"/><Button onClick={handleAddContractor} variant="outline">Add Contractor Payment</Button></CardContent></Card></TabsContent>
+            <TabsContent value="review" className="space-y-4"><Card className="bg-slate-700/50"><CardHeader><CardTitle>Review Paystubs ({paystubs.length})</CardTitle><CardDescription>Edit deductions, taxes, bonuses before approval</CardDescription></CardHeader><CardContent><div className="overflow-x-auto"><Table><TableHeader><TableRow><TableHead>Employee</TableHead><TableHead>Gross</TableHead><TableHead>Fed Tax</TableHead><TableHead>State Tax</TableHead><TableHead>Child Support</TableHead><TableHead>Garnishments</TableHead><TableHead>Bonus</TableHead><TableHead>Net Pay</TableHead><TableHead>Actions</TableHead></TableRow></TableHeader><TableBody>{paystubs.map(stub => <TableRow key={stub.id}><TableCell>{stub.employee_name}</TableCell><TableCell>{editingPaystubId === stub.id ? <Input type="number" value={editedPaystub.grosspay} onChange={e => setEditedPaystub({...editedPaystub, grosspay: parseFloat(e.target.value)})} className="w-24 bg-slate-800"/> : `$${stub.grosspay.toFixed(2)}`}</TableCell><TableCell>{editingPaystubId === stub.id ? <Input type="number" value={editedPaystub.federal_tax} onChange={e => setEditedPaystub({...editedPaystub, federal_tax: parseFloat(e.target.value)})} className="w-24 bg-slate-800"/> : `$${stub.federal_tax.toFixed(2)}`}</TableCell><TableCell>{editingPaystubId === stub.id ? <Input type="number" value={editedPaystub.state_tax} onChange={e => setEditedPaystub({...editedPaystub, state_tax: parseFloat(e.target.value)})} className="w-24 bg-slate-800"/> : `$${stub.state_tax.toFixed(2)}`}</TableCell><TableCell>{editingPaystubId === stub.id ? <Input type="number" value={editedPaystub.child_support || 0} onChange={e => setEditedPaystub({...editedPaystub, child_support: parseFloat(e.target.value)})} className="w-24 bg-slate-800"/> : `$${(stub.child_support || 0).toFixed(2)}`}</TableCell><TableCell>{editingPaystubId === stub.id ? <Input type="number" value={editedPaystub.garnishments || 0} onChange={e => setEditedPaystub({...editedPaystub, garnishments: parseFloat(e.target.value)})} className="w-24 bg-slate-800"/> : `$${(stub.garnishments || 0).toFixed(2)}`}</TableCell><TableCell>{editingPaystubId === stub.id ? <Input type="number" value={editedPaystub.bonus || 0} onChange={e => setEditedPaystub({...editedPaystub, bonus: parseFloat(e.target.value)})} className="w-24 bg-slate-800"/> : `$${(stub.bonus || 0).toFixed(2)}`}</TableCell><TableCell className="font-bold">${stub.netpay.toFixed(2)}</TableCell><TableCell>{editingPaystubId === stub.id ? <Button size="sm" onClick={saveEditedPaystub}><Save className="w-4 h-4"/></Button> : <Button size="sm" variant="outline" onClick={() => startEditingPaystub(stub)}><Edit className="w-4 h-4"/></Button>}</TableCell></TableRow>)}</TableBody></Table></div><Button onClick={() => setActiveTab('approve')} className="mt-4 w-full">Continue to Approval</Button></CardContent></Card></TabsContent>
+            <TabsContent value="approve" className="space-y-4"><Card className="bg-slate-700/50"><CardHeader><CardTitle className="flex items-center gap-2"><CheckCircle className="h-5 w-5 text-green-400"/>Approve Payroll</CardTitle></CardHeader><CardContent className="space-y-4"><Alert className="bg-yellow-900/50 border-yellow-500/50"><AlertCircle className="h-4 w-4"/><AlertDescription>Review all paystubs carefully. Once approved, they will be queued for processing.</AlertDescription></Alert><div className="text-lg">Total Paystubs: <strong>{paystubs.length}</strong></div><div className="text-lg">Total Net Pay: <strong>${paystubs.reduce((sum, s) => sum + s.netpay, 0).toFixed(2)}</strong></div><Button onClick={handleApprovePayroll} className="w-full bg-green-600 hover:bg-green-700">Approve All Paystubs</Button></CardContent></Card></TabsContent>
+            <TabsContent value="process" className="space-y-4"><Card className="bg-slate-700/50"><CardHeader><CardTitle className="flex items-center gap-2"><FileText className="h-5 w-5 text-blue-400"/>Process Payments</CardTitle></CardHeader><CardContent className="space-y-4"><Alert className="bg-blue-900/50 border-blue-500/50"><AlertDescription>Approved paystubs ready for payment processing. This will mark them as "processed".</AlertDescription></Alert><Button onClick={handleProcessPayments} className="w-full bg-blue-600 hover:bg-blue-700">Process Payments</Button></CardContent></Card></TabsContent>
+          </Tabs>
+        </CardContent>
+      </Card>
     </div>
   );
-}
+};
+
+export default WorkforceManagementSystem;

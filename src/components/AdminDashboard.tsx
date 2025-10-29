@@ -16,6 +16,7 @@ import {
   Clock,
   Flag,
   FileText,
+  DollarSign,
 } from 'lucide-react';
 import AdminControlPanel from './AdminControlPanel';
 import AutonomousSystemActivator from './AutonomousSystemActivator';
@@ -25,8 +26,14 @@ import { SelfEvolutionEngine } from './SelfEvolutionEngine';
 import FeatureFlagsManager from './FeatureFlagsManager';
 import EmployeeManagement from './EmployeeManagement';
 import CompanyHandbook from './CompanyHandbook';
+import WorkforceManagementSystem from './PayrollDashboard';
+
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('control');
+
+  // You'll need to pass actual organizationId and userId from your auth
+  const organizationId = 1; // Replace with actual org ID from context/auth
+  const userId = 'user-uuid'; // Replace with actual user ID from auth
 
   return (
     <div className='space-y-4 px-2 py-2 sm:px-4 sm:py-6 max-w-full overflow-x-hidden'>
@@ -85,6 +92,10 @@ export default function AdminDashboard() {
               <FileText className='w-4 h-4' />
               <span className='text-sm'>Handbook</span>
             </TabsTrigger>
+            <TabsTrigger value='payroll' className='justify-start gap-2 py-2 px-3 bg-blue-600/20 hover:bg-blue-500/30 data-[state=active]:bg-blue-600 data-[state=active]:text-white text-blue-100 border border-blue-500/20 w-fit'>
+              <DollarSign className='w-4 h-4' />
+              <span className='text-sm'>Payroll</span>
+            </TabsTrigger>
           </TabsList>
         </div>
 
@@ -122,6 +133,10 @@ export default function AdminDashboard() {
             <TabsTrigger value='handbook' className='flex items-center gap-2 py-2 px-3 bg-blue-600/20 hover:bg-blue-500/30 data-[state=active]:bg-blue-600 data-[state=active]:text-white text-blue-100 border border-blue-500/20 text-sm'>
               <FileText className='w-4 h-4' />
               <span>Handbook</span>
+            </TabsTrigger>
+            <TabsTrigger value='payroll' className='flex items-center gap-2 py-2 px-3 bg-blue-600/20 hover:bg-blue-500/30 data-[state=active]:bg-blue-600 data-[state=active]:text-white text-blue-100 border border-blue-500/20 text-sm'>
+              <DollarSign className='w-4 h-4' />
+              <span>Payroll</span>
             </TabsTrigger>
           </TabsList>
         </div>
@@ -171,6 +186,12 @@ export default function AdminDashboard() {
         <TabsContent value='handbook'>
           <div className='w-full max-w-full overflow-x-auto'>
             <CompanyHandbook />
+          </div>
+        </TabsContent>
+
+        <TabsContent value='payroll'>
+          <div className='w-full max-w-full overflow-x-auto'>
+            <WorkforceManagementSystem organizationId={organizationId} userId={userId} />
           </div>
         </TabsContent>
       </Tabs>

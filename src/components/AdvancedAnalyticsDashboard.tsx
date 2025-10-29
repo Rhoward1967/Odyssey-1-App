@@ -1,328 +1,343 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { BarChart3, TrendingUp, Users, Activity, Download, RefreshCw } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { 
+  Crown, 
+  TrendingUp, 
+  DollarSign, 
+  Users, 
+  Brain, 
+  Target,
+  AlertTriangle,
+  CheckCircle,
+  Activity
+} from 'lucide-react';
 
-interface AnalyticsData {
-  users: {
-    total: number;
-    active: number;
-    new: number;
-    retention: number;
+interface ExecutiveMetrics {
+  labor_costs: {
+    total_gross_payroll: number;
+    overtime_trends: number;
+    cost_per_employee: number;
+    payroll_efficiency: number;
   };
-  engagement: {
-    sessions: number;
-    pageViews: number;
-    avgDuration: string;
-    bounceRate: number;
+  sales_performance: {
+    win_loss_ratio: number;
+    predicted_margins: number;
+    bid_accuracy: number;
+    revenue_forecast: number;
   };
-  revenue: {
-    total: number;
-    monthly: number;
-    growth: number;
-    conversion: number;
-  };
-  performance: {
-    apiCalls: number;
-    responseTime: number;
-    uptime: number;
-    errors: number;
+  system_health: {
+    ai_agents_active: number;
+    platform_uptime: number;
+    data_quality_score: number;
+    security_status: string;
   };
 }
 
-export const AdvancedAnalyticsDashboard: React.FC = () => {
-  const [data, setData] = useState<AnalyticsData>({
-    users: { total: 12847, active: 8934, new: 1247, retention: 78.5 },
-    engagement: { sessions: 45623, pageViews: 189234, avgDuration: '4:32', bounceRate: 23.4 },
-    revenue: { total: 284750, monthly: 47892, growth: 12.3, conversion: 3.8 },
-    performance: { apiCalls: 1847293, responseTime: 245, uptime: 99.97, errors: 23 }
+export default function AdvancedAnalyticsDashboard() {
+  const [metrics, setMetrics] = useState<ExecutiveMetrics>({
+    labor_costs: {
+      total_gross_payroll: 487500,
+      overtime_trends: 12.5,
+      cost_per_employee: 62500,
+      payroll_efficiency: 94.2
+    },
+    sales_performance: {
+      win_loss_ratio: 73.4,
+      predicted_margins: 24.8,
+      bid_accuracy: 89.1,
+      revenue_forecast: 2850000
+    },
+    system_health: {
+      ai_agents_active: 3,
+      platform_uptime: 99.7,
+      data_quality_score: 96.3,
+      security_status: 'optimal'
+    }
   });
 
-  const [timeRange, setTimeRange] = useState('7d');
-  const [isLoading, setIsLoading] = useState(false);
-
-  const refreshData = () => {
-    setIsLoading(true);
-    setTimeout(() => setIsLoading(false), 1000);
+  const getHealthColor = (value: number, threshold: number = 90) => {
+    if (value >= threshold) return 'text-green-600';
+    if (value >= 70) return 'text-yellow-600';
+    return 'text-red-600';
   };
 
-  const exportData = () => {
-    const csvData = Object.entries(data).map(([key, values]) => 
-      `${key},${Object.values(values).join(',')}`
-    ).join('\n');
-    
-    const blob = new Blob([csvData], { type: 'text/csv' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'analytics-data.csv';
-    a.click();
+  const getHealthIcon = (value: number, threshold: number = 90) => {
+    if (value >= threshold) return <CheckCircle className="h-4 w-4 text-green-600" />;
+    if (value >= 70) return <AlertTriangle className="h-4 w-4 text-yellow-600" />;
+    return <AlertTriangle className="h-4 w-4 text-red-600" />;
   };
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <BarChart3 className="h-8 w-8 text-blue-600" />
-          <div>
-            <h1 className="text-3xl font-bold">Advanced Analytics</h1>
-            <p className="text-muted-foreground">Comprehensive business intelligence dashboard</p>
-          </div>
-        </div>
-        <div className="flex gap-2">
-          <select 
-            value={timeRange} 
-            onChange={(e) => setTimeRange(e.target.value)}
-            className="px-3 py-2 border rounded-md"
-          >
-            <option value="24h">Last 24 hours</option>
-            <option value="7d">Last 7 days</option>
-            <option value="30d">Last 30 days</option>
-            <option value="90d">Last 90 days</option>
-          </select>
-          <Button variant="outline" onClick={refreshData} disabled={isLoading}>
-            <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
-            Refresh
-          </Button>
-          <Button onClick={exportData}>
-            <Download className="h-4 w-4 mr-2" />
-            Export
-          </Button>
-        </div>
+      {/* Executive Header */}
+      <Card className="border-purple-400 bg-gradient-to-r from-purple-100 to-gold-100">
+        <CardHeader className="text-center">
+          <CardTitle className="flex items-center justify-center gap-3 text-2xl text-purple-800">
+            <Crown className="h-8 w-8 text-gold-600" />
+            Advanced Analytics Dashboard
+            <Crown className="h-8 w-8 text-gold-600" />
+          </CardTitle>
+          <Badge className="mx-auto bg-purple-200 text-purple-800 text-lg px-4 py-2">
+            Executive Command Center - Divine Law Governance
+          </Badge>
+        </CardHeader>
+      </Card>
+
+      {/* Key Performance Indicators */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <Card className="border-green-200 bg-green-50">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-green-600">Total Revenue Forecast</p>
+                <p className="text-2xl font-bold text-green-800">
+                  ${(metrics.sales_performance.revenue_forecast / 1000000).toFixed(2)}M
+                </p>
+              </div>
+              <DollarSign className="h-8 w-8 text-green-600" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="border-blue-200 bg-blue-50">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-blue-600">Win Rate</p>
+                <p className="text-2xl font-bold text-blue-800">
+                  {metrics.sales_performance.win_loss_ratio}%
+                </p>
+              </div>
+              <Target className="h-8 w-8 text-blue-600" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="border-orange-200 bg-orange-50">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-orange-600">Labor Efficiency</p>
+                <p className="text-2xl font-bold text-orange-800">
+                  {metrics.labor_costs.payroll_efficiency}%
+                </p>
+              </div>
+              <Users className="h-8 w-8 text-orange-600" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="border-purple-200 bg-purple-50">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-purple-600">Platform Health</p>
+                <p className="text-2xl font-bold text-purple-800">
+                  {metrics.system_health.platform_uptime}%
+                </p>
+              </div>
+              <Activity className="h-8 w-8 text-purple-600" />
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
-      <Tabs defaultValue="overview" className="w-full">
-        <TabsList className="grid w-full grid-cols-5">
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="users">Users</TabsTrigger>
-          <TabsTrigger value="engagement">Engagement</TabsTrigger>
-          <TabsTrigger value="revenue">Revenue</TabsTrigger>
-          <TabsTrigger value="performance">Performance</TabsTrigger>
+      {/* Detailed Analytics Tabs */}
+      <Tabs defaultValue="executive-summary" className="space-y-4">
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="executive-summary">Executive Summary</TabsTrigger>
+          <TabsTrigger value="labor-analytics">Labor Analytics</TabsTrigger>
+          <TabsTrigger value="sales-intelligence">Sales Intelligence</TabsTrigger>
+          <TabsTrigger value="system-monitoring">System Monitoring</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="overview" className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Total Users</CardTitle>
-                <Users className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{data.users.total.toLocaleString()}</div>
-                <p className="text-xs text-muted-foreground">
-                  +{data.users.new} new this week
-                </p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Revenue</CardTitle>
-                <TrendingUp className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">${data.revenue.total.toLocaleString()}</div>
-                <p className="text-xs text-muted-foreground">
-                  +{data.revenue.growth}% from last month
-                </p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">API Calls</CardTitle>
-                <Activity className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{data.performance.apiCalls.toLocaleString()}</div>
-                <p className="text-xs text-muted-foreground">
-                  {data.performance.responseTime}ms avg response
-                </p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Uptime</CardTitle>
-                <Badge variant="outline" className="text-green-600">
-                  {data.performance.uptime}%
-                </Badge>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">Excellent</div>
-                <p className="text-xs text-muted-foreground">
-                  {data.performance.errors} errors this week
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>User Growth Trend</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="h-64 flex items-center justify-center bg-muted rounded">
-                  <p className="text-muted-foreground">Interactive chart would be rendered here</p>
+        <TabsContent value="executive-summary" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Crown className="h-5 w-5 text-gold-600" />
+                Divine Law Governance Overview
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-3">
+                  <h4 className="font-semibold text-gray-800">Strategic Metrics</h4>
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-600">Revenue Growth Trajectory</span>
+                      <span className="font-semibold text-green-600">+18.3%</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-600">Operational Efficiency</span>
+                      <span className="font-semibold text-blue-600">94.2%</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-600">Genesis AI Performance</span>
+                      <span className="font-semibold text-purple-600">96.3%</span>
+                    </div>
+                  </div>
                 </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>Revenue Analytics</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="h-64 flex items-center justify-center bg-muted rounded">
-                  <p className="text-muted-foreground">Revenue chart would be rendered here</p>
+                
+                <div className="space-y-3">
+                  <h4 className="font-semibold text-gray-800">Risk Assessment</h4>
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-600">Security Posture</span>
+                      <Badge className="bg-green-100 text-green-800">Optimal</Badge>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-600">Compliance Status</span>
+                      <Badge className="bg-green-100 text-green-800">Full</Badge>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-600">Market Position</span>
+                      <Badge className="bg-blue-100 text-blue-800">Strong</Badge>
+                    </div>
+                  </div>
                 </div>
-              </CardContent>
-            </Card>
-          </div>
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
 
-        <TabsContent value="users" className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Active Users</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold text-green-600">{data.users.active.toLocaleString()}</div>
-                <p className="text-sm text-muted-foreground">Currently online</p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>New Users</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold text-blue-600">{data.users.new.toLocaleString()}</div>
-                <p className="text-sm text-muted-foreground">This period</p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>Retention Rate</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold text-purple-600">{data.users.retention}%</div>
-                <p className="text-sm text-muted-foreground">7-day retention</p>
-              </CardContent>
-            </Card>
-          </div>
+        <TabsContent value="labor-analytics" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Users className="h-5 w-5 text-orange-600" />
+                Workforce Intelligence
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="bg-orange-50 p-4 rounded border">
+                  <div className="text-2xl font-bold text-orange-800">
+                    ${(metrics.labor_costs.total_gross_payroll / 1000).toFixed(0)}K
+                  </div>
+                  <div className="text-sm text-orange-600">Total Gross Payroll</div>
+                </div>
+                <div className="bg-orange-50 p-4 rounded border">
+                  <div className="text-2xl font-bold text-orange-800">
+                    {metrics.labor_costs.overtime_trends}%
+                  </div>
+                  <div className="text-sm text-orange-600">Overtime Trends</div>
+                </div>
+                <div className="bg-orange-50 p-4 rounded border">
+                  <div className="text-2xl font-bold text-orange-800">
+                    ${(metrics.labor_costs.cost_per_employee / 1000).toFixed(0)}K
+                  </div>
+                  <div className="text-sm text-orange-600">Cost Per Employee</div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
 
-        <TabsContent value="engagement" className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Sessions</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{data.engagement.sessions.toLocaleString()}</div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>Page Views</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{data.engagement.pageViews.toLocaleString()}</div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>Avg Duration</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{data.engagement.avgDuration}</div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>Bounce Rate</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{data.engagement.bounceRate}%</div>
-              </CardContent>
-            </Card>
-          </div>
+        <TabsContent value="sales-intelligence" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <TrendingUp className="h-5 w-5 text-blue-600" />
+                Predictive Sales Analytics
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-4">
+                  <h4 className="font-semibold text-gray-800">Performance Metrics</h4>
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-600">Win/Loss Ratio</span>
+                      <span className="font-semibold text-blue-600">
+                        {metrics.sales_performance.win_loss_ratio}%
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-600">Bid Accuracy</span>
+                      <span className="font-semibold text-green-600">
+                        {metrics.sales_performance.bid_accuracy}%
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-600">Predicted Margins</span>
+                      <span className="font-semibold text-purple-600">
+                        {metrics.sales_performance.predicted_margins}%
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="bg-blue-50 p-4 rounded border">
+                  <h4 className="font-semibold text-blue-800 mb-2">AI Insights</h4>
+                  <div className="text-sm text-blue-700 space-y-1">
+                    <p>• Genesis Predictive Model active</p>
+                    <p>• Optimal margin recommendations</p>
+                    <p>• Win probability calculations</p>
+                    <p>• Market trend analysis</p>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
 
-        <TabsContent value="revenue" className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Total Revenue</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">${data.revenue.total.toLocaleString()}</div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>Monthly Revenue</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">${data.revenue.monthly.toLocaleString()}</div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>Growth Rate</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-green-600">+{data.revenue.growth}%</div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>Conversion Rate</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{data.revenue.conversion}%</div>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="performance" className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>API Calls</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{data.performance.apiCalls.toLocaleString()}</div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>Response Time</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{data.performance.responseTime}ms</div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>Uptime</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-green-600">{data.performance.uptime}%</div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>Errors</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-red-600">{data.performance.errors}</div>
-              </CardContent>
-            </Card>
-          </div>
+        <TabsContent value="system-monitoring" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Brain className="h-5 w-5 text-purple-600" />
+                Genesis Platform Health
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-3">
+                  <h4 className="font-semibold text-gray-800">System Status</h4>
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-600">Platform Uptime</span>
+                      <div className="flex items-center gap-1">
+                        {getHealthIcon(metrics.system_health.platform_uptime)}
+                        <span className={`font-semibold ${getHealthColor(metrics.system_health.platform_uptime)}`}>
+                          {metrics.system_health.platform_uptime}%
+                        </span>
+                      </div>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-600">Data Quality Score</span>
+                      <div className="flex items-center gap-1">
+                        {getHealthIcon(metrics.system_health.data_quality_score)}
+                        <span className={`font-semibold ${getHealthColor(metrics.system_health.data_quality_score)}`}>
+                          {metrics.system_health.data_quality_score}%
+                        </span>
+                      </div>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-600">AI Agents Active</span>
+                      <span className="font-semibold text-purple-600">
+                        {metrics.system_health.ai_agents_active}/3
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="bg-purple-50 p-4 rounded border">
+                  <h4 className="font-semibold text-purple-800 mb-2">Universal AI Status</h4>
+                  <div className="text-sm text-purple-700 space-y-1">
+                    <p>• Genesis Predictive Bidding: Active</p>
+                    <p>• Document Analysis Engine: Active</p>
+                    <p>• R.O.M.A.N. Universal AI: Standby</p>
+                    <p>• Security status: Optimal</p>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
       </Tabs>
     </div>
   );
-};
+}

@@ -1,21 +1,20 @@
-import React, { useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import {
-  Menu,
-  Home,
   BarChart3,
-  Monitor,
-  DollarSign,
-  HelpCircle,
-  CreditCard,
-  Calendar,
-  User,
-  Settings,
-  Search,
   Bell,
-  X,
+  BookOpen,
+  CreditCard,
+  DollarSign,
+  Home,
+  Menu,
+  Monitor,
+  Search,
+  Settings,
+  User,
+  X
 } from 'lucide-react';
+import React, { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const MobileNavigationMenu: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -32,19 +31,20 @@ const MobileNavigationMenu: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const mainNavItems = [
-    { path: '/', label: 'Home', icon: Home },
-    { path: '/odyssey', label: 'ODYSSEY-1', icon: BarChart3 },
-    { path: '/control-panel', label: 'Control Panel', icon: BarChart3 },
-    { path: '/media-workstation', label: 'Media Room', icon: Monitor },
-    { path: '/budget', label: 'Budget', icon: DollarSign },
-    { path: '/appointments', label: 'Appointments', icon: Calendar },
+  const navItems = [
+    { path: '/', label: 'Dashboard', icon: Home },
+    { path: '/trading', label: 'Trading', icon: BarChart3 },
+    { path: '/calculator', label: 'Calculator', icon: Monitor },
+    { path: '/workforce', label: 'Workforce', icon: DollarSign },
+    { path: '/admin', label: 'Admin Center', icon: Settings },
+    { path: '/user-manual', label: 'Manual', icon: BookOpen },
+    { path: '/subscription', label: 'Subscription', icon: CreditCard },
   ];
 
+  // Define the missing secondaryNavItems
   const secondaryNavItems = [
-    { path: '/help', label: 'Help', icon: HelpCircle },
-    { path: '/subscription', label: 'Subscription', icon: CreditCard },
     { path: '/profile', label: 'Profile', icon: User },
+    { path: '/subscription', label: 'Subscription', icon: CreditCard },
   ];
 
   const handleNavigation = (path: string) => {
@@ -115,7 +115,7 @@ const MobileNavigationMenu: React.FC = () => {
                   <h3 className='text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3'>
                     Main Menu
                   </h3>
-                  {mainNavItems.map(item => {
+                  {navItems.map(item => {
                     const Icon = item.icon;
                     const isActive = location.pathname === item.path;
 

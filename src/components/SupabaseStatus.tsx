@@ -72,26 +72,26 @@ export function SupabaseStatus() {
       }
       setTests([...newTests]);
 
-      // Test 3: RLS Policies
+      // Test 3: RLS Policies (use a known table: profiles)
       newTests[2].status = 'testing';
       setTests([...newTests]);
-      
+
       const { data: rlsTest, error: rlsError } = await supabase
-        .from('users')
+        .from('profiles')
         .select('id')
         .limit(1);
-      
+
       if (rlsError) {
         newTests[2] = {
           ...newTests[2],
           status: 'error',
-          message: `RLS Error: ${rlsError.message}`
+          message: `RLS/Access Error on "profiles": ${rlsError.message}`
         };
       } else {
         newTests[2] = {
           ...newTests[2],
           status: 'success',
-          message: 'RLS policies working correctly'
+          message: 'RLS policies allow basic read on profiles for current role'
         };
       }
       setTests([...newTests]);

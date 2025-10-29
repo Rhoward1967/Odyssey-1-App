@@ -1,13 +1,12 @@
-
+import { Elements } from '@stripe/react-stripe-js';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import './index.css';
 import App from './App.tsx';
-import { ErrorBoundary } from './components/ErrorBoundary';
-import { AuthProvider } from './components/AuthProvider';
 import { ArchitectProvider } from './components/ArchitectRecognitionSystem';
-import { Elements } from '@stripe/react-stripe-js';
+import { AuthProvider } from './components/AuthProvider';
+import { ErrorBoundary } from './components/ErrorBoundary';
 import { getStripe } from './config/stripe';
+import './index.css';
 
 const stripePromise = getStripe();
 

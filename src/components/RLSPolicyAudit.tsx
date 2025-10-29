@@ -17,13 +17,20 @@ export function RLSPolicyAudit() {
   const [issues, setIssues] = useState<PolicyIssue[]>([]);
   const [loading, setLoading] = useState(false);
   const [lastScan, setLastScan] = useState<Date | null>(null);
+  const [usingMock, setUsingMock] = useState(false);
 
   const scanPolicies = async () => {
     setLoading(true);
     try {
       const { data, error } = await supabase.rpc('audit_rls_policies');
       if (error) throw error;
-      
+      // If your RPC returns issues, map them here and set usingMock=false
+      setUsingMock(false);
+      // setIssues(mappedFromData);
+      // setLastScan(new Date());
+      // For now, fall through to mock
+      throw new Error('RPC not configured');
+    } catch (error) {
       // Mock data for demonstration
       const mockIssues: PolicyIssue[] = [
         {
@@ -41,11 +48,9 @@ export function RLSPolicyAudit() {
           severity: 'high'
         }
       ];
-      
       setIssues(mockIssues);
       setLastScan(new Date());
-    } catch (error) {
-      console.error('Policy audit failed:', error);
+      setUsingMock(true);
     } finally {
       setLoading(false);
     }
@@ -71,6 +76,11 @@ export function RLSPolicyAudit() {
           </CardTitle>
         </CardHeader>
         <CardContent>
+          {usingMock && (
+            <div className="mb-4 text-xs text-yellow-700 bg-yellow-50 border border-yellow-200 rounded p-2">
+              Using demo data. Configure audit_rls_policies RPC to enable live scans.
+            </div>
+          )}
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-4">
               <Button onClick={scanPolicies} disabled={loading}>

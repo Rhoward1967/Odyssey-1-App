@@ -1,0 +1,184 @@
+[33mee4e6b4[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mlab-workspace[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m, [m[1;32mlab-environment-2025-10-22-1852[m[33m)[m Complete ODYSSEY-1 Admin Dashboard with Employee Management and Company Handbook
+[33m9c17794[m Complete Feature Flags system with live backend integration
+[33m436eee3[m Complete Odyssey-1 subscription system with Stripe integration
+[33ma17392c[m ci: use Node.js 20 for Supabase Edge Function deploy workflow
+[33m61fe59e[m ci: use npx for supabase link and deploy in workflow
+[33ma828820[m ci: unify supabase link and deploy in one step
+[33m60036af[m fix: add calendar.events scope to google-oauth-handler
+[33m1626f2c[m update TradingDashboard component
+[33m37ecd03[m chore: finalize workflow, Deno compatibility, and local setup instructions
+[33m58cd03e[m fix: update serve import to jsr:@std/http in ai-calculator Edge Function
+[33m156e26d[m fix: update serve import to jsr:@std/http in smarty-address-validation Edge Function
+[33me25be84[m fix: correct import for serve in smarty-address-validation Edge Function (CODEFIX-20251012-005)
+[33m2dc404c[m Enhance Supabase Edge Functions deployment workflow
+[33m4dd46a3[m fix: inject SUPABASE_PROJECT_REF directly in deploy command (FIX-20251012-004)
+[33m1789081[m chore: add inline secret verification to deployment workflow (VERIFY-20251012-003)
+[33mba95246[m fix: replace deploy-edge-functions workflow with validated, standardized version (DEPLOY-20251012-002)
+[33m211c515[m chore: add diagnostic workflow for secret accessibility check (DIAG-20251012-001)
+[33m81da496[m deploy edge
+[33m9e96bbe[m deploy edge functions workflow with clean, verified version
+[33mf783d85[m fix: remove all trailing content and conflict markers from workflow YAML
+[33me3b3075[m fix: clean workflow YAML and resolve ai-calculator syntax errors
+[33m1e9ca80[m chore: remove redundant supabase-deploy.yml workflow to eliminate CI/CD conflicts
+[33m54bd2c5[m ci: replace deploy-edge-functions workflow with clean, verified version
+[33m22ef813[m Refactor deploy workflow for Supabase Edge Functions
+[33mdb505b2[m package.json updated with new dependencies {   "name": "my-project",   "version": "1.0.0",   "description": "A sample project",   "main": "index.js",   "scripts": {     "start": "node index.js"   },   "author": "Your Name",   "license": "ISC",   "dependencies": {     "express": "^4.17.1"   } }
+[33m5a34ba4[m Add debug step for SUPABASE_PROJECT_REF
+[33m15e692d[m Rhoward1967 patch 1 (#24)
+[33ma6b8b6b[m Fix indentation in deploy-edge-functions.yml
+[33m7225f4f[m Update Supabase project ID to project reference
+[33mc484629[m Refactor Supabase deployment workflow
+[33ma0c588a[m Refactor Supabase CLI installation in workflow
+[33m17e26a3[m fix: update ai-calculator Edge Function to use JSR import for Deno compatibility
+[33mc08d7a0[m Refactor Supabase deployment workflow for NPM installation
+[33md4cda44[m fix: set working-directory for deploy step in workflow
+[33m721691f[m Update package.json after dependency cleanup
+[33m5f12900[m Add package-lock.json and update dependencies for Node 20
+[33m6a3acf0[m Fix: use --project-ref for Supabase CLI deploy step
+[33m8dd2ef5[m deploy-supabase-edge-functions: update workflow to use official Supabase GitHub Action
+[33m5528578[m deploy-edge-functions.yml
+[33m58e02c0[m SUPABASE deployment workflow: install Supabase CLI and set SUPABASE_ACCESS_TOKEN
+[33m9558118[m Refactor Supabase deployment workflow steps
+[33m46e6dce[m Fix environment variable indentation in deploy workflow
+[33mfc6dea6[m Update deployment workflow for Supabase Edge Functions
+[33m930b3a9[m Enhance Supabase Edge Functions deployment workflow
+[33m2cc47d8[m supabase functions deploy upsert --no-verify-jwt --project-ref=your-project-ref --name=upsert --source=. --env-file=.env
+[33m6f9efc9[m supabase functions deploy upsert --no-verify-jwt --project-ref=your-project-ref --name=
+[33m9d1050a[m supabase functions deploy upsert --no-verify-jwt --project-ref=your-project-ref --name=
+[33m607127c[m Fix duplicate deploy command in workflow
+[33mbc0c57e[m Add environment variables for Supabase deployment
+[33ma88caf7[m Enhance Supabase Edge Functions deployment workflow
+[33m15f39c2[m Refactor Supabase deployment workflow steps
+[33mb0dd0d1[m Fix formatting issues in Supabase deploy workflow
+[33m42dd87c[m Enhance comments in Supabase deploy workflow
+[33mf68caba[m supabase: add Node.js setup to GitHub Actions workflow
+[33mdc67332[m supabase: add Node.js setup to GitHub Actions workflow
+[33m75d0d0d[m supabase: add Node.js setup to GitHub Actions workflow
+[33m85f1378[m supabase: add Node.js setup to GitHub Actions workflow
+[33m26092c4[m supabase-cli: add PATH export to GitHub Actions workflow
+[33m27def68[m supabase-cli: add PATH export to GitHub Actions workflow
+[33m96ab5f6[m fix: correct YAML for Supabase deploy workflow
+[33md5146b5[m fix: robust Supabase CLI install and deploy workflow
+[33m7c13091[m supabase deployemnt: install supabase cli in github actions workflow
+[33mf94f816[m supabase deploy --project-ref ${{ secrets.SUPABASE_PROJECT_REF }} --db-url ${{ secrets.SUPABASE_DB_URL }} --file ./supabase/migrations/001_initial.sql
+[33m822d01b[m supabase-cli: add PATH export to GitHub Actions workflow
+[33m2111fe2[m supabase cli install and path update
+[33m584a542[m supabase deploy --project-ref ${{ secrets.SUPABASE_PROJECT_REF }} --db-url ${{ secrets.SUPABASE_DB_URL }} --file ./supabase/migrations/001_initial.sql
+[33me7f20aa[m supabase/functions/smarty-address-validation/package.json
+[33m80f0f59[m Supabase edge functions for AI calculator and Smarty address validation
+[33m7c5f7ba[m feat: automate admin approval and add SendGrid email notifications for AI trades
+[33m5ed074d[m feat: robust AI trading, UI, and research integrations; backend simulation, logging, and admin review
+[33m0c03051[m meta mask added
+[33m5082b4e[m[33m ([m[1;31morigin/supabase-media-gallery[m[33m)[m Update dependencies and add Trading route to App.tsx
+[33m3915b17[m Enable Web3 XRP (wXRP) trading with MetaMask in TradingForm using ethers.js
+[33m104f883[m Embed MetaMaskConnector in TradingDashboard for wallet connection and status
+[33mc38d4d1[m Add Trading page and tab to navigation bar
+[33m146af50[m Integrate Supabase video storage, update MediaGallery, and add new components
+[33m4b59211[m Fix Odyssey-1 tab rendering, authentication bypass, and UI bugs
+[33m9e6353f[m src components fixes
+[33mb09ca91[m app src/App.tsx file with the following commit message:
+[33m435a3b4[m repairs
+[33m1afefc6[m Fix: Replace invalid Broom icon with Brush for Daily Cleaning category (lucide-react import)
+[33md6d3968[m error: The requested module '/src/lib/adminPrivileges.ts' does not provide an export named 'getHJSRole'
+[33mfeb5376[m Repairs to recent commits
+[33m4918a6d[m Updates to add services management functionality
+[33m0e479d9[m Fix: Replace invalid Vacuum icon with Broom for Daily Cleaning category (lucide-react import)
+[33m46b6da5[m Fix: Remove service_id field from line item change logic and update service selection to use description (type-safe)
+[33m2c489b6[m feat(customers): Robust CRM-style customer management and profile panel
+[33m0795fbc[m fix(auth): Add signIn, signUp, signOut to AuthProvider and fix login portal context usage
+[33mdc72b94[m Update App component
+[33m0b13d3e[m edits to the file
+[33md0e4619[m fix: replace with final, architecturally sound invoicing module
+[33m50ac344[m feat: implement full professional invoice form UI
+[33m69182cb[m feat: update AutomatedInvoicing UI
+[33md092c48[m repair to invoice
+[33m1a93545[m fix: update AutomatedInvoicing with type normalization and bugfixes
+[33m10b8b61[m Rebuilding invoice components
+[33mb63e9b1[m refactor(invoicing): replace with professional invoicing dashboard and customer management
+[33m28a039b[m feat: upgrade AutomatedInvoicing to professional version
+[33md518187[m UPDADTE TO INVOICING
+[33m5be7a5f[m fix: ensure BiddingCalculator.tsx is complete and exports default
+[33m641e104[m updating BiddingCalculator
+[33me7b1240[m updates to components
+[33m0f1ec45[m Update invoicing page and navigation
+[33m489c978[m feat: complete optimistic CRUD for appointments and implement bid persistence
+[33m91ce9a1[m fix: update AppointmentForm with improved typing and validation
+[33mc6e7a09[m fix: update AppointmentForm with improved typing and validation
+[33m8da00f0[m fix: type initialData in AppointmentForm to resolve TS error
+[33md34132a[m repair and
+[33m92eaf31[m R# Please enter the commit message for your changes. Lines starting
+[33mc6f2115[m repairing calender widget AppointmentForm
+[33m0139a55[m -repairs to over commited files
+[33ma50835d[m repairs to ai chat bot and AuthProvider
+[33m3db8b53[m repairs to ai chat bot, and AuthProvider
+[33m365a81e[m feat: implement architectural hardening across 15 components
+[33m04702da[m restore and update Stripe payment intent edge function
+[33m6f5ffd0[m fixes for the Odyssey-1 app done today
+[33m7cec3a7[m fixes and repairs to Odyssey-1 app
+[33m47d3a51[m Repair to ai research bot
+[33m5dfbbf6[m Repair to ai research bot
+[33me5fd1fe[m Save progress and recent changes Fix subscription page button overlap Update onboarding and plan enforcement logic Refactor calendar event handling
+[33mc26c1a6[m Fix subscription page button overlap Update onboarding and plan enforcement logic Refactor calendar event handling
+[33mf4681d0[m[33m ([m[1;31morigin/Odyssey-1-testing-lab[m[33m)[m fix: update Codespace port to 8080 to match vite.config.ts and resolve Vercel bot warning
+[33m12bb524[m Update devcontainer.json to architect's confirmed Codespace blueprint (Node 18, extensions, settings)
+[33mfc64d13[m Add Codespace blueprint: .devcontainer/devcontainer.json for Odyssey-1 Lab
+[33mbfffa88[m System upgrade: Remove mock/demo logic, connect all components to live backend, optimize database, update configs and tests
+[33m386c845[m[33m ([m[1;31morigin/fix/code-review-feedback[m[33m)[m improve: reduce upload delay for better development experience
+[33ma421184[m fix: resolve critical bugs from code review feedback
+[33mbd255e9[m[33m ([m[1;31morigin/feature/test-suite-vitest-migration[m[33m)[m feat(test): complete migration to Vitest with Supabase mock
+[33m3f4bc69[m feat: implement functional Employee Onboarding buttons
+[33m83a5d74[m feat: reorder navigation tabs - Admin tab now first
+[33m1e98aba[m Merge branch 'Odyssey-1-Lab'
+[33mbbb92f3[m[33m ([m[1;31morigin/Odyssey-1-Lab[m[33m)[m 🔒 SECURITY: Complete credential hardening for production deployment
+[33m3503820[m fix(mobile): Implement responsive tab layouts and mobile-first design
+[33mf30c94e[m docs: Correct work-protection.cjs filename in documentation
+[33mc591cf2[m feat(chat): Implement Enter-key submission in AI Assistant
+[33me3a9e12[m fix(budget): Replace SpendingChart with robust component to prevent crashes
+[33m931621e[m[33m ([m[1;31morigin/Odyssey-1-Production-Lab[m[33m, [m[1;31morigin/AI-Lab-Hospital[m[33m)[m 🤖 Enhanced AI Research Assistant with Robust Error Handling
+[33m8af6024[m ✨ Enhanced Calendar with Advanced Date Navigation
+[33m607101a[m critical: Add SSR config to prevent React hydration error #418
+[33m05b1a74[m fix: Disable module preloading to resolve console warnings
+[33m90422cc[m fix: Replace broken BudgetPage with stable placeholder
+[33mf99f3da[m 🧪 Project Genesis: Complete Odyssey-1 Lab Setup
+[33m5ac9453[m Phase 4a: Conversational AI System & Performance Optimizations
+[33m8f26656[m Phase 4a: Conversational AI System & Performance Optimizations
+[33m13bdf67[m Phase 3 Final: Integrate new budget system with backend and application routing. Replace legacy budget page. All logic and UI now production-ready.
+[33m7b7b15f[m Phase 3, Step 2: Add budget system scaffolding — new architecture, boilerplate components, and shared types
+[33me5a962c[m Phase 2 Complete: Payroll & HR UI overhaul — mobile-first, standardized components, fully production ready.
+[33m826f1bd[m Phase 1: Implement foundational ChatInput, ChatResponse, and refactored SimpleAIChat components for Odyssey-1 unified UI initiative
+[33m45b703c[m Remove domains from vercel.json
+[33m3feb05c[m Update README.md with new content
+[33m6bcfd34[m Delete REAL_AI_ARCHITECTURE.md
+[33m8782afb[m Delete README-DEPLOYMENT.md
+[33m95d0055[m Delete ODYSSEY_REAL_AI_MANIFEST.md
+[33m44cb6c7[m Delete ODYSSEY-1_NATIONAL_GRANT_PROPOSAL.md
+[33mf1120b9[m Delete ODYSSEY-1_MARKETING_PROFILE.md
+[33mfab017c[m Delete SUPABASE_SETUP_GUIDE.md
+[33m8b1e935[m Delete SSL_CERTIFICATE_FIX.md
+[33m539ae24[m Delete VERCEL_DEPLOYMENT_TROUBLESHOOTING.md
+[33m0b49e9b[m Delete VISUAL_STUDIO_CODE_GIT_RESET.md
+[33m0220c77[m Delete WARNING_FIX_GUIDE.md
+[33mea21b17[m Delete README.md
+[33m0c1a863[m Delete IMMEDIATE_GITHUB_FIX.md
+[33mf19f73e[m Delete IMMEDIATE_DNS_FIX_GUIDE.md
+[33mbbb7512[m Delete GODADDY_COMPLETE_GUIDE.md
+[33mdb4e38b[m Delete GODADDY_AUTO_UPDATE_GUIDE.md
+[33mbdb69d3[m Delete FRESH_GITHUB_SETUP.md
+[33m4aa4d44[m Delete GITHUB_ENVIRONMENT_VARIABLES_FIX.md
+[33mb1f2155[m Delete FAMOUS_AI_GODADDY_SSL_FIX.md
+[33mfc5f781[m Delete FAMOUS_AI_FINAL_DNS_CONFIGURATION.md
+[33mdbd9556[m Delete FAMOUS_AI_DOMAIN_STATUS_ANALYSIS.md
+[33mc2eadcc[m Delete FAMOUS_AI_DOMAIN_RECOVERY_GUIDE.md
+[33m82ba67e[m Delete FAMOUS_AI_DOMAIN_FIX.md
+[33maeea2b9[m Delete FAMOUS_AI_DEPLOYPAD_DNS_FIX.md
+[33mcba1576[m Delete DOMAIN_FIX_GUIDE.md
+[33m42451a5[m Delete DEPLOYMENT_UPDATE_GUIDE.md
+[33ma95d4fe[m Delete DEPLOYMENT_GUIDE.md
+[33m0f5f86c[m Delete DEPLOYMENT_FIX_GUIDE.md
+[33m70fe3f6[m Delete DEPLOYMENT-CHECKLIST.md
+[33m3b6f24b[m Delete client-app/README.md
+[33m4140751[m Delete .github/workflows/code-quality.yml
+[33m4a79cab[m Delete .github/workflows/ci.yml
+[33mdf24e1f[m Delete .github/workflows/auto-deploy.yml
+[33m1c3221c[m Delete .github/PULL_REQUEST_TEMPLATE.md
+[33madd3f90[m Initial commit
