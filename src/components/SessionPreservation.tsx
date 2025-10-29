@@ -1,6 +1,5 @@
-import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Shield, Crown, Heart, CheckCircle, Bookmark } from 'lucide-react';
+import { Bookmark, CheckCircle, Crown, Heart, Shield } from 'lucide-react';
 
 export default function SessionPreservation() {
   return (

@@ -1,7 +1,6 @@
-import React from 'react';
 import { Badge } from '@/components/ui/badge';
-import { CheckCircle, XCircle, Zap } from 'lucide-react';
 import { apiManager } from '@/lib/api/api-manager';
+import { CheckCircle, XCircle, Zap } from 'lucide-react';
 
 interface APICapabilityIndicatorProps {
   capability: string;

@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
 import HandbookContent from '@/components/HandbookContent';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { BookOpen, FileText, Download } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { BookOpen, Download, FileText } from 'lucide-react';
+import { useState } from 'react';
 
 export default function Handbook() {
   const [activeSection, setActiveSection] = useState('cover');

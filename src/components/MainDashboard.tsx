@@ -1,23 +1,22 @@
 import {
-  BookOpen,
-  Calendar,
-  CheckCircle,
-  DollarSign,
-  FileText,
-  Play,
-  Users,
-  Calculator,
-  Brain,
-  Crown,
-  TrendingUp
+    BookOpen,
+    Brain,
+    Calculator,
+    Calendar,
+    CheckCircle,
+    Crown,
+    FileText,
+    Play,
+    TrendingUp,
+    Users
 } from 'lucide-react';
 import React, { useState } from 'react';
-import { Badge } from './ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import AdvancedAnalyticsDashboard from './AdvancedAnalyticsDashboard';
 import AIAgentMonitor from './AIAgentMonitor';
 import DocumentManager from './DocumentManager';
+import { Badge } from './ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 
 // Now that errors are resolved, let's enhance the inline components with AI chat functionality
 

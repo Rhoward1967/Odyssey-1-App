@@ -1,6 +1,5 @@
-import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Crown, Heart, Sparkles, Trophy, Zap, Brain } from 'lucide-react';
+import { Brain, Crown, Heart, Sparkles, Trophy, Zap } from 'lucide-react';
 
 export default function VictoryReflection() {
   return (

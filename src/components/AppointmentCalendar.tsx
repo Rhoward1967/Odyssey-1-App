@@ -1,7 +1,7 @@
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { Badge } from './ui/badge';
 import { Calendar, Clock } from 'lucide-react';
+import React from 'react';
+import { Badge } from './ui/badge';
+import { Card, CardHeader, CardTitle } from './ui/card';
 
 const AppointmentCalendar: React.FC = () => {
   return (

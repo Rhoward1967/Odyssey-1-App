@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Shield, Clock, Edit, Play, Square, AlertTriangle, Users } from 'lucide-react';
-import { getEmployees, getTimeEntries, clockIn, clockOut, correctEmployeeTime, type Employee, type TimeEntry } from '@/lib/supabase/hr-actions';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { clockIn, clockOut, correctEmployeeTime, getEmployees, getTimeEntries, type Employee, type TimeEntry } from '@/lib/supabase/hr-actions';
+import { AlertTriangle, Edit, Play, Shield, Square } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 export default function AdminTimeOverride() {
   const [employees, setEmployees] = useState<Employee[]>([]);

@@ -1,6 +1,6 @@
+import { Brain, Users } from 'lucide-react';
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { Brain, Users } from 'lucide-react';
 
 const MediaHub: React.FC = () => {
   const [chatMessage, setChatMessage] = useState('');

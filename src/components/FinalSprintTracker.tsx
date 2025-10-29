@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { Target, Crown, Zap, CheckCircle } from 'lucide-react';
+import { CheckCircle, Crown, Target, Zap } from 'lucide-react';
+import { useState } from 'react';
 
 export default function FinalSprintTracker() {
   const [warningsEliminated] = useState(17);

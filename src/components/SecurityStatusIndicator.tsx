@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { AlertTriangle, Shield, XCircle, CheckCircle, Search } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { supabase } from '@/lib/supabase';
+import { AlertTriangle, CheckCircle, Search, Shield } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 export default function SecurityStatusIndicator() {
   const [securityStatus, setSecurityStatus] = useState<'checking' | 'secure' | 'issues'>('checking');

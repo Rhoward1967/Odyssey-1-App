@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Zap, Clock, CheckCircle, AlertTriangle } from 'lucide-react';
+import { AlertTriangle, Clock, Zap } from 'lucide-react';
+import { useState } from 'react';
 
 export default function WarningTracker() {
   const [warningsResolved, setWarningsResolved] = useState(3);

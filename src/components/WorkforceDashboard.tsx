@@ -1,12 +1,12 @@
 import {
-  BookOpen,
-  Brain,
-  Calculator,
-  Calendar,
-  Crown,
-  FileText,
-  Play,
-  Users
+    BookOpen,
+    Brain,
+    Calculator,
+    Calendar,
+    Crown,
+    FileText,
+    Play,
+    Users
 } from 'lucide-react';
 import React, { useState } from 'react';
 import { Badge } from './ui/badge';

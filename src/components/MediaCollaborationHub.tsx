@@ -1,9 +1,9 @@
+import { Bot, Brain, MessageCircle, User, Users } from 'lucide-react';
 import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
 import { Badge } from './ui/badge';
-import { Brain, MessageCircle, Bot, User, Users } from 'lucide-react';
+import { Button } from './ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { Input } from './ui/input';
 
 const MediaCollaborationHub: React.FC = () => {
   const [chatMessage, setChatMessage] = useState('');

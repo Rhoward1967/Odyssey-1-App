@@ -1,9 +1,8 @@
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { CheckCircle, XCircle, Zap, RefreshCw, Activity, AlertTriangle } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAPI } from '@/contexts/APIContext';
+import { Activity, AlertTriangle, CheckCircle, RefreshCw, XCircle, Zap } from 'lucide-react';
 
 export default function APIStatusIndicator() {
   const { capabilities, hasCapability, refreshCapabilities, isLoading } = useAPI();

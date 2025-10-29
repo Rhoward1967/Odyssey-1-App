@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Brain, Activity, Zap, Eye, CheckCircle, AlertTriangle } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Activity, AlertTriangle, Brain, CheckCircle, Eye, Zap } from 'lucide-react';
+import { useState } from 'react';
 
 interface AIAgent {
   id: string;

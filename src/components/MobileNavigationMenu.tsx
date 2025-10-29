@@ -1,17 +1,17 @@
 import { Button } from '@/components/ui/button';
 import {
-  BarChart3,
-  Bell,
-  BookOpen,
-  CreditCard,
-  DollarSign,
-  Home,
-  Menu,
-  Monitor,
-  Search,
-  Settings,
-  User,
-  X
+    BarChart3,
+    Bell,
+    BookOpen,
+    CreditCard,
+    DollarSign,
+    Home,
+    Menu,
+    Monitor,
+    Search,
+    Settings,
+    User,
+    X
 } from 'lucide-react';
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';

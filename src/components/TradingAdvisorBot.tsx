@@ -1,12 +1,12 @@
 import {
-  AlertTriangle,
-  BarChart3,
-  Bot,
-  Brain,
-  MessageCircle,
-  TrendingUp,
-  User,
-  Zap
+    AlertTriangle,
+    BarChart3,
+    Bot,
+    Brain,
+    MessageCircle,
+    TrendingUp,
+    User,
+    Zap
 } from 'lucide-react';
 import { useState } from 'react';
 

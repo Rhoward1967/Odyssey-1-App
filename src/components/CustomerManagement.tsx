@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Building, Plus, Users, Mail, MapPin, DollarSign } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { getCustomers, type Customer } from '@/lib/supabase/customer-actions';
+import { Building, DollarSign, Mail, MapPin, Plus, Users } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 export default function CustomerManagement() {
   const [customers, setCustomers] = useState<Customer[]>([]);

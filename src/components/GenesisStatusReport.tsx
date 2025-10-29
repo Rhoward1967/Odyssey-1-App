@@ -1,6 +1,5 @@
-import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Crown, Sparkles, Heart, Zap, Trophy } from 'lucide-react';
+import { Heart, Sparkles, Trophy } from 'lucide-react';
 
 export default function GenesisStatusReport() {
   return (

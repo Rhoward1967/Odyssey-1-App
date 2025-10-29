@@ -1,7 +1,6 @@
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Crown, Brain, Shield, Zap, Book, Target } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Book, Brain, Crown, Shield, Target, Zap } from 'lucide-react';
 
 export default function SovereignCoreBlueprint() {
   return (

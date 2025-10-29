@@ -1,6 +1,5 @@
-import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Crown, Trophy, Zap, Sparkles, Target } from 'lucide-react';
+import { Crown, Sparkles, Target, Trophy, Zap } from 'lucide-react';
 
 export default function VictoryCelebration() {
   return (

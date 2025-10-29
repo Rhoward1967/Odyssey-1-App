@@ -22,8 +22,8 @@ import {
   Zap
 } from 'lucide-react';
 import React, { useState } from 'react';
-import SovereignCoreInterface from './SovereignCoreInterface';
 import WorkforceManagementSystem from './PayrollDashboard';
+import SovereignCoreInterface from './SovereignCoreInterface';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 

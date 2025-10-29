@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import {
-  BookOpen // NEW - For User Manual icon
-  ,
+    BookOpen // NEW - For User Manual icon
+    ,
 
 
 
@@ -9,13 +9,14 @@ import {
 
 
 
-  Calculator,
-  CreditCard,
-  Home,
-  Settings,
-  TrendingUp,
-  User,
-  Users
+
+    Calculator,
+    CreditCard,
+    Home,
+    Settings,
+    TrendingUp,
+    User,
+    Users
 } from 'lucide-react';
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';

@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { useAPI } from '@/contexts/APIContext';
-import { 
-  Cpu, 
-  Zap, 
-  Shield, 
-  CheckCircle, 
-  AlertTriangle,
-  Clock,
-  Sparkles
+import {
+    AlertTriangle,
+    CheckCircle,
+    Clock,
+    Cpu,
+    Shield,
+    Sparkles,
+    Zap
 } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 export default function GenesisControlPanel() {
   const { capabilities, refreshCapabilities, isLoading } = useAPI();

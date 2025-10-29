@@ -1,7 +1,6 @@
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Crown, Trophy, Zap, Shield, Brain, Target, Heart, CheckCircle } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Brain, Crown, Heart, Target, Trophy } from 'lucide-react';
 
 export default function FullAchievementReport() {
   return (

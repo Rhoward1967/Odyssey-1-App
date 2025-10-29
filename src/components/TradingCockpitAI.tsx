@@ -1,7 +1,7 @@
+import { Brain, TrendingUp } from 'lucide-react';
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
-import { TrendingUp, Brain } from 'lucide-react';
+import { Card, CardHeader, CardTitle } from './ui/card';
 
 const TradingCockpitAI: React.FC = () => {
   return (

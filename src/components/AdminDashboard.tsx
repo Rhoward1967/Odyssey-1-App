@@ -1,32 +1,26 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
-import { Badge } from './ui/badge';
-import { Button } from './ui/button';
 import {
-  Shield,
-  Users,
-  Activity,
-  Database,
-  Settings,
-  Brain,
-  Zap,
-  AlertTriangle,
-  CheckCircle,
-  Clock,
-  Flag,
-  FileText,
-  DollarSign,
+    AlertTriangle,
+    Brain,
+    CheckCircle,
+    DollarSign,
+    FileText,
+    Flag,
+    Settings,
+    Users,
+    Zap
 } from 'lucide-react';
+import { useState } from 'react';
 import AdminControlPanel from './AdminControlPanel';
-import AutonomousSystemActivator from './AutonomousSystemActivator';
-import AutonomousOdysseyCore from './AutonomousOdysseyCore';
 import AutoFixSystem from './AutoFixSystem';
-import { SelfEvolutionEngine } from './SelfEvolutionEngine';
-import FeatureFlagsManager from './FeatureFlagsManager';
-import EmployeeManagement from './EmployeeManagement';
+import AutonomousOdysseyCore from './AutonomousOdysseyCore';
+import AutonomousSystemActivator from './AutonomousSystemActivator';
 import CompanyHandbook from './CompanyHandbook';
+import EmployeeManagement from './EmployeeManagement';
+import FeatureFlagsManager from './FeatureFlagsManager';
 import WorkforceManagementSystem from './PayrollDashboard';
+import { SelfEvolutionEngine } from './SelfEvolutionEngine';
+import { Badge } from './ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('control');

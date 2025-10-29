@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Clock, MapPin, Play, Square, Users, Edit, AlertTriangle, CheckCircle } from 'lucide-react';
-import { getEmployees, getTimeEntries, clockIn, clockOut, correctEmployeeTime, type Employee, type TimeEntry } from '@/lib/supabase/hr-actions';
+import { clockIn, clockOut, correctEmployeeTime, getEmployees, getTimeEntries, type Employee, type TimeEntry } from '@/lib/supabase/hr-actions';
+import { AlertTriangle, CheckCircle, Clock, Edit, MapPin, Play, Square, Users } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 export default function TimeTrackingSystem() {
   const [currentTime, setCurrentTime] = useState(new Date());

@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { AlertTriangle, RefreshCw } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { supabase } from '@/lib/supabase';
+import { AlertTriangle, RefreshCw } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 export default function ErrorTracker() {
   const [errors, setErrors] = useState<string[]>([]);

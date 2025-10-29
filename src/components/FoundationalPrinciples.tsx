@@ -1,6 +1,5 @@
-import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Crown, Sparkles, Shield, Brain, Users, Scale, MessageSquare, Zap, Scroll } from 'lucide-react';
+import { Brain, Crown, MessageSquare, Scale, Scroll, Shield, Sparkles, Users, Zap } from 'lucide-react';
 
 export default function FoundationalPrinciples() {
   const principles = [

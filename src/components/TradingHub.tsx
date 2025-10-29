@@ -1,6 +1,6 @@
+import { Brain, DollarSign, TrendingUp } from 'lucide-react';
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { TrendingUp, Brain, DollarSign } from 'lucide-react';
 
 const TradingHub: React.FC = () => {
   const [aiQuery, setAiQuery] = useState('');

@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { CheckCircle, XCircle, Play, Database } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { supabase } from '@/lib/supabase/supabase';
+import { CheckCircle, Database, Play, XCircle } from 'lucide-react';
+import { useState } from 'react';
 
 export default function DatabaseIntegrationTest() {
   const [testResults, setTestResults] = useState<{ [key: string]: boolean }>({});

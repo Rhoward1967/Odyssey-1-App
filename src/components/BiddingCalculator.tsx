@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Calculator, Brain, Zap, TrendingUp } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
+import { Brain, Calculator, TrendingUp, Zap } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 interface AIPrediction {
   optimal_margin: number;

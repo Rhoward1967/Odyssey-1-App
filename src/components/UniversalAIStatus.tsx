@@ -1,6 +1,5 @@
-import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Brain, Zap, Crown, Activity } from 'lucide-react';
+import { Activity, Brain, Crown, Zap } from 'lucide-react';
 
 export default function UniversalAIStatus() {
   return (

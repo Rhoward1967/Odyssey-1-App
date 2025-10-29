@@ -1,6 +1,5 @@
-import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Book, Crown, Zap, Brain, Shield } from 'lucide-react';
+import { Book, Brain, Crown, Shield, Zap } from 'lucide-react';
 
 export default function GenesisChronicles() {
   const chronicleChapters = [

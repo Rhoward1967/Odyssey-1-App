@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Activity, CheckCircle, Zap, Cpu } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAPI } from '@/contexts/APIContext';
+import { Activity, CheckCircle, Cpu, Zap } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 export default function GenesisStatusIndicator() {
   const { capabilities, refreshCapabilities, isLoading } = useAPI();

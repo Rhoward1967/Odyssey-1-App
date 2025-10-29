@@ -1,28 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { 
-  Users, 
-  Clock, 
-  Calendar, 
-  DollarSign, 
-  BookOpen, 
-  BarChart3,
-  AlertCircle,
-  CheckCircle,
-  Play,
-  Plus,
-  Building
-} from 'lucide-react';
-import TimeTrackingSystem from '@/components/TimeTrackingSystem';
-import HandbookContent from '@/components/HandbookContent';
-import PayrollProcessing from '@/components/PayrollProcessing';
-import EmployeeManagement from '@/components/EmployeeManagement';
 import AdminTimeOverride from '@/components/AdminTimeOverride';
 import CustomerManagement from '@/components/CustomerManagement';
+import EmployeeManagement from '@/components/EmployeeManagement';
+import HandbookContent from '@/components/HandbookContent';
+import PayrollProcessing from '@/components/PayrollProcessing';
+import TimeTrackingSystem from '@/components/TimeTrackingSystem';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { getEmployees, type Employee } from '@/lib/supabase/hr-actions';
+import {
+    AlertCircle,
+    BarChart3,
+    BookOpen,
+    Building,
+    Calendar,
+    Clock,
+    DollarSign,
+    Plus,
+    Users
+} from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 export default function WorkforceDashboard() {
   const [activeTab, setActiveTab] = useState('overview');

@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Clock, MapPin, Play, Square, Smartphone } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { clockIn, clockOut, getTimeEntries } from '@/lib/supabase/hr-actions';
+import { Clock, MapPin, Play, Smartphone, Square } from 'lucide-react';
+import { useCallback, useEffect, useState } from 'react';
 
 interface MobileTimeClockWidgetProps {
   employeeId?: string;

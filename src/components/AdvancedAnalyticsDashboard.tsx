@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { 
-  Crown, 
-  TrendingUp, 
-  DollarSign, 
-  Users, 
-  Brain, 
-  Target,
-  AlertTriangle,
-  CheckCircle,
-  Activity
+import {
+    Activity,
+    AlertTriangle,
+    Brain,
+    CheckCircle,
+    Crown,
+    DollarSign,
+    Target,
+    TrendingUp,
+    Users
 } from 'lucide-react';
+import { useState } from 'react';
 
 interface ExecutiveMetrics {
   labor_costs: {

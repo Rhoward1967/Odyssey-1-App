@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Plus, Edit, Trash2, Users, Mail, Phone } from 'lucide-react';
-import { getEmployees, createEmployee, type Employee } from '@/lib/supabase/hr-actions';
+import { createEmployee, getEmployees, type Employee } from '@/lib/supabase/hr-actions';
+import { Edit, Mail, Phone, Plus, Trash2, Users } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
 
 export default function EmployeeManagement() {
   const [employees, setEmployees] = useState<Employee[]>([]);

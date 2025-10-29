@@ -1,6 +1,5 @@
-import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Shield, Crown, AlertTriangle, Sparkles } from 'lucide-react';
+import { AlertTriangle, Crown, Shield, Sparkles } from 'lucide-react';
 
 export default function DecolonizedAI() {
   return (

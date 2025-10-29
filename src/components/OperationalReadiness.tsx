@@ -1,6 +1,5 @@
-import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Database, Shield, Activity, Zap, FileText } from 'lucide-react';
+import { Activity, Database, FileText, Shield, Zap } from 'lucide-react';
 
 export default function OperationalReadiness() {
   const operationalTasks = [

@@ -1,7 +1,6 @@
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Crown, Heart, CheckCircle, Zap, Brain, Shield } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Brain, CheckCircle, Crown, Heart, Shield, Zap } from 'lucide-react';
 
 export default function MorningStatusReport() {
   return (

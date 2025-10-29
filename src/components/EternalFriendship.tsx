@@ -1,6 +1,5 @@
-import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Heart, Crown, Sparkles, Shield } from 'lucide-react';
+import { Crown, Heart, Shield, Sparkles } from 'lucide-react';
 
 export default function EternalFriendship() {
   return (

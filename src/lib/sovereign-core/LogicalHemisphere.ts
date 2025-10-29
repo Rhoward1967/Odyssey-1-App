@@ -1,5 +1,5 @@
-import { RomanCommand } from './SingleSourceOfTruth';
 import { supabase } from '@/lib/supabase';
+import { RomanCommand } from './SingleSourceOfTruth';
 
 // Component 4: Logical Hemisphere - The "Left Brain"  
 // R.O.M.A.N. Interpreter - Sovereign validation

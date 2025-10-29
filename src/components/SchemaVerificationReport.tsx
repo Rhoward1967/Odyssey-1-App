@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { CheckCircle, XCircle, AlertCircle, Database, Shield, RefreshCw } from 'lucide-react';
-import { detectExistingTables, checkRLSFunction, getSystemHealth } from '@/lib/supabase/schema-detector';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { checkRLSFunction, detectExistingTables, getSystemHealth } from '@/lib/supabase/schema-detector';
+import { AlertCircle, CheckCircle, Database, RefreshCw, XCircle } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 interface TableStatus {
   table_name: string;

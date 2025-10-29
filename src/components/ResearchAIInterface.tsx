@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { FileText, Search, Brain, TrendingUp } from 'lucide-react';
+import { Brain, Search, TrendingUp } from 'lucide-react';
+import { useState } from 'react';
 
 export default function ResearchAIInterface() {
   const [query, setQuery] = useState('');

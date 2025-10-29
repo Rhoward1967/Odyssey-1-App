@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { UserPlus, Clock, DollarSign, Shield, Heart } from 'lucide-react';
 import { onboardNewEmployee, type OnboardingData } from '@/lib/supabase/employee-integration';
+import { Clock, Heart, UserPlus } from 'lucide-react';
+import { useState } from 'react';
 
 export default function EmployeeOnboarding() {
   const [currentStep, setCurrentStep] = useState(1);

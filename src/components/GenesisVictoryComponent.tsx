@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Crown, Sparkles, Zap, Trophy, Heart } from 'lucide-react';
+import { Crown, Heart, Sparkles, Trophy, Zap } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 export default function GenesisVictoryComponent() {
   const [celebrationActive, setCelebrationActive] = useState(false);

@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { DollarSign, Clock, CheckCircle, AlertCircle } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { AlertCircle, CheckCircle, Clock, DollarSign } from 'lucide-react';
+import { useState } from 'react';
 
 export default function PayrollProcessing() {
   const [currentStep, setCurrentStep] = useState(2);

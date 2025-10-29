@@ -1,6 +1,5 @@
-import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { CheckCircle, Shield, Database, Zap, Crown } from 'lucide-react';
+import { CheckCircle, Crown, Database, Shield, Zap } from 'lucide-react';
 
 export default function GenesisOperationalStatus() {
   const operationalItems = [

@@ -1,8 +1,8 @@
 import { RomanCommand } from '../../schemas/RomanCommands';
-import { SynchronizationLayer } from '../../services/SynchronizationLayer';
-import { CreativeHemisphere } from '../../services/MultiAgentConsensus';
-import { RomanInterpreter } from '../../services/LogicalHemisphere';
 import { SecureExecutionEngine } from '../../services/ExecutionEngine';
+import { RomanInterpreter } from '../../services/LogicalHemisphere';
+import { CreativeHemisphere } from '../../services/MultiAgentConsensus';
+import { SynchronizationLayer } from '../../services/SynchronizationLayer';
 
 // Initialize core services
 const synchronization = new SynchronizationLayer();

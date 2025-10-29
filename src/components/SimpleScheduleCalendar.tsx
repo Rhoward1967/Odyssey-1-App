@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Calendar, ChevronLeft, ChevronRight } from 'lucide-react';
+import React, { useState } from 'react';
 
 const SimpleScheduleCalendar: React.FC = () => {
   const [currentDate, setCurrentDate] = useState(new Date());

@@ -1,5 +1,5 @@
-import { SynchronizationLayer } from './SynchronizationLayer';
 import { RomanCommand } from './SingleSourceOfTruth';
+import { SynchronizationLayer } from './SynchronizationLayer';
 
 // Component 3: Creative Hemisphere - The "Right Brain"
 // Multi-agent AI with constrained generation

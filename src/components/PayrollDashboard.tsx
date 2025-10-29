@@ -8,29 +8,27 @@
  * Workforce Management System with 4-step payroll workflow
  */
 
-import React, { useState, useEffect, useCallback } from 'react';
-import { supabase } from '../lib/supabaseClient';
-import { Badge } from './ui/badge';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from './ui/card';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Label } from './ui/label';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
-import { Alert, AlertDescription } from './ui/alert';
 import { useToast } from '@/hooks/use-toast';
 import {
-  DollarSign,
-  AlertCircle,
-  CheckCircle,
-  Edit,
-  Save,
-  RefreshCw,
-  UserPlus,
-  FileText,
+    AlertCircle,
+    CheckCircle,
+    DollarSign,
+    Edit,
+    FileText,
+    RefreshCw,
+    Save,
+    UserPlus,
 } from 'lucide-react';
-import { SovereignCoreOrchestrator } from '@/services/SovereignCoreOrchestrator';
+import React, { useCallback, useEffect, useState } from 'react';
+import { supabase } from '../lib/supabaseClient';
+import { Alert, AlertDescription } from './ui/alert';
+import { Button } from './ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
+import { Input } from './ui/input';
+import { Label } from './ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 
 interface Employee {
   id: string;

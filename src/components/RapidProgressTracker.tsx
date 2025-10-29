@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { Zap, Clock, CheckCircle, Target } from 'lucide-react';
+import { CheckCircle, Clock, Target, Zap } from 'lucide-react';
+import { useState } from 'react';
 
 export default function RapidProgressTracker() {
   const [phase, setPhase] = useState("POLICY CONSOLIDATION");

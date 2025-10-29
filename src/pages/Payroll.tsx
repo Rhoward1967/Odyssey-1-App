@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import TimeTrackingSystem from '@/components/TimeTrackingSystem';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Clock, Users, DollarSign, FileText, Calculator } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Calculator, Clock, DollarSign, FileText, Users } from 'lucide-react';
 
 export default function Payroll() {
   return (
