@@ -33,10 +33,12 @@ export default function PublicHomePage() {
               Automation, and Decision Making
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
-              <Button size="lg" className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-4 text-lg">
-                Start Free Trial
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </Button>
+              <a href="/subscribe">
+                <Button size="lg" className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-4 text-lg">
+                  Start Free Trial
+                  <ArrowRight className="ml-2 w-5 h-5" />
+                </Button>
+              </a>
               <Button
                 size="lg"
                 variant="outline"
@@ -137,9 +139,11 @@ export default function PublicHomePage() {
                   <span className="text-gray-300">Scale operations with intelligent automation</span>
                 </div>
               </div>
-              <Button className="mt-8 bg-purple-600 hover:bg-purple-700 text-white px-8 py-4">
-                Get Started Today
-              </Button>
+              <a href="/subscribe">
+                <Button className="mt-8 bg-purple-600 hover:bg-purple-700 text-white px-8 py-4">
+                  Get Started Today
+                </Button>
+              </a>
             </div>
             <div className="relative">
               <img 
@@ -169,7 +173,7 @@ export default function PublicHomePage() {
             Join thousands of businesses already using ODYSSEY-1 AI to transform their operations
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="/odyssey">
+            <a href="/subscribe">
               <Button size="lg" className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-4 text-lg">
                 Start Your Journey
                 <ArrowRight className="ml-2 w-5 h-5" />
