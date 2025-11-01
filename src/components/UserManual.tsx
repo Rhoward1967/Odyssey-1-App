@@ -15,16 +15,16 @@
 
 import { supabase } from '@/lib/supabaseClient'; // Add this import
 import {
-  BookOpen,
-  Brain,
-  Calculator,
-  Calendar,
-  Crown,
-  Play,
-  Shield,
-  TrendingUp,
-  Users,
-  Zap
+    BookOpen,
+    Brain,
+    Calculator,
+    Calendar,
+    Crown,
+    Play,
+    Shield,
+    TrendingUp,
+    Users,
+    Zap
 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import SovereignCoreInterface from './SovereignCoreInterface';
