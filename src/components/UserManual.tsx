@@ -448,138 +448,84 @@ export const UserManual: React.FC = () => {
         <CardHeader className='text-center'>
           <CardTitle className='text-3xl font-bold text-white flex items-center justify-center gap-3'>
             <BookOpen className='h-8 w-8 text-green-400' />
-            **ODYSSEY-1 Complete Platform Restoration Complete!**
+            ODYSSEY-1 User Manual & Advanced Features
           </CardTitle>
-          <p className='text-green-300'>All features, AI assistants, and documentation tabs have been fully restored and integrated.</p>
+          <p className='text-green-300'>Complete workforce management, AI core, and system documentation</p>
         </CardHeader>
       </Card>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className='grid w-full grid-cols-2 md:grid-cols-12 bg-slate-800/50 gap-1'>
+        <TabsList className='grid w-full grid-cols-2 md:grid-cols-5 bg-slate-800/50 gap-1'>
           <TabsTrigger value='getting-started' className='text-xs md:text-sm px-1 md:px-3'>
-            <span className='hidden md:inline'>Getting Started</span>
-            <span className='md:hidden'>Start</span>
+            📖 Getting Started
           </TabsTrigger>
           <TabsTrigger value='workforce-management' className='text-xs md:text-sm px-1 md:px-3'>
-            <span className='hidden md:inline'>Workforce</span>
-            <span className='md:hidden'>HR</span>
-          </TabsTrigger>
-          <TabsTrigger value='bidding-calculator' className='text-xs md:text-sm px-1 md:px-3'>
-            <span className='hidden md:inline'>Bidding</span>
-            <span className='md:hidden'>Calc</span>
-          </TabsTrigger>
-          <TabsTrigger value='appointments' className='text-xs md:text-sm px-1 md:px-3'>
-            <span className='hidden md:inline'>Calendar</span>
-            <span className='md:hidden'>Cal</span>
-          </TabsTrigger>
-          <TabsTrigger value='research' className='text-xs md:text-sm px-1 md:px-3'>
-            <span className='hidden md:inline'>Research</span>
-          </TabsTrigger>
-          <TabsTrigger value='ai-monitoring' className='text-xs md:text-sm px-1 md:px-3'>
-            <span className='hidden md:inline'>AI Monitoring</span>
-            <span className='md:hidden'>Monitor</span>
-          </TabsTrigger>
-          <TabsTrigger value='advanced-analytics' className='text-xs md:text-sm px-1 md:px-3'>
-            <span className='hidden md:inline'>Analytics</span>
-            <span className='md:hidden'>Dash</span>
+            👥 Workforce
           </TabsTrigger>
           <TabsTrigger value='sovereign-core' className='text-xs md:text-sm px-1 md:px-3'>
-            <span className='hidden md:inline'>R.O.M.A.N.</span>
-            <span className='md:hidden'>AI</span>
-          </TabsTrigger>
-          <TabsTrigger value='system-administration' className='text-xs md:text-sm px-1 md:px-3'>
-            <span className='hidden md:inline'>System Admin</span>
-            <span className='md:hidden'>Admin</span>
-          </TabsTrigger>
-          <TabsTrigger value='media-collaboration' className='text-xs md:text-sm px-1 md:px-3'>
-            <span className='hidden md:inline'>Media Hub</span>
-            <span className='md:hidden'>Media</span>
-          </TabsTrigger>
-          <TabsTrigger value='trading-platform' className='text-xs md:text-sm px-1 md:px-3'>
-            <span className='hidden md:inline'>Trading</span>
-            <span className='md:hidden'>Trade</span>
+            👑 R.O.M.A.N.
           </TabsTrigger>
           
-          {/* ADD SUPA-ADMIN TAB (conditionally rendered) */}
+          {/* Supa-Admin tab (conditionally rendered) */}
           {isSupaAdmin && (
             <TabsTrigger value='supa-admin' className='text-xs md:text-sm px-1 md:px-3 border-2 border-red-500'>
-              <span className='hidden md:inline'>🛡️ Supa-Admin</span>
-              <span className='md:hidden'>🛡️</span>
+              🛡️ Supa-Admin
             </TabsTrigger>
           )}
+          
+          <TabsTrigger value='coming-soon' className='text-xs md:text-sm px-1 md:px-3 opacity-50'>
+            🚧 More Coming Soon
+          </TabsTrigger>
         </TabsList>
 
-        {/* WORKFORCE - REAL PAYROLL SYSTEM */}
+        {/* GETTING STARTED TAB */}
+        <TabsContent value='getting-started'>
+          <div className="p-6">
+            <h2 className="text-2xl font-bold text-blue-300 mb-4">📖 Getting Started with ODYSSEY-1</h2>
+            <div className="space-y-4 text-gray-300">
+              <p>
+                ODYSSEY-1 is a professional business management platform with AI-powered tools for:
+              </p>
+              <ul className="list-disc ml-6 space-y-2">
+                <li><strong>Workforce Management:</strong> Complete HR, payroll, and time tracking system</li>
+                <li><strong>Trading Platform:</strong> AI-powered market analysis (access via top navigation)</li>
+                <li><strong>Bidding Calculator:</strong> Project estimation tools (access via top navigation)</li>
+                <li><strong>R.O.M.A.N. AI Core:</strong> Constitutional AI system with dual hemispheres</li>
+                <li><strong>System Administration:</strong> Complete technical documentation for developers</li>
+              </ul>
+
+              <div className="mt-6 bg-blue-900/30 p-4 rounded border border-blue-500">
+                <h3 className="font-semibold text-blue-300 mb-2">Quick Navigation:</h3>
+                <div className="space-y-2 text-sm">
+                  <div>• <strong>Workforce Tab:</strong> Manage employees, time tracking, and payroll</div>
+                  <div>• <strong>R.O.M.A.N. Tab:</strong> Interact with the AI core system</div>
+                  <div>• <strong>Supa-Admin Tab:</strong> Complete system documentation (CEO/Developer only)</div>
+                  <div>• <strong>Top Navigation:</strong> Dashboard, Trading, Calculator, Admin Center</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </TabsContent>
+
+        {/* WORKFORCE TAB - KEEP AS-IS */}
         <TabsContent value='workforce-management'>
           <div className="p-4">
-            <h2 className="text-2xl font-bold text-blue-800 mb-4">👥 **Professional Payroll System**</h2>
+            <h2 className="text-2xl font-bold text-blue-300 mb-4">👥 Professional Payroll System</h2>
             <WorkforceManagementSystem organizationId={organizationId} userId={userId} />
           </div>
         </TabsContent>
 
-        {/* BIDDING - PLACEHOLDER */}
-        <TabsContent value='bidding-calculator'>
-          <div className="p-4">
-            <h2 className="text-2xl font-bold text-green-800 mb-4">🧮 **Bidding & Estimation Calculator**</h2>
-            <Card className="bg-slate-800/60 border-blue-500/50">
-              <CardContent className="p-8 text-center text-gray-400">
-                <Calculator className="h-16 w-16 mx-auto mb-4" />
-                <p>Bidding Calculator component coming soon</p>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-
-        {/* APPOINTMENTS - PLACEHOLDER */}
-        <TabsContent value='appointments'>
-          <div className="p-4">
-            <h2 className="text-2xl font-bold text-purple-800 mb-4">📅 **Calendar & Scheduling**</h2>
-            <Card className="bg-slate-800/60 border-blue-500/50">
-              <CardContent className="p-8 text-center text-gray-400">
-                <Calendar className="h-16 w-16 mx-auto mb-4" />
-                <p>Calendar component coming soon</p>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-
-        {/* RESEARCH - PLACEHOLDER */}
-        <TabsContent value='research'>
-          <div className="p-4">
-            <h2 className="text-2xl font-bold text-red-800 mb-4">🧠 **AI Research Assistant**</h2>
-            <Card className="bg-slate-800/60 border-blue-500/50">
-              <CardContent className="p-8 text-center text-gray-400">
-                <Brain className="h-16 w-16 mx-auto mb-4" />
-                <p>Research Assistant component coming soon</p>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-
-        {/* TRADING - PLACEHOLDER */}
-        <TabsContent value='trading-platform'>
-          <div className="p-4">
-            <h2 className="text-2xl font-bold text-green-800 mb-4">💹 **Trading AI Platform**</h2>
-            <Card className="bg-slate-800/60 border-blue-500/50">
-              <CardContent className="p-8 text-center text-gray-400">
-                <TrendingUp className="h-16 w-16 mx-auto mb-4" />
-                <p>Trading Platform component coming soon</p>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-
-        {/* R.O.M.A.N. - ORIGINAL RESTORED */}
+        {/* R.O.M.A.N. TAB - KEEP AS-IS */}
         <TabsContent value='sovereign-core'>
           <div className="p-4">
-            <h2 className="text-2xl font-bold text-purple-800 mb-4">
-              👑 **R.O.M.A.N. - Sovereign AI Core**
+            <h2 className="text-2xl font-bold text-purple-300 mb-4">
+              👑 R.O.M.A.N. - Sovereign AI Core
             </h2>
             <SovereignCoreInterface />
           </div>
         </TabsContent>
 
-        {/* SUPA-ADMIN TAB - COMPREHENSIVE DOCUMENTATION */}
+        {/* SUPA-ADMIN TAB - KEEP AS-IS */}
         {isSupaAdmin && (
           <TabsContent value='supa-admin'>
             <div className="p-6 bg-red-900/20 border-2 border-red-500 rounded-lg">

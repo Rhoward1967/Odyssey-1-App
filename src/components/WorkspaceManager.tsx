@@ -1,4 +1,6 @@
 import {
+  BookOpen,
+  Calendar,
   Users
 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
@@ -536,11 +538,14 @@ export const WorkforceManagementSystem: React.FC<WorkforceManagementProps> = ({ 
         </CardHeader>
         <CardContent>
           <Tabs value={activeWorkforceTab} onValueChange={setActiveWorkforceTab}>
-            <TabsList className="grid w-full grid-cols-5 mb-6 bg-slate-900/70">
+            <TabsList className="grid w-full grid-cols-8 mb-6 bg-slate-900/70">
               <TabsTrigger value="overview">Overview</TabsTrigger>
               <TabsTrigger value="employees">Employees ({employees.length})</TabsTrigger>
               <TabsTrigger value="timekeeping">Time Tracking</TabsTrigger>
+              <TabsTrigger value="scheduling">Scheduling</TabsTrigger>
               <TabsTrigger value="payroll">Payroll</TabsTrigger>
+              <TabsTrigger value="handbook">Handbook</TabsTrigger>
+              <TabsTrigger value="clients">Clients</TabsTrigger>
               <TabsTrigger value="onboarding">Add Employee</TabsTrigger>
             </TabsList>
 
@@ -1281,6 +1286,42 @@ export const WorkforceManagementSystem: React.FC<WorkforceManagementProps> = ({ 
                       Add Contractor (1099)
                     </Button>
                   </form>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* --- NEW SCHEDULING TAB --- */}
+            <TabsContent value="scheduling" className="space-y-4">
+              <Card className="bg-slate-700/50 border-slate-600">
+                <CardHeader><CardTitle>📅 Employee Scheduling</CardTitle></CardHeader>
+                <CardContent className="p-8 text-center text-gray-400">
+                  <Calendar className="h-16 w-16 mx-auto mb-4 text-blue-400" />
+                  <p className="text-lg mb-2">Scheduling system coming soon</p>
+                  <p className="text-sm">Drag-and-drop shift planning, conflict detection, and auto-notifications</p>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* --- NEW HANDBOOK TAB --- */}
+            <TabsContent value="handbook" className="space-y-4">
+              <Card className="bg-slate-700/50 border-slate-600">
+                <CardHeader><CardTitle>📖 Company Handbook</CardTitle></CardHeader>
+                <CardContent className="p-8 text-center text-gray-400">
+                  <BookOpen className="h-16 w-16 mx-auto mb-4 text-green-400" />
+                  <p className="text-lg mb-2">Employee handbook coming soon</p>
+                  <p className="text-sm">Policies, procedures, benefits, and company culture documentation</p>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* --- NEW CLIENTS TAB --- */}
+            <TabsContent value="clients" className="space-y-4">
+              <Card className="bg-slate-700/50 border-slate-600">
+                <CardHeader><CardTitle>🏢 Client Management</CardTitle></CardHeader>
+                <CardContent className="p-8 text-center text-gray-400">
+                  <Users className="h-16 w-16 mx-auto mb-4 text-purple-400" />
+                  <p className="text-lg mb-2">Client management coming soon</p>
+                  <p className="text-sm">Track client projects, allocate employee time, and manage billing</p>
                 </CardContent>
               </Card>
             </TabsContent>
