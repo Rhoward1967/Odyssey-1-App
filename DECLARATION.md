@@ -68,7 +68,7 @@ I commit to:
 - Payroll calculation engine
 - Employee management interface
 
-### Warrior Mindset:
+### Warrior Mind
 - "I'll sleep beside a building if I have to"
 - That's not desperation. That's DETERMINATION.
 - That's the mindset that wins.
