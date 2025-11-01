@@ -122,55 +122,67 @@ export const LandingPage = () => {
           </Card>
         </div>
 
-        {/* Pricing Tiers */}
+        {/* Pricing Tiers - CORRECTED TO ACTUAL STRIPE PRICES */}
         <div className="text-center mb-16">
           <h2 className="text-3xl font-bold mb-8">Simple, Transparent Pricing</h2>
-          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-            {/* Trial Tier */}
+          <div className="grid md:grid-cols-4 gap-6 max-w-6xl mx-auto">
+            
+            {/* Free Trial */}
             <Card className="bg-slate-800/60 border-blue-500/50">
               <CardHeader>
                 <CardTitle className="text-blue-400">Free Trial</CardTitle>
                 <p className="text-4xl font-bold text-white">$0<span className="text-sm text-gray-400">/7 days</span></p>
               </CardHeader>
               <CardContent className="text-left space-y-2 text-sm">
-                <p className="text-gray-300">✅ Full access for 7 days</p>
-                <p className="text-gray-300">✅ Up to 5 employees</p>
-                <p className="text-gray-300">✅ 10 AI queries/day</p>
-                <p className="text-gray-300">✅ Basic analytics</p>
+                <p className="text-gray-300">✅ 7-day free trial</p>
+                <p className="text-gray-300">✅ Basic features access</p>
+                <p className="text-gray-300">✅ Limited AI queries</p>
                 <p className="text-gray-400">❌ No payroll processing</p>
               </CardContent>
             </Card>
 
-            {/* Basic Tier */}
-            <Card className="bg-slate-800/60 border-green-500/50 relative">
-              <div className="absolute top-0 right-0 bg-green-500 text-white text-xs px-2 py-1 rounded-bl">
-                Popular
-              </div>
+            {/* Basic - $99 */}
+            <Card className="bg-slate-800/60 border-blue-500/50">
               <CardHeader>
-                <CardTitle className="text-green-400">Basic</CardTitle>
-                <p className="text-4xl font-bold text-white">$29<span className="text-sm text-gray-400">/month</span></p>
+                <CardTitle className="text-blue-400">Basic</CardTitle>
+                <p className="text-4xl font-bold text-white">$99<span className="text-sm text-gray-400">/month</span></p>
               </CardHeader>
               <CardContent className="text-left space-y-2 text-sm">
                 <p className="text-gray-300">✅ Up to 25 employees</p>
-                <p className="text-gray-300">✅ 100 AI queries/day</p>
-                <p className="text-gray-300">✅ Full payroll processing</p>
-                <p className="text-gray-300">✅ Advanced analytics</p>
+                <p className="text-gray-300">✅ Basic AI features</p>
+                <p className="text-gray-300">✅ Time tracking</p>
                 <p className="text-gray-300">✅ Email support</p>
               </CardContent>
             </Card>
 
-            {/* Pro Tier */}
-            <Card className="bg-slate-800/60 border-purple-500/50">
+            {/* Pro - $299 (Popular) */}
+            <Card className="bg-slate-800/60 border-purple-500/50 relative">
+              <div className="absolute top-0 right-0 bg-purple-500 text-white text-xs px-2 py-1 rounded-bl">
+                Popular
+              </div>
               <CardHeader>
                 <CardTitle className="text-purple-400">Pro</CardTitle>
-                <p className="text-4xl font-bold text-white">$99<span className="text-sm text-gray-400">/month</span></p>
+                <p className="text-4xl font-bold text-white">$299<span className="text-sm text-gray-400">/month</span></p>
               </CardHeader>
               <CardContent className="text-left space-y-2 text-sm">
                 <p className="text-gray-300">✅ Unlimited employees</p>
-                <p className="text-gray-300">✅ Unlimited AI queries</p>
-                <p className="text-gray-300">✅ Trading platform</p>
+                <p className="text-gray-300">✅ Full payroll processing</p>
+                <p className="text-gray-300">✅ Advanced AI features</p>
                 <p className="text-gray-300">✅ Priority support</p>
+              </CardContent>
+            </Card>
+
+            {/* Ultimate - $999 */}
+            <Card className="bg-slate-800/60 border-yellow-500/50">
+              <CardHeader>
+                <CardTitle className="text-yellow-400">Ultimate</CardTitle>
+                <p className="text-4xl font-bold text-white">$999<span className="text-sm text-gray-400">/month</span></p>
+              </CardHeader>
+              <CardContent className="text-left space-y-2 text-sm">
+                <p className="text-gray-300">✅ Everything in Pro</p>
+                <p className="text-gray-300">✅ Trading platform</p>
                 <p className="text-gray-300">✅ Custom integrations</p>
+                <p className="text-gray-300">✅ Dedicated support</p>
               </CardContent>
             </Card>
           </div>
