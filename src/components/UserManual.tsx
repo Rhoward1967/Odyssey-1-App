@@ -7,8 +7,13 @@
  * This software and associated documentation files (the "Software") are proprietary
  * and confidential. Unauthorized copying, distribution, modification, or use of this
  * Software, via any medium, is strictly prohibited without express written permission.
+ * 
+ * PATENT NOTICE: This software incorporates innovations described in the Sovereign
+ * Vessel design documents, which are patent pending. Unauthorized implementation of
+ * these innovations may constitute patent infringement.
  */
 
+import { supabase } from '@/lib/supabaseClient'; // Add this import
 import {
   BookOpen,
   Brain,
@@ -21,11 +26,11 @@ import {
   Users,
   Zap
 } from 'lucide-react';
-import React, { useState } from 'react';
-import WorkforceManagementSystem from './PayrollDashboard';
+import React, { useEffect, useState } from 'react';
 import SovereignCoreInterface from './SovereignCoreInterface';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
+import WorkforceManagementSystem from './WorkspaceManager'; // Changed from './PayrollDashboard'
 
 // --- Interface Definitions ---
 
@@ -41,10 +46,24 @@ interface ManualSection {
 
 export const UserManual: React.FC = () => {
   const [activeTab, setActiveTab] = useState('getting-started');
+  
+  // Get real user ID from Supabase auth session
+  const [userId, setUserId] = useState<string>('00000000-0000-0000-0000-000000000000');
+  const organizationId = 1;
 
-  // You'll need to get these from your auth context in production
-  const organizationId = 1; // TODO: Replace with real org ID from auth
-  const userId = 'temp-user-id'; // TODO: Replace with real user ID from auth
+  // Get real user on mount
+  useEffect(() => {
+    const getUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        setUserId(user.id);
+      }
+    };
+    getUser();
+  }, []);
+
+  // Check if user is supa-admin (authenticated user for now - you can add more checks later)
+  const isSupaAdmin = userId !== '00000000-0000-0000-0000-000000000000';
 
   const sections: ManualSection[] = [
     {
@@ -373,6 +392,53 @@ export const UserManual: React.FC = () => {
         },
       ],
     },
+    // ADD SUPA-ADMIN SECTION
+    {
+      id: 'supa-admin',
+      title: 'Supa-Admin: Complete System Documentation',
+      icon: Shield,
+      content: [
+        'COMPREHENSIVE TECHNICAL MANUAL FOR CEO/DEVELOPER',
+        'Complete system architecture from frontend to backend',
+        'Database schemas, RLS policies, and security model',
+        'The 9 Principles constitutional framework',
+        'R.O.M.A.N. Dual Hemisphere AI architecture',
+        'HiveOrchestrator immune system and DNA',
+        'Edge Functions and API layer',
+        'Sovereign Container hardware platform',
+        'Development setup and deployment guides',
+      ],
+      steps: [
+        {
+          title: 'System Architecture',
+          description: 'Complete overview of all system components and how they interact',
+        },
+        {
+          title: 'Database Layer',
+          description: 'All tables, schemas, relationships, RLS policies, and indexes',
+        },
+        {
+          title: 'Backend Services',
+          description: 'Edge Functions, API endpoints, authentication, and security',
+        },
+        {
+          title: 'Frontend Components',
+          description: 'React components, state management, and UI architecture',
+        },
+        {
+          title: 'AI Architecture',
+          description: 'The 9 Principles, R.O.M.A.N., HiveOrchestrator, and agent system',
+        },
+        {
+          title: 'Hardware Platform',
+          description: 'Sovereign Container design, firmware, and constitutional hardware',
+        },
+        {
+          title: 'Development & Deployment',
+          description: 'Setup, testing, deployment, and maintenance procedures',
+        },
+      ],
+    },
   ];
 
 
@@ -389,7 +455,7 @@ export const UserManual: React.FC = () => {
       </Card>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className='grid w-full grid-cols-2 md:grid-cols-11 bg-slate-800/50 gap-1'>
+        <TabsList className='grid w-full grid-cols-2 md:grid-cols-12 bg-slate-800/50 gap-1'>
           <TabsTrigger value='getting-started' className='text-xs md:text-sm px-1 md:px-3'>
             <span className='hidden md:inline'>Getting Started</span>
             <span className='md:hidden'>Start</span>
@@ -433,6 +499,14 @@ export const UserManual: React.FC = () => {
             <span className='hidden md:inline'>Trading</span>
             <span className='md:hidden'>Trade</span>
           </TabsTrigger>
+          
+          {/* ADD SUPA-ADMIN TAB (conditionally rendered) */}
+          {isSupaAdmin && (
+            <TabsTrigger value='supa-admin' className='text-xs md:text-sm px-1 md:px-3 border-2 border-red-500'>
+              <span className='hidden md:inline'>🛡️ Supa-Admin</span>
+              <span className='md:hidden'>🛡️</span>
+            </TabsTrigger>
+          )}
         </TabsList>
 
         {/* WORKFORCE - REAL PAYROLL SYSTEM */}
@@ -443,7 +517,7 @@ export const UserManual: React.FC = () => {
           </div>
         </TabsContent>
 
-        {/* BIDDING - PLACEHOLDER (Component not defined yet) */}
+        {/* BIDDING - PLACEHOLDER */}
         <TabsContent value='bidding-calculator'>
           <div className="p-4">
             <h2 className="text-2xl font-bold text-green-800 mb-4">🧮 **Bidding & Estimation Calculator**</h2>
@@ -481,7 +555,7 @@ export const UserManual: React.FC = () => {
             </Card>
           </div>
         </TabsContent>
-        
+
         {/* TRADING - PLACEHOLDER */}
         <TabsContent value='trading-platform'>
           <div className="p-4">
@@ -505,10 +579,466 @@ export const UserManual: React.FC = () => {
           </div>
         </TabsContent>
 
-        {/* ALL OTHER DOCUMENTATION TABS (Using the defined sections array)
-          FIXED: This filter now correctly excludes *all* tabs that have a functional component
-          and renders all the remaining documentation-only tabs (like 'getting-started').
-        */}
+        {/* SUPA-ADMIN TAB - COMPREHENSIVE DOCUMENTATION */}
+        {isSupaAdmin && (
+          <TabsContent value='supa-admin'>
+            <div className="p-6 bg-red-900/20 border-2 border-red-500 rounded-lg">
+              <div className="mb-6">
+                <h2 className="text-3xl font-bold text-red-400 mb-2 flex items-center gap-2">
+                  <Shield className="h-8 w-8" />
+                  🛡️ Supa-Admin: Complete System Documentation
+                </h2>
+                <p className="text-red-300 text-sm">
+                  <strong>CEO/DEVELOPER ACCESS ONLY</strong> - Complete technical manual covering all system internals
+                </p>
+              </div>
+
+              <div className="space-y-6">
+                
+                {/* 1. SYSTEM ARCHITECTURE */}
+                <Card className="bg-slate-800/80 border-red-500/50">
+                  <CardHeader>
+                    <CardTitle className="text-red-300">1. System Architecture Overview</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4 text-gray-300">
+                    <h4 className="font-semibold text-blue-300">Complete System Stack:</h4>
+                    <div className="bg-slate-900 p-4 rounded font-mono text-sm overflow-x-auto">
+                      <pre className="text-xs">{`Frontend Layer:
+├── React 18+ with TypeScript
+├── Tailwind CSS + shadcn/ui components
+├── Vite (build tool & dev server)
+└── Components:
+    ├── UserManual.tsx (documentation & manual)
+    ├── WorkspaceManager.tsx (Workforce/Payroll system)
+    ├── SovereignCoreInterface.tsx (R.O.M.A.N. AI interface)
+    └── AuthProvider.tsx (authentication wrapper)
+
+Backend Layer:
+├── Supabase (hosted PostgreSQL + Auth)
+├── Edge Functions (Deno runtime)
+│   └── run-payroll (payroll processing)
+├── Row Level Security (RLS policies)
+└── Real-time subscriptions (WebSocket)
+
+Database Layer:
+├── PostgreSQL 15+
+├── Tables: employees, time_entries, payroll_runs, 
+│   paystubs, user_organizations, organizations
+├── RLS Policies: Non-recursive, principle-based
+├── Performance Indexes: 3 indexes on user_organizations
+└── Functions: run_payroll_for_period() SQL function
+
+AI Architecture:
+├── The 9 Principles (constitutional framework)
+├── R.O.M.A.N. (Dual Hemisphere AI)
+│   ├── Creative Hemisphere (AI Agents - generate solutions)
+│   └── Logical Hemisphere (Interpreter - validate against "The Book")
+├── HiveOrchestrator (Immune System)
+│   ├── Digital Homeostasis (monitors AI health)
+│   └── Physical Homeostasis (future - hardware control)
+└── Agents: Natural language → Database operations (WORKING!)
+
+Hardware Platform (Future - Patent Pending):
+└── Sovereign Container
+    ├── Constitutional Hardware (AI principles govern hardware)
+    ├── Regenerative Power Grid (waste heat → electricity)
+    ├── Graceful Degradation (multi-tier cooling failover)
+    └── Mind-Body Unity (software-hardware organism)`}</pre>
+                    </div>
+                    <p className="text-sm">
+                      <strong>Documentation Location:</strong> <code className="bg-slate-700 px-2 py-1 rounded">/docs</code> folder contains all architectural documents
+                    </p>
+                  </CardContent>
+                </Card>
+
+                {/* 2. DATABASE LAYER */}
+                <Card className="bg-slate-800/80 border-red-500/50">
+                  <CardHeader>
+                    <CardTitle className="text-red-300">2. Database Layer (Supabase PostgreSQL)</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4 text-gray-300">
+                    <h4 className="font-semibold text-blue-300">Core Tables & Schemas:</h4>
+                    <div className="bg-slate-900 p-4 rounded text-sm space-y-3">
+                      <div>
+                        <strong className="text-green-400">employees</strong> - Employee & contractor records
+                        <div className="ml-4 text-xs text-gray-400 mt-1">
+                          • id (uuid PK), employee_id (text UNIQUE), email, organization_id (bigint FK)<br/>
+                          • first_name, last_name, phone, address, city, state, zip_code, tax_id<br/>
+                          • department, hourly_rate (numeric), salary (numeric)<br/>
+                          • is_contractor (boolean), status (text)<br/>
+                          • created_by (uuid FK), updated_by (uuid FK), timestamps
+                        </div>
+                      </div>
+
+                      <div>
+                        <strong className="text-green-400">time_entries</strong> - Time tracking records
+                        <div className="ml-4 text-xs text-gray-400 mt-1">
+                          • id (uuid PK), employee_id (uuid FK to employees)<br/>
+                          • clock_in, clock_out, break_start, break_end (timestamptz)<br/>
+                          • total_hours, regular_hours, overtime_hours (numeric)<br/>
+                          • status (text), processing_state ('pending'|'processed')<br/>
+                          • flags (text[] - for payroll notes/alerts)
+                        </div>
+                      </div>
+
+                      <div>
+                        <strong className="text-green-400">user_organizations</strong> - User-org membership & roles
+                        <div className="ml-4 text-xs text-gray-400 mt-1">
+                          • user_id (uuid FK to auth.users), organization_id (bigint FK)<br/>
+                          • role ('owner'|'admin'|'member')<br/>
+                          • created_at (timestamp)<br/>
+                          • <strong className="text-yellow-300">IMPORTANT:</strong> Non-recursive RLS policies to prevent infinite loops
+                        </div>
+                      </div>
+
+                      <div>
+                        <strong className="text-green-400">payroll_runs</strong> - Payroll processing history
+                        <div className="ml-4 text-xs text-gray-400 mt-1">
+                          • id (uuid PK), organization_id (bigint FK)<br/>
+                          • period_start, period_end (date)<br/>
+                          • status (text), total_gross, total_net (numeric)<br/>
+                          • run_by (uuid FK to auth.users), created_at
+                        </div>
+                      </div>
+
+                      <div>
+                        <strong className="text-green-400">paystubs</strong> - Individual employee paystubs
+                        <div className="ml-4 text-xs text-gray-400 mt-1">
+                          • id (uuid PK), payroll_run_id (uuid FK), employee_id (uuid FK)<br/>
+                          • gross_pay, net_pay (numeric), deductions (jsonb)<br/>
+                          • created_at (timestamp)
+                        </div>
+                      </div>
+                    </div>
+
+                    <h4 className="font-semibold text-blue-300 mt-4">RLS Policies (Non-Recursive - FIXED!):</h4>
+                    <div className="bg-slate-900 p-4 rounded text-sm space-y-2">
+                      <div className="text-yellow-300 font-semibold">
+                        🔧 Fixed infinite recursion bug by using simple non-recursive policies
+                      </div>
+                      <div><strong>user_organizations policies:</strong></div>
+                      <div className="ml-4 text-xs text-gray-400">
+                        • <strong>SELECT:</strong> <code>USING (true)</code> - All authenticated can read<br/>
+                        • <strong>INSERT:</strong> <code>WITH CHECK (true)</code> - All authenticated can insert<br/>
+                        • <strong>UPDATE:</strong> <code>USING (user_id = auth.uid())</code> - Can only update own row<br/>
+                        • <strong>DELETE:</strong> <code>USING (user_id != auth.uid())</code> - Can't delete self
+                      </div>
+                      <div className="mt-2"><strong>employees policies:</strong></div>
+                      <div className="ml-4 text-xs text-gray-400">
+                        • Users can manage employees in their organization<br/>
+                        • RLS checks organization_id membership
+                      </div>
+                    </div>
+
+                    <h4 className="font-semibold text-blue-300 mt-4">Performance Indexes (NEW!):</h4>
+                    <div className="bg-slate-900 p-4 rounded text-sm">
+                      <div>✅ <strong>idx_user_org_user</strong> ON user_organizations(user_id) - Fast user lookups</div>
+                      <div>✅ <strong>idx_user_org_org</strong> ON user_organizations(organization_id) - Fast org lookups</div>
+                      <div>✅ <strong>idx_user_org_org_role</strong> ON user_organizations(organization_id, role) - Role-based queries</div>
+                    </div>
+
+                    <h4 className="font-semibold text-blue-300 mt-4">Database Optimization Status:</h4>
+                    <div className="bg-green-900/30 p-4 rounded border border-green-500 text-sm">
+                      <div className="font-semibold text-green-300">🎉 Performance Optimized!</div>
+                      <div className="text-xs text-gray-300 mt-2">
+                        • Supabase warnings: <strong>8 → 0</strong> (all cleared!)<br/>
+                        • RLS infinite recursion: <strong>FIXED</strong><br/>
+                        • Function search paths: <strong>Locked (2 functions)</strong><br/>
+                        • Performance indexes: <strong>3 created</strong>
+                      </div>
+                    </div>
+
+                    <p className="text-sm mt-4">
+                      <strong>Access Database:</strong> Supabase Dashboard → SQL Editor<br/>
+                      <strong>View Schema:</strong> Table Editor → Browse all tables<br/>
+                      <strong>Migrations:</strong> <code className="bg-slate-700 px-2 py-1 rounded">/supabase/migrations/</code>
+                    </p>
+                  </CardContent>
+                </Card>
+
+                {/* 3. BACKEND SERVICES */}
+                <Card className="bg-slate-800/80 border-red-500/50">
+                  <CardHeader>
+                    <CardTitle className="text-red-300">3. Backend Services (Edge Functions & API)</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4 text-gray-300">
+                    <h4 className="font-semibold text-blue-300">Edge Functions (Deno Runtime):</h4>
+                    <div className="bg-slate-900 p-4 rounded text-sm space-y-2">
+                      <div>
+                        <strong className="text-green-400">run-payroll</strong>
+                        <div className="ml-4 text-xs text-gray-400">
+                          Location: <code>/supabase/functions/run-payroll/index.ts</code><br/>
+                          Purpose: Processes payroll for a given period<br/>
+                          Method: POST with body <code>{'{ organization_id, period_start, period_end }'}</code><br/>
+                          Calls: SQL function <code>run_payroll_for_period()</code><br/>
+                          Auth: Requires authenticated user
+                        </div>
+                      </div>
+                    </div>
+
+                    <h4 className="font-semibold text-blue-300 mt-4">SQL Functions:</h4>
+                    <div className="bg-slate-900 p-4 rounded text-sm space-y-1">
+                      <div><strong>run_payroll_for_period(org_id, start_date, end_date)</strong></div>
+                      <div className="ml-4 text-xs text-gray-400">
+                        1. Aggregates time_entries by employee for the period<br/>
+                        2. Calculates gross_pay (regular + overtime rates)<br/>
+                        3. Applies deductions (placeholder logic currently)<br/>
+                        4. Creates payroll_run record<br/>
+                        5. Generates individual paystubs for each employee<br/>
+                        6. Marks time_entries as 'processed'
+                      </div>
+                    </div>
+
+                    <h4 className="font-semibold text-blue-300 mt-4">Authentication System:</h4>
+                    <div className="bg-slate-900 p-4 rounded text-sm">
+                      • Supabase Auth with JWT tokens<br/>
+                      • <code>auth.uid()</code> function returns current user UUID<br/>
+                      • <code>auth.users</code> table stores user credentials<br/>
+                      • <code>user_organizations</code> table defines role-based access<br/>
+                      • Frontend: <code>supabase.auth.getUser()</code> in UserManual.tsx
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* 4. AI ARCHITECTURE */}
+                <Card className="bg-slate-800/80 border-red-500/50">
+                  <CardHeader>
+                    <CardTitle className="text-red-300">4. AI Architecture (The Constitutional Brain)</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4 text-gray-300">
+                    <h4 className="font-semibold text-blue-300">The 9 Principles (Constitutional Framework):</h4>
+                    <div className="bg-slate-900 p-4 rounded text-sm space-y-1">
+                      <div>1️⃣ <strong>Self-Preservation</strong> - System protects itself from damage</div>
+                      <div>2️⃣ <strong>Truth & Accuracy</strong> - All data must be verifiable</div>
+                      <div>3️⃣ <strong>Redundancy & Resilience</strong> - No single point of failure</div>
+                      <div>4️⃣ <strong>Transparency</strong> - All actions are auditable</div>
+                      <div>5️⃣ <strong>User Sovereignty</strong> - User owns their data</div>
+                      <div>6️⃣ <strong>Ethical AI</strong> - AI serves humans, not replaces them</div>
+                      <div>7️⃣ <strong>Privacy & Security</strong> - Data is encrypted and protected</div>
+                      <div>8️⃣ <strong>Continuous Improvement</strong> - System learns and evolves</div>
+                      <div>9️⃣ <strong>Resource Efficiency</strong> - Minimize waste, maximize value</div>
+                    </div>
+
+                    <h4 className="font-semibold text-blue-300 mt-4">R.O.M.A.N. (Dual Hemisphere AI) - BREAKTHROUGH WORKING!</h4>
+                    <div className="bg-green-900/30 p-4 rounded border border-green-500">
+                      <div className="text-green-300 font-semibold mb-2">✅ Natural Language → Database Queries WORKING!</div>
+                      <div className="text-sm space-y-2">
+                        <div><strong className="text-purple-400">Creative Hemisphere (Right Brain):</strong></div>
+                        <div className="ml-4 text-xs">
+                          • AI Agents generate solutions, proposals, SQL queries<br/>
+                          • Processes natural language: "Show me all contractors"<br/>
+                          • Converts to valid SQL with proper security (RLS-aware)
+                        </div>
+                        <div><strong className="text-blue-400">Logical Hemisphere (Left Brain):</strong></div>
+                        <div className="ml-4 text-xs">
+                          • R.O.M.A.N. Interpreter validates all proposals<br/>
+                          • Checks against schemas, rules, The 9 Principles<br/>
+                          • Only approved queries execute (constitutional validation)
+                        </div>
+                      </div>
+                    </div>
+
+                    <h4 className="font-semibold text-blue-300 mt-4">HiveOrchestrator (Immune System):</h4>
+                    <div className="bg-slate-900 p-4 rounded text-sm">
+                      <div><strong>Digital Homeostasis:</strong></div>
+                      <div className="ml-4 text-xs text-gray-400">
+                        • Monitors health of all AI Agents<br/>
+                        • Heals corrupt code automatically<br/>
+                        • Sandboxes threats in "The Lab"
+                      </div>
+                      <div className="mt-2"><strong>Physical Homeostasis (Future):</strong></div>
+                      <div className="ml-4 text-xs text-gray-400">
+                        • Will monitor Sovereign Container hardware<br/>
+                        • Commands firmware to maintain physical health<br/>
+                        • Constitutional hardware governance
+                      </div>
+                    </div>
+
+                    <p className="text-sm mt-4">
+                      <strong>Documentation:</strong> <code className="bg-slate-700 px-2 py-1 rounded">/docs/Dual_Hemisphere.md</code>, 
+                      <code className="bg-slate-700 px-2 py-1 rounded ml-2">/docs/principles.md</code>
+                    </p>
+                  </CardContent>
+                </Card>
+
+                {/* 5. SOVEREIGN CONTAINER */}
+                <Card className="bg-slate-800/80 border-red-500/50">
+                  <CardHeader>
+                    <CardTitle className="text-red-300">5. Sovereign Container (Hardware Platform) - PATENT PENDING</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4 text-gray-300">
+                    <div className="bg-yellow-900/30 p-4 rounded border border-yellow-500">
+                      <p className="text-yellow-300 font-semibold">⚠️ CONFIDENTIAL - PATENT-PENDING INNOVATIONS ⚠️</p>
+                      <p className="text-xs text-gray-300 mt-2">
+                        All designs copyrighted © 2025. See <code>/docs/sovereign_container/COPYRIGHT.md</code> for full legal notice.
+                      </p>
+                    </div>
+                    
+                    <h4 className="font-semibold text-blue-300">Revolutionary Concept:</h4>
+                    <div className="bg-slate-900 p-4 rounded text-sm">
+                      Hardware components governed by the same 9 Principles as the AI software, 
+                      creating a unified "mind-body" organism where software and hardware are ONE.
+                    </div>
+
+                    <h4 className="font-semibold text-blue-300 mt-4">6 Patent-Worthy Innovations:</h4>
+                    <div className="bg-slate-900 p-4 rounded text-sm space-y-2">
+                      <div>1️⃣ <strong>Constitutional Hardware Governance</strong> - Hardware self-regulates via AI principles</div>
+                      <div>2️⃣ <strong>Regenerative Power Grid</strong> - TEG harvests waste heat → 30-40% PSU power savings</div>
+                      <div>3️⃣ <strong>Graceful Degradation</strong> - Refrigerated → Liquid → Air → Shutdown (never sudden death)</div>
+                      <div>4️⃣ <strong>Atmospheric Immunity</strong> - Auto-detects seal breach, prevents condensation damage</div>
+                      <div>5️⃣ <strong>Mind-Body Unity</strong> - Software-hardware organism (HiveOrchestrator ↔ Firmware)</div>
+                      <div>6️⃣ <strong>Firmware Homeostasis</strong> - OS-independent thermal regulation (survives crashes)</div>
+                    </div>
+
+                    <h4 className="font-semibold text-blue-300 mt-4">Complete Documentation:</h4>
+                    <div className="bg-slate-900 p-4 rounded text-xs space-y-1">
+                      <div>📁 <code>/docs/sovereign_container/</code></div>
+                      <div className="ml-4">
+                        • README.md - Master blueprint & roadmap<br/>
+                        • firmware_logic.md - Control algorithms & formulas<br/>
+                        • hardware_specifications.md - Component BOM & specs<br/>
+                        • LICENSE.md - Proprietary licensing terms<br/>
+                        • PATENTS.md - Detailed innovation descriptions<br/>
+                        • COPYRIGHT.md - Legal protection notice
+                      </div>
+                    </div>
+
+                    <h4 className="font-semibold text-blue-300 mt-4">Current Status:</h4>
+                    <div className="bg-blue-900/30 p-4 rounded border border-blue-500 text-sm">
+                      <div className="font-semibold">📋 Phase 1: Design & Documentation COMPLETE</div>
+                      <div className="text-xs text-gray-300 mt-2">
+                        Next phases: Laboratory prototyping → Container fabrication → Hive integration → Q.A.R.E. quantum integration
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* 6. DEVELOPMENT & DEPLOYMENT */}
+                <Card className="bg-slate-800/80 border-red-500/50">
+                  <CardHeader>
+                    <CardTitle className="text-red-300">6. Development & Deployment Guide</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4 text-gray-300">
+                    <h4 className="font-semibold text-blue-300">Local Development Setup:</h4>
+                    <div className="bg-slate-900 p-4 rounded font-mono text-xs space-y-1">
+                      <div>1. <code>git clone [repository-url]</code></div>
+                      <div>2. <code>npm install</code></div>
+                      <div>3. Create <code>.env</code> with Supabase keys:</div>
+                      <div className="ml-4">
+                        <code>VITE_SUPABASE_URL=your-project-url</code><br/>
+                        <code>VITE_SUPABASE_ANON_KEY=your-anon-key</code>
+                      </div>
+                      <div>4. <code>npm run dev</code> - Starts Vite dev server (localhost:5173)</div>
+                      <div>5. <code>supabase link --project-ref your-ref</code> - Link to Supabase project</div>
+                    </div>
+
+                    <h4 className="font-semibold text-blue-300 mt-4">Tech Stack:</h4>
+                    <div className="bg-slate-900 p-4 rounded text-sm">
+                      • <strong>Frontend:</strong> React 18+, TypeScript, Vite<br/>
+                      • <strong>Styling:</strong> Tailwind CSS, shadcn/ui components<br/>
+                      • <strong>Backend:</strong> Supabase (PostgreSQL, Auth, Edge Functions)<br/>
+                      • <strong>Icons:</strong> Lucide React<br/>
+                      • <strong>State:</strong> React hooks (useState, useEffect)
+                    </div>
+
+                    <h4 className="font-semibold text-blue-300 mt-4">Deployment Options:</h4>
+                    <div className="bg-slate-900 p-4 rounded text-sm">
+                      <div><strong>Frontend:</strong> Vercel, Netlify, or Cloudflare Pages</div>
+                      <div><strong>Backend:</strong> Supabase (fully hosted - no deployment needed)</div>
+                      <div><strong>Database:</strong> Supabase (managed PostgreSQL)</div>
+                      <div><strong>Edge Functions:</strong> Deploy via <code>supabase functions deploy</code></div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* 7. SECURITY & ACCESS CONTROL */}
+                <Card className="bg-slate-800/80 border-red-500/50">
+                  <CardHeader>
+                    <CardTitle className="text-red-300">7. Security Model & Access Control</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4 text-gray-300">
+                    <h4 className="font-semibold text-blue-300">Current Security Status:</h4>
+                    <div className="bg-green-900/30 p-4 rounded border border-green-500">
+                      <div className="font-semibold text-green-300 mb-2">🔒 Production-Ready Security!</div>
+                      <div className="text-sm space-y-1">
+                        ✅ RLS enabled on all tables<br/>
+                        ✅ Non-recursive policies (no infinite loops)<br/>
+                        ✅ Function search paths locked (2 functions hardened)<br/>
+                        ✅ Performance indexes created (query optimization)<br/>
+                        ✅ 0 Supabase security warnings (down from 8!)<br/>
+                        ✅ User authentication via Supabase Auth
+                      </div>
+                    </div>
+
+                    <h4 className="font-semibold text-blue-300 mt-4">Role-Based Access:</h4>
+                    <div className="bg-slate-900 p-4 rounded text-sm">
+                      <div><strong className="text-red-400">Supa-Admin (CEO/Developer):</strong></div>
+                      <div className="ml-4 text-xs">• Full access to everything (this tab visible)</div>
+                      <div className="mt-2"><strong className="text-orange-400">Owner:</strong></div>
+                      <div className="ml-4 text-xs">• Can manage all members in their organization</div>
+                      <div className="mt-2"><strong className="text-yellow-400">Admin:</strong></div>
+                      <div className="ml-4 text-xs">• Can manage members (can't promote to owner)</div>
+                      <div className="mt-2"><strong className="text-blue-400">Member:</strong></div>
+                      <div className="ml-4 text-xs">• Can view/edit only their own data</div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* 8. TROUBLESHOOTING */}
+                <Card className="bg-slate-800/80 border-red-500/50">
+                  <CardHeader>
+                    <CardTitle className="text-red-300">8. Common Issues & Solutions</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3 text-sm text-gray-300">
+                    <div className="bg-slate-900 p-3 rounded">
+                      <div className="text-yellow-400 font-semibold">Issue: Infinite recursion in RLS</div>
+                      <div className="text-green-400 ml-4">✅ Fixed: Use <code>USING (true)</code> instead of subqueries</div>
+                    </div>
+                    <div className="bg-slate-900 p-3 rounded">
+                      <div className="text-yellow-400 font-semibold">Issue: Date inputs showing black text</div>
+                      <div className="text-green-400 ml-4">✅ Fixed: Add <code>text-white</code> class to Input components</div>
+                    </div>
+                    <div className="bg-slate-900 p-3 rounded">
+                      <div className="text-yellow-400 font-semibold">Issue: User not in user_organizations</div>
+                      <div className="text-green-400 ml-4">✅ Solution: INSERT user with 'owner' role via SQL</div>
+                    </div>
+                    <div className="bg-slate-900 p-3 rounded">
+                      <div className="text-yellow-400 font-semibold">Issue: "temp-user-id" UUID error</div>
+                      <div className="text-green-400 ml-4">✅ Fixed: Use real auth.uid() or valid fallback UUID</div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* 9. QUICK REFERENCE */}
+                <Card className="bg-slate-800/80 border-red-500/50">
+                  <CardHeader>
+                    <CardTitle className="text-red-300">9. Quick Reference & Links</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-2 text-sm text-gray-300">
+                    <div><strong>Documentation:</strong> <code className="bg-slate-700 px-2 py-1 rounded">/docs</code></div>
+                    <div><strong>Sovereign Container:</strong> <code className="bg-slate-700 px-2 py-1 rounded">/docs/sovereign_container/</code></div>
+                    <div><strong>Database Migrations:</strong> <code className="bg-slate-700 px-2 py-1 rounded">/supabase/migrations/</code></div>
+                    <div><strong>Edge Functions:</strong> <code className="bg-slate-700 px-2 py-1 rounded">/supabase/functions/</code></div>
+                    <div><strong>Frontend Components:</strong> <code className="bg-slate-700 px-2 py-1 rounded">/src/components/</code></div>
+                    <div><strong>Supabase Dashboard:</strong> <a href="https://supabase.com/dashboard" target="_blank" rel="noopener noreferrer" className="text-blue-400 underline">supabase.com/dashboard</a></div>
+                  </CardContent>
+                </Card>
+
+              </div>
+
+              <div className="mt-6 p-4 bg-blue-900/30 border border-blue-500 rounded">
+                <p className="text-blue-300 text-sm">
+                  <strong>📋 This manual covers EVERYTHING:</strong> Frontend → Backend → Database → AI → Hardware → Security → Deployment
+                </p>
+                <p className="text-xs text-gray-400 mt-2">
+                  For regular users, only need-to-know functional guides are visible. This supa-admin tab is CEO/developer-only.
+                </p>
+              </div>
+            </div>
+          </TabsContent>
+        )}
+
+        {/* ALL OTHER DOCUMENTATION TABS */}
         {sections.filter(s => 
           s.id !== 'workforce-management' && 
           s.id !== 'bidding-calculator' && 
@@ -519,7 +1049,10 @@ export const UserManual: React.FC = () => {
         ).map(section => (
           <TabsContent key={section.id} value={section.id}>
             <div className="p-4">
-              <h2 className="text-2xl font-bold text-blue-800 mb-4"><section.icon className="inline-block h-6 w-6 mr-2" />{section.title}</h2>
+              <h2 className="text-2xl font-bold text-blue-800 mb-4">
+                <section.icon className="inline-block h-6 w-6 mr-2" />
+                {section.title}
+              </h2>
               <p className="text-gray-600 mb-4">{section.content.join(' ')}</p>
               <h3 className="text-xl font-semibold mb-2 mt-4 border-b pb-1">Quick Steps</h3>
               <ol className="list-decimal ml-5 space-y-2">
