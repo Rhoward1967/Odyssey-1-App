@@ -20,6 +20,9 @@ import { TrialBanner } from './components/TrialBanner';
 import { APIProvider } from './contexts/APIContext';
 import { FundingProvider } from './contexts/FundingContext';
 import { PositionLotsProvider } from './contexts/PositionLotsProvider';
+import Subscribe from './pages/Subscribe';
+import Onboard from './pages/Onboard';
+import PublicHomePage from './components/PublicHomePage';
 
 function App() {
   return (
@@ -29,19 +32,16 @@ function App() {
           <PositionLotsProvider>
             <BrowserRouter>
               <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">
-                {/* ADD TRIAL BANNER HERE */}
-                <div className="container mx-auto px-4 py-2">
-                  <TrialBanner onUpgradeClick={() => {
-                    // Navigate to subscription page
-                    window.location.href = '/subscription';
-                  }} />
-                </div>
-
                 <Routes>
+                  {/* Public Routes */}
+                  <Route path="/" element={<PublicHomePage />} />
+                  <Route path="/subscribe" element={<Subscribe />} />
+                  <Route path="/onboard" element={<Onboard />} />
                   <Route path="/login" element={<LoginPage />} />
                   
+                  {/* Protected Routes */}
                   <Route element={<ProtectedRoute />}>
-                    <Route path="/" element={<AppLayout />}>
+                    <Route path="/app" element={<AppLayout />}>
                       <Route index element={<Index />} />
                       <Route path="profile" element={<Profile />} />
                       <Route path="subscription" element={<Subscription />} />

@@ -26,13 +26,13 @@ interface Subscription {
 
 const TIER_CONFIG = {
   free: { name: 'Free', icon: Zap, color: 'bg-gray-500', price: '$0' },
-  basic: { name: 'Basic', icon: Star, color: 'bg-blue-500', price: '$29' },
-  pro: { name: 'Pro', icon: TrendingUp, color: 'bg-purple-500', price: '$99' },
+  basic: { name: 'Basic', icon: Star, color: 'bg-blue-500', price: '$99' }, // Changed from $29
+  pro: { name: 'Pro', icon: TrendingUp, color: 'bg-purple-500', price: '$299' }, // Changed from $99
   ultimate: {
     name: 'Ultimate',
     icon: Crown,
     color: 'bg-gold-500',
-    price: '$299',
+    price: '$999', // Changed from $299
   },
 };
 
