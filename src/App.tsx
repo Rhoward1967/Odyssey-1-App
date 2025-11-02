@@ -37,16 +37,16 @@ function App() {
       } = await supabase.auth.getSession();
 
       if (session) {
-        // If authenticated, redirect to /app instead of showing public pages
+        // ONLY redirect if user is coming from subscribe/onboard, not from home page
         const currentPath = window.location.pathname;
         if (
-          currentPath === '/' ||
           currentPath === '/subscribe' ||
           currentPath === '/onboard'
         ) {
           window.location.href = '/app';
           return;
         }
+        // If on home page, let them stay there
       }
 
       setSession(session);
@@ -59,7 +59,9 @@ function App() {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session && (window.location.pathname === '/' || window.location.pathname === '/subscribe')) {
+      // Only redirect from subscribe/onboard, not home page
+      const currentPath = window.location.pathname;
+      if (session && (currentPath === '/subscribe' || currentPath === '/onboard')) {
         window.location.href = '/app';
       }
       setSession(session);
