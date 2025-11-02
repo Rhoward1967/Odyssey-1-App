@@ -1,7 +1,7 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowRight, Check, Crown, Star, TrendingUp, Zap } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Check, Crown, Star, TrendingUp, Zap } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 interface Tier {
@@ -137,6 +137,19 @@ export default function Subscribe() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-blue-900 py-16 px-4">
+      
+      {/* ADD BACK BUTTON AT THE TOP */}
+      <div className="max-w-7xl mx-auto mb-8">
+        <Button
+          onClick={() => navigate('/')}
+          variant="outline"
+          className="border-gray-400 text-gray-300 hover:bg-gray-700"
+        >
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Back to Home
+        </Button>
+      </div>
+
       {/* Header */}
       <div className="max-w-7xl mx-auto text-center mb-16">
         <h1 className="text-5xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent mb-4">
