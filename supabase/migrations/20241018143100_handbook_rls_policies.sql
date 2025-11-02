@@ -11,14 +11,17 @@ ALTER TABLE handbook_quiz_options ENABLE ROW LEVEL SECURITY;
 ALTER TABLE handbook_quiz_results ENABLE ROW LEVEL SECURITY;
 ALTER TABLE handbook_access_log ENABLE ROW LEVEL SECURITY;
 
--- Helper function to get user's organization and role
+-- First create the helper function that returns user info
 CREATE OR REPLACE FUNCTION get_user_handbook_access()
-RETURNS TABLE(organization_id INTEGER, user_role TEXT) AS $$
+RETURNS TABLE(user_role TEXT, organization_id UUID) AS $$
 BEGIN
     RETURN QUERY
-    SELECT uo.organization_id, uo.role::TEXT
-    FROM user_organizations uo
-    WHERE uo.user_id = auth.uid();
+    SELECT 
+        uo.role::TEXT as user_role,
+        uo.organization_id::UUID
+    FROM public.user_organizations uo
+    WHERE uo.user_id = auth.uid()
+    LIMIT 1;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
@@ -26,29 +29,30 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 CREATE OR REPLACE FUNCTION meets_role_requirement(required_role TEXT)
 RETURNS BOOLEAN AS $$
 DECLARE
-    user_role TEXT;
+    user_access RECORD;
     role_hierarchy INTEGER;
     required_hierarchy INTEGER;
 BEGIN
-    -- Get user's role
-    SELECT get_user_handbook_access().user_role INTO user_role;
+    -- Get user's role and org
+    SELECT * INTO user_access FROM get_user_handbook_access() LIMIT 1;
     
-    -- Define role hierarchy (higher number = more access)
-    CASE user_role
-        WHEN 'super-admin' THEN role_hierarchy := 50;
-        WHEN 'owner' THEN role_hierarchy := 40;
-        WHEN 'admin' THEN role_hierarchy := 30;
-        WHEN 'manager' THEN role_hierarchy := 20;
-        WHEN 'staff' THEN role_hierarchy := 10;
+    IF user_access.user_role IS NULL THEN
+        RETURN FALSE;
+    END IF;
+    
+    -- Define role hierarchy
+    CASE user_access.user_role
+        WHEN 'owner' THEN role_hierarchy := 3;
+        WHEN 'admin' THEN role_hierarchy := 2;
+        WHEN 'member' THEN role_hierarchy := 1;
         ELSE role_hierarchy := 0;
     END CASE;
     
+    -- Define required hierarchy
     CASE required_role
-        WHEN 'super-admin' THEN required_hierarchy := 50;
-        WHEN 'owner' THEN required_hierarchy := 40;
-        WHEN 'admin' THEN required_hierarchy := 30;
-        WHEN 'manager' THEN required_hierarchy := 20;
-        WHEN 'staff' THEN required_hierarchy := 10;
+        WHEN 'owner' THEN required_hierarchy := 3;
+        WHEN 'admin' THEN required_hierarchy := 2;
+        WHEN 'member' THEN required_hierarchy := 1;
         ELSE required_hierarchy := 0;
     END CASE;
     
