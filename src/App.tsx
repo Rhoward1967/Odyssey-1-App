@@ -16,13 +16,12 @@ import Subscription from '@/pages/Subscription';
 import Trading from '@/pages/Trading';
 import WorkforceDashboard from '@/pages/WorkforceDashboard';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { TrialBanner } from './components/TrialBanner';
+import PublicHomePage from './components/PublicHomePage';
 import { APIProvider } from './contexts/APIContext';
 import { FundingProvider } from './contexts/FundingContext';
 import { PositionLotsProvider } from './contexts/PositionLotsProvider';
-import Subscribe from './pages/Subscribe';
 import Onboard from './pages/Onboard';
-import PublicHomePage from './components/PublicHomePage';
+import Subscribe from './pages/Subscribe';
 
 function App() {
   return (
