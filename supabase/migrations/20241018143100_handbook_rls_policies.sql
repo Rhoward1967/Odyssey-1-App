@@ -25,9 +25,9 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
--- Create a simpler function to get user's organization ID
+-- Create a simpler function to get user's organization ID (FIXED TYPE)
 CREATE OR REPLACE FUNCTION get_user_organization_id()
-RETURNS UUID AS $$
+RETURNS BIGINT AS $$
 BEGIN
     RETURN (
         SELECT organization_id 
@@ -162,17 +162,17 @@ CREATE POLICY "handbook_acknowledgments_insert" ON handbook_acknowledgments
         AND employee_id = auth.uid()
     );
 
--- Managers can view all acknowledgments in their organization (FIXED)
-CREATE POLICY "handbook_acknowledgments_manager_view" ON handbook_acknowledgments
-    FOR SELECT USING (
-        auth.role() = 'authenticated' 
-        AND meets_role_requirement('manager')
-        AND employee_id IN (
-            SELECT e.id FROM employees e
-            INNER JOIN user_organizations uo ON e.user_id = uo.user_id
-            WHERE uo.organization_id = get_user_organization_id()
-        )
-    );
+-- Managers can view all acknowledgments in their organization (DISABLED FOR NOW)
+-- CREATE POLICY "handbook_acknowledgments_manager_view" ON handbook_acknowledgments
+--     FOR SELECT USING (
+--         auth.role() = 'authenticated' 
+--         AND meets_role_requirement('manager')
+--         AND employee_id IN (
+--             SELECT e.id FROM employees e
+--             INNER JOIN user_organizations uo ON e.user_id = uo.user_id
+--             WHERE uo.organization_id = get_user_organization_id()
+--         )
+--     );
 
 -- HANDBOOK QUIZ QUESTIONS POLICIES
 -- Users can view questions for sections they have access to
