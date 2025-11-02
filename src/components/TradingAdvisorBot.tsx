@@ -1,12 +1,12 @@
 import {
-    AlertTriangle,
-    BarChart3,
-    Bot,
-    Brain,
-    MessageCircle,
-    TrendingUp,
-    User,
-    Zap
+  AlertTriangle,
+  BarChart3,
+  Bot,
+  Brain,
+  MessageCircle,
+  TrendingUp,
+  User,
+  Zap
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -15,6 +15,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { AIService } from '@/services/aiService';
 
 interface ChatMessage {
   id: string;
@@ -25,6 +26,8 @@ interface ChatMessage {
 
 export default function TradingAdvisorBot() {
   const [tradingQuery, setTradingQuery] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const sessionId = 'trading-' + Math.random().toString(36).substring(7);
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>(
     [
       {
@@ -51,9 +54,9 @@ What market or trading strategy would you like to discuss?`,
     ]
   );
 
-  const handleTradingChat = (e: React.FormEvent) => {
+  const handleTradingChat = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!tradingQuery.trim()) return;
+    if (!tradingQuery.trim() || isLoading) return;
 
     const userMsg: ChatMessage = {
       id: Date.now().toString(),
@@ -62,35 +65,44 @@ What market or trading strategy would you like to discuss?`,
       timestamp: new Date()
     };
 
-    const botResponse: ChatMessage = {
-      id: (Date.now() + 1).toString(),
-      type: 'bot',
-      message: `📊 **Market Analysis for: "${tradingQuery}"**
-
-Based on current market conditions and advanced algorithms:
-
-**Technical Analysis:**
-• Support Level: $45.20
-• Resistance Level: $52.80
-• RSI: 68.4 (Slightly Overbought)
-• Moving Average: Bullish crossover detected
-
-**Risk Assessment:**
-• Volatility: Medium (12.4%)
-• Liquidity: High
-• Market Sentiment: Cautiously Optimistic
-
-**Trading Recommendation:**
-Consider a gradual position build with tight stop-losses. Monitor key resistance levels.
-
-⚠️ **Risk Warning:** All trading involves risk. This is analysis, not financial advice.
-
-Would you like me to elaborate on any specific aspect?`,
-      timestamp: new Date()
-    };
-
-    setChatHistory(prev => [...prev, userMsg, botResponse]);
+    setChatHistory(prev => [...prev, userMsg]);
     setTradingQuery('');
+    setIsLoading(true);
+
+    try {
+      const systemPrompt = `You are a professional trading advisor and market analyst. Provide actionable trading insights, 
+      market analysis, risk assessments, and strategy recommendations. Always include risk warnings.
+      Be conversational but professional. Remember previous context in this conversation.
+      IMPORTANT: Always remind users that this is not financial advice.`;
+
+      const aiResponse = await AIService.chat(
+        userMsg.message,
+        sessionId,
+        systemPrompt,
+        'anthropic'
+      );
+
+      const botResponse: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        type: 'bot',
+        message: aiResponse,
+        timestamp: new Date()
+      };
+
+      setChatHistory(prev => [...prev, botResponse]);
+    } catch (error) {
+      setChatHistory(prev => [
+        ...prev,
+        {
+          id: (Date.now() + 2).toString(),
+          type: 'bot',
+          message: '❌ Error: Unable to get response from AI service. Please try again later.',
+          timestamp: new Date()
+        }
+      ]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -177,8 +189,34 @@ Would you like me to elaborate on any specific aspect?`,
                   placeholder="Ask about stocks, crypto, forex, market analysis..."
                   className="flex-1"
                 />
-                <Button type="submit">
-                  <MessageCircle className="h-4 w-4" />
+                <Button type="submit" disabled={isLoading}>
+                  {isLoading ? (
+                    <span className="flex items-center gap-2">
+                      <svg
+                        className="animate-spin h-4 w-4 text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        />
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8v16a8 8 0 01-8-8z"
+                        />
+                      </svg>
+                      Processing...
+                    </span>
+                  ) : (
+                    <MessageCircle className="h-4 w-4" />
+                  )}
                 </Button>
               </form>
 
