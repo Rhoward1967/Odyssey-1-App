@@ -92,45 +92,36 @@ WITH CHECK (
     )
 );
 
--- 3. Insert default agents for Genesis Platform (with conflict handling)
+-- 3. Insert default agents for Genesis Platform (FIXED)
 INSERT INTO public.agents (name, type, status, organization_id) 
 SELECT 
     'Genesis Predictive Bidding' as name,
     'predictive_bidding' as type,
     'active' as status,
-    id as organization_id
-FROM public.organizations
-WHERE name = 'Default Organization'
-AND NOT EXISTS (
-    SELECT 1 FROM public.agents 
-    WHERE name = 'Genesis Predictive Bidding'
-);
+    o.id as organization_id
+FROM public.organizations o
+LIMIT 1
+ON CONFLICT DO NOTHING;
 
 INSERT INTO public.agents (name, type, status, organization_id)
 SELECT 
     'R.O.M.A.N. Universal Interpreter' as name,
     'universal_ai' as type,
     'standby' as status,
-    id as organization_id
-FROM public.organizations
-WHERE name = 'Default Organization'
-AND NOT EXISTS (
-    SELECT 1 FROM public.agents 
-    WHERE name = 'R.O.M.A.N. Universal Interpreter'
-);
+    o.id as organization_id
+FROM public.organizations o
+LIMIT 1
+ON CONFLICT DO NOTHING;
 
 INSERT INTO public.agents (name, type, status, organization_id)
 SELECT 
     'Document Analysis Engine' as name,
     'document_analysis' as type,
     'active' as status,
-    id as organization_id
-FROM public.organizations
-WHERE name = 'Default Organization'
-AND NOT EXISTS (
-    SELECT 1 FROM public.agents 
-    WHERE name = 'Document Analysis Engine'
-);
+    o.id as organization_id
+FROM public.organizations o
+LIMIT 1
+ON CONFLICT DO NOTHING;
 
 -- 4. Create R.O.M.A.N. command log table for Sovereign-Core tracking
 CREATE TABLE IF NOT EXISTS public.roman_commands (
