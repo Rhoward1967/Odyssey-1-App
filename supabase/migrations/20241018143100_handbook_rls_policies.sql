@@ -11,14 +11,14 @@ ALTER TABLE handbook_quiz_options ENABLE ROW LEVEL SECURITY;
 ALTER TABLE handbook_quiz_results ENABLE ROW LEVEL SECURITY;
 ALTER TABLE handbook_access_log ENABLE ROW LEVEL SECURITY;
 
--- First create the helper function that returns user info
+-- First create the helper function that returns user info (FIXED TYPE)
 CREATE OR REPLACE FUNCTION get_user_handbook_access()
-RETURNS TABLE(user_role TEXT, organization_id UUID) AS $$
+RETURNS TABLE(user_role TEXT, organization_id BIGINT) AS $$
 BEGIN
     RETURN QUERY
     SELECT 
         uo.role::TEXT as user_role,
-        uo.organization_id::UUID
+        uo.organization_id::BIGINT  -- FIXED: Changed from UUID to BIGINT
     FROM public.user_organizations uo
     WHERE uo.user_id = auth.uid()
     LIMIT 1;
