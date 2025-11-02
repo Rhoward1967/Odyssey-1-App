@@ -2,6 +2,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { AIService } from '@/services/aiService';
 import { Book, Bot, Brain, FileText, MessageCircle, Search, User } from 'lucide-react';
 import { useState } from 'react';
 
@@ -14,6 +15,9 @@ interface ChatMessage {
 
 export default function ResearchAIBot() {
   const [researchQuery, setResearchQuery] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [sessionId] = useState('research-' + Math.random().toString(36).substring(7));
+  
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>(
     [
       {
@@ -21,7 +25,7 @@ export default function ResearchAIBot() {
         type: 'bot',
         message: `🤖 **Research AI Assistant Online**
 
-I'm your advanced AI research assistant with expertise in:
+I'm your advanced AI research assistant powered by Claude 3.5 Sonnet. I can help with:
 
 📚 Document Analysis & Summarization
 🔍 Information Retrieval & Fact-Checking
@@ -41,9 +45,9 @@ What would you like to research today?`,
     ]
   );
 
-  const handleResearchChat = (e: React.FormEvent) => {
+  const handleResearchChat = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!researchQuery.trim()) return;
+    if (!researchQuery.trim() || isLoading) return;
 
     const userMsg: ChatMessage = {
       id: Date.now().toString(),
@@ -52,34 +56,41 @@ What would you like to research today?`,
       timestamp: new Date()
     };
 
-    const botResponse: ChatMessage = {
-      id: (Date.now() + 1).toString(),
-      type: 'bot',
-      message: `📚 **Research Results for: "${researchQuery}"**
-
-**Quick Summary:**
-Based on current knowledge and reliable sources:
-
-• Key Finding #1: [Relevant information about your query]
-• Key Finding #2: [Important context and background]
-• Key Finding #3: [Related insights and implications]
-
-**Sources:**
-1. Academic Research Papers (verified)
-2. Industry Reports (2024-2025)
-3. Expert Analysis
-
-**Confidence Level:** High (87%)
-
-Would you like me to:
-• Dive deeper into any specific aspect?
-• Find additional sources?
-• Generate a detailed report?`,
-      timestamp: new Date()
-    };
-
-    setChatHistory(prev => [...prev, userMsg, botResponse]);
+    setChatHistory(prev => [...prev, userMsg]);
     setResearchQuery('');
+    setIsLoading(true);
+
+    try {
+      const systemPrompt = `You are a professional research assistant. Provide detailed, accurate, and well-sourced information. 
+      Be conversational but professional. Remember previous context in this conversation.`;
+
+      const aiResponse = await AIService.chat(
+        userMsg.message,
+        sessionId,
+        systemPrompt,
+        'anthropic' // Claude 3.5 Sonnet!
+      );
+
+      const botResponse: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        type: 'bot',
+        message: aiResponse,
+        timestamp: new Date()
+      };
+
+      setChatHistory(prev => [...prev, botResponse]);
+    } catch (error) {
+      console.error('Research AI Error:', error);
+      const errorMsg: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        type: 'bot',
+        message: '❌ I apologize, but I encountered an error. Please try again.',
+        timestamp: new Date()
+      };
+      setChatHistory(prev => [...prev, errorMsg]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -88,8 +99,8 @@ Would you like me to:
         <CardTitle className="flex items-center gap-2">
           <Brain className="h-6 w-6 text-purple-600" />
           Research AI Assistant
-          <Badge className="bg-purple-100 text-purple-800">AI-Powered</Badge>
-          <Badge className="bg-blue-100 text-blue-800">Beta</Badge>
+          <Badge className="bg-purple-100 text-purple-800">Claude 3.5 Sonnet</Badge>
+          <Badge className="bg-green-100 text-green-800">Live</Badge>
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -122,6 +133,13 @@ Would you like me to:
               </div>
             </div>
           ))}
+
+          {/* Show loading indicator */}
+          {isLoading && (
+            <div className="flex justify-center py-4">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
+            </div>
+          )}
         </div>
 
         {/* Research Input */}
@@ -129,10 +147,11 @@ Would you like me to:
           <Input
             value={researchQuery}
             onChange={(e) => setResearchQuery(e.target.value)}
-            placeholder="Ask me anything... research, analyze, summarize..."
+            placeholder="Ask me anything... I remember our conversation!"
             className="flex-1"
+            disabled={isLoading}
           />
-          <Button type="submit">
+          <Button type="submit" disabled={isLoading}>
             <MessageCircle className="h-4 w-4" />
           </Button>
         </form>
