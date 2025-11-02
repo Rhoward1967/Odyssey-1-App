@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import {
-    BookOpen // NEW - For User Manual icon
-    ,
+  BookOpen // NEW - For User Manual icon
+  ,
 
 
 
@@ -10,13 +10,14 @@ import {
 
 
 
-    Calculator,
-    CreditCard,
-    Home,
-    Settings,
-    TrendingUp,
-    User,
-    Users
+
+  Calculator,
+  CreditCard,
+  Home,
+  Settings,
+  TrendingUp,
+  User,
+  Users
 } from 'lucide-react';
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
@@ -27,13 +28,13 @@ const Navigation: React.FC = () => {
   const location = useLocation();
 
   const navItems = [
-    { path: '/', label: 'Dashboard', icon: Home },
-    { path: '/trading', label: 'Trading', icon: TrendingUp },
-    { path: '/calculator', label: 'Calculator', icon: Calculator },
-    { path: '/workforce', label: 'Workforce', icon: Users },
-    { path: '/admin', label: 'Admin Center', icon: Settings },
-    { path: '/user-manual', label: 'Manual', icon: BookOpen }, // NEW - UserManual link
-    { path: '/subscription', label: 'Subscription', icon: CreditCard },
+    { path: '/app', label: 'Dashboard', icon: Home }, // Changed from '/'
+    { path: '/app/trading', label: 'Trading', icon: TrendingUp },
+    { path: '/app/calculator', label: 'Calculator', icon: Calculator },
+    { path: '/app/workforce', label: 'Workforce', icon: Users },
+    { path: '/app/admin', label: 'Admin Center', icon: Settings },
+    { path: '/app/user-manual', label: 'Manual', icon: BookOpen }, // ✅ FIXED!
+    { path: '/app/subscription', label: 'Subscription', icon: CreditCard },
     // REMOVED: /clients and /schedule (broken routes)
   ];
 

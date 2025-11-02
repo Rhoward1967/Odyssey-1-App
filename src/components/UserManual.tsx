@@ -15,16 +15,16 @@
 
 import { supabase } from '@/lib/supabaseClient'; // Add this import
 import {
-    BookOpen,
-    Brain,
-    Calculator,
-    Calendar,
-    Crown,
-    Play,
-    Shield,
-    TrendingUp,
-    Users,
-    Zap
+  BookOpen,
+  Brain,
+  Calculator,
+  Calendar,
+  Crown,
+  Play,
+  Shield,
+  TrendingUp,
+  Users,
+  Zap
 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import SovereignCoreInterface from './SovereignCoreInterface';
@@ -64,6 +64,12 @@ export const UserManual: React.FC = () => {
 
   // Check if user is supa-admin (authenticated user for now - you can add more checks later)
   const isSupaAdmin = userId !== '00000000-0000-0000-0000-000000000000';
+
+  // ADD THIS DEBUG LOG
+  useEffect(() => {
+    console.log('UserManual mounted, activeTab:', activeTab);
+    console.log('isSupaAdmin:', isSupaAdmin);
+  }, [activeTab, isSupaAdmin]);
 
   const sections: ManualSection[] = [
     {
@@ -444,6 +450,9 @@ export const UserManual: React.FC = () => {
 
   return (
     <div className='space-y-6'>
+      {/* REMOVE THIS DEBUG LINE - IT'S BLOCKING THE VIEW */}
+      {/* <div className="text-white bg-red-500 p-2">DEBUG: UserManual Loaded - Active Tab: {activeTab}</div> */}
+      
       <Card className='bg-gradient-to-r from-green-900/50 to-blue-900/50 border-green-500/30'>
         <CardHeader className='text-center'>
           <CardTitle className='text-3xl font-bold text-white flex items-center justify-center gap-3'>
@@ -675,15 +684,6 @@ Hardware Platform (Future - Patent Pending):
                         • RLS checks organization_id membership
                       </div>
                     </div>
-
-                    <h4 className="font-semibold text-blue-300 mt-4">Performance Indexes (NEW!):</h4>
-                    <div className="bg-slate-900 p-4 rounded text-sm">
-                      <div>✅ <strong>idx_user_org_user</strong> ON user_organizations(user_id) - Fast user lookups</div>
-                      <div>✅ <strong>idx_user_org_org</strong> ON user_organizations(organization_id) - Fast org lookups</div>
-                      <div>✅ <strong>idx_user_org_org_role</strong> ON user_organizations(organization_id, role) - Role-based queries</div>
-                    </div>
-
-                    <h4 className="font-semibold text-blue-300 mt-4">Database Optimization Status:</h4>
                     <div className="bg-green-900/30 p-4 rounded border border-green-500 text-sm">
                       <div className="font-semibold text-green-300">🎉 Performance Optimized!</div>
                       <div className="text-xs text-gray-300 mt-2">
