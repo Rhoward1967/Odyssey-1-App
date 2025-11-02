@@ -25,6 +25,19 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
+-- Create a simpler function to get user's organization ID
+CREATE OR REPLACE FUNCTION get_user_organization_id()
+RETURNS UUID AS $$
+BEGIN
+    RETURN (
+        SELECT organization_id 
+        FROM public.user_organizations 
+        WHERE user_id = auth.uid() 
+        LIMIT 1
+    );
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
 -- Helper function to check if user meets minimum role requirement
 CREATE OR REPLACE FUNCTION meets_role_requirement(required_role TEXT)
 RETURNS BOOLEAN AS $$
@@ -149,7 +162,7 @@ CREATE POLICY "handbook_acknowledgments_insert" ON handbook_acknowledgments
         AND employee_id = auth.uid()
     );
 
--- Managers can view all acknowledgments in their organization
+-- Managers can view all acknowledgments in their organization (FIXED)
 CREATE POLICY "handbook_acknowledgments_manager_view" ON handbook_acknowledgments
     FOR SELECT USING (
         auth.role() = 'authenticated' 
@@ -157,7 +170,7 @@ CREATE POLICY "handbook_acknowledgments_manager_view" ON handbook_acknowledgment
         AND employee_id IN (
             SELECT e.id FROM employees e
             INNER JOIN user_organizations uo ON e.user_id = uo.user_id
-            WHERE uo.organization_id = (SELECT get_user_handbook_access().organization_id)
+            WHERE uo.organization_id = get_user_organization_id()
         )
     );
 
