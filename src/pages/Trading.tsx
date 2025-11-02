@@ -1,8 +1,12 @@
+import TradingHub from '@/components/TradingHub';
 import React from 'react';
-import TradingDashboard from '@/components/TradingDashboard';
 
 const Trading: React.FC = () => {
-  return <TradingDashboard />;
+  return (
+    <div className="min-h-screen">
+      <TradingHub />
+    </div>
+  );
 };
 
 export default Trading;

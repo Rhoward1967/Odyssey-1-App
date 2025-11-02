@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
-import { Users, MessageSquare, Image, Search, FileText, Settings, Phone } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import MediaChat from './MediaChat';
-import MediaGallery from './MediaGallery';
+import { Bot, FileText, Image, Mail, MessageSquare, Phone, Users, Video } from 'lucide-react';
+import { useState } from 'react';
 import ContactPhoneBook from './ContactPhoneBook';
 import FileManager from './FileManager';
+import MediaChat from './MediaChat';
+import MediaGallery from './MediaGallery';
+import ResearchAIBot from './ResearchAIBot';
+
 export default function MediaWorkstation() {
   const [onlineUsers] = useState([
     { id: '1', name: 'Sarah Johnson', status: 'online' },
@@ -74,10 +75,6 @@ export default function MediaWorkstation() {
               <h3 className="font-semibold text-gray-900 mb-3">Quick Stats</h3>
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Photos Shared</span>
-                  <span className="font-medium">127</span>
-                </div>
-                <div className="flex justify-between text-sm">
                   <span className="text-gray-600">Messages Today</span>
                   <span className="font-medium">45</span>
                 </div>
@@ -105,6 +102,16 @@ export default function MediaWorkstation() {
                   <span className="hidden sm:inline">Chat</span>
                   <span className="sm:hidden">💬</span>
                 </TabsTrigger>
+                <TabsTrigger value="research" className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 text-xs sm:text-sm whitespace-nowrap">
+                  <Bot className="h-3 w-3 sm:h-4 sm:w-4" />
+                  <span className="hidden sm:inline">Research AI</span>
+                  <span className="sm:hidden">🤖</span>
+                </TabsTrigger>
+                <TabsTrigger value="video" className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 text-xs sm:text-sm whitespace-nowrap">
+                  <Video className="h-3 w-3 sm:h-4 sm:w-4" />
+                  <span className="hidden sm:inline">Video</span>
+                  <span className="sm:hidden">📹</span>
+                </TabsTrigger>
                 <TabsTrigger value="contacts" className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 text-xs sm:text-sm whitespace-nowrap">
                   <Phone className="h-3 w-3 sm:h-4 sm:w-4" />
                   <span className="hidden sm:inline">Contacts</span>
@@ -114,6 +121,11 @@ export default function MediaWorkstation() {
                   <FileText className="h-3 w-3 sm:h-4 sm:w-4" />
                   <span className="hidden sm:inline">Files</span>
                   <span className="sm:hidden">📁</span>
+                </TabsTrigger>
+                <TabsTrigger value="email" className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 text-xs sm:text-sm whitespace-nowrap">
+                  <Mail className="h-3 w-3 sm:h-4 sm:w-4" />
+                  <span className="hidden sm:inline">Email</span>
+                  <span className="sm:hidden">📧</span>
                 </TabsTrigger>
               </TabsList>
             </div>
@@ -126,12 +138,32 @@ export default function MediaWorkstation() {
               <MediaChat />
             </TabsContent>
 
+            <TabsContent value="research" className="h-[calc(100%-60px)]">
+              <ResearchAIBot />
+            </TabsContent>
+
+            <TabsContent value="video" className="h-[calc(100%-60px)]">
+              <div className="text-center py-8">
+                <Video className="h-16 w-16 mx-auto text-blue-400 mb-4" />
+                <h3 className="text-lg font-semibold mb-2">Video Conferencing</h3>
+                <p className="text-gray-600 mb-4">Team video calls coming soon!</p>
+              </div>
+            </TabsContent>
+
             <TabsContent value="contacts" className="h-[calc(100%-60px)]">
               <ContactPhoneBook />
             </TabsContent>
 
             <TabsContent value="files" className="h-[calc(100%-60px)]">
               <FileManager />
+            </TabsContent>
+
+            <TabsContent value="email" className="h-[calc(100%-60px)]">
+              <div className="text-center py-8">
+                <Mail className="h-16 w-16 mx-auto text-green-400 mb-4" />
+                <h3 className="text-lg font-semibold mb-2">Email Integration</h3>
+                <p className="text-gray-600 mb-4">Email management coming soon!</p>
+              </div>
             </TabsContent>
           </Tabs>
         </div>
