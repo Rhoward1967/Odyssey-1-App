@@ -257,6 +257,18 @@ export class SovereignCoreOrchestrator {
           processedPayload.organization_id = command.metadata?.organizationId || 1;
         }
 
+        // Generate employee_id if not provided (REQUIRED FIELD)
+        if (!processedPayload.employee_id) {
+          const timestamp = Date.now();
+          const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+          processedPayload.employee_id = `EMP-${timestamp}-${random}`;
+        }
+
+        // Set default status if not provided
+        if (!processedPayload.status) {
+          processedPayload.status = 'active';
+        }
+
         const { data: created, error: createError } = await supabase
           .from('employees')
           .insert(processedPayload)
@@ -267,7 +279,7 @@ export class SovereignCoreOrchestrator {
         return { 
           success: true, 
           data: created, 
-          message: `Employee ${created.first_name} ${created.last_name} created successfully` 
+          message: `Employee ${created.first_name} ${created.last_name} (${created.employee_id}) created successfully` 
         };
       
       default:
