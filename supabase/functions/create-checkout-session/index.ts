@@ -15,11 +15,11 @@ serve(async (req) => {
     const body = await req.json();
     const { tier, userId, email, successUrl, cancelUrl } = body ?? {};
 
-    // Replace these with your real Stripe Price IDs
+    // REAL STRIPE PRICE IDs - PRODUCTION READY! ✅
     const PRICE_IDS: Record<string, string> = {
-      basic: "price_XXXXX",    // $99/month
-      pro: "price_XXXXX",      // $299/month
-      ultimate: "price_XXXXX", // $999/month
+      basic: "price_1S45KEDPqeWRzwCXi6awuzd4",       // $99/month
+      pro: "price_1S45LLDPqeWRzwCXNSNtLlm0",         // $299/month
+      ultimate: "price_1S45NMDPqeWRzwCXMTAOnP5b",    // $999/month
     };
 
     const priceId = PRICE_IDS[tier];
@@ -44,10 +44,8 @@ serve(async (req) => {
     params.append("success_url", successUrl);
     params.append("cancel_url", cancelUrl);
     params.append("customer_email", email);
-    // line_items[0][price]=priceId and quantity
     params.append("line_items[0][price]", priceId);
     params.append("line_items[0][quantity]", "1");
-    // metadata
     if (userId) params.append("metadata[userId]", userId);
     if (tier) params.append("metadata[tier]", tier);
 
@@ -70,7 +68,6 @@ serve(async (req) => {
       });
     }
 
-    // Stripe returns a "url" property for Checkout Sessions; include it
     return new Response(
       JSON.stringify({ sessionId: respJson.id, sessionUrl: respJson.url }),
       {
