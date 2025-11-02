@@ -22,7 +22,8 @@ export const ROMAN_ACTIONS = [
   "EXECUTE",
   "VALIDATE",
   "PROCESS",
-  "APPROVE"
+  "APPROVE",
+  "GENERATE"
 ] as const;
 
 export type RomanAction = typeof ROMAN_ACTIONS[number];
@@ -41,7 +42,8 @@ export const ROMAN_TARGETS = [
   "BID",
   "CONTRACT",
   "ORGANIZATION",
-  "AGENT"
+  "AGENT",
+  "SYSTEM_STATUS"
 ] as const;
 
 export type RomanTarget = typeof ROMAN_TARGETS[number];

@@ -119,4 +119,16 @@ Respond ONLY with valid JSON matching the RomanCommand schema. No markdown, no e
       throw new Error(`AI generation failed: ${error.message}`);
     }
   }
+
+  static getValidTargets(): string[] {
+    return [
+      'EMPLOYEE', 
+      'PAYROLL_RUN', 
+      'PAYSTUB', 
+      'TIME_ENTRY', 
+      'PROJECT_TASK', 
+      'BID',
+      'SYSTEM_STATUS' // Added for system diagnostics
+    ];
+  }
 }
