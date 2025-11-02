@@ -28,20 +28,45 @@ WITH CHECK (
     )
 );
 
--- 2. Create agents table for AI Agent Monitoring
+-- 2. Create/Update agents table for AI Agent Monitoring
 CREATE TABLE IF NOT EXISTS public.agents (
     id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     name text NOT NULL,
-    type text NOT NULL,
-    status text NOT NULL DEFAULT 'idle',
     organization_id uuid REFERENCES public.organizations(id) NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    last_activity timestamp with time zone DEFAULT now(),
-    requests_today integer DEFAULT 0,
-    confidence_score decimal(3,2) DEFAULT 0.95,
-    model_version text DEFAULT 'v1.0.0'
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
+
+-- Add missing columns if they don't exist
+DO $$
+BEGIN
+    -- Add type column if it doesn't exist
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='agents' AND column_name='type') THEN
+        ALTER TABLE public.agents ADD COLUMN type text NOT NULL DEFAULT 'ai_agent';
+    END IF;
+    
+    -- Add status column if it doesn't exist
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='agents' AND column_name='status') THEN
+        ALTER TABLE public.agents ADD COLUMN status text NOT NULL DEFAULT 'idle';
+    END IF;
+    
+    -- Add other missing columns
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='agents' AND column_name='last_activity') THEN
+        ALTER TABLE public.agents ADD COLUMN last_activity timestamp with time zone DEFAULT now();
+    END IF;
+    
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='agents' AND column_name='requests_today') THEN
+        ALTER TABLE public.agents ADD COLUMN requests_today integer DEFAULT 0;
+    END IF;
+    
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='agents' AND column_name='confidence_score') THEN
+        ALTER TABLE public.agents ADD COLUMN confidence_score decimal(3,2) DEFAULT 0.95;
+    END IF;
+    
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='agents' AND column_name='model_version') THEN
+        ALTER TABLE public.agents ADD COLUMN model_version text DEFAULT 'v1.0.0';
+    END IF;
+END $$;
 
 -- Enable RLS on agents table
 ALTER TABLE public.agents ENABLE ROW LEVEL SECURITY;
@@ -67,7 +92,7 @@ WITH CHECK (
     )
 );
 
--- 3. Insert default agents for Genesis Platform
+-- 3. Insert default agents for Genesis Platform (with conflict handling)
 INSERT INTO public.agents (name, type, status, organization_id) 
 SELECT 
     'Genesis Predictive Bidding' as name,
@@ -76,7 +101,10 @@ SELECT
     id as organization_id
 FROM public.organizations
 WHERE name = 'Default Organization'
-ON CONFLICT DO NOTHING;
+AND NOT EXISTS (
+    SELECT 1 FROM public.agents 
+    WHERE name = 'Genesis Predictive Bidding'
+);
 
 INSERT INTO public.agents (name, type, status, organization_id)
 SELECT 
@@ -86,7 +114,10 @@ SELECT
     id as organization_id
 FROM public.organizations
 WHERE name = 'Default Organization'
-ON CONFLICT DO NOTHING;
+AND NOT EXISTS (
+    SELECT 1 FROM public.agents 
+    WHERE name = 'R.O.M.A.N. Universal Interpreter'
+);
 
 INSERT INTO public.agents (name, type, status, organization_id)
 SELECT 
@@ -96,7 +127,10 @@ SELECT
     id as organization_id
 FROM public.organizations
 WHERE name = 'Default Organization'
-ON CONFLICT DO NOTHING;
+AND NOT EXISTS (
+    SELECT 1 FROM public.agents 
+    WHERE name = 'Document Analysis Engine'
+);
 
 -- 4. Create R.O.M.A.N. command log table for Sovereign-Core tracking
 CREATE TABLE IF NOT EXISTS public.roman_commands (
