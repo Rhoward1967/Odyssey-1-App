@@ -92,36 +92,62 @@ WITH CHECK (
     )
 );
 
--- 3. Insert default agents for Genesis Platform (FIXED)
-INSERT INTO public.agents (name, type, status, organization_id) 
+-- 3. Insert default agents for Genesis Platform (FIXED - with proper dna_config)
+INSERT INTO public.agents (name, dna_config, status, organization_id, type, last_heartbeat) 
 SELECT 
-    'Genesis Predictive Bidding' as name,
-    'predictive_bidding' as type,
-    'active' as status,
-    o.id as organization_id
+    'Genesis Predictive Bidding' AS name,
+    jsonb_build_object(
+        'version', '1.0.0',
+        'capabilities', jsonb_build_array('market_analysis', 'bid_prediction', 'risk_assessment'),
+        'parameters', jsonb_build_object('max_candidates', 100, 'optimize_for', 'win_rate', 'confidence_threshold', 0.85)
+    ) AS dna_config,
+    'active' AS status,
+    o.id AS organization_id,
+    'predictive_bidding' AS type,
+    NOW() AS last_heartbeat
 FROM public.organizations o
 LIMIT 1
 ON CONFLICT DO NOTHING;
 
-INSERT INTO public.agents (name, type, status, organization_id)
+INSERT INTO public.agents (name, dna_config, status, organization_id, type, last_heartbeat)
 SELECT 
-    'R.O.M.A.N. Universal Interpreter' as name,
-    'universal_ai' as type,
-    'standby' as status,
-    o.id as organization_id
+    'R.O.M.A.N. Universal Interpreter' AS name,
+    jsonb_build_object(
+        'version', '1.0.0',
+        'capabilities', jsonb_build_array('natural_language', 'command_validation', 'constitutional_ai', 'sql_generation'),
+        'parameters', jsonb_build_object('max_tokens', 1024, 'temperature', 0.3, 'principles_compliance', true)
+    ) AS dna_config,
+    'standby' AS status,
+    o.id AS organization_id,
+    'universal_ai' AS type,
+    NOW() AS last_heartbeat
 FROM public.organizations o
 LIMIT 1
 ON CONFLICT DO NOTHING;
 
-INSERT INTO public.agents (name, type, status, organization_id)
+INSERT INTO public.agents (name, dna_config, status, organization_id, type, last_heartbeat)
 SELECT 
-    'Document Analysis Engine' as name,
-    'document_analysis' as type,
-    'active' as status,
-    o.id as organization_id
+    'Document Analysis Engine' AS name,
+    jsonb_build_object(
+        'version', '1.0.0',
+        'capabilities', jsonb_build_array('document_processing', 'text_extraction', 'ai_analysis', 'classification'),
+        'parameters', jsonb_build_object('max_file_size', '10MB', 'supported_formats', jsonb_build_array('pdf', 'docx', 'txt'))
+    ) AS dna_config,
+    'active' AS status,
+    o.id AS organization_id,
+    'document_analysis' AS type,
+    NOW() AS last_heartbeat
 FROM public.organizations o
 LIMIT 1
 ON CONFLICT DO NOTHING;
+
+-- Also add default for future inserts
+ALTER TABLE public.agents
+    ALTER COLUMN dna_config SET DEFAULT '{}'::jsonb;
+
+-- Add unique constraint to prevent duplicates
+CREATE UNIQUE INDEX IF NOT EXISTS uq_agents_org_name
+    ON public.agents (organization_id, name);
 
 -- 4. Create R.O.M.A.N. command log table for Sovereign-Core tracking
 CREATE TABLE IF NOT EXISTS public.roman_commands (
