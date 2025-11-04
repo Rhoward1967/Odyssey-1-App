@@ -1,6 +1,6 @@
-﻿import React, { createContext, useContext, useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabase';
+﻿import { supabase } from '@/lib/supabase';
 import type { User } from '@supabase/supabase-js';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 
 interface AuthContextType {
   user: User | null;
@@ -27,25 +27,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return; // Stop the real auth logic from running
     }
 
-    const getSession = async () => {
-      console.log("AuthProvider: Trying to get session..."); // <-- ADD LOG 3
-      try {
-        const { data: { session } } = await supabase.auth.getSession();
-        console.log("AuthProvider: Got session:", session); // <-- ADD LOG 4
-        setUser(session?.user ?? null);
-        setLoading(false);
-      } catch (error) {
-         console.error("AuthProvider: Error in getSession:", error); // <-- ADD LOG 5
-         setLoading(false); // Ensure loading stops even on error
-      }
-    };
+    // Get initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+      setLoading(false);
 
-    getSession();
+      // If user is authenticated and on public routes, redirect to app
+      if (session && (window.location.pathname === '/' || window.location.pathname === '/login')) {
+        console.log('🔀 AuthProvider: Redirecting authenticated user to /app');
+        window.location.href = '/app';
+      }
+    });
 
     console.log("AuthProvider: Setting up onAuthStateChange listener..."); // <-- ADD LOG 6
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       console.log("AuthProvider: onAuthStateChange triggered:", _event, session); // <-- ADD LOG 7
       setUser(session?.user ?? null);
+      setLoading(false);
+
+      // Redirect authenticated users away from public pages
+      if (session && (window.location.pathname === '/' || window.location.pathname === '/login')) {
+        console.log('🔀 AuthProvider: Auth change - redirecting to /app');
+        window.location.href = '/app';
+      }
     });
 
     // Cleanup

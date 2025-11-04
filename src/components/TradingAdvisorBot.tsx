@@ -1,20 +1,18 @@
 import {
-  AlertTriangle,
-  BarChart3,
   Bot,
   Brain,
   MessageCircle,
   TrendingUp,
-  User,
-  Zap
+  User
 } from 'lucide-react';
 import { useState } from 'react';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { supabase } from '@/lib/supabaseClient';
 import { AIService } from '@/services/aiService';
 
 interface ChatMessage {
@@ -24,7 +22,11 @@ interface ChatMessage {
   timestamp: Date;
 }
 
-export default function TradingAdvisorBot() {
+interface TradingAdvisorBotProps {
+  mode?: string;
+}
+
+const TradingAdvisorBot: React.FC<TradingAdvisorBotProps> = ({ mode = 'paper' }) => {
   const [tradingQuery, setTradingQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const sessionId = 'trading-' + Math.random().toString(36).substring(7);
@@ -105,9 +107,52 @@ What market or trading strategy would you like to discuss?`,
     }
   };
 
+  const [messages, setMessages] = useState<Array<{ role: 'user' | 'assistant'; content: string }>>([]);
+  const [input, setInput] = useState('');
+
+  const sendMessage = async () => {
+    if (!input.trim()) return;
+
+    const userMessage = { role: 'user' as const, content: input };
+    setMessages(prev => [...prev, userMessage]);
+    setInput('');
+    setIsLoading(true);
+
+    try {
+      // Make sure we're calling the correct function name
+      const { data, error } = await supabase.functions.invoke('chat-trading-advisor', {
+        body: { 
+          message: input,
+          tradingMode: mode,
+          messages: messages 
+        }
+      });
+
+      if (error) {
+        console.error('Supabase function error:', error);
+        throw error;
+      }
+
+      const aiMessage = { 
+        role: 'assistant' as const, 
+        content: data?.response || 'I apologize, but I encountered an error. Please try again.' 
+      };
+      setMessages(prev => [...prev, aiMessage]);
+
+    } catch (error) {
+      console.error('Trading Advisor Error:', error);
+      const errorMessage = { 
+        role: 'assistant' as const, 
+        content: 'I apologize, but I encountered an error. Please try again.' 
+      };
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
-      {/* Header */}
       <Card className="border-green-400 bg-gradient-to-r from-green-100 to-blue-100">
         <CardHeader className="text-center">
           <CardTitle className="flex items-center justify-center gap-3 text-2xl text-green-800">
@@ -121,27 +166,30 @@ What market or trading strategy would you like to discuss?`,
         </CardHeader>
       </Card>
 
-      <Tabs defaultValue="trading-bot" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-5">
-          <TabsTrigger value="trading-bot">Trading Advisor</TabsTrigger>
-          <TabsTrigger value="market-analysis">Market Analysis</TabsTrigger>
-          <TabsTrigger value="portfolio">Portfolio Manager</TabsTrigger>
-          <TabsTrigger value="risk-management">Risk Management</TabsTrigger>
-          <TabsTrigger value="trade-execution">Trade Execution</TabsTrigger>
+      <Tabs defaultValue="chat" className="w-full">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="chat">AI Trading Chat</TabsTrigger>
+          <TabsTrigger value="analysis">Market Analysis</TabsTrigger>
         </TabsList>
-
-        {/* Trading Bot Chat */}
-        <TabsContent value="trading-bot">
-          <Card>
+        
+        <TabsContent value="chat">
+          <Card className="bg-gradient-to-br from-purple-900/20 to-pink-900/20 border-purple-500/30">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Bot className="h-6 w-6 text-green-600" />
-                Advanced Trading Advisor
-                <Badge className="bg-green-100 text-green-800">AI-Powered</Badge>
-                <Badge className="bg-yellow-100 text-yellow-800">Live Markets</Badge>
+              <CardTitle className="text-purple-300 flex items-center gap-2">
+                🤖 AI Trading Advisor
+                <span className="text-sm bg-purple-600 px-2 py-1 rounded">
+                  {mode === 'paper' ? '📚 Learning Mode' : '💰 Live Trading'}
+                </span>
               </CardTitle>
+              <CardDescription className="text-purple-400">
+                {mode === 'paper' 
+                  ? 'Get educational trading advice and learn market strategies'
+                  : 'Receive real-time trading insights and portfolio recommendations'
+                }
+              </CardDescription>
             </CardHeader>
-            <CardContent>
+            
+            <CardContent className="space-y-4">
               <div className="h-96 min-h-[24rem] overflow-y-auto space-y-3 mb-4 p-4 border rounded bg-gray-50">
                 {chatHistory.length > 0 ? (
                   chatHistory.map((msg) => (
@@ -259,67 +307,25 @@ What market or trading strategy would you like to discuss?`,
           </Card>
         </TabsContent>
         
-
-        {/* Market Analysis */}
-        <TabsContent value="market-analysis">
-          <Card>
+        <TabsContent value="analysis">
+          <Card className="bg-gradient-to-br from-blue-900/20 to-cyan-900/20 border-blue-500/30">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <BarChart3 className="h-6 w-6 text-blue-600" />
-                Real-Time Market Analysis
-              </CardTitle>
+              <CardTitle className="text-blue-300">📊 Market Analysis</CardTitle>
+              <CardDescription className="text-blue-400">
+                Real-time market insights and trend analysis
+              </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="text-center py-8">
-                <BarChart3 className="h-16 w-16 mx-auto text-blue-400 mb-4" />
-                <h3 className="text-lg font-semibold mb-2">Advanced Market Analytics</h3>
-                <p className="text-gray-600 mb-4">Real-time analysis powered by Genesis AI algorithms</p>
-                <Button>
-                  <Zap className="h-4 w-4 mr-2" />
-                  Generate Market Report
-                </Button>
+              <div className="text-center text-gray-400 py-8">
+                <p>📈 Advanced market analysis coming soon...</p>
+                <p>Real-time charts, technical indicators, and AI predictions</p>
               </div>
             </CardContent>
           </Card>
         </TabsContent>
-        
-
-        {/* Placeholder Tabs */}
-        <TabsContent value="portfolio">
-          <Card>
-            <CardContent>
-              <div className="text-center py-8">
-                <AlertTriangle className="h-12 w-12 mx-auto text-yellow-500 mb-4" />
-                <h3 className="text-lg font-semibold">Feature Under Development</h3>
-                <p className="text-gray-600">The **Portfolio Manager** module is currently being re-integrated and tested. Check back soon!</p>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-        <TabsContent value="risk-management">
-          <Card>
-            <CardContent>
-              <div className="text-center py-8">
-                <AlertTriangle className="h-12 w-12 mx-auto text-yellow-500 mb-4" />
-                <h3 className="text-lg font-semibold">Feature Under Development</h3>
-                <p className="text-gray-600">The **Risk Management** module is currently being re-integrated and tested. Check back soon!</p>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-        <TabsContent value="trade-execution">
-          <Card>
-            <CardContent>
-              <div className="text-center py-8">
-                <AlertTriangle className="h-12 w-12 mx-auto text-yellow-500 mb-4" />
-                <h3 className="text-lg font-semibold">Feature Under Development</h3>
-                <p className="text-gray-600">The **Trade Execution** module is currently being re-integrated and tested. Check back soon!</p>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
       </Tabs>
     </div>
   );
-}
+};
+
+export default TradingAdvisorBot;

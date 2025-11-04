@@ -22,31 +22,79 @@ import { APIProvider } from './contexts/APIContext';
 import { FundingProvider } from './contexts/FundingContext';
 import { PositionLotsProvider } from './contexts/PositionLotsProvider';
 import { supabase } from './lib/supabaseClient';
+import MediaCenter from './pages/MediaCenter';
 import Onboard from './pages/Onboard';
 import Subscribe from './pages/Subscribe';
 
 function App() {
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
+  const [redirecting, setRedirecting] = useState(false);
 
   useEffect(() => {
-    // Handle auth callback
+    // Enhanced magic link handling with security improvements
     const handleAuth = async () => {
+      const url = new URL(window.location.href);
+      const params = url.searchParams;
+      
+      // Handle newer PKCE/code flow (recommended)
+      if (params.get('code')) {
+        console.log('🔗 Processing magic link with code...');
+        setRedirecting(true);
+        
+        try {
+          const { error } = await supabase.auth.exchangeCodeForSession(window.location.href);
+          
+          // Clean URL immediately for security
+          window.history.replaceState({}, document.title, window.location.pathname);
+          
+          if (error) {
+            console.error('Magic link processing error:', error);
+            setRedirecting(false);
+            return;
+          }
+          
+          setTimeout(() => {
+            window.location.href = '/app';
+          }, 500);
+          
+        } catch (error) {
+          console.error('Auth exchange failed:', error);
+          setRedirecting(false);
+        }
+        return;
+      }
+
+      // Handle legacy access_token flow (fallback)
+      const accessToken = params.get('access_token');
+      const refreshToken = params.get('refresh_token');
+      const type = params.get('type');
+      
+      if (accessToken || refreshToken || type === 'magiclink') {
+        console.log('🔗 Processing legacy magic link...');
+        setRedirecting(true);
+        
+        // Clean URL for security
+        window.history.replaceState({}, document.title, window.location.pathname);
+        
+        // Small delay to prevent flickering
+        setTimeout(() => {
+          window.location.href = '/app';
+        }, 500);
+        return;
+      }
+
       const {
         data: { session },
       } = await supabase.auth.getSession();
 
-      if (session) {
-        // ONLY redirect if user is coming from subscribe/onboard, not from home page
-        const currentPath = window.location.pathname;
-        if (
-          currentPath === '/subscribe' ||
-          currentPath === '/onboard'
-        ) {
+      if (session && window.location.pathname === '/') {
+        console.log('✅ User already authenticated, redirecting to /app');
+        setRedirecting(true);
+        setTimeout(() => {
           window.location.href = '/app';
-          return;
-        }
-        // If on home page, let them stay there
+        }, 300);
+        return;
       }
 
       setSession(session);
@@ -55,26 +103,45 @@ function App() {
 
     handleAuth();
 
-    // Listen for auth changes
+    // Enhanced auth state listener with correct event types
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      // Only redirect from subscribe/onboard, not home page
-      const currentPath = window.location.pathname;
-      if (session && (currentPath === '/subscribe' || currentPath === '/onboard')) {
-        window.location.href = '/app';
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log('🔔 Auth state changed:', event);
+      
+      if (event === 'SIGNED_IN' && session && window.location.pathname === '/') {
+        console.log('✅ User signed in, redirecting to /app');
+        setRedirecting(true);
+        setTimeout(() => {
+          window.location.href = '/app';
+        }, 500);
+      } else if (event === 'SIGNED_OUT') {
+        console.log('🚪 User signed out, redirecting to login');
+        setSession(null);
+        if (window.location.pathname.startsWith('/app')) {
+          window.location.href = '/login';
+        }
+      } else {
+        setSession(session);
+        setLoading(false);
       }
-      setSession(session);
     });
 
     return () => subscription.unsubscribe();
   }, []);
 
-  if (loading) {
+  if (loading || redirecting) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-slate-900">
         <div className="text-center">
-          <p className="text-white text-xl">Loading ODYSSEY-1...</p>
+          <p className="text-white text-xl">
+            {redirecting ? 'Redirecting to ODYSSEY-1...' : 'Loading ODYSSEY-1...'}
+          </p>
+          {redirecting && (
+            <p className="text-purple-400 text-sm mt-2">
+              🔗 Magic link authentication successful
+            </p>
+          )}
         </div>
       </div>
     );
@@ -105,6 +172,7 @@ function App() {
                       <Route path="calculator" element={<Calculator />} />
                       <Route path="workforce" element={<WorkforceDashboard />} />
                       <Route path="user-manual" element={<UserManual />} />
+                      <Route path="media-center" element={<MediaCenter />} />
                     </Route>
                   </Route>
                 </Routes>

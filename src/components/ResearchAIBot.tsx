@@ -2,7 +2,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { AIService } from '@/services/aiService';
+import { supabase } from '@/lib/supabaseClient';
 import { Book, Bot, Brain, FileText, MessageCircle, Search, User } from 'lucide-react';
 import { useState } from 'react';
 
@@ -61,26 +61,28 @@ What would you like to research today?`,
     setIsLoading(true);
 
     try {
-      const systemPrompt = `You are a professional research assistant. Provide detailed, accurate, and well-sourced information. 
-      Be conversational but professional. Remember previous context in this conversation.`;
+      // Use existing gemini-api function for now since research-bot might not exist
+      const { data, error } = await supabase.functions.invoke('gemini-api', {
+        body: { 
+          message: userMsg.message,
+          context: 'research',
+          messages: chatHistory 
+        }
+      });
 
-      const aiResponse = await AIService.chat(
-        userMsg.message,
-        sessionId,
-        systemPrompt,
-        'anthropic' // Claude 3.5 Sonnet!
-      );
+      if (error) throw error;
 
-      const botResponse: ChatMessage = {
+      const aiMessage: ChatMessage = { 
         id: (Date.now() + 1).toString(),
         type: 'bot',
-        message: aiResponse,
+        message: data.response || 'I apologize, but I encountered an error. Please try again.',
         timestamp: new Date()
       };
 
-      setChatHistory(prev => [...prev, botResponse]);
+      setChatHistory(prev => [...prev, aiMessage]);
+
     } catch (error) {
-      console.error('Research AI Error:', error);
+      console.error('Research Error:', error);
       const errorMsg: ChatMessage = {
         id: (Date.now() + 1).toString(),
         type: 'bot',

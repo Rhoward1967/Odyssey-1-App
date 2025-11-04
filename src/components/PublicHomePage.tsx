@@ -1,17 +1,50 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { supabase } from '@/lib/supabaseClient';
 import { ArrowRight, Brain, CheckCircle, Eye, Network, Zap } from 'lucide-react';
-import React from 'react';
+import React, { useState } from 'react';
 
 import OdysseyGalaxyDemo from './OdysseyGalaxyDemo';
 
 export default function PublicHomePage() {
+  const [email, setEmail] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [message, setMessage] = useState('');
+  
   const vrDemoRef = React.useRef<HTMLDivElement>(null);
   const handleWatchDemo = () => {
     if (vrDemoRef.current) {
       vrDemoRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   };
+
+  const handleMagicLink = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) return;
+
+    setIsLoading(true);
+    setMessage('');
+
+    try {
+      const { error } = await supabase.auth.signInWithOtp({
+        email,
+        options: {
+          emailRedirectTo: `${window.location.origin}/app`,
+        },
+      });
+
+      if (error) throw error;
+
+      setMessage('✅ Magic link sent! Check your email to access ODYSSEY-1.');
+      setEmail('');
+    } catch (error: any) {
+      setMessage(`❌ ${error.message}`);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-blue-900">
       {/* Hero Section */}
@@ -31,6 +64,34 @@ export default function PublicHomePage() {
               The World's Most Advanced AI Platform - Revolutionizing Business Intelligence, 
               Automation, and Decision Making
             </p>
+            
+            {/* Magic Link Form */}
+            <div className="max-w-md mx-auto bg-black/30 backdrop-blur-sm p-6 rounded-xl border border-purple-500/30">
+              <h3 className="text-xl font-semibold text-white mb-4">🔗 Quick Access</h3>
+              <form onSubmit={handleMagicLink} className="space-y-4">
+                <Input
+                  type="email"
+                  placeholder="Enter your email for instant access"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="bg-black/50 border-purple-500/50 text-white placeholder-gray-400"
+                  required
+                />
+                <Button 
+                  type="submit" 
+                  disabled={isLoading}
+                  className="w-full bg-purple-600 hover:bg-purple-700 text-white"
+                >
+                  {isLoading ? 'Sending...' : 'Send Magic Link 🪄'}
+                </Button>
+                {message && (
+                  <p className={`text-sm ${message.includes('✅') ? 'text-green-400' : 'text-red-400'}`}>
+                    {message}
+                  </p>
+                )}
+              </form>
+            </div>
+
             <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
               <a href="/subscribe">
                 <Button size="lg" className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-4 text-lg">
@@ -55,7 +116,7 @@ export default function PublicHomePage() {
       <section className="max-w-7xl mx-auto px-4" ref={vrDemoRef}>
         <h2 className="text-3xl font-bold text-white text-center mb-6 mt-8">Odyssey-1: The AI Core & Hive</h2>
         <p className="text-center text-gray-300 mb-4 max-w-2xl mx-auto">A glowing AI orb, surrounded by the Hive, with a smaller orb in perpetual orbit. Click any element to learn more.</p>
-  <OdysseyGalaxyDemo />
+        <OdysseyGalaxyDemo />
       </section>
 
       {/* Features Grid */}
@@ -183,6 +244,75 @@ export default function PublicHomePage() {
                 View Documentation
               </Button>
             </a>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-20 px-4 max-w-6xl mx-auto">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl font-bold text-white mb-6">
+            Why ODYSSEY-1 is Different
+          </h2>
+          <p className="text-xl text-gray-300 mb-8">
+            The world's most advanced AI-powered business platform with constitutional intelligence
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-8">
+          <div className="bg-gradient-to-br from-blue-900/40 to-purple-900/40 p-8 rounded-xl border border-blue-500/30">
+            <div className="text-3xl mb-4">🧠</div>
+            <h3 className="text-xl font-semibold text-white mb-4">Constitutional AI Core</h3>
+            <p className="text-gray-300">
+              R.O.M.A.N. - our sovereign AI system with dual hemisphere processing. 
+              Natural language commands become structured actions through constitutional validation.
+            </p>
+          </div>
+
+          <div className="bg-gradient-to-br from-purple-900/40 to-pink-900/40 p-8 rounded-xl border border-purple-500/30">
+            <div className="text-3xl mb-4">👑</div>
+            <h3 className="text-xl font-semibold text-white mb-4">User Sovereignty</h3>
+            <p className="text-gray-300">
+              Built on The 9 Principles framework. Your data remains yours. 
+              Complete transparency with enterprise-grade security and homeostatic monitoring.
+            </p>
+          </div>
+
+          <div className="bg-gradient-to-br from-green-900/40 to-blue-900/40 p-8 rounded-xl border border-green-500/30">
+            <div className="text-3xl mb-4">⚡</div>
+            <h3 className="text-xl font-semibold text-white mb-4">Intelligent Operations</h3>
+            <p className="text-gray-300">
+              Advanced workforce management, predictive analytics, and real-time market intelligence. 
+              Experience what happens when AI truly understands your business.
+            </p>
+          </div>
+        </div>
+
+        {/* Free Trial Limitations Teaser */}
+        <div className="mt-16 bg-gradient-to-r from-yellow-900/20 to-orange-900/20 p-8 rounded-xl border border-yellow-500/30">
+          <h3 className="text-2xl font-semibold text-white mb-4 text-center">
+            Experience the Future - 7 Days Free
+          </h3>
+          <div className="grid md:grid-cols-2 gap-8">
+            <div>
+              <h4 className="text-lg font-semibold text-yellow-300 mb-3">✨ Free Trial Includes:</h4>
+              <ul className="text-gray-300 space-y-2">
+                <li>• R.O.M.A.N. AI Assistant (limited queries)</li>
+                <li>• Basic workforce management</li>
+                <li>• Standard reporting</li>
+                <li>• Community support</li>
+                <li>• Up to 5 employees</li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-lg font-semibold text-blue-300 mb-3">🚀 Unlock with Premium:</h4>
+              <ul className="text-gray-300 space-y-2">
+                <li>• Full constitutional AI capabilities</li>
+                <li>• Unlimited natural language commands</li>
+                <li>• Advanced predictive analytics</li>
+                <li>• Real-time market intelligence</li>
+                <li>• Enterprise security & compliance</li>
+              </ul>
+            </div>
           </div>
         </div>
       </section>

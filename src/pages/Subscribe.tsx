@@ -1,7 +1,9 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { supabase } from '@/lib/supabaseClient';
 import { ArrowLeft, ArrowRight, Check, Crown, Star, TrendingUp, Zap } from 'lucide-react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 interface Tier {
@@ -13,6 +15,7 @@ interface Tier {
   icon: any;
   color: string;
   popular: boolean;
+  trialDays: number;
   features: string[];
   limits: {
     employees: string;
@@ -32,6 +35,7 @@ const TIERS: Tier[] = [
     icon: Zap,
     color: 'from-gray-600 to-gray-800',
     popular: false,
+    trialDays: 7,
     features: [
       '7-day full access',
       'All core features',
@@ -55,6 +59,7 @@ const TIERS: Tier[] = [
     icon: Star,
     color: 'from-blue-600 to-blue-800',
     popular: false,
+    trialDays: 7,
     features: [
       'Up to 25 employees',
       'Basic AI features',
@@ -80,6 +85,7 @@ const TIERS: Tier[] = [
     icon: TrendingUp,
     color: 'from-purple-600 to-purple-800',
     popular: true,
+    trialDays: 7,
     features: [
       'Unlimited employees',
       'Full AI suite',
@@ -107,6 +113,7 @@ const TIERS: Tier[] = [
     icon: Crown,
     color: 'from-yellow-600 to-yellow-800',
     popular: false,
+    trialDays: 7,
     features: [
       'Everything in Pro',
       'Unlimited AI queries',
@@ -130,15 +137,56 @@ const TIERS: Tier[] = [
 
 export default function Subscribe() {
   const navigate = useNavigate();
+  const [user, setUser] = React.useState<any>(null);
+  const [selectedPlan, setSelectedPlan] = React.useState(TIERS[0]);
+
+  React.useEffect(() => {
+    const getUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+    };
+    getUser();
+  }, []);
 
   const handleSelectTier = (tierId: string) => {
-    navigate(`/onboard?tier=${tierId}`);
+    const tier = TIERS.find((t) => t.id === tierId);
+    if (tier) {
+      setSelectedPlan(tier);
+    }
+  };
+
+  const handleCompleteSubscription = async () => {
+    if (!user) {
+      navigate('/');
+      return;
+    }
+
+    try {
+      const { data, error } = await supabase
+        .from('subscriptions')
+        .insert({
+          user_id: user.id,
+          plan: selectedPlan.id,
+          tier: selectedPlan.id,
+          status: selectedPlan.price === 0 ? 'trialing' : 'active',
+          current_period_start: new Date().toISOString(),
+          current_period_end: new Date(Date.now() + (selectedPlan.trialDays * 24 * 60 * 60 * 1000)).toISOString(),
+          trial_start: new Date().toISOString(),
+          trial_end: new Date(Date.now() + (selectedPlan.trialDays * 24 * 60 * 60 * 1000)).toISOString(),
+        });
+
+      if (error) throw error;
+
+      navigate('/app');
+    } catch (error) {
+      console.error('Error completing subscription:', error);
+    }
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-blue-900 py-16 px-4">
       
-      {/* ADD BACK BUTTON AT THE TOP */}
+      {/* Back Button */}
       <div className="max-w-7xl mx-auto mb-8">
         <Button
           onClick={() => navigate('/')}
@@ -153,38 +201,36 @@ export default function Subscribe() {
       {/* Header */}
       <div className="max-w-7xl mx-auto text-center mb-16">
         <h1 className="text-5xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent mb-4">
-          Choose Your ODYSSEY-1 Plan
+          Find the plan that's right for you
         </h1>
-        <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-          Select the perfect tier for your business. Start with a free trial, upgrade anytime.
+        <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+          Start with a 7-day free trial. No credit card required.
         </p>
       </div>
 
-      {/* Pricing Cards */}
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-        {TIERS.map((tier) => {
-          const Icon = tier.icon;
+      {/* Tiers Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto mb-16">
+        {TIERS.map((tier, index) => {
+          const IconComponent = tier.icon;
           return (
-            <Card
-              key={tier.id}
-              className={`relative bg-gradient-to-br ${tier.color} border-2 ${
-                tier.popular ? 'border-purple-400 scale-105' : 'border-gray-700'
-              } transition-transform hover:scale-105`}
+            <Card 
+              key={index} 
+              className={`relative border-2 ${
+                tier.popular ? 'border-purple-500' : 'border-gray-700'
+              } bg-gradient-to-br ${tier.color} shadow-lg flex flex-col`}
             >
               {tier.popular && (
-                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                  <Badge className="bg-purple-500 text-white px-4 py-1 text-sm font-bold">
-                    MOST POPULAR
-                  </Badge>
-                </div>
+                <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-purple-600">
+                  Most Popular
+                </Badge>
               )}
 
-              <CardHeader className="text-center pb-8 pt-8">
-                <Icon className="w-12 h-12 mx-auto mb-4 text-white" />
-                <CardTitle className="text-2xl font-bold text-white mb-2">
-                  {tier.name}
-                </CardTitle>
-                <CardDescription className="text-gray-300 text-sm">
+              <CardHeader className="text-center">
+                <div className="mx-auto mb-4">
+                  <IconComponent className="w-12 h-12 text-white" />
+                </div>
+                <CardTitle className="text-2xl font-bold text-white">{tier.name}</CardTitle>
+                <CardDescription className="text-gray-300">
                   {tier.description}
                 </CardDescription>
                 <div className="mt-4">
@@ -193,7 +239,7 @@ export default function Subscribe() {
                 </div>
               </CardHeader>
 
-              <CardContent className="space-y-6">
+              <CardContent className="space-y-6 flex-grow flex flex-col justify-between">
                 {/* Features List */}
                 <div className="space-y-3">
                   {tier.features.map((feature, index) => (
@@ -204,64 +250,77 @@ export default function Subscribe() {
                   ))}
                 </div>
 
-                {/* Limits */}
-                <div className="border-t border-gray-600 pt-4 space-y-2">
-                  <div className="text-xs text-gray-400">
-                    <strong className="text-white">Employees:</strong> {tier.limits.employees}
+                {/* Limits & CTA */}
+                <div>
+                  {/* Limits */}
+                  <div className="border-t border-gray-600 pt-4 space-y-2 mt-6">
+                    <div className="text-xs text-gray-400">
+                      <strong className="text-white">Employees:</strong> {tier.limits.employees}
+                    </div>
+                    <div className="text-xs text-gray-400">
+                      <strong className="text-white">AI Queries:</strong> {tier.limits.aiQueries}
+                    </div>
+                    <div className="text-xs text-gray-400">
+                      <strong className="text-white">Storage:</strong> {tier.limits.storage}
+                    </div>
+                    <div className="text-xs text-gray-400">
+                      <strong className="text-white">Support:</strong> {tier.limits.support}
+                    </div>
                   </div>
-                  <div className="text-xs text-gray-400">
-                    <strong className="text-white">AI Queries:</strong> {tier.limits.aiQueries}
-                  </div>
-                  <div className="text-xs text-gray-400">
-                    <strong className="text-white">Storage:</strong> {tier.limits.storage}
-                  </div>
-                  <div className="text-xs text-gray-400">
-                    <strong className="text-white">Support:</strong> {tier.limits.support}
-                  </div>
-                </div>
 
-                {/* CTA Button */}
-                <Button
-                  onClick={() => handleSelectTier(tier.id)}
-                  className={`w-full ${
-                    tier.popular
-                      ? 'bg-purple-600 hover:bg-purple-700'
-                      : 'bg-white hover:bg-gray-200 text-gray-900'
-                  }`}
-                  size="lg"
-                >
-                  {tier.id === 'free' ? 'Start Free Trial' : 'Get Started'}
-                  <ArrowRight className="ml-2 w-4 h-4" />
-                </Button>
+                  {/* CTA Button */}
+                  <Button
+                    onClick={() => handleSelectTier(tier.id)}
+                    className={`w-full mt-6 ${
+                      tier.popular
+                        ? 'bg-purple-600 hover:bg-purple-700'
+                        : 'bg-white hover:bg-gray-200 text-gray-900'
+                    }`}
+                    size="lg"
+                  >
+                    {tier.id === 'free' ? 'Start Free Trial' : 'Get Started'}
+                    <ArrowRight className="ml-2 w-4 h-4" />
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           );
         })}
       </div>
 
-      {/* FAQ / Trust Section */}
-      <div className="max-w-4xl mx-auto mt-16 text-center">
-        <div className="bg-gradient-to-r from-purple-900/30 to-blue-900/30 rounded-lg p-8 border border-purple-500/30">
-          <h3 className="text-2xl font-bold text-white mb-4">All plans include:</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-gray-300">
-            <div>
-              <Check className="w-6 h-6 text-green-400 mx-auto mb-2" />
-              <p className="font-semibold">14-Day Money Back</p>
-              <p className="text-sm">Risk-free guarantee</p>
-            </div>
-            <div>
-              <Check className="w-6 h-6 text-green-400 mx-auto mb-2" />
-              <p className="font-semibold">No Long-Term Contract</p>
-              <p className="text-sm">Cancel anytime</p>
-            </div>
-            <div>
-              <Check className="w-6 h-6 text-green-400 mx-auto mb-2" />
-              <p className="font-semibold">24/7 Security</p>
-              <p className="text-sm">Bank-grade encryption</p>
-            </div>
-          </div>
+      {/* Selected Plan Summary */}
+      {selectedPlan && (
+        <div className="max-w-2xl mx-auto mb-16">
+          <Card className="bg-gradient-to-r from-purple-900/50 to-blue-900/50 border-purple-500/50">
+            <CardHeader className="text-center">
+              <CardTitle className="text-white">Selected Plan: {selectedPlan.name}</CardTitle>
+            </CardHeader>
+            <CardContent className="text-center">
+              <Button
+                onClick={handleCompleteSubscription}
+                size="lg"
+                className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-4"
+              >
+                {selectedPlan.price === 0 ? 'Start Free Trial' : `Subscribe for $${selectedPlan.price}/${selectedPlan.period}`}
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* Trust Section */}
+      <div className="max-w-4xl mx-auto text-center">
+        <div className="bg-gradient-to-r from-purple-900/30 to-blue-900/30 p-8 rounded-lg">
+          <h3 className="text-2xl font-bold text-white mb-4">
+            Trusted by businesses of all sizes
+          </h3>
+          <p className="text-gray-300">
+            Join thousands of companies using ODYSSEY-1 to manage their operations,
+            payroll, and growth.
+          </p>
         </div>
       </div>
+      
     </div>
   );
 }
