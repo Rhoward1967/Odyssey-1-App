@@ -41,6 +41,7 @@ export default function TradingChart({ symbol, timeframe, chartType }: TradingCh
           </div>
         </div>
       </CardContent>
+      {/* Clean, working trading chart component */}
     </Card>
   );
 }
