@@ -106,7 +106,7 @@ export default function Sidebar() {
         </Button>
       </div>
 
-      {/* Production-ready sidebar - optimization authorized */}
+      {/* Clean, production-ready sidebar */}
     </div>
   );
 }
