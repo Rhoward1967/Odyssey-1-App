@@ -131,7 +131,7 @@ export default function MediaCenter() {
         </Card>
       </div>
 
-      {/* ✅ Production-ready Media Center with working AI research bot */}
+      {/* ✅ MediaCenter ready to test in development server */}
     </div>
   );
 }
