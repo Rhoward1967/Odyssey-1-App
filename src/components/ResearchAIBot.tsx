@@ -61,7 +61,9 @@ What would you like to research today?`,
     setIsLoading(true);
 
     try {
-      // Use existing gemini-api function for now since research-bot might not exist
+      // ✅ This will work BETTER after optimization
+      // Currently uses gemini-api function (fallback)
+      // After optimization: faster database queries = faster responses
       const { data, error } = await supabase.functions.invoke('gemini-api', {
         body: { 
           message: userMsg.message,
