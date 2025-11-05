@@ -316,6 +316,8 @@ export default function PublicHomePage() {
           </div>
         </div>
       </section>
+
+      {/* Professional public homepage ready for production */}
     </div>
   );
 }

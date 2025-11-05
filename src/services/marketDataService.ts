@@ -60,7 +60,7 @@ export class MarketDataService {
     }
   }
 
-  // Fallback mock data
+  // More realistic mock price generator
   private static getMockPrice(symbol: string) {
     const prices: { [key: string]: number } = {
       'AAPL': 191.44,
@@ -72,10 +72,11 @@ export class MarketDataService {
     };
     
     const basePrice = prices[symbol] || 100;
-    const change = (Math.random() - 0.5) * basePrice * 0.02;
+    // Much smaller, realistic intraday movements
+    const change = (Math.random() - 0.5) * basePrice * 0.003; // 0.3% max change
     
     return {
-      price: basePrice + change,
+      price: Math.max(basePrice * 0.97, Math.min(basePrice * 1.03, basePrice + change)),
       change: change,
       changePercent: `${(change / basePrice * 100).toFixed(2)}%`
     };

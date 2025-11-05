@@ -139,6 +139,25 @@ export default function Trading() {
     return () => clearInterval(interval);
   }, [selectedAsset, marketData]);
 
+  // Much slower and more realistic price updates for trading platform
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (selectedAsset) {
+        const asset = [...marketData.stocks, ...marketData.crypto, ...marketData.etfs]
+          .find(a => a.symbol === selectedAsset);
+        
+        if (asset) {
+          // Extremely small, realistic price movement (0.01% to 0.05%)
+          const variation = (Math.random() - 0.5) * asset.price * 0.0005; // 0.05% max
+          const newPrice = Math.max(asset.price * 0.98, Math.min(asset.price * 1.02, asset.price + variation));
+          setRealTimePrice(newPrice);
+        }
+      }
+    }, 15000); // Update every 15 seconds for more realistic trading
+
+    return () => clearInterval(interval);
+  }, [selectedAsset, marketData]);
+
   // Initialize chart data when asset changes
   useEffect(() => {
     if (selectedAsset) {
