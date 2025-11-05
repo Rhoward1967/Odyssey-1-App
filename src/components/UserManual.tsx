@@ -65,12 +65,6 @@ export const UserManual: React.FC = () => {
   // Check if user is supa-admin (authenticated user for now - you can add more checks later)
   const isSupaAdmin = userId !== '00000000-0000-0000-0000-000000000000';
 
-  // ADD THIS DEBUG LOG
-  useEffect(() => {
-    console.log('UserManual mounted, activeTab:', activeTab);
-    console.log('isSupaAdmin:', isSupaAdmin);
-  }, [activeTab, isSupaAdmin]);
-
   const sections: ManualSection[] = [
     {
       id: 'getting-started',
@@ -450,9 +444,6 @@ export const UserManual: React.FC = () => {
 
   return (
     <div className='space-y-6'>
-      {/* REMOVE THIS DEBUG LINE - IT'S BLOCKING THE VIEW */}
-      {/* <div className="text-white bg-red-500 p-2">DEBUG: UserManual Loaded - Active Tab: {activeTab}</div> */}
-      
       <Card className='bg-gradient-to-r from-green-900/50 to-blue-900/50 border-green-500/30'>
         <CardHeader className='text-center'>
           <CardTitle className='text-3xl font-bold text-white flex items-center justify-center gap-3'>

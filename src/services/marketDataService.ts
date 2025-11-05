@@ -1,6 +1,9 @@
 export class MarketDataService {
-  private static readonly ALPHA_VANTAGE_KEY = process.env.NEXT_PUBLIC_ALPHA_VANTAGE_KEY || 'demo';
-  private static readonly POLYGON_API_KEY = process.env.NEXT_PUBLIC_POLYGON_API_KEY || 'demo';
+  // CHANGE THESE TWO LINES (lines 2-3):
+  // FROM: private static readonly ALPHA_VANTAGE_KEY = process.env.NEXT_PUBLIC_ALPHA_VANTAGE_KEY || 'demo';
+  // TO:
+  private static readonly ALPHA_VANTAGE_KEY = import.meta.env.VITE_ALPHA_VANTAGE_KEY || 'demo';
+  private static readonly POLYGON_API_KEY = import.meta.env.VITE_POLYGON_API_KEY || 'demo';
 
   // Get REAL stock prices from Alpha Vantage
   static async getRealStockPrice(symbol: string) {
