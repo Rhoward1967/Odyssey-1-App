@@ -16,7 +16,7 @@ serve(async (req) => {
   }
 
   try {
-    const { message, messages } = await req.json()
+    const { message, messages: _messages } = await req.json()
 
     // Check for specific research topics and provide detailed responses
     const query = message.toLowerCase();
@@ -165,7 +165,7 @@ Please specify what you'd like to research, and I'll provide detailed insights w
           aiResponse += `\n\n**Additional AI Analysis:**\n${hfData[0].generated_text}`;
         }
       }
-    } catch (hfError) {
+    } catch (_hfError) {
       console.log('Hugging Face API unavailable, using fallback response');
     }
 
