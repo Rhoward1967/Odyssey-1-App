@@ -2,10 +2,10 @@ import TradingAdvisorBot from '@/components/TradingAdvisorBot';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
-const Trading: React.FC = () => {
+export default function Trading() {
   const [tradingMode, setTradingMode] = useState('paper');
   const [walletConnected, setWalletConnected] = useState(false);
   const [walletAddress, setWalletAddress] = useState('');
@@ -15,6 +15,16 @@ const Trading: React.FC = () => {
   const [chartData, setChartData] = useState<any[]>([]);
   const [realTimePrice, setRealTimePrice] = useState<number>(0);
   const [chartType, setChartType] = useState('line'); // Add chart type state
+  const [orderType, setOrderType] = useState('market');
+  const [quantity, setQuantity] = useState('');
+  const [showOrderForm, setShowOrderForm] = useState(false);
+  const [selectedStock, setSelectedStock] = useState('AAPL');
+  const [currentPrice] = useState(191.44);
+  const [paperPortfolio, setPaperPortfolio] = useState<any[]>([]);
+
+  // Separate the chart price from the order price to prevent conflicts
+  const [basePrice] = useState(191.44);
+  const [chartPrice, setChartPrice] = useState(191.44);
 
   // Move marketData outside component or memoize it to fix dependency warnings
   const marketData = React.useMemo(() => ({
@@ -557,6 +567,107 @@ const Trading: React.FC = () => {
     </div>
   );
 
+  // Get current price for a symbol
+  const getCurrentPrice = (symbol: string) => {
+    // Mock price data - in real app would fetch from API
+    const prices: { [key: string]: number } = {
+      'AAPL': 191.44,
+      'MSFT': 384.52,
+      'NVDA': 722.48,
+      'TSLA': 248.42
+    };
+    return prices[symbol] || 100.00;
+  };
+
+  // Handle trading mode switch
+  const handleTradingModeChange = (mode: 'paper' | 'live') => {
+    setTradingMode(mode);
+    console.log(`🔄 Switched to ${mode} trading mode`);
+  };
+
+  // Handle timeframe changes
+  const handleTimeframeChange = (timeframe: string) => {
+    setChartTimeframe(timeframe);
+    console.log(`📊 Chart timeframe changed to ${timeframe}`);
+  };
+
+  // Handle chart type changes
+  const handleChartTypeChange = (type: 'line' | 'candlestick') => {
+    setChartType(type);
+    console.log(`📈 Chart type changed to ${type}`);
+  };
+
+  // Memoize the price update to prevent unnecessary re-renders
+  const chartPriceUpdate = useCallback(() => {
+    setChartPrice(prev => {
+      const change = (Math.random() - 0.5) * 0.5; // Smaller changes
+      return Math.max(basePrice * 0.9, Math.min(basePrice * 1.1, prev + change));
+    });
+  }, [basePrice]);
+
+  // Use separate effect for chart updates that doesn't affect form state
+  useEffect(() => {
+    const interval = setInterval(chartPriceUpdate, 3000); // Slower updates
+    return () => clearInterval(interval);
+  }, [chartPriceUpdate]);
+
+  // Handle quantity change with persistence
+  const handleQuantityChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (value === '' || /^\d*\.?\d*$/.test(value)) {
+      setQuantity(value);
+    }
+  }, []);
+
+  // Use stable price for orders (not the fluctuating chart price)
+  const getOrderPrice = () => basePrice;
+
+  // Handle buy order
+  const handleBuyOrder = () => {
+    if (!quantity || parseFloat(quantity) <= 0) {
+      alert('❌ Please enter a valid quantity');
+      return;
+    }
+
+    const orderPrice = getOrderPrice();
+    const orderValue = parseFloat(quantity) * orderPrice;
+    
+    if (tradingMode === 'paper') {
+      setPaperPortfolio(prev => [...prev, {
+        symbol: 'AAPL',
+        type: 'BUY',
+        quantity: parseFloat(quantity),
+        price: orderPrice,
+        timestamp: new Date().toISOString(),
+        mode: tradingMode
+      }]);
+      alert(`✅ Paper Trade Executed!\n\nBOUGHT: ${quantity} shares of AAPL\nPrice: $${orderPrice.toFixed(2)}\nTotal: $${orderValue.toFixed(2)}\n\nThis is a simulated trade for learning.`);
+    } else {
+      alert(`💰 Live Trade Ready!\n\nOrder: BUY ${quantity} AAPL at $${orderPrice.toFixed(2)}\nTotal: $${orderValue.toFixed(2)}\n\n⚠️ Live trading requires broker integration.`);
+    }
+    
+    // Clear quantity after successful order
+    setQuantity('');
+  };
+
+  // Handle sell order
+  const handleSellOrder = () => {
+    if (!quantity || parseFloat(quantity) <= 0) {
+      alert('❌ Please enter a valid quantity');
+      return;
+    }
+
+    const orderValue = parseFloat(quantity) * currentPrice;
+    
+    if (tradingMode === 'paper') {
+      alert(`✅ Paper Sell Order!\n\nSOLD: ${quantity} shares of AAPL\nPrice: $${currentPrice.toFixed(2)}\nTotal: $${orderValue.toFixed(2)}\n\nThis is a simulated trade for learning.`);
+    } else {
+      alert(`💰 Live Sell Ready!\n\nOrder: SELL ${quantity} AAPL at $${currentPrice.toFixed(2)}\nTotal: $${orderValue.toFixed(2)}\n\n⚠️ Live trading requires broker integration.`);
+    }
+    
+    setQuantity('');
+  };
+
   return (
     <div className="space-y-6">
       <div>
@@ -579,5 +690,3 @@ const Trading: React.FC = () => {
     </div>
   );
 };
-
-export default Trading;
