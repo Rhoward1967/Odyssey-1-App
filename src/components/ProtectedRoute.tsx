@@ -1,7 +1,7 @@
+import { supabase } from '@/lib/supabaseClient';
+import { useEffect, useState } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from './AuthProvider';
-import { useEffect, useState } from 'react';
-import { supabase } from '@/lib/supabaseClient';
 
 /**
  * Enhanced security guard for routes with proper session handling

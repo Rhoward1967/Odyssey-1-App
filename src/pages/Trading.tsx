@@ -2,6 +2,7 @@ import TradingAdvisorBot from '@/components/TradingAdvisorBot';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { MarketDataService } from '@/services/marketDataService';
 import React, { useCallback, useEffect, useState } from 'react';
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
@@ -21,38 +22,88 @@ export default function Trading() {
   const [selectedStock, setSelectedStock] = useState('AAPL');
   const [currentPrice] = useState(191.44);
   const [paperPortfolio, setPaperPortfolio] = useState<any[]>([]);
+  const [realMarketData, setRealMarketData] = useState<any>(null);
+  const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
 
   // Separate the chart price from the order price to prevent conflicts
   const [basePrice] = useState(191.44);
   const [chartPrice, setChartPrice] = useState(191.44);
 
-  // Move marketData outside component or memoize it to fix dependency warnings
-  const marketData = React.useMemo(() => ({
-    stocks: [
-      { symbol: 'AAPL', name: 'Apple Inc.', price: 191.45, change: '+2.34%', volume: '52.8M' },
-      { symbol: 'MSFT', name: 'Microsoft Corp.', price: 384.52, change: '+1.23%', volume: '31.2M' },
-      { symbol: 'NVDA', name: 'NVIDIA Corp.', price: 722.48, change: '+4.67%', volume: '67.1M' },
-      { symbol: 'TSLA', name: 'Tesla Inc.', price: 248.42, change: '-1.45%', volume: '89.3M' },
-      { symbol: 'GOOGL', name: 'Alphabet Inc.', price: 139.69, change: '+0.87%', volume: '28.4M' },
-      { symbol: 'AMZN', name: 'Amazon.com Inc.', price: 153.32, change: '+1.92%', volume: '45.6M' },
-    ],
-    crypto: [
-      { symbol: 'BTC', name: 'Bitcoin', price: 43250.00, change: '+3.45%', volume: '$28.4B' },
-      { symbol: 'ETH', name: 'Ethereum', price: 2580.75, change: '+2.67%', volume: '$12.8B' },
-      { symbol: 'SOL', name: 'Solana', price: 102.34, change: '+5.23%', volume: '$3.2B' },
-      { symbol: 'ADA', name: 'Cardano', price: 0.52, change: '+1.89%', volume: '$1.1B' },
-      { symbol: 'DOT', name: 'Polkadot', price: 7.85, change: '+4.12%', volume: '$892M' },
-      { symbol: 'AVAX', name: 'Avalanche', price: 37.92, change: '+6.78%', volume: '$1.4B' },
-    ],
-    etfs: [
-      { symbol: 'SPY', name: 'SPDR S&P 500 ETF', price: 477.83, change: '+0.45%', volume: '87.2M' },
-      { symbol: 'QQQ', name: 'Invesco QQQ Trust', price: 388.92, change: '+1.23%', volume: '45.8M' },
-      { symbol: 'VTI', name: 'Vanguard Total Stock', price: 238.45, change: '+0.67%', volume: '23.1M' },
-      { symbol: 'ARKK', name: 'ARK Innovation ETF', price: 45.67, change: '+2.89%', volume: '12.4M' },
-      { symbol: 'TQQQ', name: '3x Nasdaq Bull ETF', price: 63.24, change: '+3.67%', volume: '34.5M' },
-      { symbol: 'SQQQ', name: '3x Nasdaq Bear ETF', price: 8.92, change: '-3.45%', volume: '28.9M' },
-    ]
-  }), []); // Empty dependency array since data is static
+  // Fetch REAL market data on component mount
+  useEffect(() => {
+    const fetchRealData = async () => {
+      console.log('📡 Fetching real market data...');
+      const realData = await MarketDataService.getAllMarketData();
+      setRealMarketData(realData);
+      setLastUpdated(new Date());
+    };
+
+    fetchRealData();
+    
+    // Update every 60 seconds (API rate limit friendly)
+    const interval = setInterval(fetchRealData, 60000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Use real data when available, fallback to mock data
+  const marketData = React.useMemo(() => {
+    if (realMarketData) {
+      return {
+        stocks: [
+          { symbol: 'AAPL', name: 'Apple Inc.', ...realMarketData.stocks[0] },
+          { symbol: 'MSFT', name: 'Microsoft Corp.', ...realMarketData.stocks[1] },
+          { symbol: 'NVDA', name: 'NVIDIA Corp.', ...realMarketData.stocks[2] },
+          { symbol: 'TSLA', name: 'Tesla Inc.', ...realMarketData.stocks[3] },
+          { symbol: 'GOOGL', name: 'Alphabet Inc.', ...realMarketData.stocks[4] },
+          { symbol: 'AMZN', name: 'Amazon.com Inc.', ...realMarketData.stocks[5] },
+        ],
+        crypto: [
+          { symbol: 'BTC', name: 'Bitcoin', ...realMarketData.crypto[0] },
+          { symbol: 'ETH', name: 'Ethereum', ...realMarketData.crypto[1] },
+          { symbol: 'SOL', name: 'Solana', ...realMarketData.crypto[2] },
+          { symbol: 'ADA', name: 'Cardano', ...realMarketData.crypto[3] },
+          { symbol: 'DOT', name: 'Polkadot', ...realMarketData.crypto[4] },
+          { symbol: 'AVAX', name: 'Avalanche', ...realMarketData.crypto[5] },
+        ],
+        etfs: [
+          { symbol: 'SPY', name: 'SPDR S&P 500 ETF', ...realMarketData.etfs[0] },
+          { symbol: 'QQQ', name: 'Invesco QQQ Trust', ...realMarketData.etfs[1] },
+          { symbol: 'VTI', name: 'Vanguard Total Stock', ...realMarketData.etfs[2] },
+          { symbol: 'ARKK', name: 'ARK Innovation ETF', ...realMarketData.etfs[3] },
+          { symbol: 'TQQQ', name: '3x Nasdaq Bull ETF', ...realMarketData.etfs[4] },
+          { symbol: 'SQQQ', name: '3x Nasdaq Bear ETF', ...realMarketData.etfs[5] },
+        ]
+      };
+    }
+    
+    // Fallback to mock data
+    return {
+      stocks: [
+        { symbol: 'AAPL', name: 'Apple Inc.', price: 191.45, change: '+2.34%', volume: '52.8M' },
+        { symbol: 'MSFT', name: 'Microsoft Corp.', price: 384.52, change: '+1.23%', volume: '31.2M' },
+        { symbol: 'NVDA', name: 'NVIDIA Corp.', price: 722.48, change: '+4.67%', volume: '67.1M' },
+        { symbol: 'TSLA', name: 'Tesla Inc.', price: 248.42, change: '-1.45%', volume: '89.3M' },
+        { symbol: 'GOOGL', name: 'Alphabet Inc.', price: 139.69, change: '+0.87%', volume: '28.4M' },
+        { symbol: 'AMZN', name: 'Amazon.com Inc.', price: 153.32, change: '+1.92%', volume: '45.6M' },
+      ],
+      crypto: [
+        { symbol: 'BTC', name: 'Bitcoin', price: 43250.00, change: '+3.45%', volume: '$28.4B' },
+        { symbol: 'ETH', name: 'Ethereum', price: 2580.75, change: '+2.67%', volume: '$12.8B' },
+        { symbol: 'SOL', name: 'Solana', price: 102.34, change: '+5.23%', volume: '$3.2B' },
+        { symbol: 'ADA', name: 'Cardano', price: 0.52, change: '+1.89%', volume: '$1.1B' },
+        { symbol: 'DOT', name: 'Polkadot', price: 7.85, change: '+4.12%', volume: '$892M' },
+        { symbol: 'AVAX', name: 'Avalanche', price: 37.92, change: '+6.78%', volume: '$1.4B' },
+      ],
+      etfs: [
+        { symbol: 'SPY', name: 'SPDR S&P 500 ETF', price: 477.83, change: '+0.45%', volume: '87.2M' },
+        { symbol: 'QQQ', name: 'Invesco QQQ Trust', price: 388.92, change: '+1.23%', volume: '45.8M' },
+        { symbol: 'VTI', name: 'Vanguard Total Stock', price: 238.45, change: '+0.67%', volume: '23.1M' },
+        { symbol: 'ARKK', name: 'ARK Innovation ETF', price: 45.67, change: '+2.89%', volume: '12.4M' },
+        { symbol: 'TQQQ', name: '3x Nasdaq Bull ETF', price: 63.24, change: '+3.67%', volume: '34.5M' },
+        { symbol: 'SQQQ', name: '3x Nasdaq Bear ETF', price: 8.92, change: '-3.45%', volume: '28.9M' },
+      ]
+    };
+  }, [realMarketData]);
 
   // Memoize generateChartData FIRST (moved up to fix declaration order)
   const generateChartData = React.useCallback((timeframe: string, basePrice: number) => {
@@ -363,35 +414,51 @@ export default function Trading() {
   const MarketDataTable = ({ assets, title }: { assets: any[], title: string }) => (
     <Card className="bg-slate-800/50 border-slate-600">
       <CardHeader>
-        <CardTitle className="text-white">{title}</CardTitle>
+        <CardTitle className="text-white flex items-center justify-between">
+          {title}
+          {realMarketData && (
+            <span className="text-xs text-green-400">
+              📡 LIVE • Updated {lastUpdated.toLocaleTimeString()}
+            </span>
+          )}
+        </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="overflow-x-auto"> {/* Horizontal scroll on small screens */}
-          <div className="space-y-2">
-            {assets.map((asset) => (
-              <div 
-                key={asset.symbol} 
-                className={`flex justify-between items-center p-3 rounded hover:bg-slate-600/50 cursor-pointer transition-colors ${
-                  selectedAsset === asset.symbol ? 'bg-blue-600/30 border border-blue-500/50' : 'bg-slate-700/50'
-                }`}
-                onClick={() => setSelectedAsset(asset.symbol)}
-              >
-                <div className="flex-1">
-                  <div className="font-semibold text-white">{asset.symbol}</div>
-                  <div className="text-sm text-gray-400">{asset.name}</div>
+        <div className="space-y-2">
+          {assets.map((asset) => (
+            <div 
+              key={asset.symbol} 
+              className={`flex justify-between items-center p-3 rounded hover:bg-slate-600/50 cursor-pointer transition-colors ${
+                selectedAsset === asset.symbol ? 'bg-blue-600/30 border border-blue-500/50' : 'bg-slate-700/50'
+              }`}
+              onClick={() => setSelectedAsset(asset.symbol)}
+            >
+              <div className="flex-1">
+                <div className="font-semibold text-white">{asset.symbol}</div>
+                <div className="text-sm text-gray-400">{asset.name}</div>
+              </div>
+              <div className="text-right">
+                <div className="font-mono text-white">
+                  ${typeof asset.price === 'number' ? asset.price.toFixed(2) : asset.price}
                 </div>
-                <div className="text-right">
-                  <div className="font-mono text-white">${asset.price.toLocaleString()}</div>
-                  <div className={`text-sm ${asset.change.startsWith('+') ? 'text-green-400' : 'text-red-400'}`}>
-                    {asset.change}
-                  </div>
-                </div>
-                <div className="text-right ml-4">
-                  <div className="text-sm text-gray-400">{asset.volume}</div>
+                <div className={`text-sm ${
+                  (asset.change?.toString().startsWith('+') || asset.change > 0) 
+                    ? 'text-green-400' 
+                    : 'text-red-400'
+                }`}>
+                  {typeof asset.change === 'number' 
+                    ? `${asset.change > 0 ? '+' : ''}${asset.change.toFixed(2)}%`
+                    : asset.change
+                  }
                 </div>
               </div>
-            ))}
-          </div>
+              <div className="text-right ml-4">
+                <div className="text-sm text-gray-400">
+                  {asset.volume?.toLocaleString() || 'N/A'}
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </CardContent>
     </Card>

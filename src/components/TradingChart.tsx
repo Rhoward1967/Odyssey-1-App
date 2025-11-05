@@ -26,7 +26,7 @@ export default function TradingChart({ symbol, timeframe, chartType }: TradingCh
         setPriceChange(realPrice.change);
       }
 
-      // Get real historical data
+      // Get real historical data - now this method exists
       const historical = await MarketDataService.getHistoricalData(symbol, timeframe);
       setHistoricalData(historical);
       

@@ -2,7 +2,7 @@ export class MarketDataService {
   private static readonly ALPHA_VANTAGE_KEY = process.env.NEXT_PUBLIC_ALPHA_VANTAGE_KEY || 'demo';
   private static readonly POLYGON_API_KEY = process.env.NEXT_PUBLIC_POLYGON_API_KEY || 'demo';
 
-  // Get real stock price from Alpha Vantage
+  // Get REAL stock prices from Alpha Vantage
   static async getRealStockPrice(symbol: string) {
     try {
       const response = await fetch(
@@ -15,11 +15,14 @@ export class MarketDataService {
         return {
           price: parseFloat(quote['05. price']),
           change: parseFloat(quote['09. change']),
-          changePercent: quote['10. change percent']
+          changePercent: quote['10. change percent'].replace('%', ''),
+          open: parseFloat(quote['02. open']),
+          high: parseFloat(quote['03. high']),
+          low: parseFloat(quote['04. low']),
+          volume: quote['06. volume']
         };
       }
       
-      // Fallback to mock data if API fails
       return this.getMockPrice(symbol);
     } catch (error) {
       console.error('Failed to fetch real stock price:', error);
@@ -27,7 +30,31 @@ export class MarketDataService {
     }
   }
 
-  // Get historical data
+  // Get REAL crypto prices from CoinGecko
+  static async getCryptoPrice(coinId: string) {
+    try {
+      const response = await fetch(
+        `https://api.coingecko.com/api/v3/simple/price?ids=${coinId}&vs_currencies=usd&include_24hr_change=true&include_24hr_vol=true`
+      );
+      const data = await response.json();
+      
+      if (data[coinId]) {
+        return {
+          price: data[coinId].usd,
+          change: data[coinId].usd_24h_change || 0,
+          changePercent: (data[coinId].usd_24h_change || 0).toFixed(2),
+          volume: data[coinId].usd_24h_vol || 0
+        };
+      }
+      
+      return null;
+    } catch (error) {
+      console.error('Failed to fetch crypto price:', error);
+      return null;
+    }
+  }
+
+  // Add the missing getHistoricalData method
   static async getHistoricalData(symbol: string, timeframe: string) {
     try {
       const function_name = timeframe === '1D' ? 'TIME_SERIES_INTRADAY' : 'TIME_SERIES_DAILY';
@@ -60,6 +87,30 @@ export class MarketDataService {
     }
   }
 
+  // Add the missing getAllMarketData method
+  static async getAllMarketData() {
+    const stockSymbols = ['AAPL', 'MSFT', 'NVDA', 'TSLA', 'GOOGL', 'AMZN'];
+    const cryptoIds = ['bitcoin', 'ethereum', 'solana', 'cardano', 'polkadot', 'avalanche-2'];
+    const etfSymbols = ['SPY', 'QQQ', 'VTI', 'ARKK', 'TQQQ', 'SQQQ'];
+
+    try {
+      const allData = await Promise.all([
+        ...stockSymbols.map(symbol => this.getRealStockPrice(symbol)),
+        ...cryptoIds.map(id => this.getCryptoPrice(id)),
+        ...etfSymbols.map(symbol => this.getRealStockPrice(symbol))
+      ]);
+
+      return {
+        stocks: allData.slice(0, 6),
+        crypto: allData.slice(6, 12),
+        etfs: allData.slice(12, 18)
+      };
+    } catch (error) {
+      console.error('Failed to fetch market data:', error);
+      return null;
+    }
+  }
+
   // More realistic mock price generator
   private static getMockPrice(symbol: string) {
     const prices: { [key: string]: number } = {
@@ -84,7 +135,7 @@ export class MarketDataService {
 
   // Mock historical data generator
   private static getMockHistoricalData(symbol: string, timeframe: string) {
-    const basePrice = this.getMockPrice(symbol).price;
+    const basePrice = 191.44;
     const points = timeframe === '1D' ? 24 : timeframe === '1W' ? 7 : 30;
     
     return Array.from({ length: points }, (_, i) => {
@@ -100,28 +151,5 @@ export class MarketDataService {
         volume: Math.floor(Math.random() * 1000000)
       };
     });
-  }
-
-  // Get crypto prices from CoinGecko (free API)
-  static async getCryptoPrice(coinId: string) {
-    try {
-      const response = await fetch(
-        `https://api.coingecko.com/api/v3/simple/price?ids=${coinId}&vs_currencies=usd&include_24hr_change=true`
-      );
-      const data = await response.json();
-      
-      if (data[coinId]) {
-        return {
-          price: data[coinId].usd,
-          change: data[coinId].usd_24h_change || 0,
-          changePercent: `${(data[coinId].usd_24h_change || 0).toFixed(2)}%`
-        };
-      }
-      
-      return null;
-    } catch (error) {
-      console.error('Failed to fetch crypto price:', error);
-      return null;
-    }
   }
 }
