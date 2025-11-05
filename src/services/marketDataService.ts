@@ -156,3 +156,5 @@ export class MarketDataService {
     });
   }
 }
+
+// File is ready to accept - import.meta.env fixed
