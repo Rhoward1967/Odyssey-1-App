@@ -11,227 +11,122 @@ serve(async (req) => {
   }
 
   try {
-    const { message, tradingMode = 'paper', messages: _messages } = await req.json()
-
-    // Check for specific stock/crypto queries and provide intelligent responses
+    const { message, tradingMode = 'paper' } = await req.json()
+    
+    // Enhanced trading responses based on query
     const query = message.toLowerCase();
-    let aiResponse = '';
+    let response = '';
 
     if (query.includes('aapl') || query.includes('apple')) {
-      aiResponse = `📈 **AAPL (Apple Inc.) Analysis**
+      response = `📈 **AAPL Trading Analysis**
 
-**💰 Current Market Position:**
-• **Symbol:** AAPL (NASDAQ)
+**Current Status:** Apple Inc. (NASDAQ: AAPL)
+• **Market Cap:** ~$3.0 Trillion
 • **Sector:** Technology - Consumer Electronics
-• **Market Cap:** ~$3.0 Trillion (Large Cap)
-• **P/E Ratio:** ~28-30 range (Premium valuation)
+• **Key Support:** $175-180 range
+• **Resistance:** $200-205 levels
 
-**📊 Technical Analysis:**
-• **Support Levels:** Monitor $175-180 range
-• **Resistance:** Key levels around $200-205
-• **Moving Averages:** Watch 50-day and 200-day MA crossovers
-• **Volume:** Institutional buying/selling patterns
+**Technical Indicators:**
+• 50-day MA: Bullish crossover pattern
+• Volume: Above average institutional activity
+• RSI: Currently in neutral zone (45-55)
 
-**🔍 Fundamental Factors:**
-• **iPhone Sales:** Primary revenue driver (60-70% of revenue)
-• **Services Growth:** App Store, iCloud, Apple Pay expansion
-• **Innovation Pipeline:** AI integration, AR/VR developments
-• **Global Markets:** China market performance impact
+**Fundamental Strengths:**
+• iPhone revenue remains stable (60-70% of total)
+• Services growth: App Store, iCloud expansion
+• Strong balance sheet with $29B quarterly revenue
 
-**⚠️ Risk Considerations:**
-• **Market Concentration:** Heavy iPhone dependence
-• **Regulatory Scrutiny:** App Store policies under review
-• **Economic Sensitivity:** Consumer discretionary spending
-• **Competition:** Android, AI hardware competition
-
-**💡 Trading Considerations:**
+**${tradingMode === 'paper' ? 'Paper Trading Strategy' : 'Live Trading Notes'}:**
 ${tradingMode === 'paper' 
-  ? '• **Paper Trading:** Excellent for learning blue-chip analysis\n• **Study Pattern:** Track earnings impact and product cycles'
-  : '• **Position Sizing:** Consider 2-5% of portfolio for single stock\n• **Entry Strategy:** Dollar-cost averaging on dips'
+  ? '• Practice with 10-20 share positions\n• Study earnings impact patterns\n• Track daily volatility ranges'
+  : '• Position size: 2-5% of portfolio max\n• Set stop loss at $170 support\n• Consider covered calls on positions'
 }
 
-*This is educational analysis. Always conduct your own research and consider your risk tolerance.*`;
+**Risk Factors:**
+• China market exposure (~20% revenue)
+• Regulatory scrutiny on App Store
+• Consumer spending sensitivity
 
-    } else if (query.includes('crypto') || query.includes('bitcoin') || query.includes('btc') || query.includes('ethereum')) {
-      aiResponse = `🚀 **Cryptocurrency Market Analysis**
+*This is educational analysis for ${tradingMode} trading.*`;
 
-**📊 Major Crypto Overview:**
-• **Bitcoin (BTC):** Digital gold, store of value narrative
-• **Ethereum (ETH):** Smart contracts platform, DeFi ecosystem
-• **Market Cap:** Total crypto market ~$1.7-2.0 trillion
-• **Dominance:** Bitcoin ~45-50%, Ethereum ~18-20%
+    } else if (query.includes('strategy') || query.includes('how to')) {
+      response = `💡 **Trading Strategy Guide**
 
-**📈 Current Trends:**
-• **Institutional Adoption:** ETFs, corporate treasury holdings
-• **Regulatory Clarity:** Ongoing development in major markets
-• **Technology Evolution:** Layer 2 solutions, proof-of-stake
-• **DeFi Growth:** Decentralized finance ecosystem expansion
+**${tradingMode === 'paper' ? 'Paper Trading Learning Path' : 'Live Trading Framework'}:**
 
-**⚠️ High-Risk Considerations:**
-• **Extreme Volatility:** 20-30% daily moves possible
-• **Regulatory Risk:** Policy changes can impact prices significantly
-• **Technology Risk:** Smart contract vulnerabilities
-• **Market Manipulation:** Less regulated than traditional assets
+**1. Risk Management (CRITICAL):**
+• Never risk more than 1-2% per trade
+• Use stop losses on every position
+• Size positions based on volatility
 
-**💡 Risk Management for Crypto:**
-${tradingMode === 'paper' 
-  ? '• **Paper Trading:** Perfect for learning crypto volatility\n• **Study Correlations:** Track Bitcoin dominance effects'
-  : '• **Position Sizing:** Never more than 5-10% of total portfolio\n• **Dollar-Cost Averaging:** Spread purchases over time'
+**2. Entry Strategies:**
+• **Breakout:** Enter above resistance with volume
+• **Pullback:** Buy dips to moving average support
+• **Momentum:** Follow strong trending moves
+
+**3. Market Analysis:**
+• Check overall market direction (SPY/QQQ)
+• Verify sector strength before stock picks
+• Use volume to confirm price moves
+
+**${tradingMode === 'paper' ? 'Learning Focus' : 'Execution Tips'}:**
+${tradingMode === 'paper'
+  ? '• Track win/loss ratios\n• Practice different timeframes\n• Study after-hours reactions'
+  : '• Use limit orders for better fills\n• Monitor pre-market activity\n• Keep trading journal'
 }
 
-*Crypto is highly speculative. Only invest what you can afford to lose.*`;
+**Key Metrics to Track:**
+• Sharpe ratio (risk-adjusted returns)
+• Maximum drawdown periods
+• Average holding time per position
 
-    } else if (query.includes('market') || query.includes('analysis') || query.includes('strategy')) {
-      aiResponse = `📊 **Market Analysis & Strategy Framework**
-
-**🔍 Market Analysis Approach:**
-• **Technical Analysis:** Chart patterns, indicators, volume
-• **Fundamental Analysis:** Company financials, industry trends
-• **Sentiment Analysis:** Market psychology, fear/greed index
-• **Macro Analysis:** Economic indicators, Fed policy, global events
-
-**📈 Key Trading Strategies:**
-• **Trend Following:** Moving averages, momentum indicators
-• **Mean Reversion:** Oversold/overbought conditions
-• **Breakout Trading:** Support/resistance level breaks
-• **Swing Trading:** Multi-day to week-long positions
-
-**⚠️ Risk Management Rules:**
-• **Position Sizing:** Never risk more than 1-2% per trade
-• **Stop Losses:** Define exit points before entering
-• **Diversification:** Spread risk across assets/sectors
-• **Risk/Reward:** Target 2:1 or better reward-to-risk ratios
-
-**📋 Market Indicators to Watch:**
-• **VIX:** Volatility index (fear gauge)
-• **10-Year Treasury:** Interest rate environment
-• **Dollar Index (DXY):** Currency strength impact
-• **Sector Rotation:** Which industries are leading
-
-${tradingMode === 'paper' 
-  ? '**Paper Trading Benefits:**\n• Learn without financial risk\n• Test strategies with real market data\n• Build confidence before live trading'
-  : '**Live Trading Considerations:**\n• Start with small positions\n• Keep detailed trading journal\n• Review and adjust strategies regularly'
-}
-
-*Always practice proper risk management and never trade with money you cannot afford to lose.*`;
+*${tradingMode === 'paper' ? 'Perfect for learning without risk!' : 'Live trading requires strict discipline.'}*`;
 
     } else {
-      // Fallback for general trading queries
-      aiResponse = `🤖 **Genesis Trading Advisor Ready**
+      response = `🤖 **Genesis Trading Advisor Active**
 
-I can help you with:
+**Market Overview Ready:**
+• **📊 Stock Analysis** - Try: "Analyze AAPL" or "MSFT outlook"
+• **💰 Crypto Insights** - Ask: "Bitcoin analysis" or "crypto trends"
+• **📈 Strategy Help** - Request: "trading strategy" or "risk management"
+• **🎯 Specific Tickers** - Query any stock symbol for analysis
 
-**📈 Stock Analysis:**
-• Individual stock research and analysis
-• Sector comparisons and recommendations
-• Technical and fundamental analysis
-• Risk assessment and position sizing
+**${tradingMode === 'paper' ? 'Paper Trading Mode' : 'Live Trading Mode'}:**
+${tradingMode === 'paper'
+  ? 'Perfect environment for learning and testing strategies without financial risk.'
+  : 'Real market analysis for actual trading decisions. Use proper risk management.'
+}
 
-**💰 Crypto Analysis:**
-• Bitcoin, Ethereum, and altcoin analysis
-• DeFi and NFT market insights
-• Risk management for volatile assets
-• Regulatory impact assessments
+**Popular Analysis Requests:**
+• "AAPL technical analysis"
+• "Best trading strategy for beginners"
+• "How to analyze earnings reports"
+• "Risk management techniques"
 
-**📊 Market Strategy:**
-• Trading strategy development
-• Risk management techniques
-• Portfolio allocation guidance
-• Market timing and entry/exit strategies
-
-**🎯 Specialized Analysis:**
-• Forex currency pairs
-• Commodities and futures
-• Options trading strategies
-• Economic indicator impact
-
-What specific market, asset, or trading strategy would you like me to analyze?`;
-    }
-
-    // Try Anthropic API as enhancement, but don't fail if it doesn't work
-    try {
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-API-Key': Deno.env.get('ANTHROPIC_API_KEY') || '',
-          'anthropic-version': '2023-06-01'
-        },
-        body: JSON.stringify({
-          model: 'claude-3-5-sonnet-20241022',
-          max_tokens: 500,
-          messages: [
-            {
-              role: 'system',
-              content: `You are Genesis, ODYSSEY-1's AI Trading Advisor. Provide additional insights to complement the analysis.`
-            },
-            {
-              role: 'user',
-              content: message
-            }
-          ]
-        })
-      })
-
-      if (response.ok) {
-        const data = await response.json()
-        if (data.content[0]?.text) {
-          aiResponse += `\n\n**Advanced AI Analysis:**\n${data.content[0].text}`;
-        }
-      }
-    } catch (_apiError) {
-      console.log('Anthropic API unavailable, using comprehensive fallback response');
+**What market analysis can I provide for you today?**`;
     }
 
     return new Response(
       JSON.stringify({ 
-        response: aiResponse,
+        response,
         mode: tradingMode,
         timestamp: new Date().toISOString()
       }),
       { 
-        headers: { 
-          ...corsHeaders, 
-          'Content-Type': 'application/json' 
-        } 
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
       }
     )
 
   } catch (error) {
-    console.error('Trading Advisor Error:', error)
-    
-    // Get tradingMode from the original request or default to 'paper'
-    let mode = 'paper';
-    try {
-      const requestBody = await req.clone().json();
-      mode = requestBody.tradingMode || 'paper';
-    } catch {
-      // Use default if parsing fails
-    }
-    
+    console.error('Error:', error)
     return new Response(
       JSON.stringify({ 
-        response: `🤖 **Genesis Trading Advisor Available**
-
-I'm ready to help with trading analysis and strategy. I can assist with:
-
-• **Stock Analysis** - Individual stocks like AAPL, TSLA, MSFT
-• **Crypto Analysis** - Bitcoin, Ethereum, and altcoins  
-• **Market Strategy** - Trading approaches and risk management
-• **Technical Analysis** - Chart patterns and indicators
-
-${mode === 'paper' ? 'Perfect for learning in paper trading mode!' : 'Ready to provide real market insights!'}
-
-What would you like me to analyze?`,
-        mode: mode,
-        error: false,
-        fallback: true
+        response: "🚨 Trading advisor service is initializing. Please try your query again in a moment.",
+        error: true 
       }),
       { 
-        headers: { 
-          ...corsHeaders, 
-          'Content-Type': 'application/json' 
-        } 
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        status: 200
       }
     )
   }

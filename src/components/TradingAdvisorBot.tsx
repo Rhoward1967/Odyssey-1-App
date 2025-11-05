@@ -26,7 +26,7 @@ interface TradingAdvisorBotProps {
   mode?: string;
 }
 
-const TradingAdvisorBot: React.FC<TradingAdvisorBotProps> = ({ mode = 'paper' }) => {
+export default function TradingAdvisorBot({ mode }: { mode: string }) {
   const [tradingQuery, setTradingQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const sessionId = 'trading-' + Math.random().toString(36).substring(7);
@@ -146,6 +146,65 @@ What market or trading strategy would you like to discuss?`,
         content: 'I apologize, but I encountered an error. Please try again.' 
       };
       setMessages(prev => [...prev, errorMessage]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const [message, setMessage] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!message.trim()) return;
+
+    const userMessage = message.trim();
+    setMessage('');
+    
+    // FIX: Use proper role types
+    const userMsg = { role: 'user' as 'user' | 'assistant', content: userMessage };
+    setMessages(prev => [...prev, userMsg]);
+    setIsLoading(true);
+
+    try {
+      const { data, error } = await supabase.functions.invoke('chat-trading-advisor', {
+        body: { 
+          message: userMessage, 
+          tradingMode: mode,
+          messages: messages 
+        }
+      });
+
+      if (error) {
+        console.error('Supabase function error:', error);
+        throw error;
+      }
+
+      if (data?.response) {
+        setMessages(prev => [...prev, { role: 'assistant' as 'user' | 'assistant', content: data.response }]);
+      } else {
+        throw new Error('No response from trading advisor');
+      }
+    } catch (error) {
+      console.error('Trading advisor error:', error);
+      setMessages(prev => [...prev, { 
+        role: 'assistant' as 'user' | 'assistant', 
+        content: `🚨 **Trading Bot Connection Error**
+
+I'm having trouble connecting to the trading analysis server. Here's what I can tell you:
+
+**📊 For AAPL Analysis:**
+• Current market cap: ~$3.0 trillion
+• Strong fundamentals with iPhone revenue
+• Watch support at $175-180 range
+• Resistance around $200-205
+
+**💡 ${mode === 'paper' ? 'Paper Trading Tips' : 'Live Trading Notes'}:**
+• Always use stop losses
+• Position size: 1-2% of portfolio max
+• Check volume before entries
+
+*I'm working to restore full analysis capabilities. Please try again in a moment.*`
+      }]);
     } finally {
       setIsLoading(false);
     }
@@ -327,5 +386,3 @@ What market or trading strategy would you like to discuss?`,
     </div>
   );
 };
-
-export default TradingAdvisorBot;

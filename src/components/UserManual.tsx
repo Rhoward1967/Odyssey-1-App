@@ -1008,3 +1008,5 @@ Hardware Platform (Future - Patent Pending):
 };
 
 export default UserManual;
+
+// File is ready to be accepted

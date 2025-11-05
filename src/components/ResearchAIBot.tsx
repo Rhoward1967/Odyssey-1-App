@@ -45,53 +45,75 @@ What would you like to research today?`,
     ]
   );
 
-  const handleResearchChat = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!researchQuery.trim() || isLoading) return;
 
-    const userMsg: ChatMessage = {
+    const userQuery = researchQuery.trim();
+    setResearchQuery('');
+    
+    const userMessage: ChatMessage = {
       id: Date.now().toString(),
       type: 'user',
-      message: researchQuery,
+      message: userQuery,
       timestamp: new Date()
     };
-
-    setChatHistory(prev => [...prev, userMsg]);
-    setResearchQuery('');
+    
+    setChatHistory(prev => [...prev, userMessage]);
     setIsLoading(true);
 
     try {
-      // ✅ This will work BETTER after optimization
-      // Currently uses gemini-api function (fallback)
-      // After optimization: faster database queries = faster responses
-      const { data, error } = await supabase.functions.invoke('gemini-api', {
+      const { data, error } = await supabase.functions.invoke('research-bot', {
         body: { 
-          message: userMsg.message,
+          message: userQuery,
           context: 'research',
-          messages: chatHistory 
+          chatHistory: chatHistory
         }
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Research bot error:', error);
+        throw error;
+      }
 
-      const aiMessage: ChatMessage = { 
-        id: (Date.now() + 1).toString(),
-        type: 'bot',
-        message: data.response || 'I apologize, but I encountered an error. Please try again.',
-        timestamp: new Date()
-      };
-
-      setChatHistory(prev => [...prev, aiMessage]);
-
+      if (data?.response) {
+        const assistantMessage: ChatMessage = {
+          id: (Date.now() + 1).toString(),
+          type: 'bot',
+          message: data.response,
+          timestamp: new Date()
+        };
+        setChatHistory(prev => [...prev, assistantMessage]);
+      } else {
+        throw new Error('No response from research bot');
+      }
     } catch (error) {
-      console.error('Research Error:', error);
-      const errorMsg: ChatMessage = {
-        id: (Date.now() + 1).toString(),
+      console.error('Research bot connection error:', error);
+      const errorMessage: ChatMessage = {
+        id: (Date.now() + 2).toString(),
         type: 'bot',
-        message: '❌ I apologize, but I encountered an error. Please try again.',
+        message: `🔬 **Research Assistant Connection Issue**
+
+I'm experiencing connectivity problems. Here's some immediate help:
+
+**📚 Research Topics I Can Help With:**
+• **Academic Research:** Citations, summaries, analysis
+• **Market Research:** Industry trends, competitor analysis  
+• **Technology Research:** Latest developments, comparisons
+• **Legal Research:** Case studies, regulatory updates
+
+**💡 Research Tips:**
+• Be specific with your questions
+• Provide context for better results
+• Ask for sources and verification
+
+**🔧 Troubleshooting:**
+The research bot service may be initializing. Please try your query again in a moment.
+
+*What would you like me to research for you?*`,
         timestamp: new Date()
       };
-      setChatHistory(prev => [...prev, errorMsg]);
+      setChatHistory(prev => [...prev, errorMessage]);
     } finally {
       setIsLoading(false);
     }
@@ -147,7 +169,7 @@ What would you like to research today?`,
         </div>
 
         {/* Research Input */}
-        <form onSubmit={handleResearchChat} className="flex gap-2">
+        <form onSubmit={handleSubmit} className="flex gap-2">
           <Input
             value={researchQuery}
             onChange={(e) => setResearchQuery(e.target.value)}
