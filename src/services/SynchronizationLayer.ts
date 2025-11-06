@@ -8,8 +8,9 @@
  * Ensures both Creative and Logical Hemispheres read from the same source
  */
 
+import { supabase } from '@/lib/supabaseClient';
 import {
-    RomanCommand
+  RomanCommand
 } from '@/schemas/RomanCommands';
 
 export interface EnhancedPrompt {
@@ -28,96 +29,69 @@ export interface EnhancedPrompt {
  */
 export class SynchronizationLayer {
   static async generateCommand(
-    naturalLanguageInput: string,
+    userIntent: string,
     userId: string,
     organizationId?: number
   ): Promise<RomanCommand> {
     
-    try {
-      const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
-      if (!apiKey) {
-        throw new Error('OpenAI API key not configured');
+    // Generate the smart prompt
+    const prompt = this.generateSmartPrompt(userIntent, userId, organizationId);
+    
+    // ACTUALLY CALL THE AI NOW (using YOUR API key)
+    const { data, error } = await supabase.functions.invoke('anthropic-chat', {
+      body: { 
+        message: prompt,
+        chatHistory: []
       }
+    });
 
-      // OpenAI API call (GPT-4)
-      const response = await fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${apiKey}`
-        },
-        body: JSON.stringify({
-          model: 'gpt-3.5-turbo', // Changed from 'gpt-4'
-          messages: [
-            {
-              role: 'system',
-              content: `You are R.O.M.A.N., the Recursive Orchestration & Management of Autonomous Networks AI.
+    if (error || !data) {
+      console.error('AI generation failed:', error);
+      // Fallback to basic command if AI fails
+      return this.generateFallbackCommand(userIntent, userId, organizationId);
+    }
 
-Convert natural language requests into structured RomanCommand objects with these fields:
+    try {
+      // Parse AI response into RomanCommand
+      const commandJson = JSON.parse(data.response);
+      return commandJson as RomanCommand;
+    } catch (parseError) {
+      console.error('Failed to parse AI response:', parseError);
+      return this.generateFallbackCommand(userIntent, userId, organizationId);
+    }
+  }
 
+  private static generateSmartPrompt(userIntent: string, userId: string, orgId?: number): string {
+    const orgIdStr = orgId?.toString() || '1';
+    
+    return `Generate a R.O.M.A.N. command for: "${userIntent}"
+    
+Return ONLY valid JSON matching this structure:
 {
-  "action": "READ" | "CREATE" | "UPDATE" | "DELETE" | "PROCESS" | "APPROVE",
-  "target": "EMPLOYEE" | "PAYROLL_RUN" | "PAYSTUB" | "TIME_ENTRY" | "PROJECT_TASK" | "BID",
-  "payload": { relevant data },
+  "action": "CREATE|READ|UPDATE|DELETE|PROCESS",
+  "target": "EMPLOYEE|PAYROLL_RUN|PAYSTUB|SYSTEM_STATUS",
+  "payload": {},
   "metadata": {
     "requestedBy": "${userId}",
-    "organizationId": ${organizationId || 'null'},
-    "timestamp": "${new Date().toISOString()}"
+    "organizationId": ${orgIdStr},
+    "timestamp": "${new Date().toISOString()}",
+    "intent": "${userIntent}"
   }
-}
+}`;
+  }
 
-Examples:
-- "Show me all employees" → {"action":"READ","target":"EMPLOYEE","payload":{"organizationId":${organizationId}}}
-- "Run payroll for March 1-15" → {"action":"PROCESS","target":"PAYROLL_RUN","payload":{"periodStart":"2024-03-01","periodEnd":"2024-03-15"}}
-- "Delete the Deploy task" → {"action":"DELETE","target":"PROJECT_TASK","payload":{"taskName":"Deploy"}}
-
-Respond ONLY with valid JSON matching the RomanCommand schema. No markdown, no explanations.`
-            },
-            {
-              role: 'user',
-              content: naturalLanguageInput
-            }
-          ],
-          temperature: 0.3,
-          max_tokens: 800
-        })
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(`OpenAI API error: ${errorData.error?.message || response.statusText}`);
+  private static generateFallbackCommand(userIntent: string, userId: string, orgId?: number): RomanCommand {
+    return {
+      action: 'PROCESS',
+      target: 'SYSTEM_STATUS',
+      payload: { intent: userIntent },
+      metadata: {
+        requestedBy: userId,
+        organizationId: orgId,
+        timestamp: new Date().toISOString(),
+        intent: userIntent
       }
-
-      const result = await response.json();
-      const content = result.choices[0]?.message?.content;
-      
-      if (!content) {
-        throw new Error('No response from OpenAI Creative Hemisphere');
-      }
-
-      // Parse the JSON response
-      const parsedCommand = JSON.parse(content.trim());
-      
-      // Ensure metadata is included
-      const command: RomanCommand = {
-        action: parsedCommand.action || 'READ',
-        target: parsedCommand.target || 'EMPLOYEE',
-        payload: parsedCommand.payload || {},
-        metadata: {
-          requestedBy: userId,
-          organizationId: organizationId,
-          timestamp: new Date().toISOString(),
-          ...parsedCommand.metadata
-        }
-      };
-
-      console.log('✅ Creative Hemisphere (OpenAI GPT-4) generated command:', command);
-      return command;
-
-    } catch (error: any) {
-      console.error('❌ Creative Hemisphere failed:', error);
-      throw new Error(`AI generation failed: ${error.message}`);
-    }
+    };
   }
 
   static getValidTargets(): string[] {

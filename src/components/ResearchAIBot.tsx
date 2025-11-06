@@ -89,6 +89,7 @@ What would you like to research today?`,
       }
     } catch (error) {
       console.error('Research bot connection error:', error);
+      // This generic error message makes it seem broken even if API works
       const errorMessage: ChatMessage = {
         id: (Date.now() + 2).toString(),
         type: 'bot',
