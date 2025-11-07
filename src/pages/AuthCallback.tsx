@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '../services/supabase';
+import { supabase } from '../lib/supabase'; // Change this import to match wherever your Supabase client actually is:
 import { assignUserToOrganization } from '../services/authService';
 
 export default function AuthCallback() {
