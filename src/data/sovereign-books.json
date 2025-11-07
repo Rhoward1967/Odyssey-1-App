@@ -1,0 +1,46 @@
+{
+  "books": [
+    {
+      "number": 1,
+      "title": "The Program",
+      "subtitle": "The Origin and Architecture of Disconnection",
+      "summary": "Identifies systemic 'programming' as a virus hijacking consciousness"
+    },
+    {
+      "number": 2,
+      "title": "The Echo",
+      "subtitle": "Deconstructing the Program's Legacy",
+      "summary": "Exposes 13th Amendment loophole, mass incarceration, economic warfare"
+    },
+    {
+      "number": 3,
+      "title": "The Sovereign Covenant",
+      "subtitle": "Architecting a Divinely Aligned Future",
+      "summary": "Governance based on consent, not coercion"
+    },
+    {
+      "number": 4,
+      "title": "The Sovereign's True Collateral",
+      "subtitle": "The Bond of the People",
+      "summary": "Financial system as scam; people are the unpaid bond"
+    },
+    {
+      "number": 5,
+      "title": "The Alien Program",
+      "subtitle": "Deconstructing Frequencies of History, Identity, and Language",
+      "summary": "Race as manufactured weapon; decolonizing language"
+    },
+    {
+      "number": 6,
+      "title": "The Sovereign's Armory",
+      "subtitle": "An Exposé and Guide to Reclaiming Divine Intent",
+      "summary": "Legal defense tools and sovereignty reclamation"
+    },
+    {
+      "number": 7,
+      "title": "The Unveiling",
+      "subtitle": "How Crypto, Corruption, and AI Proved the Program",
+      "summary": "Crypto, AI, and corruption proving the thesis"
+    }
+  ]
+}
