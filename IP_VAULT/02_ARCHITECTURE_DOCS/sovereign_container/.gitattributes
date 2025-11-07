@@ -1,0 +1,7 @@
+# Copyright notice for all files in this directory
+* text eol=lf
+*.md linguist-documentation=false linguist-detectable
+*.md merge=union
+
+# All files in this directory are proprietary and copyrighted
+# © 2025 Rickey A Howard. All Rights Reserved.
