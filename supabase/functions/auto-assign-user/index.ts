@@ -44,7 +44,7 @@ serve(async (req) => {
     const { data: org, error: orgError } = await supabaseAdmin
       .from('organizations')
       .select('id')
-      .ilike('name', '%HJS Services%')
+      .eq('slug', 'hjs-services-llc')  // Changed from .ilike('name', '%HJS Services%')
       .single();
 
     if (orgError || !org) {
