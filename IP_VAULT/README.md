@@ -113,15 +113,19 @@ IP filing status and documentation
 
 ## Legal Protection Status
 
+### Patent
+- ✅ **FILED & CONFIRMED:** Provisional Patent Application
+  - **Application #:** 63/913,134
+  - **Title:** "A Dual-Hemisphere, Constitutionally-Governed AI and Modular Computing System"
+  - **Filing Date:** November 7, 2025
+  - **Fee:** $65.00 (micro-entity)
+  - **Status:** **PATENT PENDING** 🔥
+  - **Priority Date:** November 7, 2025 (locked)
+  - **Non-Provisional Due:** November 7, 2026
+
 ### Copyright
 - ✅ **Filed:** 7-book series ($85) - Case #1-15033889051
 - ✅ **Filed:** 52-song collection ($65) - Distributed via DistroKid
-
-### Patent
-- ✅ **FILED:** Provisional patent covering 21 innovations ($150-300) - **PATENT PENDING** 🔥
-- **Priority Date:** January 27, 2025
-- **Status:** 12-month provisional period active
-- 📋 **Due:** Utility patent conversion by January 27, 2026 (~$1,900 + fees)
 
 ### Trademark
 - 📋 **Ready:** ODYSSEY-1, R.O.M.A.N., Sovereign Container ($1,000)
