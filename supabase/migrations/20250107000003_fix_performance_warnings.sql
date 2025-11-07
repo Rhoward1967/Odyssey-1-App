@@ -1,0 +1,369 @@
+-- ========================================
+-- FIX ALL 28 PERFORMANCE WARNINGS
+-- ========================================
+-- Issues:
+-- 1. Auth RLS initplan (auth.uid() called per-row)
+-- 2. Multiple permissive policies (redundant evaluations)
+-- 3. Duplicate index on user_organizations
+-- ========================================
+
+-- ========================================
+-- STEP 1: DROP DUPLICATE INDEX
+-- ========================================
+
+-- Keep idx_uo_user_org_role (better name), drop duplicate
+DROP INDEX IF EXISTS public.idx_user_org_security_check;
+
+-- ========================================
+-- STEP 2: CONSOLIDATE BOOKS POLICIES
+-- ========================================
+
+-- Drop old policies
+DROP POLICY IF EXISTS "Admins can manage all books" ON public.books;
+DROP POLICY IF EXISTS "Authenticated users can read books" ON public.books;
+
+-- Consolidated SELECT policy
+CREATE POLICY books_select_authenticated ON public.books
+FOR SELECT TO authenticated
+USING (
+  public.is_global_admin()
+  OR true  -- All authenticated users can read books
+);
+
+-- ========================================
+-- STEP 3: CONSOLIDATE EMPLOYEES POLICIES
+-- ========================================
+
+-- Drop old policies
+DROP POLICY IF EXISTS employees_global_admin_all ON public.employees;
+DROP POLICY IF EXISTS employees_select_all ON public.employees;
+DROP POLICY IF EXISTS employees_insert_all ON public.employees;
+DROP POLICY IF EXISTS employees_update_all ON public.employees;
+DROP POLICY IF EXISTS employees_delete_all ON public.employees;
+
+-- Consolidated policies with scalar subselects
+CREATE POLICY employees_select_authenticated ON public.employees
+FOR SELECT TO authenticated
+USING (
+  public.is_global_admin()
+  OR organization_id IN (
+    SELECT uo.organization_id 
+    FROM user_organizations uo 
+    WHERE uo.user_id = (SELECT auth.uid())
+  )
+);
+
+CREATE POLICY employees_insert_authenticated ON public.employees
+FOR INSERT TO authenticated
+WITH CHECK (
+  public.is_global_admin()
+  OR organization_id IN (
+    SELECT uo.organization_id 
+    FROM user_organizations uo 
+    WHERE uo.user_id = (SELECT auth.uid()) AND uo.role = 'admin'
+  )
+);
+
+CREATE POLICY employees_update_authenticated ON public.employees
+FOR UPDATE TO authenticated
+USING (
+  public.is_global_admin()
+  OR organization_id IN (
+    SELECT uo.organization_id 
+    FROM user_organizations uo 
+    WHERE uo.user_id = (SELECT auth.uid()) AND uo.role = 'admin'
+  )
+)
+WITH CHECK (
+  public.is_global_admin()
+  OR organization_id IN (
+    SELECT uo.organization_id 
+    FROM user_organizations uo 
+    WHERE uo.user_id = (SELECT auth.uid()) AND uo.role = 'admin'
+  )
+);
+
+CREATE POLICY employees_delete_authenticated ON public.employees
+FOR DELETE TO authenticated
+USING (
+  public.is_global_admin()
+  OR organization_id IN (
+    SELECT uo.organization_id 
+    FROM user_organizations uo 
+    WHERE uo.user_id = (SELECT auth.uid()) AND uo.role = 'admin'
+  )
+);
+
+-- ========================================
+-- STEP 4: CONSOLIDATE FEATURE_FLAGS POLICIES
+-- ========================================
+
+DROP POLICY IF EXISTS feature_flags_global_admin_all ON public.feature_flags;
+DROP POLICY IF EXISTS feature_flags_read_members ON public.feature_flags;
+DROP POLICY IF EXISTS feature_flags_update_admins ON public.feature_flags;
+
+CREATE POLICY feature_flags_select_authenticated ON public.feature_flags
+FOR SELECT TO authenticated
+USING (
+  public.is_global_admin()
+  OR organization_id IN (
+    SELECT uo.organization_id 
+    FROM user_organizations uo 
+    WHERE uo.user_id = (SELECT auth.uid())
+  )
+);
+
+CREATE POLICY feature_flags_update_authenticated ON public.feature_flags
+FOR UPDATE TO authenticated
+USING (
+  public.is_global_admin()
+  OR organization_id IN (
+    SELECT uo.organization_id 
+    FROM user_organizations uo 
+    WHERE uo.user_id = (SELECT auth.uid()) AND uo.role = 'admin'
+  )
+)
+WITH CHECK (
+  public.is_global_admin()
+  OR organization_id IN (
+    SELECT uo.organization_id 
+    FROM user_organizations uo 
+    WHERE uo.user_id = (SELECT auth.uid()) AND uo.role = 'admin'
+  )
+);
+
+-- ========================================
+-- STEP 5: CONSOLIDATE ORGANIZATIONS POLICIES
+-- ========================================
+
+DROP POLICY IF EXISTS "Unified access for members, owners, and admins" ON public.organizations;
+DROP POLICY IF EXISTS org_owners_all ON public.organizations;
+
+CREATE POLICY organizations_select_authenticated ON public.organizations
+FOR SELECT TO authenticated
+USING (
+  public.is_global_admin()
+  OR owner_id = (SELECT auth.uid())
+  OR id IN (
+    SELECT uo.organization_id 
+    FROM user_organizations uo 
+    WHERE uo.user_id = (SELECT auth.uid())
+  )
+);
+
+CREATE POLICY organizations_update_authenticated ON public.organizations
+FOR UPDATE TO authenticated
+USING (
+  public.is_global_admin()
+  OR owner_id = (SELECT auth.uid())
+)
+WITH CHECK (
+  public.is_global_admin()
+  OR owner_id = (SELECT auth.uid())
+);
+
+-- ========================================
+-- STEP 6: CONSOLIDATE PAYROLL_RUNS POLICIES
+-- ========================================
+
+DROP POLICY IF EXISTS payroll_runs_global_admin_all ON public.payroll_runs;
+DROP POLICY IF EXISTS payroll_runs_org_read ON public.payroll_runs;
+DROP POLICY IF EXISTS payroll_runs_org_insert ON public.payroll_runs;
+
+CREATE POLICY payroll_runs_select_authenticated ON public.payroll_runs
+FOR SELECT TO authenticated
+USING (
+  public.is_global_admin()
+  OR organization_id IN (
+    SELECT uo.organization_id 
+    FROM user_organizations uo 
+    WHERE uo.user_id = (SELECT auth.uid())
+  )
+);
+
+CREATE POLICY payroll_runs_insert_authenticated ON public.payroll_runs
+FOR INSERT TO authenticated
+WITH CHECK (
+  public.is_global_admin()
+  OR organization_id IN (
+    SELECT uo.organization_id 
+    FROM user_organizations uo 
+    WHERE uo.user_id = (SELECT auth.uid()) AND uo.role = 'admin'
+  )
+);
+
+-- ========================================
+-- STEP 7: CONSOLIDATE PAYSTUBS POLICIES
+-- ========================================
+
+DROP POLICY IF EXISTS "Enable full management for admins only" ON public.paystubs;
+DROP POLICY IF EXISTS paystubs_global_admin_all ON public.paystubs;
+
+CREATE POLICY paystubs_select_authenticated ON public.paystubs
+FOR SELECT TO authenticated
+USING (
+  public.is_global_admin()
+  OR organization_id IN (
+    SELECT uo.organization_id 
+    FROM user_organizations uo 
+    WHERE uo.user_id = (SELECT auth.uid())
+  )
+  OR employee_id = (SELECT auth.uid())
+);
+
+-- ========================================
+-- STEP 8: CONSOLIDATE TIME_ENTRIES POLICIES
+-- ========================================
+
+DROP POLICY IF EXISTS time_entries_global_admin_all ON public.time_entries;
+DROP POLICY IF EXISTS time_entries_select_all ON public.time_entries;
+DROP POLICY IF EXISTS time_entries_insert_all ON public.time_entries;
+DROP POLICY IF EXISTS time_entries_update_all ON public.time_entries;
+DROP POLICY IF EXISTS time_entries_delete_all ON public.time_entries;
+
+CREATE POLICY time_entries_select_authenticated ON public.time_entries
+FOR SELECT TO authenticated
+USING (
+  public.is_global_admin()
+  OR employee_id = (SELECT auth.uid())
+  OR EXISTS (
+    SELECT 1 
+    FROM employees e
+    JOIN user_organizations uo ON uo.organization_id = e.organization_id
+    WHERE e.id = time_entries.employee_id 
+      AND uo.user_id = (SELECT auth.uid())
+  )
+);
+
+CREATE POLICY time_entries_insert_authenticated ON public.time_entries
+FOR INSERT TO authenticated
+WITH CHECK (
+  public.is_global_admin()
+  OR employee_id = (SELECT auth.uid())
+);
+
+CREATE POLICY time_entries_update_authenticated ON public.time_entries
+FOR UPDATE TO authenticated
+USING (
+  public.is_global_admin()
+  OR employee_id = (SELECT auth.uid())
+  OR EXISTS (
+    SELECT 1 
+    FROM employees e
+    JOIN user_organizations uo ON uo.organization_id = e.organization_id
+    WHERE e.id = time_entries.employee_id 
+      AND uo.user_id = (SELECT auth.uid()) 
+      AND uo.role = 'admin'
+  )
+)
+WITH CHECK (
+  public.is_global_admin()
+  OR employee_id = (SELECT auth.uid())
+);
+
+CREATE POLICY time_entries_delete_authenticated ON public.time_entries
+FOR DELETE TO authenticated
+USING (
+  public.is_global_admin()
+  OR EXISTS (
+    SELECT 1 
+    FROM employees e
+    JOIN user_organizations uo ON uo.organization_id = e.organization_id
+    WHERE e.id = time_entries.employee_id 
+      AND uo.user_id = (SELECT auth.uid()) 
+      AND uo.role = 'admin'
+  )
+);
+
+-- ========================================
+-- STEP 9: CONSOLIDATE USER_ORGANIZATIONS POLICIES
+-- ========================================
+
+DROP POLICY IF EXISTS org_members_all ON public.user_organizations;
+DROP POLICY IF EXISTS uo_select_all ON public.user_organizations;
+DROP POLICY IF EXISTS uo_insert_authenticated ON public.user_organizations;
+DROP POLICY IF EXISTS uo_update_own ON public.user_organizations;
+DROP POLICY IF EXISTS uo_delete_not_self ON public.user_organizations;
+
+CREATE POLICY uo_select_authenticated ON public.user_organizations
+FOR SELECT TO authenticated
+USING (
+  public.is_global_admin()
+  OR user_id = (SELECT auth.uid())
+  OR organization_id IN (
+    SELECT uo2.organization_id 
+    FROM user_organizations uo2 
+    WHERE uo2.user_id = (SELECT auth.uid())
+  )
+);
+
+CREATE POLICY uo_insert_authenticated ON public.user_organizations
+FOR INSERT TO authenticated
+WITH CHECK (
+  public.is_global_admin()
+  OR organization_id IN (
+    SELECT uo.organization_id 
+    FROM user_organizations uo 
+    WHERE uo.user_id = (SELECT auth.uid()) AND uo.role = 'admin'
+  )
+);
+
+CREATE POLICY uo_update_authenticated ON public.user_organizations
+FOR UPDATE TO authenticated
+USING (
+  public.is_global_admin()
+  OR (user_id = (SELECT auth.uid()))
+  OR (
+    organization_id IN (
+      SELECT uo.organization_id 
+      FROM user_organizations uo 
+      WHERE uo.user_id = (SELECT auth.uid()) AND uo.role = 'admin'
+    )
+  )
+)
+WITH CHECK (
+  public.is_global_admin()
+  OR organization_id IN (
+    SELECT uo.organization_id 
+    FROM user_organizations uo 
+    WHERE uo.user_id = (SELECT auth.uid()) AND uo.role = 'admin'
+  )
+);
+
+CREATE POLICY uo_delete_authenticated ON public.user_organizations
+FOR DELETE TO authenticated
+USING (
+  public.is_global_admin()
+  OR (
+    user_id != (SELECT auth.uid())
+    AND organization_id IN (
+      SELECT uo.organization_id 
+      FROM user_organizations uo 
+      WHERE uo.user_id = (SELECT auth.uid()) AND uo.role = 'admin'
+    )
+  )
+);
+
+-- ========================================
+-- VERIFICATION QUERIES
+-- ========================================
+
+-- Count policies per table (should be 1 per action per role)
+SELECT 
+  schemaname,
+  tablename,
+  COUNT(*) as policy_count
+FROM pg_policies
+WHERE schemaname = 'public'
+GROUP BY schemaname, tablename
+ORDER BY tablename;
+
+-- Verify no duplicate indexes
+SELECT 
+  tablename,
+  indexname,
+  indexdef
+FROM pg_indexes
+WHERE schemaname = 'public' 
+  AND tablename = 'user_organizations'
+ORDER BY indexname;
