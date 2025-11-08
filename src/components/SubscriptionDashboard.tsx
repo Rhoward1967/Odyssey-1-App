@@ -110,51 +110,44 @@ const SubscriptionDashboard: React.FC = () => {
 
   const handleSelectPlan = async (tierName: string, price: number) => {
     console.log('Subscription button clicked:', { tierName, price });
-
-    // Check if user is logged in
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
+    
+    const { data: { user } } = await supabase.auth.getUser();
+    
     if (!user) {
-      // Redirect to login first
       navigate('/login', {
         state: {
           returnTo: '/profile',
           selectedTier: tierName,
-          selectedPrice: `$${price}`,
-        },
+          selectedPrice: `$${price}`
+        }
       });
       return;
     }
-
-    // Navigate to profile setup
+    
     navigate('/profile', {
       state: {
         selectedTier: tierName,
         selectedPrice: `$${price}`,
-        fromPricing: true,
-      },
+        fromPricing: true
+      }
     });
   };
 
   const handleManageBilling = async () => {
     setLoading(true);
     try {
-      // Make sure this is calling the right Edge Function
+      const { data: { user } } = await supabase.auth.getUser();
+      
       const { data, error } = await supabase.functions.invoke('create-portal-session', {
         body: { userId: user?.id }
       });
       
-      if (error) {
-        console.error('Portal error:', error);
-        throw error;
-      }
+      if (error) throw error;
       
       if (data?.url) {
         window.location.href = data.url;
-      } else {
-        throw new Error('No portal URL returned');
+      } else if (data?.error) {
+        alert(data.error);
       }
     } catch (error) {
       console.error('Billing portal error:', error);
