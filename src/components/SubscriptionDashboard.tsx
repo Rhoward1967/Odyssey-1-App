@@ -3,6 +3,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
@@ -17,6 +18,7 @@ import {
   AlertCircle,
   CheckCircle,
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 interface Subscription {
   id: string;
@@ -26,10 +28,67 @@ interface Subscription {
   created_at: string;
 }
 
+const tiers = [
+  {
+    name: 'Professional',
+    displayName: 'ODYSSEY Professional',
+    price: 99,
+    priceDisplay: '$99/month',
+    features: [
+      'Full access to 7-book framework',
+      'AI Legal Assistant',
+      '5-10 General Themes',
+      '3 Industry Knowledge Bases',
+      '1 User Seat',
+      '10 GB Storage',
+      'Email Support',
+    ],
+    cta: 'Choose Professional',
+  },
+  {
+    name: 'Business',
+    displayName: 'ODYSSEY Business',
+    price: 299,
+    priceDisplay: '$299/month',
+    badge: 'Most Popular',
+    features: [
+      'Everything in Professional, PLUS:',
+      'ALL 17+ Premium Industry Themes',
+      'INSTANT shape-shifting transformation',
+      'ALL 17 Industry Knowledge Bases',
+      'Full Calculator suite',
+      'Up to 5 User Seats',
+      '100 GB Storage',
+      'Priority Support',
+    ],
+    cta: 'Choose Business',
+    highlight: true,
+  },
+  {
+    name: 'Enterprise',
+    displayName: 'ODYSSEY Enterprise',
+    price: 999,
+    priceDisplay: '$999/month',
+    features: [
+      'Everything in Business, PLUS:',
+      'UNLIMITED Custom Themes',
+      'Developer Code Editor',
+      'Create Custom Knowledge Bases',
+      'Full White-label Platform',
+      'Dedicated Account Manager',
+      'Unlimited Everything',
+      'Phone Support',
+    ],
+    cta: 'Choose Enterprise',
+  },
+];
+
 const SubscriptionDashboard: React.FC = () => {
   const { user } = useAuth();
   const [subscription, setSubscription] = useState<Subscription | null>(null);
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<'current' | 'plans'>('current');
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!user) return;
@@ -53,6 +112,52 @@ const SubscriptionDashboard: React.FC = () => {
     };
     fetchSubscription();
   }, [user]);
+
+  const handleSelectPlan = async (tierName: string, price: number) => {
+    console.log('Subscription button clicked:', { tierName, price });
+
+    // Check if user is logged in
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      // Redirect to login first
+      navigate('/login', {
+        state: {
+          returnTo: '/profile',
+          selectedTier: tierName,
+          selectedPrice: `$${price}`,
+        },
+      });
+      return;
+    }
+
+    // Navigate to profile setup
+    navigate('/profile', {
+      state: {
+        selectedTier: tierName,
+        selectedPrice: `$${price}`,
+        fromPricing: true,
+      },
+    });
+  };
+
+  const handleManageBilling = async () => {
+    setLoading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('create-portal-session');
+      if (error) throw error;
+      if (data?.url) {
+        window.location.href = data.url;
+      }
+    } catch (error) {
+      console.error('Portal error:', error);
+      alert('Unable to open billing portal. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleCancelSubscription = async () => {
     if (!subscription) return;
@@ -110,89 +215,136 @@ const SubscriptionDashboard: React.FC = () => {
     );
   }
 
-  if (!subscription) {
-    return (
-      <Card className='bg-slate-800/50 border-slate-700'>
-        <CardHeader>
-          <CardTitle className='text-white flex items-center'>
-            <AlertCircle className='w-5 h-5 mr-2 text-yellow-500' />
-            No Active Subscription
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className='text-gray-400 mb-4'>
-            You don't have an active subscription.
-          </p>
-          <Button className='bg-purple-600 hover:bg-purple-700'>
-            Choose a Plan
-          </Button>
-        </CardContent>
-      </Card>
-    );
-  }
-
   return (
-    <Card className='bg-slate-800/50 border-slate-700'>
-      <CardHeader>
-        <CardTitle className='text-white flex items-center'>
-          <Crown className='w-5 h-5 mr-2 text-purple-500' />
-          Current Subscription
-        </CardTitle>
-        <CardDescription>Manage your ODYSSEY-1 subscription</CardDescription>
-      </CardHeader>
-      <CardContent className='space-y-6'>
-        <div className='flex items-center justify-between'>
-          <div>
-            <h3 className='text-xl font-semibold text-white'>
-              {getPlanName(subscription.plan_id)}
-            </h3>
-            <p className='text-gray-400'>
-              Active since{' '}
-              {new Date(subscription.created_at).toLocaleDateString()}
-            </p>
-          </div>
-          <Badge className={getStatusColor(subscription.status)}>
-            {subscription.status}
-          </Badge>
-        </div>
+    <div className='container mx-auto py-8 px-4'>
+      <h1 className='text-3xl font-bold mb-6'>
+        Choose your plan and manage your subscription
+      </h1>
 
-        <div className='grid grid-cols-2 gap-4'>
-          <div className='flex items-center space-x-2'>
-            <Calendar className='w-4 h-4 text-gray-400' />
-            <div>
-              <p className='text-sm text-gray-400'>Next billing</p>
-              <p className='text-white'>
-                {new Date(subscription.current_period_end).toLocaleDateString()}
-              </p>
-            </div>
-          </div>
-          <div className='flex items-center space-x-2'>
-            <CheckCircle className='w-4 h-4 text-green-500' />
-            <div>
-              <p className='text-sm text-gray-400'>Status</p>
-              <p className='text-white capitalize'>{subscription.status}</p>
-            </div>
-          </div>
-        </div>
+      {/* Tabs */}
+      <div className='flex gap-4 mb-8 border-b'>
+        <button
+          className={`px-4 py-2 ${
+            activeTab === 'current'
+              ? 'border-b-2 border-primary font-semibold'
+              : ''
+          }`}
+          onClick={() => setActiveTab('current')}
+          type='button'
+        >
+          Current Plan
+        </button>
+        <button
+          className={`px-4 py-2 ${
+            activeTab === 'plans'
+              ? 'border-b-2 border-primary font-semibold'
+              : ''
+          }`}
+          onClick={() => setActiveTab('plans')}
+          type='button'
+        >
+          All Plans
+        </button>
+      </div>
 
-        <div className='flex space-x-3'>
-          <Button variant='outline' className='flex-1'>
-            <CreditCard className='w-4 h-4 mr-2' />
-            Update Payment
-          </Button>
-          {subscription.status === 'active' && (
-            <Button
-              variant='destructive'
-              className='flex-1'
-              onClick={handleCancelSubscription}
+      {/* Current Plan Tab */}
+      {activeTab === 'current' && (
+        <div className='space-y-6'>
+          <Card>
+            <CardHeader>
+              <CardTitle>Current Subscription</CardTitle>
+              <CardDescription>
+                View and manage your active subscription plan.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className='space-y-4'>
+                <div>
+                  <h3 className='text-xl font-semibold'>
+                    {getPlanName(subscription.plan_id)}
+                  </h3>
+                  <span className='inline-block px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-semibold mt-2'>
+                    {subscription.status.toUpperCase()}
+                  </span>
+                </div>
+                <p className='text-muted-foreground'>
+                  Your plan will automatically renew{' '}
+                  {new Date(subscription.current_period_end).toLocaleDateString()}
+                  .
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Billing Management</CardTitle>
+              <CardDescription>
+                Manage your payment methods and view your billing history in the
+                Stripe Customer Portal.
+              </CardDescription>
+            </CardHeader>
+            <CardFooter>
+              <Button
+                variant='outline'
+                onClick={handleManageBilling}
+                disabled={loading}
+                type='button'
+              >
+                {loading ? 'Loading...' : 'Manage Billing & Invoices'}
+              </Button>
+            </CardFooter>
+          </Card>
+        </div>
+      )}
+
+      {/* All Plans Tab */}
+      {activeTab === 'plans' && (
+        <div className='grid md:grid-cols-3 gap-6'>
+          {tiers.map((tier) => (
+            <Card
+              key={tier.name}
+              className={tier.highlight ? 'border-primary shadow-lg' : ''}
             >
-              <span className='md:hidden'>Cancel</span>
-              <span className='hidden md:inline'>Cancel Subscription</span>
-            </Button>
-          )}
+              {tier.badge && (
+                <div className='bg-primary text-primary-foreground text-center py-2 rounded-t-lg font-semibold'>
+                  {tier.badge}
+                </div>
+              )}
+
+              <CardHeader>
+                <CardTitle>{tier.displayName}</CardTitle>
+                <CardDescription className='text-2xl font-bold mt-2'>
+                  {tier.priceDisplay}
+                </CardDescription>
+              </CardHeader>
+
+              <CardContent>
+                <ul className='space-y-2'>
+                  {tier.features.map((feature, idx) => (
+                    <li key={idx} className='flex items-start gap-2'>
+                      <Check className='h-4 w-4 text-primary shrink-0 mt-0.5' />
+                      <span className='text-sm'>{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
+
+              <CardFooter>
+                <Button
+                  className='w-full'
+                  variant={tier.highlight ? 'default' : 'outline'}
+                  onClick={() => handleSelectPlan(tier.name, tier.price)}
+                  type='button'
+                >
+                  {tier.cta}
+                </Button>
+              </CardFooter>
+            </Card>
+          ))}
         </div>
-      </CardContent>
-    </Card>
+      )}
+    </div>
   );
 };
 

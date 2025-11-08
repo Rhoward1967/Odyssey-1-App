@@ -1,5 +1,8 @@
 import { Check, Crown, Rocket, X, Zap } from 'lucide-react';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface PlanFeature {
   name: string;
@@ -8,8 +11,54 @@ interface PlanFeature {
   enterprise: boolean | string;
 }
 
+const tiers = [
+  {
+    name: 'Professional',
+    price: 99,
+    icon: Zap,
+    color: 'blue',
+    persona: 'The Solopreneur / Starter',
+    value: 'Get Online & Look Good',
+    popular: false,
+    cta: 'Get Started'
+  },
+  {
+    name: 'Business',
+    price: 299,
+    icon: Crown,
+    color: 'purple',
+    persona: 'The Growing Business',
+    value: 'Dominate Your Niche',
+    popular: true,
+    cta: 'Most Popular'
+  },
+  {
+    name: 'Enterprise',
+    price: 999,
+    icon: Rocket,
+    color: 'amber',
+    persona: 'The Established Agency / Developer',
+    value: 'Full Control & Scale',
+    popular: false,
+    cta: 'Get Started'
+  }
+];
+
 export default function SubscriptionPlans() {
   const [billingPeriod, setBillingPeriod] = useState<'monthly' | 'annual'>('monthly');
+  const navigate = useNavigate();
+
+  const handleSelectPlan = (tierName: string, price: number) => {
+    console.log('Plan button clicked:', { tierName, price });
+    
+    navigate('/profile', {
+      state: {
+        selectedTier: tierName,
+        selectedPrice: `$${price}`,
+        fromPricing: true
+      }
+    });
+  };
 
   const plans = {
     professional: {
@@ -96,12 +145,7 @@ export default function SubscriptionPlans() {
         {Object.entries(plans).map(([key, plan]) => {
           const Icon = plan.icon;
           return (
-            <div
-              key={key}
-              className={`relative bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-8 ${
-                plan.popular ? 'ring-4 ring-purple-500 scale-105' : ''
-              }`}
-            >
+            <Card key={key} className={`relative ${plan.popular ? 'border-primary shadow-lg' : ''}`}>
               {plan.popular && (
                 <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
                   <span className="bg-purple-500 text-white px-4 py-1 rounded-full text-sm font-semibold">
@@ -110,32 +154,37 @@ export default function SubscriptionPlans() {
                 </div>
               )}
 
-              <div className="text-center mb-6">
-                <Icon className={`w-12 h-12 mx-auto mb-4 text-${plan.color}-500`} />
-                <h2 className="text-2xl font-bold mb-2">{plan.name}</h2>
-                <p className="text-sm text-slate-600 dark:text-slate-400 mb-1">{plan.persona}</p>
-                <p className="text-xs font-semibold text-purple-600 dark:text-purple-400">{plan.value}</p>
-              </div>
-
-              <div className="text-center mb-6">
-                <div className="text-4xl font-bold mb-2">
-                  ${plan.price}
-                  <span className="text-lg font-normal text-slate-500">
-                    /{billingPeriod === 'monthly' ? 'mo' : 'yr'}
-                  </span>
+              <CardHeader>
+                <div className="text-center mb-6">
+                  <Icon className={`w-12 h-12 mx-auto mb-4 text-${plan.color}-500`} />
+                  <h2 className="text-2xl font-bold mb-2">{plan.name}</h2>
+                  <p className="text-sm text-slate-600 dark:text-slate-400 mb-1">{plan.persona}</p>
+                  <p className="text-xs font-semibold text-purple-600 dark:text-purple-400">{plan.value}</p>
                 </div>
-              </div>
+              </CardHeader>
 
-              <button
-                className={`w-full py-3 rounded-lg font-semibold transition-colors ${
-                  plan.popular
-                    ? 'bg-purple-600 hover:bg-purple-700 text-white'
-                    : `bg-${plan.color}-500 hover:bg-${plan.color}-600 text-white`
-                }`}
-              >
-                Get Started
-              </button>
-            </div>
+              <CardContent>
+                <div className="text-center mb-6">
+                  <div className="text-4xl font-bold mb-2">
+                    ${plan.price}
+                    <span className="text-lg font-normal text-slate-500">
+                      /{billingPeriod === 'monthly' ? 'mo' : 'yr'}
+                    </span>
+                  </div>
+                </div>
+              </CardContent>
+
+              <CardFooter>
+                <Button
+                  className="w-full"
+                  variant={plan.popular ? 'default' : 'outline'}
+                  onClick={() => handleSelectPlan(plan.name, plan.price)}
+                  type="button"
+                >
+                  {plan.popular ? 'Most Popular' : 'Get Started'}
+                </Button>
+              </CardFooter>
+            </Card>
           );
         })}
       </div>
