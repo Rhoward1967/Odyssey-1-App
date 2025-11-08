@@ -141,14 +141,24 @@ const SubscriptionDashboard: React.FC = () => {
   const handleManageBilling = async () => {
     setLoading(true);
     try {
-      const { data, error } = await supabase.functions.invoke('create-portal-session');
-      if (error) throw error;
+      // Make sure this is calling the right Edge Function
+      const { data, error } = await supabase.functions.invoke('create-portal-session', {
+        body: { userId: user?.id }
+      });
+      
+      if (error) {
+        console.error('Portal error:', error);
+        throw error;
+      }
+      
       if (data?.url) {
         window.location.href = data.url;
+      } else {
+        throw new Error('No portal URL returned');
       }
     } catch (error) {
-      console.error('Portal error:', error);
-      alert('Unable to open billing portal. Please try again.');
+      console.error('Billing portal error:', error);
+      alert('Unable to open billing portal. This feature requires Stripe configuration.');
     } finally {
       setLoading(false);
     }
