@@ -24,7 +24,6 @@ COMMENT ON FUNCTION public.is_user_org_owner() IS 'Check if current user is owne
 COMMENT ON FUNCTION public.chat_messages_broadcast_trigger() IS 'Realtime broadcast trigger for chat messages. Security hardened with fixed search_path to prevent exploit.';
 
 -- Verification query (for documentation)
--- Shows all functions now have fixed search_path
 SELECT 
   n.nspname AS schema,
   p.proname AS function,
