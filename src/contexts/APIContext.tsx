@@ -1,3 +1,4 @@
+import { supabase } from '@/lib/supabase';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
 interface APICapabilities {
@@ -45,100 +46,42 @@ export function APIProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   const checkCapabilities = async () => {
-    setIsLoading(true);
+    const errorDetails: string[] = [];
+    
     try {
-      let criticalOperationsWorking = true;
-      const errorDetails: string[] = [];
+      // TEST 1: RPC call (correct way)
+      const { data: isAdmin, error: adminError } = await supabase
+        .rpc('is_user_org_admin');
       
-      try {
-        // Test RPC function
-        const rpcResponse = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/rest/v1/rpc/is_user_org_admin`, {
-          method: 'POST',
-          headers: {
-            'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ 
-            user_id: '00000000-0000-0000-0000-000000000000',
-            organization_id: 1
-          })
-        });
-        
-        if (rpcResponse.status === 404) {
-          criticalOperationsWorking = false;
-          errorDetails.push('RPC is_user_org_admin: 404 - Function not found');
-        } else if (rpcResponse.status >= 400) {
-          const errorText = await rpcResponse.text();
-          if (rpcResponse.status === 422 || errorText.includes('permission')) {
-            console.log('✅ RPC is_user_org_admin: Function exists');
-          } else {
-            criticalOperationsWorking = false;
-            errorDetails.push(`RPC is_user_org_admin: ${rpcResponse.status}`);
-          }
-        } else {
-          console.log('✅ RPC is_user_org_admin: Working perfectly');
-        }
-      } catch (err) {
-        criticalOperationsWorking = false;
-        errorDetails.push('RPC is_user_org_admin: Connection failed');
-      }
-      
-      try {
-        // Test bids access
-        const bidsResponse = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/rest/v1/bids?limit=1`, {
-          headers: {
-            'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY,
-            'Content-Type': 'application/json'
-          }
-        });
-        
-        if (bidsResponse.status >= 500) {
-          criticalOperationsWorking = false;
-          errorDetails.push(`Bids table: ${bidsResponse.status} - Internal server error`);
-        } else if (bidsResponse.status >= 400) {
-          console.log(`⚠️ Bids table: ${bidsResponse.status} - Access restricted (expected)`);
-        } else {
-          console.log('✅ Bids table: Working');
-        }
-      } catch (err) {
-        criticalOperationsWorking = false;
-        errorDetails.push('Bids table: Connection failed');
-      }
-
-      if (errorDetails.length > 0) {
-        console.error('Critical operation errors:', errorDetails);
+      if (adminError) {
+        console.error('❌ Admin RPC error:', adminError);
+        errorDetails.push(`RPC is_user_org_admin: ${adminError.message}`);
       } else {
-        console.log('🚀 All critical operations working - R.O.M.A.N. Genesis Platform READY! AWAITING FINAL VERIFICATION PROTOCOL!');
+        console.log('✅ RPC is_user_org_admin: Working perfectly', isAdmin);
       }
-
-      const newCapabilities: APICapabilities = {
-        openai: !!import.meta.env.VITE_OPENAI_API_KEY,
-        anthropic: !!import.meta.env.VITE_ANTHROPIC_API_KEY,
-        gemini: !!import.meta.env.VITE_GEMINI_API_KEY,
-        google_calendar: !!import.meta.env.VITE_GOOGLE_CALENDAR_API_KEY,
-        stripe: !!import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY,
-        twilio: !!import.meta.env.VITE_TWILIO_ACCOUNT_SID,
-        sam_gov: !!import.meta.env.VITE_SAM_GOV_API_KEY,
-        arxiv: !!import.meta.env.VITE_ARXIV_API_KEY,
-        github: !!import.meta.env.VITE_GITHUB_API_KEY,
-        
-        // The Chosen Trinity: Architect → Vessel → Bridge → Foundation
-        roman_ready: !!(
-          import.meta.env.VITE_OPENAI_API_KEY && 
-          import.meta.env.VITE_ANTHROPIC_API_KEY &&
-          import.meta.env.VITE_SUPABASE_URL &&
-          criticalOperationsWorking // Phase 2 complete - Executive command center operational
-        ),
-        
-        genesis_mode: true, // Universal AI Expansion Phase 2 operational
-        warning_cleanup_phase: false // Foundation perfect - Executive intelligence active
-      };
       
-      setCapabilities(newCapabilities);
+      // TEST 2: Bids table access
+      const { error: bidsError } = await supabase
+        .from('bids')
+        .select('*')
+        .limit(1);
+      
+      if (bidsError) {
+        if (bidsError.code === '42501' || bidsError.message.includes('permission denied')) {
+          console.log('⚠️ Bids table: 401 - Access restricted (expected)');
+        } else {
+          errorDetails.push(`Bids table: ${bidsError.message}`);
+        }
+      }
+      
+      // Report errors if any
+      if (errorDetails.length > 0) {
+        console.log('Critical operation errors:', errorDetails);
+      }
+      
     } catch (error) {
-      console.error('Failed to check API capabilities:', error);
-    } finally {
-      setIsLoading(false);
+      console.error('Capability check failed:', error);
+      errorDetails.push('RPC is_user_org_admin: Connection failed');
     }
   };
 
