@@ -72,7 +72,7 @@ const tiers = [
 ];
 
 export default function Pricing() {
-	const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
+	const [billingCycle] = useState<'monthly' | 'yearly'>('monthly');
 
 	return (
 		<div className="min-h-screen bg-gradient-to-b from-background to-muted/20 py-12 px-4">
@@ -141,7 +141,7 @@ export default function Pricing() {
 								>
 									{tier.cta}
 								</Button>
-							</<CardFooter>
+							</CardFooter>
 						</Card>
 					))}
 				</div>
