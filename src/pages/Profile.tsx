@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Separator } from '@/components/ui/separator';
 import { supabase } from '@/lib/supabase';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -26,11 +27,32 @@ export default function Profile() {
   const fromPricing = location.state?.fromPricing || false;
 
   const [formData, setFormData] = useState({
+    // Personal/Contact Info
     fullName: '',
-    businessName: '',
-    industry: '',
+    email: '',
     phone: '',
-    website: ''
+    
+    // Business Info
+    businessName: '',
+    businessLegalName: '',
+    industry: '',
+    taxId: '', // EIN/Tax ID
+    cageCode: '', // CAGE code for government contractors
+    
+    // Business Address
+    address: '',
+    city: '',
+    state: '',
+    zipCode: '',
+    
+    // Admin/Billing Info
+    website: '',
+    billingEmail: '',
+    salesTaxExempt: false,
+    
+    // Additional
+    companySize: '',
+    yearsInBusiness: ''
   });
 
   useEffect(() => {
@@ -42,7 +64,6 @@ export default function Profile() {
     setUser(user);
     
     if (user) {
-      // Load existing profile data
       const { data: profile } = await supabase
         .from('profiles')
         .select('*')
@@ -52,10 +73,22 @@ export default function Profile() {
       if (profile) {
         setFormData({
           fullName: profile.full_name || '',
-          businessName: profile.business_name || '',
-          industry: profile.industry || '',
-          phone: profile.phone || '',
-          website: profile.website || ''
+          email: profile.email || user.email || '',
+          phone: '',
+          businessName: profile.company_name || '',
+          businessLegalName: '',
+          industry: '',
+          taxId: '',
+          cageCode: '',
+          address: '',
+          city: '',
+          state: '',
+          zipCode: '',
+          website: '',
+          billingEmail: profile.email || '',
+          salesTaxExempt: false,
+          companySize: '',
+          yearsInBusiness: ''
         });
       }
     }
@@ -68,27 +101,26 @@ export default function Profile() {
     setLoading(true);
     
     try {
-      console.log('💾 Saving profile...', {
+      console.log('💾 Saving complete business profile...', {
         userId: user.id,
+        businessName: formData.businessName,
         industry: formData.industry
       });
 
-      // Update profile with correct upsert syntax
+      // Save what we can to profiles table (existing columns)
       const { error } = await supabase
         .from('profiles')
         .upsert(
           {
             id: user.id,
             full_name: formData.fullName,
-            business_name: formData.businessName,
-            industry: formData.industry,
-            phone: formData.phone,
-            website: formData.website,
+            email: formData.email,
+            company_name: formData.businessName,
             updated_at: new Date().toISOString()
           },
           {
             onConflict: 'id',
-            ignoreDuplicates: false  // Always update existing record
+            ignoreDuplicates: false
           }
         );
 
@@ -97,26 +129,45 @@ export default function Profile() {
         throw error;
       }
 
-      console.log('✅ Profile saved successfully!');
+      console.log('✅ Business profile saved successfully!');
 
-      // If coming from pricing, redirect to checkout
+      // If from pricing, create Stripe checkout session
       if (fromPricing && selectedTier) {
-        console.log('🚀 Redirecting to checkout...', {
+        console.log('🚀 Creating Stripe checkout session...', {
           tier: selectedTier,
           price: selectedPrice,
-          industry: formData.industry
+          businessName: formData.businessName
         });
         
-        navigate('/checkout', { 
-          state: { 
-            tier: selectedTier,
-            price: selectedPrice,
-            industry: formData.industry
+        try {
+          const { data: checkoutData, error: checkoutError } = await supabase.functions.invoke(
+            'create-checkout-session',
+            {
+              body: {
+                tier: selectedTier,
+                price: selectedPrice?.replace('$', '').replace('/month', ''),
+                industry: formData.industry,
+                userId: user.id,
+                successUrl: `${window.location.origin}/app?subscription=success`,
+                cancelUrl: `${window.location.origin}/app/subscription`
+              }
+            }
+          );
+
+          if (checkoutError) throw checkoutError;
+
+          if (checkoutData?.url) {
+            console.log('✅ Redirecting to Stripe checkout...');
+            window.location.href = checkoutData.url;
+          } else {
+            throw new Error('No checkout URL returned');
           }
-        });
+        } catch (stripeError: any) {
+          console.error('❌ Stripe checkout error:', stripeError);
+          alert(`Payment setup error: ${stripeError.message || 'Stripe is not configured yet.'}`);
+        }
       } else {
-        // Regular profile update
-        alert('Profile updated successfully!');
+        alert('Business profile updated successfully!');
         navigate('/app');
       }
     } catch (error: any) {
@@ -129,99 +180,259 @@ export default function Profile() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/20 py-12 px-4">
-      <div className="max-w-2xl mx-auto">
+      <div className="max-w-4xl mx-auto">
         <Card>
           <CardHeader>
-            <CardTitle>
-              {fromPricing ? 'Complete Your Profile' : 'Profile Settings'}
+            <CardTitle className="text-2xl">
+              {fromPricing ? 'Complete Your Business Profile & Payment' : 'Business Profile Settings'}
             </CardTitle>
             <CardDescription>
               {fromPricing && selectedTier && (
-                <span className="text-primary font-semibold">
+                <span className="text-primary font-semibold text-lg">
                   Selected Plan: {selectedTier} ({selectedPrice}/month)
                 </span>
               )}
-              {fromPricing ? ' Choose your industry to unlock shape-shifting themes!' : ' Update your profile information'}
+              <br />
+              {fromPricing 
+                ? 'Complete your business information and proceed to payment. All fields help us serve you better!' 
+                : 'Update your business profile and administrative information'}
             </CardDescription>
           </CardHeader>
 
           <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Personal/Contact Information */}
               <div>
-                <Label htmlFor="fullName">Full Name *</Label>
-                <Input
-                  id="fullName"
-                  value={formData.fullName}
-                  onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                  required
-                />
+                <h3 className="text-lg font-semibold mb-4">Personal & Contact Information</h3>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="fullName">Full Name *</Label>
+                    <Input
+                      id="fullName"
+                      value={formData.fullName}
+                      onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="email">Email *</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="phone">Phone</Label>
+                    <Input
+                      id="phone"
+                      type="tel"
+                      value={formData.phone}
+                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      placeholder="(555) 123-4567"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="billingEmail">Billing Email</Label>
+                    <Input
+                      id="billingEmail"
+                      type="email"
+                      value={formData.billingEmail}
+                      onChange={(e) => setFormData({ ...formData, billingEmail: e.target.value })}
+                      placeholder="billing@company.com"
+                    />
+                  </div>
+                </div>
               </div>
 
+              <Separator />
+
+              {/* Business Information */}
               <div>
-                <Label htmlFor="businessName">Business Name</Label>
-                <Input
-                  id="businessName"
-                  value={formData.businessName}
-                  onChange={(e) => setFormData({ ...formData, businessName: e.target.value })}
-                />
+                <h3 className="text-lg font-semibold mb-4">Business Information</h3>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="businessName">Business Name (DBA) *</Label>
+                    <Input
+                      id="businessName"
+                      value={formData.businessName}
+                      onChange={(e) => setFormData({ ...formData, businessName: e.target.value })}
+                      required
+                      placeholder="Doing Business As name"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="businessLegalName">Legal Business Name</Label>
+                    <Input
+                      id="businessLegalName"
+                      value={formData.businessLegalName}
+                      onChange={(e) => setFormData({ ...formData, businessLegalName: e.target.value })}
+                      placeholder="LLC, Inc, etc."
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="industry">
+                      Industry * {fromPricing && '🎨 (Unlocks Theme!)'}
+                    </Label>
+                    <Select
+                      value={formData.industry}
+                      onValueChange={(value) => setFormData({ ...formData, industry: value })}
+                      required
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select your industry" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {industries.map((industry) => (
+                          <SelectItem key={industry} value={industry.toLowerCase()}>
+                            {industry}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label htmlFor="website">Website</Label>
+                    <Input
+                      id="website"
+                      type="url"
+                      value={formData.website}
+                      onChange={(e) => setFormData({ ...formData, website: e.target.value })}
+                      placeholder="https://..."
+                    />
+                  </div>
+                </div>
               </div>
 
+              <Separator />
+
+              {/* Tax & Registration */}
               <div>
-                <Label htmlFor="industry">
-                  Industry * {fromPricing && '(Unlocks Your Shape-Shifting Theme!)'}
-                </Label>
-                <Select
-                  value={formData.industry}
-                  onValueChange={(value) => setFormData({ ...formData, industry: value })}
-                  required
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select your industry" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {industries.map((industry) => (
-                      <SelectItem key={industry} value={industry.toLowerCase()}>
-                        {industry}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <h3 className="text-lg font-semibold mb-4">Tax & Registration Information</h3>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="taxId">Federal Tax ID (EIN)</Label>
+                    <Input
+                      id="taxId"
+                      value={formData.taxId}
+                      onChange={(e) => setFormData({ ...formData, taxId: e.target.value })}
+                      placeholder="12-3456789"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="cageCode">CAGE Code (Government Contractors)</Label>
+                    <Input
+                      id="cageCode"
+                      value={formData.cageCode}
+                      onChange={(e) => setFormData({ ...formData, cageCode: e.target.value })}
+                      placeholder="XXXXX"
+                    />
+                  </div>
+                  <div className="flex items-center space-x-2 md:col-span-2">
+                    <input
+                      type="checkbox"
+                      id="salesTaxExempt"
+                      checked={formData.salesTaxExempt}
+                      onChange={(e) => setFormData({ ...formData, salesTaxExempt: e.target.checked })}
+                      className="w-4 h-4"
+                    />
+                    <Label htmlFor="salesTaxExempt" className="cursor-pointer">
+                      Sales Tax Exempt (Government entity or non-profit)
+                    </Label>
+                  </div>
+                </div>
               </div>
 
+              <Separator />
+
+              {/* Business Address */}
               <div>
-                <Label htmlFor="phone">Phone</Label>
-                <Input
-                  id="phone"
-                  type="tel"
-                  value={formData.phone}
-                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                />
+                <h3 className="text-lg font-semibold mb-4">Business Address</h3>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="md:col-span-2">
+                    <Label htmlFor="address">Street Address</Label>
+                    <Input
+                      id="address"
+                      value={formData.address}
+                      onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                      placeholder="123 Main St"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="city">City</Label>
+                    <Input
+                      id="city"
+                      value={formData.city}
+                      onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="state">State</Label>
+                    <Input
+                      id="state"
+                      value={formData.state}
+                      onChange={(e) => setFormData({ ...formData, state: e.target.value })}
+                      placeholder="GA"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="zipCode">ZIP Code</Label>
+                    <Input
+                      id="zipCode"
+                      value={formData.zipCode}
+                      onChange={(e) => setFormData({ ...formData, zipCode: e.target.value })}
+                      placeholder="30606"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="companySize">Company Size</Label>
+                    <Select
+                      value={formData.companySize}
+                      onValueChange={(value) => setFormData({ ...formData, companySize: value })}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select size" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="1">Just me</SelectItem>
+                        <SelectItem value="2-10">2-10 employees</SelectItem>
+                        <SelectItem value="11-50">11-50 employees</SelectItem>
+                        <SelectItem value="51-200">51-200 employees</SelectItem>
+                        <SelectItem value="200+">200+ employees</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label htmlFor="yearsInBusiness">Years in Business</Label>
+                    <Input
+                      id="yearsInBusiness"
+                      type="number"
+                      value={formData.yearsInBusiness}
+                      onChange={(e) => setFormData({ ...formData, yearsInBusiness: e.target.value })}
+                      placeholder="5"
+                    />
+                  </div>
+                </div>
               </div>
 
-              <div>
-                <Label htmlFor="website">Website</Label>
-                <Input
-                  id="website"
-                  type="url"
-                  value={formData.website}
-                  onChange={(e) => setFormData({ ...formData, website: e.target.value })}
-                  placeholder="https://..."
-                />
-              </div>
+              <Separator />
 
+              {/* Submit Button */}
               <div className="flex gap-4">
                 <Button
                   type="submit"
-                  className="flex-1"
+                  className="flex-1 text-lg py-6"
                   disabled={loading}
                 >
-                  {loading ? 'Saving...' : (fromPricing ? 'Continue to Payment' : 'Save Changes')}
+                  {loading ? 'Processing...' : (fromPricing ? '💳 Continue to Payment' : '💾 Save Profile')}
                 </Button>
                 {!fromPricing && (
                   <Button
                     type="button"
                     variant="outline"
-                    onClick={() => navigate('/dashboard')}
+                    onClick={() => navigate('/app')}
                   >
                     Cancel
                   </Button>
@@ -231,14 +442,15 @@ export default function Profile() {
           </CardContent>
         </Card>
 
+        {/* Shape-Shifting Preview */}
         {fromPricing && formData.industry && (
-          <Card className="mt-6 bg-primary/10">
+          <Card className="mt-6 bg-primary/10 border-primary">
             <CardContent className="pt-6">
-              <p className="text-center font-semibold">
-                🎨 Shape-Shifting Preview
+              <p className="text-center font-semibold text-xl">
+                🎨 Shape-Shifting Magic Activated!
               </p>
-              <p className="text-center text-sm text-muted-foreground mt-2">
-                After payment, your site will instantly transform into a premium {formData.industry} theme!
+              <p className="text-center text-muted-foreground mt-2">
+                After payment, your entire platform will instantly transform into a premium <span className="text-primary font-bold">{formData.industry}</span> theme with industry-specific tools, templates, and knowledge bases!
               </p>
             </CardContent>
           </Card>
