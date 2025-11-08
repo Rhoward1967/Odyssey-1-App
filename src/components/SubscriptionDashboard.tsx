@@ -82,7 +82,7 @@ const SubscriptionDashboard: React.FC = () => {
   const { user } = useAuth();
   const [subscription, setSubscription] = useState<Subscription | null>(null);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'current' | 'plans'>('current');
+  const [activeTab, setActiveTab] = useState<'current' | 'plans'>('plans');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -95,12 +95,17 @@ const SubscriptionDashboard: React.FC = () => {
           .eq('user_id', user.id)
           .order('created_at', { ascending: false })
           .limit(1)
-          .single();
+          .maybeSingle();
+        
         if (!error && data) {
           setSubscription(data);
+          setActiveTab('current');
+        } else {
+          setActiveTab('plans');
         }
       } catch (err) {
         console.error('Error fetching subscription:', err);
+        setActiveTab('plans');
       } finally {
         setLoading(false);
       }
@@ -166,19 +171,21 @@ const SubscriptionDashboard: React.FC = () => {
         Choose your plan and manage your subscription
       </h1>
 
-      {/* Tabs */}
+      {/* Tabs - only show Current Plan if subscription exists */}
       <div className="flex gap-4 mb-8 border-b">
-        <button
-          className={`px-4 py-2 ${
-            activeTab === 'current'
-              ? 'border-b-2 border-primary font-semibold'
-              : ''
-          }`}
-          onClick={() => setActiveTab('current')}
-          type="button"
-        >
-          Current Plan
-        </button>
+        {subscription && (
+          <button
+            className={`px-4 py-2 ${
+              activeTab === 'current'
+                ? 'border-b-2 border-primary font-semibold'
+                : ''
+            }`}
+            onClick={() => setActiveTab('current')}
+            type="button"
+          >
+            Current Plan
+          </button>
+        )}
         <button
           className={`px-4 py-2 ${
             activeTab === 'plans'
@@ -192,8 +199,8 @@ const SubscriptionDashboard: React.FC = () => {
         </button>
       </div>
 
-      {/* Current Plan Tab */}
-      {activeTab === 'current' && (
+      {/* Current Plan Tab - only show if subscription exists */}
+      {activeTab === 'current' && subscription && (
         <div className="space-y-6">
           <Card>
             <CardHeader>
@@ -206,15 +213,17 @@ const SubscriptionDashboard: React.FC = () => {
               <div className="space-y-4">
                 <div>
                   <h3 className="text-xl font-semibold">
-                    {subscription?.plan_id}
+                    {subscription.plan_id || 'Pro Plan'}
                   </h3>
                   <span className="inline-block px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-semibold mt-2">
-                    {subscription?.status.toUpperCase()}
+                    {subscription.status?.toUpperCase() || 'ACTIVE'}
                   </span>
                 </div>
                 <p className="text-muted-foreground">
-                  Your plan will automatically renew{' '}
-                  {new Date(subscription?.current_period_end).toLocaleDateString()}
+                  Your plan will automatically renew on{' '}
+                  {subscription.current_period_end 
+                    ? new Date(subscription.current_period_end).toLocaleDateString()
+                    : 'your next billing date'}
                   .
                 </p>
               </div>
@@ -225,8 +234,7 @@ const SubscriptionDashboard: React.FC = () => {
             <CardHeader>
               <CardTitle>Billing Management</CardTitle>
               <CardDescription>
-                Manage your payment methods and view your billing history in the
-                Stripe Customer Portal.
+                Manage your payment methods and view your billing history.
               </CardDescription>
             </CardHeader>
             <CardFooter>
@@ -243,7 +251,7 @@ const SubscriptionDashboard: React.FC = () => {
         </div>
       )}
 
-      {/* All Plans Tab */}
+      {/* All Plans Tab - always available */}
       {activeTab === 'plans' && (
         <div className="grid md:grid-cols-3 gap-6">
           {tiers.map((tier) => (

@@ -68,23 +68,45 @@ export default function Profile() {
     setLoading(true);
     
     try {
-      // Update profile
+      console.log('💾 Saving profile...', {
+        userId: user.id,
+        industry: formData.industry
+      });
+
+      // Update profile with correct upsert syntax
       const { error } = await supabase
         .from('profiles')
-        .upsert({
-          id: user.id,
-          full_name: formData.fullName,
-          business_name: formData.businessName,
-          industry: formData.industry,
-          phone: formData.phone,
-          website: formData.website,
-          updated_at: new Date().toISOString()
-        });
+        .upsert(
+          {
+            id: user.id,
+            full_name: formData.fullName,
+            business_name: formData.businessName,
+            industry: formData.industry,
+            phone: formData.phone,
+            website: formData.website,
+            updated_at: new Date().toISOString()
+          },
+          {
+            onConflict: 'id',
+            ignoreDuplicates: false  // Always update existing record
+          }
+        );
 
-      if (error) throw error;
+      if (error) {
+        console.error('❌ Profile update error:', error);
+        throw error;
+      }
 
-      // If coming from pricing, redirect to payment
+      console.log('✅ Profile saved successfully!');
+
+      // If coming from pricing, redirect to checkout
       if (fromPricing && selectedTier) {
+        console.log('🚀 Redirecting to checkout...', {
+          tier: selectedTier,
+          price: selectedPrice,
+          industry: formData.industry
+        });
+        
         navigate('/checkout', { 
           state: { 
             tier: selectedTier,
@@ -94,11 +116,12 @@ export default function Profile() {
         });
       } else {
         // Regular profile update
-        navigate('/dashboard');
+        alert('Profile updated successfully!');
+        navigate('/app');
       }
-    } catch (error) {
-      console.error('Profile update error:', error);
-      alert('Error updating profile. Please try again.');
+    } catch (error: any) {
+      console.error('❌ Profile update error:', error);
+      alert(`Error updating profile: ${error.message || 'Please try again.'}`);
     } finally {
       setLoading(false);
     }
