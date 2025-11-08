@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import { Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Check } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const tiers = [
 	{
@@ -72,7 +72,20 @@ const tiers = [
 ];
 
 export default function Pricing() {
-	const [billingCycle] = useState<'monthly' | 'yearly'>('monthly');
+	const navigate = useNavigate();
+
+	const handleSelectPlan = (tierName: string, price: string) => {
+		console.log('Button clicked!', { tierName, price }); // Debug log
+
+		// Navigate to profile setup with tier info
+		navigate('/profile', {
+			state: {
+				selectedTier: tierName,
+				selectedPrice: price,
+				fromPricing: true,
+			},
+		});
+	};
 
 	return (
 		<div className="min-h-screen bg-gradient-to-b from-background to-muted/20 py-12 px-4">
@@ -85,7 +98,8 @@ export default function Pricing() {
 					<p className="text-xl text-muted-foreground max-w-2xl mx-auto">
 						Three tiers. One mission: Empower you to reclaim your sovereignty.
 						<br />
-						Primary value: Industry-specific themes that transform your site instantly.
+						Primary value: Industry-specific themes that transform your site
+						instantly.
 					</p>
 				</div>
 
@@ -138,6 +152,8 @@ export default function Pricing() {
 									className="w-full"
 									variant={tier.highlight ? 'default' : 'outline'}
 									size="lg"
+									onClick={() => handleSelectPlan(tier.name, tier.price)}
+									type="button"
 								>
 									{tier.cta}
 								</Button>

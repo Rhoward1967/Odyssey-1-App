@@ -1,5 +1,6 @@
 // deno-lint-ignore-file no-import-prefix
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import Stripe from "https://esm.sh/stripe@14.21.0?target=deno";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -7,79 +8,66 @@ const corsHeaders = {
 };
 
 serve(async (req) => {
-  if (req.method === "OPTIONS") {
-    return new Response("ok", { headers: corsHeaders });
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders });
   }
 
   try {
-    const body = await req.json();
-    const { tier, userId, email, successUrl, cancelUrl } = body ?? {};
+    const { tier, industry, userId, successUrl, cancelUrl } = await req.json();
+    
+    const STRIPE_SECRET_KEY = Deno.env.get('STRIPE_SECRET_KEY');
+    if (!STRIPE_SECRET_KEY) {
+      throw new Error('STRIPE_SECRET_KEY not configured');
+    }
 
-    // REAL STRIPE PRICE IDs - PRODUCTION READY! ✅
-    const PRICE_IDS: Record<string, string> = {
-      basic: "price_1S45KEDPqeWRzwCXi6awuzd4",       // $99/month
-      pro: "price_1S45LLDPqeWRzwCXNSNtLlm0",         // $299/month
-      ultimate: "price_1S45NMDPqeWRzwCXMTAOnP5b",    // $999/month
+    const stripe = new Stripe(STRIPE_SECRET_KEY, {
+      apiVersion: '2023-10-16',
+    });
+
+    // Price IDs (you'll create these in Stripe Dashboard)
+    const priceIds: Record<string, string> = {
+      'Professional': Deno.env.get('STRIPE_PRICE_ID_99') || '',
+      'Business': Deno.env.get('STRIPE_PRICE_ID_299') || '',
+      'Enterprise': Deno.env.get('STRIPE_PRICE_ID_999') || ''
     };
 
-    const priceId = PRICE_IDS[tier];
+    const priceId = priceIds[tier];
     if (!priceId) {
-      return new Response(
-        JSON.stringify({ error: "Invalid tier selected" }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 400 }
-      );
+      throw new Error(`Invalid tier: ${tier}`);
     }
 
-    const stripeSecret = Deno.env.get("STRIPE_SECRET_KEY");
-    if (!stripeSecret) {
-      return new Response(
-        JSON.stringify({ error: "Server misconfigured: STRIPE_SECRET_KEY missing" }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 500 }
-      );
-    }
-
-    // Build form-encoded body per Stripe API
-    const params = new URLSearchParams();
-    params.append("mode", "subscription");
-    params.append("success_url", successUrl);
-    params.append("cancel_url", cancelUrl);
-    params.append("customer_email", email);
-    params.append("line_items[0][price]", priceId);
-    params.append("line_items[0][quantity]", "1");
-    if (userId) params.append("metadata[userId]", userId);
-    if (tier) params.append("metadata[tier]", tier);
-
-    const resp = await fetch("https://api.stripe.com/v1/checkout/sessions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${stripeSecret}`,
-        "Content-Type": "application/x-www-form-urlencoded",
+    // Create Stripe Checkout Session
+    const session = await stripe.checkout.sessions.create({
+      mode: 'subscription',
+      payment_method_types: ['card'],
+      line_items: [
+        {
+          price: priceId,
+          quantity: 1,
+        },
+      ],
+      success_url: successUrl,
+      cancel_url: cancelUrl,
+      client_reference_id: userId,
+      metadata: {
+        userId,
+        tier,
+        industry,
       },
-      body: params.toString(),
     });
-
-    const respJson = await resp.json();
-
-    if (!resp.ok) {
-      const errorMessage = respJson?.error?.message || "Stripe API error";
-      return new Response(JSON.stringify({ error: errorMessage }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: resp.status || 400,
-      });
-    }
 
     return new Response(
-      JSON.stringify({ sessionId: respJson.id, sessionUrl: respJson.url }),
-      {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: 200,
-      }
+      JSON.stringify({ url: session.url }),
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
-  } catch (err) {
-    const errorMessage = err instanceof Error ? err.message : "Unknown error occurred";
-    return new Response(JSON.stringify({ error: errorMessage }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-      status: 500,
-    });
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    console.error('Create checkout session error:', errorMessage);
+    
+    return new Response(
+      JSON.stringify({ error: errorMessage }),
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
+    );
   }
 });
+

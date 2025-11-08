@@ -11,6 +11,7 @@ import Admin from '@/pages/Admin';
 import Calculator from '@/pages/Calculator';
 import Index from '@/pages/Index';
 import LoginPage from '@/pages/LoginPage';
+import Pricing from '@/pages/Pricing';
 import Profile from '@/pages/Profile';
 import Subscription from '@/pages/Subscription';
 import Trading from '@/pages/Trading';
@@ -160,6 +161,7 @@ function App() {
                   <Route path="/subscribe" element={<Subscribe />} />
                   <Route path="/onboard" element={<Onboard />} />
                   <Route path="/login" element={<LoginPage />} />
+                  <Route path="/pricing" element={<Pricing />} />
 
                   {/* Protected Routes */}
                   <Route element={<ProtectedRoute />}>
@@ -175,6 +177,9 @@ function App() {
                       <Route path="media-center" element={<MediaCenter />} />
                     </Route>
                   </Route>
+
+                  {/* Profile Setup Route (can be public for new signups) */}
+                  <Route path="/profile" element={<Profile />} />
                 </Routes>
               </div>
             </BrowserRouter>
