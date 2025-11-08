@@ -6,6 +6,7 @@
 import AppLayout from '@/components/AppLayout';
 import { AuthProvider } from '@/components/AuthProvider';
 import ProtectedRoute from '@/components/ProtectedRoute';
+import SubscriptionDashboard from '@/components/SubscriptionDashboard';
 import UserManual from '@/components/UserManual';
 import Admin from '@/pages/Admin';
 import Calculator from '@/pages/Calculator';
@@ -13,7 +14,6 @@ import Index from '@/pages/Index';
 import LoginPage from '@/pages/LoginPage';
 import Pricing from '@/pages/Pricing';
 import Profile from '@/pages/Profile';
-import Subscription from '@/pages/Subscription';
 import Trading from '@/pages/Trading';
 import WorkforceDashboard from '@/pages/WorkforceDashboard';
 import { useEffect, useState } from 'react';
@@ -168,7 +168,7 @@ function App() {
                     <Route path="/app" element={<AppLayout />}>
                       <Route index element={<Index />} />
                       <Route path="profile" element={<Profile />} />
-                      <Route path="subscription" element={<Subscription />} />
+                      <Route path="subscription" element={<SubscriptionDashboard />} />
                       <Route path="admin" element={<Admin />} />
                       <Route path="trading" element={<Trading />} />
                       <Route path="calculator" element={<Calculator />} />
