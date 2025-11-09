@@ -154,7 +154,22 @@ export default function Profile() {
             }
           );
 
-          if (checkoutError) throw checkoutError;
+          if (checkoutError) {
+            // 🔥 LOG ERROR TO ODYSSEY-1 SELF-HEALING SYSTEM
+            await supabase.from('system_logs').insert({
+              source: 'stripe_api',
+              level: 'ERROR',
+              message: checkoutError.message,
+              metadata: {
+                code: 401, // Trigger self-healing
+                tier: selectedTier,
+                userId: user.id,
+                error: checkoutError
+              }
+            });
+            
+            throw checkoutError;
+          }
 
           if (checkoutData?.url) {
             console.log('✅ Redirecting to Stripe checkout...');
@@ -164,6 +179,19 @@ export default function Profile() {
           }
         } catch (stripeError: any) {
           console.error('❌ Stripe checkout error:', stripeError);
+          
+          // 🔥 LOG TO ODYSSEY-1 SELF-HEALING
+          await supabase.from('system_logs').insert({
+            source: 'stripe_checkout',
+            level: 'ERROR',
+            message: stripeError.message,
+            metadata: {
+              tier: selectedTier,
+              userId: user.id,
+              error: stripeError.toString()
+            }
+          });
+          
           alert(`Payment setup error: ${stripeError.message || 'Stripe is not configured yet.'}`);
         }
       } else {
