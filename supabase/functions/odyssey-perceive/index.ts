@@ -1,4 +1,5 @@
-console.info('odyssey-perceive started');
+console.info('[BOOT] odyssey-perceive handler loading');
+console.info('[BOOT] Timestamp:', new Date().toISOString());
 
 type LogRow = {
   id: number;
@@ -57,15 +58,38 @@ function romanConsensus(log: LogRow) {
 }
 
 Deno.serve(async (req) => {
-  console.log('🔔 Request received:', req.method);
+  // IMMEDIATE REQUEST LOG - BEFORE ANYTHING ELSE!
+  console.info('[REQUEST] Received at:', new Date().toISOString());
+  console.info('[REQUEST] Method:', req.method);
+  console.info('[REQUEST] URL:', req.url);
   
+  // LOG ALL HEADERS
+  const headers: Record<string, string> = {};
+  req.headers.forEach((value, key) => {
+    headers[key] = value.substring(0, 50) + (value.length > 50 ? '...' : '');
+  });
+  console.info('[REQUEST] Headers:', JSON.stringify(headers, null, 2));
+  
+  // LOG AUTHORIZATION SPECIFICALLY
+  const authHeaderValue = req.headers.get('authorization');
+  console.info('[AUTH] Authorization header present:', !!authHeaderValue);
+  console.info('[AUTH] Authorization header length:', authHeaderValue?.length || 0);
+  console.info('[AUTH] Authorization header value (first 40):', authHeaderValue?.substring(0, 40) || 'NONE');
+  
+  // LOG EXPECTED TOKEN
+  const expectedTokenValue = Deno.env.get('ODYSSEY_INGEST_TOKEN');
+  console.info('[AUTH] Expected token present:', !!expectedTokenValue);
+  console.info('[AUTH] Expected token length:', expectedTokenValue?.length || 0);
+  console.info('[AUTH] Expected token value (first 40):', expectedTokenValue?.substring(0, 40) || 'NONE');
+  
+  // NOW CONTINUE WITH EXISTING CODE
   if (req.method !== 'POST') {
     console.log('❌ Method not allowed:', req.method);
     return new Response('Method not allowed', { status: 405 });
   }
   
-  const authHeader = req.headers.get('authorization') || '';
-  const expectedToken = Deno.env.get('ODYSSEY_INGEST_TOKEN') || '';
+  const authHeader = authHeaderValue || '';
+  const expectedToken = expectedTokenValue || '';
   
   // SUPER DETAILED DEBUG LOGGING
   console.log('🔍 DEBUG INFO:');

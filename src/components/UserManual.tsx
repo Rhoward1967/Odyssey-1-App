@@ -13,7 +13,7 @@
  * these innovations may constitute patent infringement.
  */
 
-import { supabase } from '@/lib/supabaseClient';
+import { supabase } from '@/lib/supabaseClient'; // Add this import
 import {
   BookOpen,
   Brain,
@@ -27,8 +27,7 @@ import {
   Zap
 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
-import LaunchTracker from './LaunchTracker';
-import SovereignBooksLibrary from './SovereignBooksLibrary'; // ADD THIS LINE
+import LaunchTracker from './LaunchTracker'; // Import the new LaunchTracker component
 import SovereignCoreInterface from './SovereignCoreInterface';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
@@ -474,36 +473,6 @@ export const UserManual: React.FC = () => {
         },
       ],
     },
-    {
-      id: 'constitutional-framework',
-      title: 'Constitutional Framework',
-      icon: BookOpen,
-      content: [
-        'Explore the constitutional framework and principles guiding ODYSSEY-1',
-        'In-depth resources and documentation on the 9 Principles',
-        'AI and HiveOrchestrator immune system architecture',
-        'R.O.M.A.N. Dual Hemisphere AI detailed explanation',
-        'Sovereign Container hardware platform and innovations',
-      ],
-      steps: [
-        {
-          title: 'The 9 Principles',
-          description: 'Learn about the constitutional principles guiding the system',
-        },
-        {
-          title: 'R.O.M.A.N. Architecture',
-          description: 'Understand the dual hemisphere AI architecture',
-        },
-        {
-          title: 'HiveOrchestrator Immune System',
-          description: 'Explore the immune system and its components',
-        },
-        {
-          title: 'Sovereign Container Innovations',
-          description: 'Discover the hardware innovations and design',
-        },
-      ],
-    },
   ];
 
 
@@ -520,7 +489,7 @@ export const UserManual: React.FC = () => {
       </Card>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className='grid w-full grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-1 md:gap-2 bg-slate-800/50'>
+        <TabsList className='grid w-full grid-cols-2 md:grid-cols-5 bg-slate-800/50 gap-1'>
           <TabsTrigger value='getting-started' className='text-xs md:text-sm px-1 md:px-3'>
             📖 Getting Started
           </TabsTrigger>
@@ -541,9 +510,8 @@ export const UserManual: React.FC = () => {
           <TabsTrigger value='coming-soon' className='text-xs md:text-sm px-1 md:px-3 opacity-50'>
             🚧 More Coming Soon
           </TabsTrigger>
-          
-          <TabsTrigger value='constitutional-framework' className='text-xs md:text-sm px-1 md:px-3'>
-            📚 Constitutional Framework
+          <TabsTrigger value='book-launch' className='text-xs md:text-sm px-1 md:px-3'>
+            📚 Book Launch
           </TabsTrigger>
         </TabsList>
 
@@ -746,12 +714,12 @@ Hardware Platform (Future - Patent Pending):
                     </div>
                     <div className="bg-green-900/30 p-4 rounded border border-green-500 text-sm">
                       <div className="font-semibold text-green-300">🎉 ABSOLUTE PERFECTION ACHIEVED!</div>
-                      <div className="text-xs text-gray-300 mt-2 space-y-2">
-                        <div>• Supabase warnings: <strong>41 → 0</strong> (100% PERFECT!)</div>
-                        <div>• Frontend problems: <strong>0</strong> (CLEAN CODE!)</div>
-                        <div>• RLS policies: <strong>OPTIMIZED</strong> (Lightning fast!)</div>
-                        <div>• System status: <strong>OPERATIONAL EXCELLENCE</strong></div>
-                        <div>• Ready for: <strong>COST CONTROL DEPLOYMENT</strong></div>
+                      <div className="text-xs text-gray-300 mt-2">
+                        • Supabase warnings: <strong>41 → 0</strong> (100% PERFECT!)<br/>
+                        • Frontend problems: <strong>0</strong> (CLEAN CODE!)<br/>
+                        • RLS policies: <strong>OPTIMIZED</strong> (Lightning fast!)<br/>
+                        • System status: <strong>OPERATIONAL EXCELLENCE</strong><br/>
+                        • Ready for: <strong>COST CONTROL DEPLOYMENT</strong>
                       </div>
                     </div>
 
@@ -1422,13 +1390,13 @@ TOTAL: 16 legacy policies to remove after validation`}</pre>
                 </div>
 
                 <div className="bg-emerald-900/30 p-4 rounded border border-emerald-500">
-                  <div className="text-green-300 font-semibold mb-2">🎉 ABSOLUTE PERFECTION ACHIEVED!</div>
-                  <div className="text-xs text-gray-300 mt-2 space-y-2">
-                    <div>• Supabase warnings: <strong>41 → 0</strong> (100% PERFECT!)</div>
-                    <div>• Frontend problems: <strong>0</strong> (CLEAN CODE!)</div>
-                    <div>• RLS policies: <strong>OPTIMIZED</strong> (Lightning fast!)</div>
-                    <div>• System status: <strong>OPERATIONAL EXCELLENCE</strong></div>
-                    <div>• Ready for: <strong>COST CONTROL DEPLOYMENT</strong></div>
+                  <h4 className="font-semibold text-emerald-300 mb-2">🚀 READY TO EXECUTE - ZERO RISK OPTIMIZATION:</h4>
+                  <div className="text-sm text-gray-300 space-y-2">
+                    <div><strong>✅ Data Confirmed:</strong> All 41 warnings mapped and categorized</div>
+                    <div><strong>✅ Execution Plan:</strong> Conservative approach with validation between phases</div>
+                    <div><strong>✅ Risk Assessment:</strong> Zero risk - only performance improvements</div>
+                    <div><strong>✅ Rollback Ready:</strong> All changes are reversible if needed</div>
+                    <div><strong>✅ Timeline:</strong> ~15 minutes total execution time</div>
                   </div>
                 </div>
 
@@ -1443,6 +1411,8 @@ TOTAL: 16 legacy policies to remove after validation`}</pre>
                   </div>
                 </div>
 
+               
+               
                 {/* COST-AWARENESS — keep Supabase costs low */}
                 <div className="bg-yellow-800/20 p-4 rounded border border-yellow-600 mt-3">
                   <h5 className="font-semibold text-yellow-300 mb-2">💡 Cost Awareness (shoe-string friendly)</h5>
@@ -1456,13 +1426,6 @@ TOTAL: 16 legacy policies to remove after validation`}</pre>
                 </div>
               </CardContent>
             </Card>
-          </div>
-        </TabsContent>
-
-        {/* BOOKS TAB */}
-        <TabsContent value='books'>
-          <div className="p-4">
-            <SovereignBooksLibrary />
           </div>
         </TabsContent>
       </Tabs>
