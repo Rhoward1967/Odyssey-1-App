@@ -14,66 +14,54 @@ serve(async (req) => {
 
   try {
     console.log('🚀 Checkout session request received');
+    console.log('📍 Origin:', req.headers.get('origin'));
+    console.log('📍 Method:', req.method);
 
-    // Get Stripe secret key
     const stripeSecretKey = Deno.env.get('STRIPE_SECRET_KEY');
     
     if (!stripeSecretKey) {
       console.error('❌ STRIPE_SECRET_KEY not found in environment');
-      throw new Error('Stripe not configured - STRIPE_SECRET_KEY missing');
+      throw new Error('STRIPE_SECRET_KEY not configured');
     }
 
-    if (!stripeSecretKey.startsWith('sk_')) {
-      console.error('❌ Invalid STRIPE_SECRET_KEY format:', stripeSecretKey.substring(0, 10));
-      throw new Error('Invalid Stripe secret key format');
-    }
+    console.log('✅ Stripe key exists:', stripeSecretKey.substring(0, 7) + '...');
+    console.log('🔑 Key starts with sk_?', stripeSecretKey.startsWith('sk_'));
 
-    console.log('✅ Stripe secret key found:', stripeSecretKey.substring(0, 7) + '...');
-
-    // Parse request body
     const body = await req.json();
-    console.log('📦 Request body:', JSON.stringify(body, null, 2));
+    console.log('📦 Full request body:', JSON.stringify(body, null, 2));
 
-    const { tier, price, industry, userId, successUrl, cancelUrl } = body;
+    const { tier, price } = body;
+    console.log('🎯 Tier:', tier);
+    console.log('💵 Price:', price);
 
-    // Get price ID
-    let priceId: string | undefined;
+    // Map tiers to your actual Stripe price IDs
+    let priceId: string;
     
     if (price === '99' || tier === 'Professional') {
-      priceId = Deno.env.get('STRIPE_PRICE_ID_99');
-      console.log('💰 Using $99 price ID:', priceId);
+      priceId = 'price_1S45KEDPqeWRzwCXi6awuzd4';
+      console.log('💰 Selected $99 tier');
     } else if (price === '299' || tier === 'Business') {
-      priceId = Deno.env.get('STRIPE_PRICE_ID_299');
-      console.log('💰 Using $299 price ID:', priceId);
+      priceId = 'price_1S45LLDPqeWRzwCXNSNtLlm0';
+      console.log('💰 Selected $299 tier');
     } else if (price === '999' || tier === 'Enterprise') {
-      priceId = Deno.env.get('STRIPE_PRICE_ID_999');
-      console.log('💰 Using $999 price ID:', priceId);
+      priceId = 'price_1S45NMDPqeWRzwCXMTAOnP5b';
+      console.log('💰 Selected $999 tier');
     } else {
-      throw new Error(`Invalid tier/price: ${tier} - $${price}`);
+      console.error('❌ Invalid tier/price combination:', { tier, price });
+      throw new Error(`Invalid tier: ${tier} / price: ${price}`);
     }
 
-    if (!priceId) {
-      console.error('❌ Price ID not found for tier:', tier);
-      throw new Error(`Price ID not configured for tier: ${tier}`);
-    }
-
-    if (!priceId.startsWith('price_')) {
-      console.error('❌ Invalid price ID format:', priceId);
-      throw new Error('Invalid price ID format');
-    }
-
-    console.log('✅ Price ID validated:', priceId);
-
-    // Initialize Stripe
+    console.log('💰 Final price ID:', priceId);
     console.log('🔌 Initializing Stripe...');
+
     const stripe = new Stripe(stripeSecretKey, {
       apiVersion: '2023-10-16',
-      httpClient: Stripe.createFetchHttpClient(),
     });
-    console.log('✅ Stripe initialized successfully');
+
+    console.log('✅ Stripe initialized');
+    console.log('💳 Creating checkout session...');
 
     // Create checkout session
-    console.log('💳 Creating Stripe checkout session...');
     const session = await stripe.checkout.sessions.create({
       mode: 'subscription',
       payment_method_types: ['card'],
@@ -83,31 +71,16 @@ serve(async (req) => {
           quantity: 1,
         },
       ],
-      success_url: successUrl || `${req.headers.get('origin')}/app?subscription=success`,
-      cancel_url: cancelUrl || `${req.headers.get('origin')}/app/subscription`,
-      client_reference_id: userId,
-      metadata: {
-        userId,
-        tier,
-        industry: industry || 'not-specified',
-      },
-      subscription_data: {
-        metadata: {
-          userId,
-          tier,
-          industry: industry || 'not-specified',
-        },
-      },
+      success_url: `${req.headers.get('origin')}/app?subscription=success`,
+      cancel_url: `${req.headers.get('origin')}/app/subscription`,
     });
 
-    console.log('✅ Checkout session created successfully:', session.id);
+    console.log('✅ Session created successfully!');
+    console.log('🆔 Session ID:', session.id);
     console.log('🔗 Checkout URL:', session.url);
 
     return new Response(
-      JSON.stringify({ 
-        url: session.url, 
-        sessionId: session.id 
-      }),
+      JSON.stringify({ url: session.url, sessionId: session.id }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         status: 200,
@@ -115,16 +88,18 @@ serve(async (req) => {
     );
   } catch (error: unknown) {
     const err = error as Error;
-    console.error('❌ Checkout error:', err);
-    console.error('❌ Error type:', err.constructor.name);
-    console.error('❌ Error message:', err.message);
-    console.error('❌ Error stack:', err.stack);
+    console.error('❌❌❌ FATAL ERROR ❌❌❌');
+    console.error('Error name:', err.name);
+    console.error('Error message:', err.message);
+    console.error('Error stack:', err.stack);
+    console.error('Error type:', typeof err);
+    console.error('Full error object:', JSON.stringify(err, null, 2));
     
     return new Response(
-      JSON.stringify({
+      JSON.stringify({ 
         error: err.message,
-        type: err.constructor.name,
-        details: err.toString(),
+        name: err.name,
+        type: typeof err,
       }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
