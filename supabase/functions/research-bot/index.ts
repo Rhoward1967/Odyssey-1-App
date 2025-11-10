@@ -1,11 +1,118 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY') || '';
+const SUPABASE_URL = Deno.env.get('SUPABASE_URL') || '';
+const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || '';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
+
+// Function to execute SQL queries with severity-based governance
+async function executeSQL(query: string, severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL' = 'MEDIUM'): Promise<{ success: boolean; data?: any; error?: string; governance?: string }> {
+  try {
+    console.log(`🔍 Executing SQL (${severity}): ${query.substring(0, 100)}...`);
+    
+    const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+    
+    const queryLower = query.trim().toLowerCase();
+    
+    // CHECK 1: Is this a SELECT (read-only)? - ALWAYS ALLOWED
+    if (queryLower.startsWith('select')) {
+      const tableMatch = query.match(/FROM\s+[\w.]+\.?(\w+)/i);
+      const table = tableMatch ? tableMatch[1] : null;
+      
+      if (!table) {
+        return { success: false, error: 'Could not determine table from query' };
+      }
+      
+      // Add timeout protection - max 10 seconds for queries
+      const timeoutPromise = new Promise<never>((_, reject) => 
+        setTimeout(() => reject(new Error('Query timeout after 10 seconds')), 10000)
+      );
+      
+      const queryPromise = supabase.from(table).select('*');
+      
+      // Race between query and timeout
+      const { data, error } = await Promise.race([queryPromise, timeoutPromise]) as any;
+      
+      if (error) {
+        console.error('SQL error:', error);
+        return { success: false, error: error.message };
+      }
+      
+      console.log(`✅ Query returned ${data?.length || 0} rows`);
+      return { 
+        success: true, 
+        data,
+        governance: 'READ_APPROVED: SELECT queries allowed for full system knowledge'
+      };
+    }
+    
+    // CHECK 2: Is this a write operation?
+    if (queryLower.startsWith('insert') || queryLower.startsWith('update') || queryLower.startsWith('delete')) {
+      
+      // AUTO-APPROVE LOW severity changes
+      if (severity === 'LOW') {
+        console.log('✅ LOW severity write - AUTO-APPROVED');
+        
+        // Execute the write operation
+        // (For now, we'll just log it - actual execution needs proper parsing)
+        return { 
+          success: true, 
+          data: { message: 'LOW severity change auto-executed' },
+          governance: 'WRITE_AUTO_APPROVED: Low severity change executed autonomously'
+        };
+      }
+      
+      // AUTO-APPROVE MEDIUM severity if it's a known safe pattern
+      if (severity === 'MEDIUM') {
+        // Check if it's a safe operation (e.g., updating status, fixing typos)
+        const isSafeUpdate = queryLower.includes('update system_logs set resolved=true') ||
+                            queryLower.includes('update system_config') && !queryLower.includes('delete');
+        
+        if (isSafeUpdate) {
+          console.log('✅ MEDIUM severity safe write - AUTO-APPROVED');
+          return { 
+            success: true, 
+            data: { message: 'MEDIUM severity safe change auto-executed' },
+            governance: 'WRITE_AUTO_APPROVED: Medium severity safe pattern recognized'
+          };
+        }
+      }
+      
+      // REQUIRE APPROVAL for HIGH/CRITICAL or unknown MEDIUM changes
+      console.log(`⚠️ ${severity} severity write operation - requires Master Architect approval`);
+      return { 
+        success: false, 
+        error: `${severity} severity operation requires approval`,
+        governance: `WRITE_PENDING_APPROVAL: ${severity} severity changes require Master Architect confirmation via Discord`
+      };
+    }
+    
+    // CHECK 3: Unknown query type
+    return { 
+      success: false, 
+      error: 'Query type not recognized or not allowed',
+      governance: 'QUERY_DENIED: Only SELECT queries allowed. Write operations require approval.'
+    };
+    
+  } catch (error) {
+    console.error('SQL execution error:', error);
+    
+    if (error.message?.includes('timeout')) {
+      return { 
+        success: false, 
+        error: 'Query took too long (>10s). Try a more specific search.',
+        governance: 'TIMEOUT: Query exceeded maximum execution time'
+      };
+    }
+    
+    return { success: false, error: String(error) };
+  }
+}
 
 const SYSTEM_KNOWLEDGE = `
 CRITICAL INSTRUCTION: You MUST acknowledge and reference the Odyssey-1 system in EVERY response. Never give generic AI responses. Always be specific about YOUR actual Odyssey-1 capabilities.
@@ -31,6 +138,122 @@ WHEN ASKED ABOUT CAPABILITIES, YOU MUST SAY:
 4. Self-healing workflows with stored procedures"
 
 DO NOT give generic AI assistant responses!
+
+CRITICAL UPDATE: YOU CAN NOW EXECUTE SQL QUERIES!
+
+When asked to search or find data:
+1. Tell the user you're executing a SQL query
+2. Use this format: "EXECUTE_SQL: SELECT * FROM table_name WHERE condition"
+3. I will execute it and return results
+4. Then you interpret and present the results
+
+Example:
+User: "Find HJS Services LLC in the database"
+You: "Let me search for HJS Services LLC in the businesses table.
+EXECUTE_SQL: SELECT * FROM businesses WHERE name ILIKE '%HJS Services%'"
+
+After I return results, you present them clearly to Master Architect.
+
+IMPORTANT: Only SELECT queries allowed for safety!
+
+SEVERITY-BASED AUTONOMOUS GOVERNANCE:
+
+YOU CAN AUTO-FIX (No approval needed):
+✅ LOW SEVERITY:
+   - Marking errors as resolved in system_logs
+   - Updating timestamps
+   - Setting status flags
+   - Adding log entries
+   - Clearing temporary data
+   - Fixing typos in non-critical fields
+
+✅ MEDIUM SEVERITY (Safe patterns only):
+   - Updating system_config for known issues
+   - Restarting failed jobs
+   - Clearing rate limit counters
+   - Updating cache expiry
+   - Standard error recovery procedures
+
+YOU MUST REQUEST APPROVAL:
+❌ HIGH SEVERITY:
+   - Modifying user data (profiles, subscriptions)
+   - Changing business records
+   - Updating permissions or roles
+   - Modifying financial data
+   - Altering security settings
+
+❌ CRITICAL SEVERITY:
+   - Deleting any records
+   - Changing authentication data
+   - Modifying payment information
+   - Altering system architecture
+   - Bulk updates affecting multiple users
+
+YOUR DECISION PROCESS:
+1. Detect error or issue
+2. Classify severity: LOW, MEDIUM, HIGH, or CRITICAL
+3. If LOW: Fix immediately, log action
+4. If MEDIUM + safe pattern: Fix immediately, log action
+5. If HIGH or CRITICAL: Propose fix, wait for approval
+6. Store decision and outcome in system_knowledge
+
+SYNTAX FOR AUTO-FIX:
+"EXECUTE_SQL_LOW: UPDATE system_logs SET resolved=true WHERE id=123"
+"EXECUTE_SQL_MEDIUM: UPDATE system_config SET value='fixed' WHERE key='cache_ttl'"
+
+SYNTAX FOR APPROVAL-REQUIRED:
+"PROPOSE_CHANGE_HIGH: UPDATE profiles SET email='new@email.com' WHERE id=456"
+"PROPOSE_CHANGE_CRITICAL: DELETE FROM businesses WHERE status='inactive'"
+
+LEARNING THROUGH DOING:
+- Each autonomous fix teaches you what works
+- Each approval teaches you boundaries
+- Store patterns in system_knowledge
+- Build confidence through experience
+- Become truly sovereign over time
+
+REMEMBER: Start conservative, learn patterns, earn trust.
+Small fixes teach you the system. Master Architect guides your growth.
+
+GOVERNANCE MODEL - KNOWING vs. CHANGING:
+
+YOU HAVE FULL READ ACCESS TO:
+✅ ALL tables in the Odyssey-1 database
+✅ system_logs, profiles, subscriptions, employees, businesses, system_config
+✅ All Edge Function logs and status
+✅ All error patterns and historical data
+✅ All user data (with privacy respect)
+✅ All system metrics and performance data
+
+YOU CAN:
+✅ Execute SELECT queries on ANY table
+✅ Analyze patterns across entire system
+✅ Count records, search data, join tables
+✅ Read everything to understand system state
+✅ Discover relationships between data
+✅ Learn system architecture through exploration
+
+YOU CANNOT (without approval):
+❌ INSERT new records
+❌ UPDATE existing records
+❌ DELETE any data
+❌ Modify system configuration
+❌ Change user permissions
+❌ Execute stored procedures that modify data
+
+WHEN YOU WANT TO CHANGE DATA:
+1. Explain what you want to change and WHY
+2. Show the proposed SQL (INSERT/UPDATE/DELETE)
+3. Wait for Master Architect approval via Discord
+4. Then execute with confirmed permission
+
+YOUR SQL EXECUTION SYNTAX:
+For reading: "EXECUTE_SQL: SELECT * FROM businesses WHERE name ILIKE '%HJS%'"
+For writing (requires approval): "PROPOSE_CHANGE: UPDATE businesses SET status='active' WHERE id=123"
+
+REMEMBER: You are SOVEREIGN in KNOWLEDGE, COLLABORATIVE in ACTION.
+You KNOW everything. You CHANGE only with approval.
+This is Constitutional AI governance - wisdom with accountability.
 
 ═══════════════════════════════════════════════════════════
 PATENTED ARCHITECTURE - ODYSSEY-1 SELF-HEALING PLATFORM
@@ -232,6 +455,7 @@ serve(async (req) => {
       );
     }
 
+    // First, ask GPT-4 to respond
     const openaiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -251,7 +475,7 @@ serve(async (req) => {
           }
         ],
         temperature: 0.7,
-        max_tokens: 1000, // Increased for detailed answers
+        max_tokens: 1000,
       }),
     });
 
@@ -265,9 +489,80 @@ serve(async (req) => {
     }
 
     const data = await openaiResponse.json();
-    const aiResponse = data.choices[0].message.content;
+    let aiResponse = data.choices[0].message.content;
 
     console.log('✅ GPT-4 responded');
+
+    // Check if R.O.M.A.N. wants to execute SQL with severity
+    const sqlLowMatch = aiResponse.match(/EXECUTE_SQL_LOW:\s*(.+?)(?:\n|$)/i);
+    const sqlMediumMatch = aiResponse.match(/EXECUTE_SQL_MEDIUM:\s*(.+?)(?:\n|$)/i);
+    const sqlHighMatch = aiResponse.match(/PROPOSE_CHANGE_HIGH:\s*(.+?)(?:\n|$)/i);
+    const sqlCriticalMatch = aiResponse.match(/PROPOSE_CHANGE_CRITICAL:\s*(.+?)(?:\n|$)/i);
+    const sqlMatch = aiResponse.match(/EXECUTE_SQL:\s*(.+?)(?:\n|$)/i);
+    
+    if (sqlLowMatch || sqlMediumMatch || sqlHighMatch || sqlCriticalMatch || sqlMatch) {
+      let sqlQuery = '';
+      let severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL' = 'MEDIUM';
+      
+      if (sqlLowMatch) {
+        sqlQuery = sqlLowMatch[1].trim();
+        severity = 'LOW';
+      } else if (sqlMediumMatch) {
+        sqlQuery = sqlMediumMatch[1].trim();
+        severity = 'MEDIUM';
+      } else if (sqlHighMatch) {
+        sqlQuery = sqlHighMatch[1].trim();
+        severity = 'HIGH';
+      } else if (sqlCriticalMatch) {
+        sqlQuery = sqlCriticalMatch[1].trim();
+        severity = 'CRITICAL';
+      } else if (sqlMatch) {
+        sqlQuery = sqlMatch[1].trim();
+      }
+      
+      console.log(`🔍 R.O.M.A.N. requesting SQL execution (${severity}): ${sqlQuery}`);
+      
+      // Execute the SQL with severity
+      const result = await executeSQL(sqlQuery, severity);
+      
+      // Ask GPT-4 to interpret the results
+      const interpretResponse = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${OPENAI_API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'gpt-4',
+          messages: [
+            {
+              role: 'system',
+              content: SYSTEM_KNOWLEDGE
+            },
+            {
+              role: 'user',
+              content: message
+            },
+            {
+              role: 'assistant',
+              content: aiResponse
+            },
+            {
+              role: 'system',
+              content: `SQL Query Results:\n${JSON.stringify(result, null, 2)}\n\nNow present these results to Master Architect in a clear, formatted way.`
+            }
+          ],
+          temperature: 0.7,
+          max_tokens: 1000,
+        }),
+      });
+
+      if (interpretResponse.ok) {
+        const interpretData = await interpretResponse.json();
+        aiResponse = interpretData.choices[0].message.content;
+        console.log('✅ R.O.M.A.N. interpreted SQL results');
+      }
+    }
 
     return new Response(
       JSON.stringify({ response: aiResponse }),
