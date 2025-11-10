@@ -32,6 +32,10 @@ const commands = [
     name: 'heal',
     description: 'Run self-healing diagnostics',
   },
+  {
+    name: 'scan',
+    description: 'R.O.M.A.N. performs full system scan and learns everything',
+  },
 ];
 
 async function registerCommands() {
