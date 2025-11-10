@@ -58,6 +58,30 @@ function romanConsensus(log: LogRow) {
 }
 
 Deno.serve(async (req) => {
+  // HEALTH CHECK ROUTE
+  if (req.method === 'GET' && new URL(req.url).pathname.endsWith('/health')) {
+    const expectedToken = Deno.env.get('ODYSSEY_INGEST_TOKEN');
+    const discordWebhook = Deno.env.get('DISCORD_WEBHOOK_URL');
+    
+    return new Response(
+      JSON.stringify({
+        status: 'healthy',
+        service: 'odyssey-perceive',
+        version: '1.0.0',
+        timestamp: new Date().toISOString(),
+        config: {
+          token_configured: !!expectedToken,
+          discord_configured: !!discordWebhook,
+          jwt_verification: 'disabled'
+        }
+      }),
+      {
+        headers: { 'Content-Type': 'application/json' },
+        status: 200
+      }
+    );
+  }
+
   // IMMEDIATE REQUEST LOG - BEFORE ANYTHING ELSE!
   console.info('[REQUEST] Received at:', new Date().toISOString());
   console.info('[REQUEST] Method:', req.method);
