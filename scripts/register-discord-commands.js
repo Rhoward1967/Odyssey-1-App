@@ -35,6 +35,19 @@ const commands = [
   {
     name: 'scan',
     description: 'R.O.M.A.N. performs full system scan and learns everything',
+    options: [
+      {
+        name: 'depth',
+        description: 'Scan depth: quick, normal, or deep',
+        type: 3, // STRING
+        required: false,
+        choices: [
+          { name: 'Quick scan (tables only)', value: 'quick' },
+          { name: 'Normal scan (tables + configs)', value: 'normal' },
+          { name: 'Deep scan (everything)', value: 'deep' },
+        ],
+      },
+    ],
   },
 ];
 

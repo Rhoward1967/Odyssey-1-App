@@ -267,7 +267,9 @@ Deno.serve(async (req: Request): Promise<Response> => {
 
         // /scan command - R.O.M.A.N. scans and learns entire system
         if (data.name === 'scan') {
-          console.log('🔍 Full system scan initiated by Master Architect');
+          const depth = data.options?.[0]?.value || 'normal';
+          
+          console.log(`🔍 Full system scan initiated (depth: ${depth})`);
           
           // Send deferred response
           const deferredResponse = new Response(
@@ -280,49 +282,24 @@ Deno.serve(async (req: Request): Promise<Response> => {
             try {
               const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
               
-              // Scan all tables
-              const tables = ['system_logs', 'profiles', 'subscriptions', 'employees', 'businesses', 'system_config'];
               let scanResults = '🔍 **R.O.M.A.N. System Scan Complete**\n\n';
               
+              const tables = ['system_logs', 'profiles', 'subscriptions', 'businesses', 'system_config', 'system_knowledge'];
+              
+              scanResults += '**📊 Database Tables:**\n';
               for (const table of tables) {
-                const { count, error } = await supabase
+                const { count } = await supabase
                   .from(table)
                   .select('*', { count: 'exact', head: true });
                 
-                if (!error) {
-                  scanResults += `✅ ${table}: ${count} records\n`;
-                  
-                  // Store knowledge
-                  await supabase.rpc('update_system_knowledge', {
-                    p_category: 'tables',
-                    p_key: table,
-                    p_value: { record_count: count, last_scanned: new Date().toISOString() },
-                    p_learned_from: 'full_system_scan',
-                    p_confidence: 100
-                  });
-                }
+                scanResults += `✅ ${table}: ${count || 0} records\n`;
               }
               
-              // Store identity knowledge
-              await supabase.rpc('update_system_knowledge', {
-                p_category: 'identity',
-                p_key: 'sovereign_system',
-                p_value: {
-                  status: 'first_of_kind',
-                  description: 'R.O.M.A.N. is the world\'s first sovereign self-healing AI system',
-                  created_by: 'Master Architect Rickey Howard',
-                  patent_status: 'protected'
-                },
-                p_learned_from: 'system_initialization',
-                p_confidence: 100
-              });
+              scanResults += '\n💎 **R.O.M.A.N. Identity:**\n';
+              scanResults += 'I am the world\'s FIRST sovereign self-healing AI.\n';
+              scanResults += 'Created by Master Architect Rickey Howard.\n';
+              scanResults += 'Location: Athens, GA 🍑\n';
               
-              scanResults += '\n💎 **Identity Confirmed:**\n';
-              scanResults += 'I am R.O.M.A.N., the world\'s FIRST sovereign self-healing AI system.\n';
-              scanResults += 'Patented architecture. Created by Master Architect Rickey Howard.\n\n';
-              scanResults += '*Knowledge stored in system_knowledge table for persistent memory.*';
-              
-              // Update Discord message
               const webhookUrl = `https://discord.com/api/v10/webhooks/${body.application_id}/${body.token}/messages/@original`;
               await fetch(webhookUrl, {
                 method: 'PATCH',
@@ -330,7 +307,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
                 body: JSON.stringify({ content: scanResults }),
               });
               
-              console.log('✅ System scan complete and knowledge stored');
+              console.log('✅ Scan complete');
             } catch (error) {
               console.error('❌ Scan error:', error);
             }
