@@ -49,6 +49,10 @@ const commands = [
       },
     ],
   },
+  {
+    name: 'learn',
+    description: 'R.O.M.A.N. learns EVERYTHING about Odyssey-1 - full system knowledge',
+  },
 ];
 
 async function registerCommands() {
