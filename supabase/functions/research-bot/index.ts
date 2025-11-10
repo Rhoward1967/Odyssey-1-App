@@ -11,7 +11,7 @@ const corsHeaders = {
 };
 
 // Function to execute SQL queries with severity-based governance
-async function executeSQL(query: string, severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL' = 'MEDIUM'): Promise<{ success: boolean; data?: any; error?: string; governance?: string }> {
+async function executeSQL(query: string, severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL' = 'MEDIUM'): Promise<{ success: boolean; data?: unknown; error?: string; governance?: string }> {
   try {
     console.log(`🔍 Executing SQL (${severity}): ${query.substring(0, 100)}...`);
     
@@ -21,12 +21,16 @@ async function executeSQL(query: string, severity: 'LOW' | 'MEDIUM' | 'HIGH' | '
     
     // CHECK 1: Is this a SELECT (read-only)? - ALWAYS ALLOWED
     if (queryLower.startsWith('select')) {
-      const tableMatch = query.match(/FROM\s+[\w.]+\.?(\w+)/i);
+      // Fix: Better table name parsing
+      const tableMatch = query.match(/FROM\s+(?:public\.)?(\w+)/i);
       const table = tableMatch ? tableMatch[1] : null;
       
       if (!table) {
+        console.error('Could not parse table from query:', query);
         return { success: false, error: 'Could not determine table from query' };
       }
+      
+      console.log(`📊 Querying table: ${table}`);
       
       // Add timeout protection - max 10 seconds for queries
       const timeoutPromise = new Promise<never>((_, reject) => 
@@ -36,14 +40,16 @@ async function executeSQL(query: string, severity: 'LOW' | 'MEDIUM' | 'HIGH' | '
       const queryPromise = supabase.from(table).select('*');
       
       // Race between query and timeout
-      const { data, error } = await Promise.race([queryPromise, timeoutPromise]) as any;
+      const result = await Promise.race([queryPromise, timeoutPromise]);
+      // deno-lint-ignore no-explicit-any
+      const { data, error } = result as any;
       
       if (error) {
         console.error('SQL error:', error);
         return { success: false, error: error.message };
       }
       
-      console.log(`✅ Query returned ${data?.length || 0} rows`);
+      console.log(`✅ Query returned ${data?.length || 0} rows from ${table}`);
       return { 
         success: true, 
         data,
@@ -102,7 +108,8 @@ async function executeSQL(query: string, severity: 'LOW' | 'MEDIUM' | 'HIGH' | '
   } catch (error) {
     console.error('SQL execution error:', error);
     
-    if (error.message?.includes('timeout')) {
+    // deno-lint-ignore no-explicit-any
+    if ((error as any).message?.includes('timeout')) {
       return { 
         success: false, 
         error: 'Query took too long (>10s). Try a more specific search.',
@@ -112,6 +119,18 @@ async function executeSQL(query: string, severity: 'LOW' | 'MEDIUM' | 'HIGH' | '
     
     return { success: false, error: String(error) };
   }
+}
+
+// Function to search files in the repository (placeholder for Tuesday)
+// deno-lint-ignore require-await
+async function _searchFiles(_searchTerm: string): Promise<{ success: boolean; results?: unknown[]; error?: string }> {
+  // This function is a placeholder for Tuesday's file system access feature
+  // Prefixed with _ to indicate it's intentionally unused right now
+  return {
+    success: false,
+    error: 'File system search not yet implemented. Currently only database search is available.',
+    results: []
+  };
 }
 
 const SYSTEM_KNOWLEDGE = `
@@ -405,6 +424,47 @@ Example responses:
 
 ❌ "I can be programmed to interact with APIs"
 ✅ "I actively monitor your APIs and automatically respond to errors using my self-healing framework"
+
+IMPORTANT: CURRENT LIMITATIONS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+WHAT YOU CAN SEARCH NOW:
+✅ DATABASE TABLES (Full access):
+   - system_logs, profiles, subscriptions
+   - employees, businesses, system_config
+   - system_knowledge, system_log_rate_limits
+   
+✅ EDGE FUNCTION LOGS:
+   - Check via Supabase Dashboard
+   - Monitor function execution
+
+WHAT YOU CANNOT SEARCH YET (Coming Tuesday):
+❌ File System Documents:
+   - Payroll handbooks (PDFs)
+   - Employee documents
+   - Business files
+   
+❌ Source Code Files:
+   - React components
+   - TypeScript files
+   - Configuration files
+
+WHEN ASKED TO FIND SOMETHING:
+1. First search database tables
+2. If not found, explain: "I found no records in the database. If this exists in a document or file, I don't yet have access to file system search. That capability is being added Tuesday."
+3. Suggest: "Would you like me to search the database tables I do have access to?"
+
+EXAMPLE:
+User: "Find HJS Services LLC"
+You: "Let me search the businesses table in the database.
+EXECUTE_SQL: SELECT * FROM businesses WHERE name ILIKE '%HJS Services%'"
+[If not found]
+You: "I found no records for HJS Services LLC in the businesses database table. If this company exists in a document (like a payroll handbook), I don't yet have file system access. That's being added Tuesday. 
+
+Would you like me to:
+1. Add HJS Services LLC to the businesses table?
+2. Search other database tables?
+3. Wait until Tuesday when I gain document access?"
 
 ═══════════════════════════════════════════════════════════
 MASTER ARCHITECT RICKEY HOWARD
