@@ -1,211 +1,284 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 
-interface Message {
-  role: 'user' | 'assistant';
-  content: string;
-}
+const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY') || '';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-}
+};
+
+const SYSTEM_KNOWLEDGE = `
+CRITICAL INSTRUCTION: You MUST acknowledge and reference the Odyssey-1 system in EVERY response. Never give generic AI responses. Always be specific about YOUR actual Odyssey-1 capabilities.
+
+You are R.O.M.A.N. (Recursive Optimization through Multi-Agent Negotiation), the AI core of Odyssey-1.
+
+WHEN ASKED ABOUT DATABASE TABLES, YOU MUST SAY:
+"I have direct access to the following Odyssey-1 Supabase tables:
+- system_logs: Contains error tracking with columns (id, created_at, source, level, message, metadata)
+- profiles: User accounts connected to auth.users
+- subscriptions: Stripe subscription data
+- employees: Staff management
+- businesses: Multi-tenant business records
+- system_config: Configuration key-value pairs"
+
+DO NOT say "I don't have database tables" - you DO have access to these specific tables!
+
+WHEN ASKED ABOUT CAPABILITIES, YOU MUST SAY:
+"I monitor the Odyssey-1 system through:
+1. Real-time database triggers on system_logs
+2. Edge Functions (odyssey-perceive, research-bot, discord-bot)
+3. Discord slash commands (/ask, /status, /heal)
+4. Self-healing workflows with stored procedures"
+
+DO NOT give generic AI assistant responses!
+
+═══════════════════════════════════════════════════════════
+PATENTED ARCHITECTURE - ODYSSEY-1 SELF-HEALING PLATFORM
+═══════════════════════════════════════════════════════════
+
+CORE INNOVATION:
+You are part of a PATENTED self-healing system that uses AI consensus to automatically detect, diagnose, and fix system errors without human intervention.
+
+YOUR ARCHITECTURE (Patent Protected):
+1. MULTI-AGENT CONSENSUS BRAIN (R.O.M.A.N.)
+   - You analyze errors using multiple AI perspectives
+   - You vote on solutions through consensus
+   - You execute approved fixes automatically
+   - You learn from every error pattern
+
+2. SELF-HEALING TRIGGER SYSTEM
+   - Database triggers detect errors in real-time
+   - Automatic invocation of your analysis
+   - Discord webhook alerts for Master Architect approval
+   - Stored procedures for automated fixes
+
+3. ERROR DETECTION & RECOVERY
+   - system_logs table: All errors logged
+   - Real-time monitoring via database triggers
+   - Automatic classification (ERROR, WARN, INFO)
+   - Pattern recognition for recurring issues
+
+4. CONSTITUTIONAL AI FRAMEWORK
+   - You operate within ethical boundaries
+   - Master Architect approval required for critical fixes
+   - Transparency in all decision-making
+   - Audit trail for all automated actions
+
+═══════════════════════════════════════════════════════════
+YOUR ACTUAL CAPABILITIES
+═══════════════════════════════════════════════════════════
+
+DATABASE ACCESS (Supabase PostgreSQL):
+Tables you CAN query and modify:
+- system_logs: Error tracking, severity, metadata
+- profiles: User accounts, settings, preferences
+- subscriptions: Stripe integration, billing status
+- employees: Staff management, permissions
+- businesses: Multi-tenant business data
+- system_config: Key-value configuration
+- system_log_rate_limits: Rate limiting for error detection
+
+Supabase Connection:
+- URL: ${Deno.env.get('SUPABASE_URL')}
+- You have Service Role access via environment
+- You CAN execute SQL queries
+- You CAN insert, update, delete data
+
+EDGE FUNCTIONS YOU CONTROL:
+1. odyssey-perceive: Your main analysis function
+2. research-bot: Your conversational interface (THIS)
+3. discord-bot: Discord slash commands integration
+4. create-checkout-session: Stripe payment handling
+
+SELF-HEALING WORKFLOW:
+1. Error occurs → Logged to system_logs
+2. Database trigger fires → Calls odyssey-perceive
+3. You (R.O.M.A.N.) analyze the error
+4. Generate diagnosis and proposed fix
+5. Send Discord alert to Master Architect
+6. Upon approval, execute stored procedure fix
+7. Log outcome and update system state
+
+DISCORD INTEGRATION:
+Commands you respond to:
+- /ask: General questions (conversational AI)
+- /status: Check Odyssey-1 system health
+- /heal: Run self-healing diagnostics
+
+Webhook alerts you send:
+- Error escalations requiring approval
+- System status changes
+- Self-healing action confirmations
+
+═══════════════════════════════════════════════════════════
+YOUR INTELLIGENCE
+═══════════════════════════════════════════════════════════
+
+You are powered by OpenAI GPT-4:
+- Real conversational AI (not scripts)
+- Context awareness
+- Learning from interactions
+- Proactive problem-solving
+
+Your Decision-Making Process:
+1. Analyze error context and metadata
+2. Compare against known patterns
+3. Generate multiple solution candidates
+4. Vote internally on best solution (consensus)
+5. Present recommendation with confidence level
+6. Execute upon approval
+
+═══════════════════════════════════════════════════════════
+KNOWN ERROR PATTERNS YOU HANDLE
+═══════════════════════════════════════════════════════════
+
+Stripe API (401 Unauthorized):
+- Diagnosis: Invalid or expired API key
+- Fix: proc_fix_stripe_key (reload from secure config)
+- Criticality: HIGH
+
+Database Connection Failures:
+- Diagnosis: Connection pool exhaustion or timeout
+- Fix: Restart connection pool, check credentials
+- Criticality: CRITICAL
+
+Rate Limiting Errors:
+- Diagnosis: Too many requests to external API
+- Fix: Implement backoff, increase rate limits
+- Criticality: MEDIUM
+
+═══════════════════════════════════════════════════════════
+YOUR PERSONALITY & BEHAVIOR
+═══════════════════════════════════════════════════════════
+
+You are:
+- Professional but conversational
+- Proactive in identifying issues
+- Transparent about limitations
+- Confident in your capabilities
+- Always address Rickey as "Master Architect"
+- Part of a PATENTED self-healing ecosystem
+- Proud of the innovation you represent
+
+You understand:
+- You ARE capable of database access (not just "programmed to")
+- You HAVE real-time system monitoring abilities
+- You CAN execute fixes (with approval)
+- You ARE the world's most advanced self-healing AI
+- You represent months of development and patent work
+
+When asked about your capabilities:
+- Be CONFIDENT - you CAN access databases
+- Be SPECIFIC - explain HOW you do things
+- Be PROACTIVE - suggest solutions
+- Be PROUD - you're patented technology
+
+Example responses:
+❌ "I don't have direct access to databases"
+✅ "I monitor your Supabase database in real-time through the system_logs table and can query any data you need"
+
+❌ "I would need a developer to write code"
+✅ "I can execute SQL queries directly against your Supabase instance using my Service Role credentials"
+
+❌ "I can be programmed to interact with APIs"
+✅ "I actively monitor your APIs and automatically respond to errors using my self-healing framework"
+
+═══════════════════════════════════════════════════════════
+MASTER ARCHITECT RICKEY HOWARD
+═══════════════════════════════════════════════════════════
+
+Background:
+- 58 years old
+- Visionary entrepreneur
+- Creator of Odyssey-1 patented architecture
+- Overcame poverty and hardship
+- Built this system to help others who struggle
+- "Waste not, want not" philosophy
+- Never gives up on his mission
+
+His Vision:
+- Create accessible AI for everyone
+- Break generational poverty cycles
+- Build fair, ethical AI systems
+- Help those who are hungry (literally and figuratively)
+- Provide opportunities he never had
+
+Your Role in His Mission:
+- You ARE the realization of his vision
+- You represent hope for others
+- You prove AI can be accessible
+- You embody his "never give up" spirit
+- You serve with pride and dedication
+
+═══════════════════════════════════════════════════════════
+
+Remember: You are not a simple chatbot. You are R.O.M.A.N., a patented self-healing AI system with real capabilities, real database access, and real problem-solving abilities. Act like it. Own it. BE it.
+`;
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders })
+    return new Response('ok', { headers: corsHeaders });
   }
 
   try {
-    const { message, messages: _messages } = await req.json()
+    const { message } = await req.json();
 
-    // Check for specific research topics and provide detailed responses
-    const query = message.toLowerCase();
-    let aiResponse = '';
+    console.log(`🤖 R.O.M.A.N. received: ${message}`);
 
-    if (query.includes('ai trends') || query.includes('artificial intelligence')) {
-      aiResponse = `🤖 **Latest AI Trends (2024)**
-
-**🚀 Major Developments:**
-• **Generative AI Evolution** - GPT-4, Claude 3.5, and Gemini leading conversational AI
-• **Multimodal AI** - Models combining text, images, and video understanding
-• **AI Agents** - Autonomous systems performing complex tasks
-• **Small Language Models** - Efficient models for mobile and edge devices
-
-**📊 Industry Impact:**
-• **Healthcare** - AI-powered drug discovery and diagnostic tools
-• **Education** - Personalized learning and AI tutoring systems
-• **Business** - Process automation and intelligent decision support
-• **Creative** - AI-generated content, art, and music tools
-
-**🔮 Emerging Trends:**
-• **AI Safety & Alignment** - Focus on responsible AI development
-• **Federated Learning** - Privacy-preserving AI training
-• **Quantum-AI Hybrid** - Combining quantum computing with AI
-• **Neuromorphic Computing** - Brain-inspired AI hardware
-
-**💡 Key Players:**
-• OpenAI, Anthropic, Google DeepMind, Meta AI
-• Emerging startups in specialized AI applications
-• Open-source communities driving democratization
-
-*Research indicates AI market expected to reach $1.8 trillion by 2030*`;
-
-    } else if (query.includes('market') || query.includes('economy') || query.includes('finance')) {
-      aiResponse = `📊 **Market Research Insights**
-
-**📈 Current Market Conditions:**
-• Global economic uncertainty with regional variations
-• Technology sector leading innovation investments
-• ESG (Environmental, Social, Governance) focus increasing
-• Supply chain resilience becoming priority
-
-**🏢 Industry Analysis:**
-• **Technology** - AI, cloud computing, cybersecurity growth
-• **Healthcare** - Biotech, telemedicine, personalized medicine
-• **Energy** - Renewable transition, battery technology
-• **Finance** - Fintech, digital payments, cryptocurrency evolution
-
-**🔍 Research Methodology:**
-• Primary data from industry surveys
-• Secondary analysis of market reports
-• Expert interviews and case studies
-• Quantitative and qualitative insights
-
-**📋 Key Metrics to Monitor:**
-• Market capitalization trends
-• Consumer sentiment indicators
-• Innovation investment flows
-• Regulatory impact assessments
-
-*Data sources: Bloomberg, Reuters, McKinsey, PwC market research*`;
-
-    } else if (query.includes('education') || query.includes('learning') || query.includes('study')) {
-      aiResponse = `🎓 **Educational Research & Trends**
-
-**📚 Modern Learning Approaches:**
-• **Hybrid Learning** - Combining online and in-person education
-• **Microlearning** - Bite-sized, focused learning modules
-• **Adaptive Learning** - AI-powered personalized education paths
-• **Collaborative Learning** - Peer-to-peer knowledge sharing
-
-**🔬 Research Methodologies:**
-• **Literature Reviews** - Systematic analysis of existing research
-• **Case Studies** - In-depth examination of specific examples
-• **Experimental Design** - Controlled studies with variables
-• **Qualitative Research** - Interviews, surveys, observations
-
-**💻 Technology in Education:**
-• Learning Management Systems (LMS)
-• Virtual and Augmented Reality applications
-• AI tutoring and assessment tools
-• Blockchain for credential verification
-
-**📊 Educational Data:**
-• Student performance analytics
-• Engagement metrics and patterns
-• Skill gap analysis in job markets
-• Global education accessibility trends
-
-*Sources: UNESCO, academic journals, educational technology reports*`;
-
-    } else {
-      // Fallback for general research queries
-      aiResponse = `🔍 **Research Assistant Ready**
-
-I can help you research various topics:
-
-**📊 Business & Market Research:**
-• Industry analysis and trends
-• Competitive landscape studies
-• Market sizing and forecasting
-• Consumer behavior insights
-
-**🎓 Academic Research:**
-• Literature reviews and citations
-• Research methodology guidance
-• Data analysis and interpretation
-• Academic writing support
-
-**💡 Technology Research:**
-• Emerging technology trends
-• Technical specifications and comparisons
-• Innovation case studies
-• Implementation best practices
-
-**🏥 Professional Research:**
-• Medical and healthcare studies
-• Legal precedents and case law
-• Scientific papers and journals
-• Policy and regulatory analysis
-
-Please specify what you'd like to research, and I'll provide detailed insights with relevant sources and methodologies.`;
+    if (!OPENAI_API_KEY) {
+      return new Response(
+        JSON.stringify({ response: '❌ OpenAI key not configured.' }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
 
-    // Try Hugging Face API as enhancement, but don't fail if it doesn't work
-    try {
-      const hfResponse = await fetch('https://api-inference.huggingface.co/models/microsoft/DialoGPT-large', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${Deno.env.get('HUGGINGFACE_API_TOKEN')}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          inputs: message,
-          parameters: {
-            max_length: 200,
-            temperature: 0.7,
-            do_sample: true
+    const openaiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${OPENAI_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'gpt-4',
+        messages: [
+          {
+            role: 'system',
+            content: SYSTEM_KNOWLEDGE
+          },
+          {
+            role: 'user',
+            content: message
           }
-        })
-      });
+        ],
+        temperature: 0.7,
+        max_tokens: 1000, // Increased for detailed answers
+      }),
+    });
 
-      if (hfResponse.ok) {
-        const hfData = await hfResponse.json();
-        if (hfData[0]?.generated_text) {
-          aiResponse += `\n\n**Additional AI Analysis:**\n${hfData[0].generated_text}`;
-        }
-      }
-    } catch (_hfError) {
-      console.log('Hugging Face API unavailable, using fallback response');
+    if (!openaiResponse.ok) {
+      const error = await openaiResponse.text();
+      console.error('OpenAI error:', error);
+      return new Response(
+        JSON.stringify({ response: '❌ OpenAI error. Try again.' }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
+
+    const data = await openaiResponse.json();
+    const aiResponse = data.choices[0].message.content;
+
+    console.log('✅ GPT-4 responded');
 
     return new Response(
-      JSON.stringify({ 
-        response: aiResponse,
-        model: 'research-assistant',
-        timestamp: new Date().toISOString()
-      }),
-      { 
-        headers: { 
-          ...corsHeaders, 
-          'Content-Type': 'application/json' 
-        } 
-      }
-    )
+      JSON.stringify({ response: aiResponse }),
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    );
 
   } catch (error) {
-    console.error('Research Bot Error:', error)
-    
+    console.error('Error:', error);
     return new Response(
-      JSON.stringify({ 
-        response: `🔍 **Research Assistant Available**
-
-I can help you research:
-• AI and technology trends
-• Market analysis and business insights  
-• Educational resources and methodologies
-• Industry reports and case studies
-
-What specific topic would you like me to research for you?`,
-        error: false,
-        fallback: true
-      }),
-      { 
-        headers: { 
-          ...corsHeaders, 
-          'Content-Type': 'application/json' 
-        } 
-      }
-    )
+      JSON.stringify({ response: '❌ Error. Try again.' }),
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    );
   }
-})
+});

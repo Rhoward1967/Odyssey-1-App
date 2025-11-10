@@ -13,3 +13,8 @@ entrypoint = "./functions/odyssey-perceive/index.ts"
 enabled = true
 verify_jwt = false
 entrypoint = "./functions/create-checkout-session/index.ts"
+
+[functions.discord-bot]
+enabled = true
+verify_jwt = false
+entrypoint = "./functions/discord-bot/index.ts"
