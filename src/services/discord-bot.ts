@@ -239,11 +239,14 @@ async function storeKnowledge(category: string, knowledgeKey: string, value: any
   try {
     const { data, error } = await supabase
       .from('system_knowledge')
-      .insert({
+      .upsert({
         category,
         knowledge_key: knowledgeKey,
         value,
-        learned_from: learnedFrom
+        learned_from: learnedFrom,
+        updated_at: new Date().toISOString()
+      }, {
+        onConflict: 'category,knowledge_key'
       });
 
     if (error) {
@@ -251,7 +254,7 @@ async function storeKnowledge(category: string, knowledgeKey: string, value: any
       return false;
     }
 
-    console.log('✅ Knowledge stored:', category, knowledgeKey);
+    console.log('✅ Knowledge stored/updated:', category, knowledgeKey);
     return true;
   } catch (error) {
     console.error('❌ Error storing knowledge:', error);
