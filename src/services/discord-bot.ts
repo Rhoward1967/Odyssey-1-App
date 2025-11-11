@@ -1,7 +1,7 @@
-import { Client, GatewayIntentBits, Partials, Message } from 'discord.js';
+import { Client, GatewayIntentBits, Message, Partials } from 'discord.js';
+import dotenv from 'dotenv';
 import OpenAI from 'openai';
 import type { ChatCompletionMessageParam } from 'openai/resources/chat/completions';
-import dotenv from 'dotenv';
 
 // Load environment variables
 dotenv.config();
