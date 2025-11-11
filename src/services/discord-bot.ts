@@ -26,6 +26,15 @@ const supabase = createClient(
     auth: {
       autoRefreshToken: false,
       persistSession: false
+    },
+    db: {
+      schema: 'public'
+    },
+    global: {
+      headers: {
+        'apikey': SUPABASE_KEY || '',
+        'Authorization': `Bearer ${SUPABASE_KEY}`
+      }
     }
   }
 );
@@ -116,38 +125,23 @@ async function getSystemContext() {
   try {
     console.log('📊 Fetching system context from database...');
     
-    // Get list of all tables in public schema using raw SQL
-    const { data: tablesData, error: tablesError } = await supabase.rpc('exec_sql', {
-      query: `SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' ORDER BY table_name`
-    });
+    // Test with a simple count query first
+    const { count: logsCount, error: countError } = await supabase
+      .from('system_logs')
+      .select('*', { count: 'exact', head: true });
     
-    // If that RPC doesn't exist, try direct query
-    let tables = [];
-    if (tablesError) {
-      console.log('⚠️ RPC method failed, trying alternative...');
-      // Try querying a known table to verify connection
-      const { data: testData, error: testError } = await supabase
-        .from('system_logs')
-        .select('*')
-        .limit(1);
-      
-      if (!testError) {
-        // Manually list known tables
-        tables = [
-          { table_name: 'system_logs' },
-          { table_name: 'system_knowledge' },
-          { table_name: 'profiles' },
-          { table_name: 'subscriptions' },
-          { table_name: 'businesses' },
-          { table_name: 'system_config' },
-          { table_name: 'stripe_events' },
-          { table_name: 'appointments' }
-        ];
-        console.log('✅ Using known table list');
-      }
-    } else {
-      tables = tablesData || [];
+    console.log('📊 system_logs count:', countError ? `ERROR: ${countError.message}` : `${logsCount} records`);
+    
+    if (countError) {
+      console.error('Full error:', JSON.stringify(countError, null, 2));
     }
+    
+    // Manually define known tables since information_schema query isn't working
+    const knownTables = [
+      'system_logs', 'system_knowledge', 'profiles', 'subscriptions', 
+      'businesses', 'system_config', 'stripe_events', 'appointments',
+      'employees', 'time_entries', 'services', 'customers'
+    ];
     
     // Get recent system logs
     const { data: logs, error: logsError } = await supabase
@@ -156,8 +150,6 @@ async function getSystemContext() {
       .order('created_at', { ascending: false })
       .limit(10);
     
-    console.log('📝 Logs:', logsError ? `FAILED: ${logsError.message}` : `SUCCESS: ${logs?.length} entries`);
-    
     // Get system knowledge
     const { data: knowledge, error: knowledgeError } = await supabase
       .from('system_knowledge')
@@ -165,10 +157,8 @@ async function getSystemContext() {
       .order('updated_at', { ascending: false })
       .limit(20);
     
-    console.log('🧠 Knowledge:', knowledgeError ? `FAILED: ${knowledgeError.message}` : `SUCCESS: ${knowledge?.length} entries`);
-    
     const context = {
-      tables: tables,
+      tables: knownTables.map(t => ({ table_name: t })),
       recentLogs: logs || [],
       systemKnowledge: knowledge || []
     };
@@ -178,7 +168,11 @@ async function getSystemContext() {
     return context;
   } catch (error) {
     console.error('❌ Error in getSystemContext:', error);
-    return { tables: [], recentLogs: [], systemKnowledge: [] };
+    return { 
+      tables: [], 
+      recentLogs: [], 
+      systemKnowledge: [] 
+    };
   }
 }
 
