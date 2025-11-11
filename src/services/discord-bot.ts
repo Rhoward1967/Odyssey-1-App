@@ -1,9 +1,9 @@
+import { createClient } from '@supabase/supabase-js';
 import { Client, GatewayIntentBits, Message, Partials } from 'discord.js';
 import dotenv from 'dotenv';
+import { readdir } from 'fs/promises';
 import OpenAI from 'openai';
 import type { ChatCompletionMessageParam } from 'openai/resources/chat/completions';
-import { createClient } from '@supabase/supabase-js';
-import { readdir, readFile } from 'fs/promises';
 import { join } from 'path';
 
 // Load environment variables
@@ -96,28 +96,49 @@ client.on('disconnect', () => {
 
 async function getSystemContext() {
   try {
-    // Get database schema info
-    const { data: tables } = await supabase.rpc('get_table_list');
+    console.log('📊 Fetching system context from database...');
+    
+    // Get table list using a simpler query
+    const { data: tablesData, error: tablesError } = await supabase
+      .from('information_schema.tables')
+      .select('table_name')
+      .eq('table_schema', 'public');
+    
+    if (tablesError) {
+      console.error('Error fetching tables:', tablesError);
+    }
     
     // Get recent system logs
-    const { data: logs } = await supabase
+    const { data: logs, error: logsError } = await supabase
       .from('system_logs')
       .select('*')
       .order('created_at', { ascending: false })
       .limit(10);
     
+    if (logsError) {
+      console.error('Error fetching logs:', logsError);
+    }
+    
     // Get system knowledge
-    const { data: knowledge } = await supabase
+    const { data: knowledge, error: knowledgeError } = await supabase
       .from('system_knowledge')
       .select('*')
       .order('updated_at', { ascending: false })
       .limit(20);
     
-    return {
-      tables: tables || [],
+    if (knowledgeError) {
+      console.error('Error fetching knowledge:', knowledgeError);
+    }
+    
+    const context = {
+      tables: tablesData || [],
       recentLogs: logs || [],
       systemKnowledge: knowledge || []
     };
+    
+    console.log(`✅ Context loaded: ${context.tables.length} tables, ${context.recentLogs.length} logs, ${context.systemKnowledge.length} knowledge entries`);
+    
+    return context;
   } catch (error) {
     console.error('Error fetching system context:', error);
     return { tables: [], recentLogs: [], systemKnowledge: [] };
@@ -156,15 +177,15 @@ async function handleDirectMessage(message: Message) {
   // Get system context for R.O.M.A.N.'s awareness
   const systemContext = await getSystemContext();
   
-  // Enhanced user message with system context
-  const enhancedMessage = `${message.content}
-
-[SYSTEM CONTEXT AVAILABLE]
-- Database Tables: ${systemContext.tables.length}
-- Recent Logs: ${systemContext.recentLogs.length}
-- System Knowledge Entries: ${systemContext.systemKnowledge.length}
-
-You have access to query these through your system awareness.`;
+  // Enhanced user message with actual system data
+  let enhancedMessage = `${message.content}\n\n[SYSTEM CONTEXT]\n`;
+  enhancedMessage += `Tables (${systemContext.tables.length}): ${systemContext.tables.map(t => t.table_name).join(', ')}\n`;
+  enhancedMessage += `Recent Logs: ${systemContext.recentLogs.length} entries\n`;
+  enhancedMessage += `System Knowledge: ${systemContext.systemKnowledge.length} entries\n`;
+  
+  if (systemContext.recentLogs.length > 0) {
+    enhancedMessage += `\nLast Error: ${systemContext.recentLogs[0].message}\n`;
+  }
   
   history.push({ role: "user", content: enhancedMessage });
   
