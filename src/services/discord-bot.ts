@@ -350,7 +350,7 @@ client.on('disconnect', () => {
   console.log('⚠️ Discord bot disconnected');
 });
 
-// Update handleDirectMessage to enable learning
+// Add approval/directive pattern matching
 async function handleDirectMessage(message: Message) {
   const userId = message.author.id;
   
@@ -362,18 +362,30 @@ async function handleDirectMessage(message: Message) {
     { userId, channelType: message.channel.type }
   );
   
-  if (!conversationHistory.has(userId)) {
-    conversationHistory.set(userId, [
-      { role: "system", content: ROMAN_SYSTEM_PROMPT }
-    ]);
+  // Check for approval commands
+  const approvalPattern = /^(approve|yes|confirmed?|proceed|do it|fix it|go ahead)/i;
+  const rejectionPattern = /^(deny|no|reject|stop|cancel|don't)/i;
+
+  if (approvalPattern.test(message.content.trim())) {
+    await logSystemEvent('approval', `User approved action: ${message.content}`, 'info', { userId });
+  }
+
+  if (rejectionPattern.test(message.content.trim())) {
+    await logSystemEvent('rejection', `User rejected action: ${message.content}`, 'info', { userId });
   }
   
-  const history = conversationHistory.get(userId)!;
+  // Check for direct commands/directives
+  const commandPattern = /^R\.O\.M\.A\.N\.|^@R\.O\.M\.A\.N\.|^roman[,:]?\s*/i;
+  const isDirective = commandPattern.test(message.content);
+  
+  if (isDirective) {
+    await logSystemEvent('directive', `Directive received: ${message.content}`, 'info', { userId });
+  }
   
   // Get system context for R.O.M.A.N.'s awareness
   const systemContext = await getSystemContext();
   
-  // Enhanced user message with ACTUAL system data
+  // Enhanced user message with approval/directive awareness
   let enhancedMessage = `${message.content}\n\n[SYSTEM CONTEXT - You can access this data]\n`;
   enhancedMessage += `Tables (${systemContext.tables.length}): ${systemContext.tables.map(t => t.table_name).join(', ')}\n`;
   enhancedMessage += `\nRecent System Logs (${systemContext.recentLogs.length}):\n`;
@@ -394,6 +406,26 @@ async function handleDirectMessage(message: Message) {
   }
   
   enhancedMessage += `\nYou can query these tables directly using your database access. When users ask about logs or knowledge, reference the actual data above.`;
+  
+  // Add governance instructions
+  enhancedMessage += `\n[GOVERNANCE PROTOCOL]
+When you identify an issue that needs fixing, present it as:
+"⚠️ ISSUE DETECTED: [description]
+🔧 PROPOSED FIX: [what you want to do]
+⏸️ AWAITING APPROVAL: Reply 'approve' to proceed, 'deny' to cancel."
+
+When user replies with approval keywords (approve, yes, confirmed, proceed, fix it, go ahead), acknowledge and execute.
+When user replies with rejection keywords (deny, no, reject, stop, cancel), acknowledge and stand down.
+
+You have Constitutional AI governance - you can propose fixes but need approval for critical changes.`;
+  
+  if (!conversationHistory.has(userId)) {
+    conversationHistory.set(userId, [
+      { role: "system", content: ROMAN_SYSTEM_PROMPT }
+    ]);
+  }
+  
+  const history: ChatCompletionMessageParam[] = conversationHistory.get(userId)!;
   
   history.push({ role: "user", content: enhancedMessage });
   
