@@ -373,28 +373,27 @@ async function handleDirectMessage(message: Message) {
   // Get system context for R.O.M.A.N.'s awareness
   const systemContext = await getSystemContext();
   
-  // Check if user is asking R.O.M.A.N. to learn/remember something
-  const learnPattern = /(?:remember|store|learn|save).*?:?\s*(.+)/i;
-  const learnMatch = message.content.match(learnPattern);
-  
-  if (learnMatch && learnMatch[1]) {
-    const knowledge = learnMatch[1].trim();
-    await storeKnowledge('user_instruction', `from_${userId}`, knowledge, 'user_command');
-    await logSystemEvent('learning', `Stored knowledge: ${knowledge}`, 'info', { userId });
-  }
-  
-  // Enhanced user message with actual system data
-  let enhancedMessage = `${message.content}\n\n[SYSTEM CONTEXT]\n`;
+  // Enhanced user message with ACTUAL system data
+  let enhancedMessage = `${message.content}\n\n[SYSTEM CONTEXT - You can access this data]\n`;
   enhancedMessage += `Tables (${systemContext.tables.length}): ${systemContext.tables.map(t => t.table_name).join(', ')}\n`;
-  enhancedMessage += `Recent Logs: ${systemContext.recentLogs.length} entries\n`;
-  enhancedMessage += `System Knowledge: ${systemContext.systemKnowledge.length} entries\n`;
+  enhancedMessage += `\nRecent System Logs (${systemContext.recentLogs.length}):\n`;
   
   if (systemContext.recentLogs.length > 0) {
-    enhancedMessage += `\nLast Event: ${systemContext.recentLogs[0].message}\n`;
+    systemContext.recentLogs.slice(0, 5).forEach((log: any, i: number) => {
+      enhancedMessage += `  ${i + 1}. [${log.level}] ${log.source}: ${log.message}\n`;
+    });
+  } else {
+    enhancedMessage += `  (No recent logs)\n`;
   }
   
-  // Add capability hint
-  enhancedMessage += `\nNote: You can write to system_knowledge and system_logs tables. When users ask you to remember something, acknowledge that you've stored it.}`;
+  enhancedMessage += `\nSystem Knowledge (${systemContext.systemKnowledge.length} entries):\n`;
+  if (systemContext.systemKnowledge.length > 0) {
+    systemContext.systemKnowledge.slice(0, 5).forEach((k: any, i: number) => {
+      enhancedMessage += `  ${i + 1}. [${k.category}] ${k.knowledge_key}\n`;
+    });
+  }
+  
+  enhancedMessage += `\nYou can query these tables directly using your database access. When users ask about logs or knowledge, reference the actual data above.`;
   
   history.push({ role: "user", content: enhancedMessage });
   
