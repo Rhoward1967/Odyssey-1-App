@@ -407,30 +407,37 @@ async function handleDirectMessage(message: Message) {
     await logSystemEvent('directive', `Directive received: ${message.content}`, 'info', { userId });
   }
   
-  // Get system context for R.O.M.A.N.'s awareness
+  // Check for learning/analysis commands
+  const analysisPattern = /(?:analyze|learn|study|examine|review|deep learn|understand all)/i;
+  const isAnalysisCommand = analysisPattern.test(message.content);
+  
+  // Get system context
   const systemContext = await getSystemContext();
   
-  // Enhanced user message with approval/directive awareness
-  let enhancedMessage = `${message.content}\n\n[SYSTEM CONTEXT - You can access this data]\n`;
-  enhancedMessage += `Tables (${systemContext.tables.length}): ${systemContext.tables.map(t => t.table_name).join(', ')}\n`;
-  enhancedMessage += `\nRecent System Logs (${systemContext.recentLogs.length}):\n`;
+  // Enhanced user message with FULL data if analyzing
+  let enhancedMessage = `${message.content}\n\n[SYSTEM CONTEXT - REAL DATA]\n`;
   
-  if (systemContext.recentLogs.length > 0) {
-    systemContext.recentLogs.slice(0, 5).forEach((log: any, i: number) => {
-      enhancedMessage += `  ${i + 1}. [${log.level}] ${log.source}: ${log.message}\n`;
+  if (isAnalysisCommand) {
+    enhancedMessage += `\n=== COMPLETE SYSTEM KNOWLEDGE (${systemContext.systemKnowledge.length} entries) ===\n`;
+    systemContext.systemKnowledge.forEach((k: any, i: number) => {
+      enhancedMessage += `\n${i + 1}. [${k.category}] ${k.knowledge_key}\n`;
+      enhancedMessage += `   Value: ${JSON.stringify(k.value, null, 2)}\n`;
+      enhancedMessage += `   Learned from: ${k.learned_from}\n`;
     });
+    
+    enhancedMessage += `\n=== RECENT SYSTEM LOGS (${systemContext.recentLogs.length} entries) ===\n`;
+    systemContext.recentLogs.forEach((log: any, i: number) => {
+      enhancedMessage += `${i + 1}. [${log.level}] ${log.source}: ${log.message}\n`;
+      if (log.metadata) enhancedMessage += `   Metadata: ${JSON.stringify(log.metadata)}\n`;
+    });
+    
+    enhancedMessage += `\nYou now have COMPLETE access to all system knowledge and logs. Analyze this ACTUAL data.`;
   } else {
-    enhancedMessage += `  (No recent logs)\n`;
+    // Normal context (summary only)
+    enhancedMessage += `Tables (${systemContext.tables.length}): ${systemContext.tables.map((t: any) => t.table_name).join(', ')}\n`;
+    enhancedMessage += `Recent Logs: ${systemContext.recentLogs.length} entries\n`;
+    enhancedMessage += `System Knowledge: ${systemContext.systemKnowledge.length} entries\n`;
   }
-  
-  enhancedMessage += `\nSystem Knowledge (${systemContext.systemKnowledge.length} entries):\n`;
-  if (systemContext.systemKnowledge.length > 0) {
-    systemContext.systemKnowledge.slice(0, 5).forEach((k: any, i: number) => {
-      enhancedMessage += `  ${i + 1}. [${k.category}] ${k.knowledge_key}\n`;
-    });
-  }
-  
-  enhancedMessage += `\nYou can query these tables directly using your database access. When users ask about logs or knowledge, reference the actual data above.`;
   
   // Add governance instructions
   enhancedMessage += `\n[GOVERNANCE PROTOCOL]
