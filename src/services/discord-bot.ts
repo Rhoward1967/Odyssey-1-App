@@ -76,6 +76,7 @@ async function handleDirectMessage(message: Message) {
   history.push({ role: "user", content: message.content });
   
   try {
+    console.log('🔄 Calling OpenAI GPT-4...');
     const completion = await openai.chat.completions.create({
       model: "gpt-4",
       messages: history,
@@ -83,6 +84,8 @@ async function handleDirectMessage(message: Message) {
     });
 
     const response = completion.choices[0]?.message?.content || 'I apologize, I could not generate a response.';
+    console.log(`✅ GPT-4 response: ${response.substring(0, 100)}...`);
+    
     history.push({ role: "assistant", content: response });
     
     // Keep last 20 messages
@@ -90,10 +93,17 @@ async function handleDirectMessage(message: Message) {
       history.splice(1, history.length - 21);
     }
     
+    console.log('📤 Sending reply to Discord...');
     await message.reply(response);
+    console.log('✅ Reply sent successfully!');
   } catch (error) {
-    console.error('❌ Error generating response:', error);
-    await message.reply('I encountered an error. Please try again.');
+    console.error('❌ Error in handleDirectMessage:', error);
+    console.error('Error details:', JSON.stringify(error, null, 2));
+    try {
+      await message.reply('I encountered an error. Please try again.');
+    } catch (replyError) {
+      console.error('❌ Could not send error message:', replyError);
+    }
   }
 }
 
