@@ -350,6 +350,30 @@ client.on('disconnect', () => {
   console.log('⚠️ Discord bot disconnected');
 });
 
+// Add function to execute learning queries
+async function executeDeepLearning() {
+  try {
+    console.log('🧠 R.O.M.A.N. executing deep learning...');
+    
+    // Query all system knowledge
+    const { data: allKnowledge, error } = await supabase
+      .from('system_knowledge')
+      .select('*')
+      .order('updated_at', { ascending: false });
+    
+    if (error) {
+      console.error('❌ Learning query failed:', error);
+      return null;
+    }
+    
+    console.log(`✅ Retrieved ${allKnowledge?.length} knowledge entries for analysis`);
+    return allKnowledge;
+  } catch (error) {
+    console.error('❌ Deep learning error:', error);
+    return null;
+  }
+}
+
 // Add approval/directive pattern matching
 async function handleDirectMessage(message: Message) {
   const userId = message.author.id;
