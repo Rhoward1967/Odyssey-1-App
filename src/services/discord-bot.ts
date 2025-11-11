@@ -6,11 +6,12 @@ import OpenAI from 'openai';
 import type { ChatCompletionMessageParam } from 'openai/resources/chat/completions';
 import { join } from 'path';
 
-// Load environment variables
+// Make sure dotenv loads BEFORE we read env vars
 dotenv.config();
 
-const SUPABASE_URL = process.env.VITE_SUPABASE_URL;
-const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+// Read and validate IMMEDIATELY after dotenv loads
+const SUPABASE_URL = process.env.VITE_SUPABASE_URL?.trim();
+const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
 
 console.log('🔍 Environment check:');
 console.log('  SUPABASE_URL:', SUPABASE_URL);
@@ -23,27 +24,47 @@ if (!SUPABASE_URL || !SUPABASE_KEY || SUPABASE_KEY.length < 100) {
   process.exit(1);
 }
 
+// Create Supabase client with explicit service role configuration
 const supabase = createClient(
-  SUPABASE_URL || '',
-  SUPABASE_KEY || '',
+  SUPABASE_URL,
+  SUPABASE_KEY,
   {
     auth: {
       autoRefreshToken: false,
-      persistSession: false
-    },
-    db: {
-      schema: 'public'
+      persistSession: false,
+      detectSessionInUrl: false
     },
     global: {
       headers: {
-        'apikey': SUPABASE_KEY || '',
+        'apikey': SUPABASE_KEY,
         'Authorization': `Bearer ${SUPABASE_KEY}`
       }
     }
   }
 );
 
-console.log('✅ Supabase client initialized');
+console.log('✅ Supabase client initialized with service role');
+
+// Test the connection immediately
+async function testSupabaseConnection() {
+  try {
+    const { data, error } = await supabase
+      .from('system_logs')
+      .select('count', { count: 'exact', head: true });
+    
+    if (error) {
+      console.error('❌ Supabase connection test FAILED:', error.message);
+      console.error('   This means the service role key is not working.');
+      return false;
+    }
+    
+    console.log('✅ Supabase connection test PASSED');
+    return true;
+  } catch (err) {
+    console.error('❌ Supabase connection error:', err);
+    return false;
+  }
+}
 
 const client = new Client({
   intents: [
@@ -287,8 +308,15 @@ client.on('clientReady', async () => {
   console.log(`📊 Listening to ${client.guilds.cache.size} servers`);
   console.log(`🎯 Intents: Message Content = ENABLED`);
   
-  // Initialize identity on first startup
-  await initializeRomanIdentity();
+  // Test database connection first
+  const connected = await testSupabaseConnection();
+  
+  if (connected) {
+    // Initialize identity on first startup
+    await initializeRomanIdentity();
+  } else {
+    console.error('❌ Skipping identity initialization due to database connection failure');
+  }
 });
 
 client.on('messageCreate', async (message: Message) => {
