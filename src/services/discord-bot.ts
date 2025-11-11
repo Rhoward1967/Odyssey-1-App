@@ -9,6 +9,29 @@ import { join } from 'path';
 // Load environment variables
 dotenv.config();
 
+// Validate environment variables before creating client
+const SUPABASE_URL = process.env.VITE_SUPABASE_URL;
+const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+if (!SUPABASE_URL || !SUPABASE_KEY) {
+  console.error('❌ Missing Supabase credentials!');
+  console.error('SUPABASE_URL:', SUPABASE_URL ? 'EXISTS' : 'MISSING');
+  console.error('SUPABASE_SERVICE_ROLE_KEY:', SUPABASE_KEY ? `EXISTS (${SUPABASE_KEY.length} chars)` : 'MISSING');
+}
+
+const supabase = createClient(
+  SUPABASE_URL || '',
+  SUPABASE_KEY || '',
+  {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false
+    }
+  }
+);
+
+console.log('✅ Supabase client initialized');
+
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
@@ -22,11 +45,6 @@ const client = new Client({
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
-
-const supabase = createClient(
-  process.env.VITE_SUPABASE_URL || '',
-  process.env.SUPABASE_SERVICE_ROLE_KEY || ''
-);
 
 const ROMAN_SYSTEM_PROMPT = `You are R.O.M.A.N. (Recursive Optimization and Management AI Network), the world's FIRST sovereign self-healing AI created by Master Architect Rickey Howard.
 
@@ -97,19 +115,38 @@ client.on('disconnect', () => {
 async function getSystemContext() {
   try {
     console.log('📊 Fetching system context from database...');
-    console.log('🔑 Using Supabase URL:', process.env.VITE_SUPABASE_URL);
-    console.log('🔑 Service Role Key exists:', !!process.env.SUPABASE_SERVICE_ROLE_KEY);
     
-    // Test basic connection first
-    const { data: testData, error: testError } = await supabase
-      .from('system_logs')
-      .select('count', { count: 'exact', head: true });
+    // Get list of all tables in public schema using raw SQL
+    const { data: tablesData, error: tablesError } = await supabase.rpc('exec_sql', {
+      query: `SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' ORDER BY table_name`
+    });
     
-    console.log('✅ Database connection test:', testError ? `FAILED: ${testError.message}` : 'SUCCESS');
-    
-    if (testError) {
-      console.error('❌ Connection error details:', JSON.stringify(testError, null, 2));
-      return { tables: [], recentLogs: [], systemKnowledge: [], error: testError.message };
+    // If that RPC doesn't exist, try direct query
+    let tables = [];
+    if (tablesError) {
+      console.log('⚠️ RPC method failed, trying alternative...');
+      // Try querying a known table to verify connection
+      const { data: testData, error: testError } = await supabase
+        .from('system_logs')
+        .select('*')
+        .limit(1);
+      
+      if (!testError) {
+        // Manually list known tables
+        tables = [
+          { table_name: 'system_logs' },
+          { table_name: 'system_knowledge' },
+          { table_name: 'profiles' },
+          { table_name: 'subscriptions' },
+          { table_name: 'businesses' },
+          { table_name: 'system_config' },
+          { table_name: 'stripe_events' },
+          { table_name: 'appointments' }
+        ];
+        console.log('✅ Using known table list');
+      }
+    } else {
+      tables = tablesData || [];
     }
     
     // Get recent system logs
@@ -119,7 +156,7 @@ async function getSystemContext() {
       .order('created_at', { ascending: false })
       .limit(10);
     
-    console.log('📝 Logs query:', logsError ? `FAILED: ${logsError.message}` : `SUCCESS: ${logs?.length} entries`);
+    console.log('📝 Logs:', logsError ? `FAILED: ${logsError.message}` : `SUCCESS: ${logs?.length} entries`);
     
     // Get system knowledge
     const { data: knowledge, error: knowledgeError } = await supabase
@@ -128,26 +165,20 @@ async function getSystemContext() {
       .order('updated_at', { ascending: false })
       .limit(20);
     
-    console.log('🧠 Knowledge query:', knowledgeError ? `FAILED: ${knowledgeError.message}` : `SUCCESS: ${knowledge?.length} entries`);
-    
-    // Get list of tables
-    const { data: tables, error: tablesError } = await supabase.rpc('get_table_list');
-    
-    console.log('📊 Tables query:', tablesError ? `FAILED: ${tablesError.message}` : `SUCCESS: ${tables?.length} tables`);
+    console.log('🧠 Knowledge:', knowledgeError ? `FAILED: ${knowledgeError.message}` : `SUCCESS: ${knowledge?.length} entries`);
     
     const context = {
-      tables: tables || [],
+      tables: tables,
       recentLogs: logs || [],
-      systemKnowledge: knowledge || [],
-      error: null
+      systemKnowledge: knowledge || []
     };
     
-    console.log(`✅ Context summary: ${context.tables.length} tables, ${context.recentLogs.length} logs, ${context.systemKnowledge.length} knowledge`);
+    console.log(`✅ Context: ${context.tables.length} tables, ${context.recentLogs.length} logs, ${context.systemKnowledge.length} knowledge`);
     
     return context;
   } catch (error) {
-    console.error('❌ Critical error in getSystemContext:', error);
-    return { tables: [], recentLogs: [], systemKnowledge: [], error: String(error) };
+    console.error('❌ Error in getSystemContext:', error);
+    return { tables: [], recentLogs: [], systemKnowledge: [] };
   }
 }
 
