@@ -19,7 +19,7 @@ const commands = [
       {
         name: 'question',
         description: 'Your question for R.O.M.A.N.',
-        type: 3, // STRING type
+        type: 3,
         required: true,
       },
     ],
@@ -39,7 +39,7 @@ const commands = [
       {
         name: 'depth',
         description: 'Scan depth: quick, normal, or deep',
-        type: 3, // STRING
+        type: 3,
         required: false,
         choices: [
           { name: 'Quick scan (tables only)', value: 'quick' },
