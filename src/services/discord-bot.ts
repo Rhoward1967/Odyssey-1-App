@@ -35,12 +35,18 @@ client.on('clientReady', () => {
 });
 
 client.on('messageCreate', async (message: Message) => {
+  console.log(`📨 Message received from ${message.author.tag}: "${message.content}"`);
+  console.log(`   Channel type: ${message.channel.type}, Is bot: ${message.author.bot}`);
+  
   // Ignore bot messages
   if (message.author.bot) return;
   
   // Only respond to DMs
   if (message.channel.type === 1) {
+    console.log('✅ Processing DM...');
     await handleDirectMessage(message);
+  } else {
+    console.log('⏭️  Ignoring non-DM message');
   }
 });
 
