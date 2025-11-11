@@ -9,14 +9,18 @@ import { join } from 'path';
 // Load environment variables
 dotenv.config();
 
-// Validate environment variables before creating client
 const SUPABASE_URL = process.env.VITE_SUPABASE_URL;
 const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-if (!SUPABASE_URL || !SUPABASE_KEY) {
-  console.error('❌ Missing Supabase credentials!');
-  console.error('SUPABASE_URL:', SUPABASE_URL ? 'EXISTS' : 'MISSING');
-  console.error('SUPABASE_SERVICE_ROLE_KEY:', SUPABASE_KEY ? `EXISTS (${SUPABASE_KEY.length} chars)` : 'MISSING');
+console.log('🔍 Environment check:');
+console.log('  SUPABASE_URL:', SUPABASE_URL);
+console.log('  SERVICE_ROLE_KEY length:', SUPABASE_KEY?.length);
+console.log('  SERVICE_ROLE_KEY starts with:', SUPABASE_KEY?.substring(0, 20));
+console.log('  SERVICE_ROLE_KEY ends with:', SUPABASE_KEY?.substring(SUPABASE_KEY.length - 20));
+
+if (!SUPABASE_URL || !SUPABASE_KEY || SUPABASE_KEY.length < 100) {
+  console.error('❌ INVALID Supabase credentials!');
+  process.exit(1);
 }
 
 const supabase = createClient(
