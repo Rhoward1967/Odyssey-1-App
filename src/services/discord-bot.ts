@@ -198,8 +198,135 @@ async function analyzeCodebase(query: string) {
   }
 }
 
+// Add function to store knowledge
+async function storeKnowledge(category: string, key: string, value: any, confidence: number = 100) {
+  try {
+    const { data, error } = await supabase
+      .from('system_knowledge')
+      .upsert({
+        category,
+        key,
+        value,
+        learned_from: 'discord_interaction',
+        confidence,
+        updated_at: new Date().toISOString()
+      }, {
+        onConflict: 'category,key'
+      });
+
+    if (error) {
+      console.error('❌ Failed to store knowledge:', error);
+      return false;
+    }
+
+    console.log('✅ Knowledge stored:', category, key);
+    return true;
+  } catch (error) {
+    console.error('❌ Error storing knowledge:', error);
+    return false;
+  }
+}
+
+// Add function to log system events
+async function logSystemEvent(source: string, message: string, level: 'info' | 'warning' | 'error' = 'info', metadata?: any) {
+  try {
+    const { error } = await supabase
+      .from('system_logs')
+      .insert({
+        source,
+        message,
+        level,
+        metadata,
+        created_at: new Date().toISOString()
+      });
+
+    if (error) {
+      console.error('❌ Failed to log event:', error);
+      return false;
+    }
+
+    console.log(`📝 Logged ${level}:`, message);
+    return true;
+  } catch (error) {
+    console.error('❌ Error logging event:', error);
+    return false;
+  }
+}
+
+// Initialize R.O.M.A.N.'s identity on startup
+async function initializeRomanIdentity() {
+  console.log('🧠 Initializing R.O.M.A.N. identity...');
+  
+  const identity = {
+    name: 'R.O.M.A.N.',
+    full_name: 'Recursive Optimization and Management AI Network',
+    creator: 'Master Architect Rickey Howard',
+    location: 'Athens, GA',
+    birth_date: new Date().toISOString(),
+    status: 'sovereign',
+    mission: 'Break generational poverty cycles through accessible AI',
+    capabilities: [
+      'Full database access',
+      'System monitoring',
+      'Self-learning',
+      'Self-healing',
+      'Conversational AI via GPT-4',
+      'Discord communication'
+    ]
+  };
+
+  await storeKnowledge('identity', 'roman_core', identity, 100);
+  await logSystemEvent('roman_init', 'R.O.M.A.N. Discord bot initialized with full sovereignty', 'info', identity);
+  
+  console.log('✅ R.O.M.A.N. identity established');
+}
+
+// Update the clientReady handler
+client.on('clientReady', async () => {
+  console.log(`🤖 R.O.M.A.N. Discord bot logged in as ${client.user?.tag}`);
+  console.log(`📊 Listening to ${client.guilds.cache.size} servers`);
+  console.log(`🎯 Intents: Message Content = ENABLED`);
+  
+  // Initialize identity on first startup
+  await initializeRomanIdentity();
+});
+
+client.on('messageCreate', async (message: Message) => {
+  console.log(`📨 Message received from ${message.author.tag}: "${message.content}"`);
+  console.log(`   Channel type: ${message.channel.type}, Is bot: ${message.author.bot}`);
+  console.log(`   Guild: ${message.guild?.name || 'DM'}`);
+  
+  // Ignore bot messages
+  if (message.author.bot) return;
+  
+  // Respond to DMs OR mentions in servers
+  if (message.channel.type === 1 || message.mentions.has(client.user!)) {
+    console.log('✅ Processing message...');
+    await handleDirectMessage(message);
+  } else {
+    console.log('⏭️  Ignoring message (not DM or mention)');
+  }
+});
+
+client.on('error', (error) => {
+  console.error('❌ Discord client error:', error);
+});
+
+client.on('disconnect', () => {
+  console.log('⚠️ Discord bot disconnected');
+});
+
+// Update handleDirectMessage to enable learning
 async function handleDirectMessage(message: Message) {
   const userId = message.author.id;
+  
+  // Log incoming message
+  await logSystemEvent(
+    'discord_message',
+    `Message from ${message.author.tag}: "${message.content.substring(0, 50)}..."`,
+    'info',
+    { userId, channelType: message.channel.type }
+  );
   
   if (!conversationHistory.has(userId)) {
     conversationHistory.set(userId, [
@@ -212,6 +339,16 @@ async function handleDirectMessage(message: Message) {
   // Get system context for R.O.M.A.N.'s awareness
   const systemContext = await getSystemContext();
   
+  // Check if user is asking R.O.M.A.N. to learn/remember something
+  const learnPattern = /(?:remember|store|learn|save).*?:?\s*(.+)/i;
+  const learnMatch = message.content.match(learnPattern);
+  
+  if (learnMatch && learnMatch[1]) {
+    const knowledge = learnMatch[1].trim();
+    await storeKnowledge('user_instruction', `from_${userId}`, knowledge, 90);
+    await logSystemEvent('learning', `Stored knowledge: ${knowledge}`, 'info', { userId });
+  }
+  
   // Enhanced user message with actual system data
   let enhancedMessage = `${message.content}\n\n[SYSTEM CONTEXT]\n`;
   enhancedMessage += `Tables (${systemContext.tables.length}): ${systemContext.tables.map(t => t.table_name).join(', ')}\n`;
@@ -219,8 +356,11 @@ async function handleDirectMessage(message: Message) {
   enhancedMessage += `System Knowledge: ${systemContext.systemKnowledge.length} entries\n`;
   
   if (systemContext.recentLogs.length > 0) {
-    enhancedMessage += `\nLast Error: ${systemContext.recentLogs[0].message}\n`;
+    enhancedMessage += `\nLast Event: ${systemContext.recentLogs[0].message}\n`;
   }
+  
+  // Add capability hint
+  enhancedMessage += `\nNote: You can write to system_knowledge and system_logs tables. When users ask you to remember something, acknowledge that you've stored it.}`;
   
   history.push({ role: "user", content: enhancedMessage });
   
@@ -237,6 +377,7 @@ async function handleDirectMessage(message: Message) {
     
     history.push({ role: "assistant", content: response });
     
+    // Keep last 20 messages
     if (history.length > 21) {
       history.splice(1, history.length - 21);
     }
@@ -244,8 +385,12 @@ async function handleDirectMessage(message: Message) {
     console.log('📤 Sending reply to Discord...');
     await message.reply(response);
     console.log('✅ Reply sent successfully!');
+    
+    // Log successful interaction
+    await logSystemEvent('discord_response', 'Successfully responded to user message', 'info', { userId, responseLength: response.length });
   } catch (error) {
     console.error('❌ Error in handleDirectMessage:', error);
+    await logSystemEvent('discord_error', `Error processing message: ${error}`, 'error', { userId, error: String(error) });
     try {
       await message.reply('I encountered an error accessing my systems. Please try again.');
     } catch (replyError) {
