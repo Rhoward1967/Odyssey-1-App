@@ -1,7 +1,0 @@
-{
-  "originalPath": "src\\test\\setup.ts",
-  "timestamp": "2025-09-23T17:04:27.749Z",
-  "hash": "a31289685b87eb9c78c09a1d139f40cd2b426b95643d2e6429bd1eae20a36104",
-  "size": 917,
-  "content": "import '@testing-library/jest-dom';\r\nimport { vi } from 'vitest';\r\n\r\n// Mock IntersectionObserver for testing components that use it\r\nconst intersectionObserverMock = () => ({\r\n  observe: () => null,\r\n  unobserve: () => null,\r\n  disconnect: () => null,\r\n});\r\n\r\nwindow.IntersectionObserver = vi.fn().mockImplementation(intersectionObserverMock);\r\n\r\n// Mock ResizeObserver\r\nwindow.ResizeObserver = vi.fn().mockImplementation(() => ({\r\n  observe: vi.fn(),\r\n  unobserve: vi.fn(),\r\n  disconnect: vi.fn(),\r\n}));\r\n\r\n// Mock matchMedia\r\nObject.defineProperty(window, 'matchMedia', {\r\n  writable: true,\r\n  value: vi.fn().mockImplementation(query => ({\r\n    matches: false,\r\n    media: query,\r\n    onchange: null,\r\n    addListener: vi.fn(),\r\n    removeListener: vi.fn(),\r\n    addEventListener: vi.fn(),\r\n    removeEventListener: vi.fn(),\r\n    dispatchEvent: vi.fn(),\r\n  })),\r\n});\r\n\r\n// Mock scrollTo\r\nwindow.scrollTo = vi.fn();"
-}

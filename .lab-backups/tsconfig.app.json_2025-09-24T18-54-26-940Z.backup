@@ -1,7 +1,0 @@
-{
-  "originalPath": "tsconfig.app.json",
-  "timestamp": "2025-09-24T18:54:26.940Z",
-  "hash": "8881dfd2738f5093356b651c1dbb7f0b7c230b6fa593272abdc8ba900142e6dc",
-  "size": 713,
-  "content": "{\r\n  \"compilerOptions\": {\r\n    \"target\": \"ES2020\",\r\n    \"useDefineForClassFields\": true,\r\n    \"lib\": [\"ES2020\", \"DOM\", \"DOM.Iterable\"],\r\n    \"module\": \"ESNext\",\r\n    \"skipLibCheck\": true,\r\n\r\n    /* Bundler mode */\r\n    \"moduleResolution\": \"bundler\",\r\n    \"allowImportingTsExtensions\": true,\r\n    \"isolatedModules\": true,\r\n    \"moduleDetection\": \"force\",\r\n    \"noEmit\": true,\r\n    \"jsx\": \"react-jsx\",\r\n\r\n    /* Linting */\r\n    \"strict\": false,\r\n    \"noUnusedLocals\": false,\r\n    \"noUnusedParameters\": false,\r\n    \"noImplicitAny\": false,\r\n    \"noFallthroughCasesInSwitch\": false,\r\n\r\n    \"baseUrl\": \".\",\r\n    \"paths\": {\r\n      \"@/*\": [\"./src/*\"]\r\n    },\r\n    \"types\": [\"vite/client\"]\r\n  },\r\n  \"include\": [\"src\"]\r\n}\r\n"
-}

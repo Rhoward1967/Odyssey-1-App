@@ -1,7 +1,0 @@
-{
-  "originalPath": "src\\test\\setup.ts",
-  "timestamp": "2025-09-23T16:47:37.136Z",
-  "hash": "fcacc0d843d49ba4f92a0fe981bc3b9571b02a2994bd818db57e3f53ec46fa73",
-  "size": 316,
-  "content": "import '@testing-library/jest-dom';\r\n\r\n// Mock IntersectionObserver for testing components that use it\r\nconst intersectionObserverMock = () => ({\r\n  observe: () => null,\r\n  unobserve: () => null,\r\n  disconnect: () => null,\r\n});\r\n\r\nwindow.IntersectionObserver = jest.fn().mockImplementation(intersectionObserverMock);"
-}

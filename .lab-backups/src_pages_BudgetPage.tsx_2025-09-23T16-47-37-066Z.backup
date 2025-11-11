@@ -1,7 +1,0 @@
-{
-  "originalPath": "src\\pages\\BudgetPage.tsx",
-  "timestamp": "2025-09-23T16:47:37.066Z",
-  "hash": "df1a9aaab0155ac8e0a3cd5da4f70385bf48987365c06bf083fee7ed6a62981a",
-  "size": 953,
-  "content": "/**\r\n * BudgetPage Component\r\n * \r\n * Stable placeholder to resolve production hydration errors.\r\n * This simple implementation prevents deployment crashes.\r\n */\r\nimport React from \"react\";\r\n\r\nconst BudgetPage: React.FC = () => {\r\n  return (\r\n    <div className=\"min-h-screen bg-gray-50 flex items-center justify-center\">\r\n      <div className=\"max-w-md mx-auto text-center p-8\">\r\n        <h1 className=\"text-3xl font-bold text-gray-900 mb-4\">\r\n          Budget Management\r\n        </h1>\r\n        <p className=\"text-gray-600 mb-6\">\r\n          Budget dashboard is temporarily unavailable while we resolve technical issues.\r\n        </p>\r\n        <div className=\"bg-blue-50 border border-blue-200 rounded-lg p-4\">\r\n          <p className=\"text-blue-800 text-sm\">\r\n            Our team is working to restore full functionality. Thank you for your patience.\r\n          </p>\r\n        </div>\r\n      </div>\r\n    </div>\r\n  );\r\n};\r\n\r\nexport default BudgetPage;\r\n"
-}

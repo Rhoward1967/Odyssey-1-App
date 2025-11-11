@@ -1,7 +1,0 @@
-{
-  "originalPath": "tsconfig.json",
-  "timestamp": "2025-09-24T18:43:17.196Z",
-  "hash": "69d07fa209573011f17fdcfe3bec26d7158c24d2e056b9506b794e6f9f750108",
-  "size": 429,
-  "content": "{\r\n  \"files\": [],\r\n  \"references\": [\r\n    { \"path\": \"./tsconfig.app.json\" },\r\n    { \"path\": \"./tsconfig.node.json\" }\r\n  ],\r\n  \"compilerOptions\": {\r\n    \"baseUrl\": \".\",\r\n    \"paths\": {\r\n      \"@/*\": [\"./src/*\"]\r\n    },\r\n    \"noImplicitAny\": false,\r\n    \"noUnusedParameters\": false,\r\n    \"skipLibCheck\": true,\r\n    \"allowJs\": true,\r\n    \"noUnusedLocals\": false,\r\n    \"strictNullChecks\": false,\r\n  \"types\": [\"vite/client\"]\r\n  }\r\n}\r\n"
-}

@@ -1,7 +1,0 @@
-{
-  "originalPath": "src\\test\\__mocks__\\supabase.ts",
-  "timestamp": "2025-09-23T17:04:39.204Z",
-  "hash": "d7a783d99f93a835b2a3bc04a60ee0f432704f6f2a12188f2b809d2c77ac2782",
-  "size": 1119,
-  "content": "import { vi } from 'vitest';\r\n\r\n// Mock Supabase client for testing\r\nexport const supabase = {\r\n  from: vi.fn(() => ({\r\n    select: vi.fn(() => ({\r\n      order: vi.fn(() => Promise.resolve({ data: [], error: null })),\r\n      limit: vi.fn(() => Promise.resolve({ data: [], error: null })),\r\n      single: vi.fn(() => Promise.resolve({ data: null, error: null })),\r\n      eq: vi.fn().mockReturnThis(),\r\n      gte: vi.fn().mockReturnThis(),\r\n      lte: vi.fn().mockReturnThis(),\r\n    })),\r\n    insert: vi.fn(() => Promise.resolve({ data: [], error: null })),\r\n    update: vi.fn(() => Promise.resolve({ data: [], error: null })),\r\n    delete: vi.fn(() => Promise.resolve({ data: [], error: null }))\r\n  })),\r\n  auth: {\r\n    getSession: vi.fn(() => Promise.resolve({ data: { session: null }, error: null })),\r\n    getUser: vi.fn(() => Promise.resolve({ data: { user: null }, error: null })),\r\n    signIn: vi.fn(() => Promise.resolve({ data: null, error: null })),\r\n    signOut: vi.fn(() => Promise.resolve({ error: null }))\r\n  },\r\n  functions: {\r\n    invoke: vi.fn(() => Promise.resolve({ data: null, error: null }))\r\n  }\r\n};"
-}
