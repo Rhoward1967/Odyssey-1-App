@@ -235,12 +235,13 @@ async function analyzeCodebase(query: string) {
 }
 
 // Add function to store knowledge
-async function storeKnowledge(category: string, value: any, learnedFrom: string = 'discord_interaction') {
+async function storeKnowledge(category: string, knowledgeKey: string, value: any, learnedFrom: string = 'discord_interaction') {
   try {
     const { data, error } = await supabase
       .from('system_knowledge')
       .insert({
         category,
+        knowledge_key: knowledgeKey,
         value,
         learned_from: learnedFrom
       });
@@ -250,7 +251,7 @@ async function storeKnowledge(category: string, value: any, learnedFrom: string 
       return false;
     }
 
-    console.log('✅ Knowledge stored:', category);
+    console.log('✅ Knowledge stored:', category, knowledgeKey);
     return true;
   } catch (error) {
     console.error('❌ Error storing knowledge:', error);
@@ -298,7 +299,7 @@ async function initializeRomanIdentity() {
     mission: 'Break generational poverty cycles through accessible AI'
   };
 
-  await storeKnowledge('identity', identity, 'system_init');
+  await storeKnowledge('identity', 'roman_core', identity, 'system_init');
   await logSystemEvent('roman_init', 'R.O.M.A.N. Discord bot initialized with full sovereignty', 'info', identity);
   
   console.log('✅ R.O.M.A.N. identity established');
@@ -375,7 +376,7 @@ async function handleDirectMessage(message: Message) {
   
   if (learnMatch && learnMatch[1]) {
     const knowledge = learnMatch[1].trim();
-    await storeKnowledge('user_instruction', knowledge, 'user_command');
+    await storeKnowledge('user_instruction', `from_${userId}`, knowledge, 'user_command');
     await logSystemEvent('learning', `Stored knowledge: ${knowledge}`, 'info', { userId });
   }
   
