@@ -1,7 +1,7 @@
 import { Client, GatewayIntentBits, Message } from 'discord.js';
-import dotenv from 'dotenv';
 import OpenAI from 'openai';
 import type { ChatCompletionMessageParam } from 'openai/resources/chat/completions';
+import dotenv from 'dotenv';
 
 // Load environment variables
 dotenv.config();
@@ -10,7 +10,7 @@ const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMessages,
-    GatewayIntentBits.MessageContent,
+    GatewayIntentBits.MessageContent, // CRITICAL - needed to read message text
     GatewayIntentBits.DirectMessages,
   ],
 });
