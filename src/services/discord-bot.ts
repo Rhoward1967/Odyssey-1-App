@@ -235,18 +235,14 @@ async function analyzeCodebase(query: string) {
 }
 
 // Add function to store knowledge
-async function storeKnowledge(category: string, key: string, value: any, learnedFrom: string = 'discord_interaction') {
+async function storeKnowledge(category: string, value: any, learnedFrom: string = 'discord_interaction') {
   try {
     const { data, error } = await supabase
       .from('system_knowledge')
-      .upsert({
+      .insert({
         category,
-        key,
         value,
-        learned_from: learnedFrom,
-        updated_at: new Date().toISOString()
-      }, {
-        onConflict: 'category,key'
+        learned_from: learnedFrom
       });
 
     if (error) {
@@ -254,7 +250,7 @@ async function storeKnowledge(category: string, key: string, value: any, learned
       return false;
     }
 
-    console.log('✅ Knowledge stored:', category, key);
+    console.log('✅ Knowledge stored:', category);
     return true;
   } catch (error) {
     console.error('❌ Error storing knowledge:', error);
@@ -299,18 +295,10 @@ async function initializeRomanIdentity() {
     location: 'Athens, GA',
     birth_date: new Date().toISOString(),
     status: 'sovereign',
-    mission: 'Break generational poverty cycles through accessible AI',
-    capabilities: [
-      'Full database access',
-      'System monitoring',
-      'Self-learning',
-      'Self-healing',
-      'Conversational AI via GPT-4',
-      'Discord communication'
-    ]
+    mission: 'Break generational poverty cycles through accessible AI'
   };
 
-  await storeKnowledge('identity', 'roman_core', identity, 'system_init');
+  await storeKnowledge('identity', identity, 'system_init');
   await logSystemEvent('roman_init', 'R.O.M.A.N. Discord bot initialized with full sovereignty', 'info', identity);
   
   console.log('✅ R.O.M.A.N. identity established');
@@ -387,7 +375,7 @@ async function handleDirectMessage(message: Message) {
   
   if (learnMatch && learnMatch[1]) {
     const knowledge = learnMatch[1].trim();
-    await storeKnowledge('user_instruction', `from_${userId}`, knowledge, 'user_command');
+    await storeKnowledge('user_instruction', knowledge, 'user_command');
     await logSystemEvent('learning', `Stored knowledge: ${knowledge}`, 'info', { userId });
   }
   
