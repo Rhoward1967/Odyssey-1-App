@@ -7,8 +7,14 @@ import { AuthProvider } from './components/AuthProvider';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { getStripe } from './config/stripe';
 import './index.css';
+import { startDiscordBot } from './services/discord-bot';
 
 const stripePromise = getStripe();
+
+// Start Discord bot if we're in Node environment (not browser)
+if (typeof window === 'undefined') {
+  startDiscordBot();
+}
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

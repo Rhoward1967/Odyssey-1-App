@@ -25,6 +25,7 @@ import { supabase } from './lib/supabaseClient';
 import MediaCenter from './pages/MediaCenter';
 import Onboard from './pages/Onboard';
 import Subscribe from './pages/Subscribe';
+import TestCheckout from './pages/TestCheckout';
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -173,6 +174,7 @@ function App() {
                       <Route path="workforce" element={<WorkforceDashboard />} />
                       <Route path="user-manual" element={<UserManual />} />
                       <Route path="media-center" element={<MediaCenter />} />
+                      <Route path="test-checkout" element={<TestCheckout />} />
                     </Route>
                   </Route>
                 </Routes>
