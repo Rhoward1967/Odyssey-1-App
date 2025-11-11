@@ -1,6 +1,10 @@
 import { Client, GatewayIntentBits, Message } from 'discord.js';
 import OpenAI from 'openai';
 import type { ChatCompletionMessageParam } from 'openai/resources/chat/completions';
+import dotenv from 'dotenv';
+
+// Load environment variables
+dotenv.config();
 
 const client = new Client({
   intents: [
@@ -76,7 +80,16 @@ async function handleDirectMessage(message: Message) {
 }
 
 export function startDiscordBot() {
-  client.login(process.env.DISCORD_BOT_TOKEN);
+  const token = process.env.DISCORD_BOT_TOKEN;
+  
+  if (!token) {
+    console.error('❌ DISCORD_BOT_TOKEN is missing from environment variables');
+    console.log('Available env vars:', Object.keys(process.env).filter(k => k.includes('DISCORD')));
+    return;
+  }
+  
+  console.log('✅ Discord token found, logging in...');
+  client.login(token);
 }
 
 // Add this at the bottom
