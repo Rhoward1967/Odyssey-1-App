@@ -414,29 +414,21 @@ async function handleDirectMessage(message: Message) {
   // Get system context
   const systemContext = await getSystemContext();
   
-  // Enhanced user message with FULL data if analyzing
-  let enhancedMessage = `${message.content}\n\n[SYSTEM CONTEXT - REAL DATA]\n`;
+  // Enhanced user message with optimized data
+  let enhancedMessage = `${message.content}\n\n[SYSTEM CONTEXT]\n`;
   
   if (isAnalysisCommand) {
-    enhancedMessage += `\n=== COMPLETE SYSTEM KNOWLEDGE (${systemContext.systemKnowledge.length} entries) ===\n`;
+    // Send summarized knowledge, not full JSON to save tokens
+    enhancedMessage += `\n=== SYSTEM KNOWLEDGE (${systemContext.systemKnowledge.length} entries) ===\n`;
     systemContext.systemKnowledge.forEach((k: any, i: number) => {
-      enhancedMessage += `\n${i + 1}. [${k.category}] ${k.knowledge_key}\n`;
-      enhancedMessage += `   Value: ${JSON.stringify(k.value, null, 2)}\n`;
-      enhancedMessage += `   Learned from: ${k.learned_from}\n`;
+      const valuePreview = typeof k.value === 'string' 
+        ? k.value.substring(0, 100) 
+        : JSON.stringify(k.value).substring(0, 100);
+      enhancedMessage += `${i + 1}. [${k.category}] ${k.knowledge_key}: ${valuePreview}...\n`;
     });
-    
-    enhancedMessage += `\n=== RECENT SYSTEM LOGS (${systemContext.recentLogs.length} entries) ===\n`;
-    systemContext.recentLogs.forEach((log: any, i: number) => {
-      enhancedMessage += `${i + 1}. [${log.level}] ${log.source}: ${log.message}\n`;
-      if (log.metadata) enhancedMessage += `   Metadata: ${JSON.stringify(log.metadata)}\n`;
-    });
-    
-    enhancedMessage += `\nYou now have COMPLETE access to all system knowledge and logs. Analyze this ACTUAL data.`;
   } else {
-    // Normal context (summary only)
-    enhancedMessage += `Tables (${systemContext.tables.length}): ${systemContext.tables.map((t: any) => t.table_name).join(', ')}\n`;
-    enhancedMessage += `Recent Logs: ${systemContext.recentLogs.length} entries\n`;
-    enhancedMessage += `System Knowledge: ${systemContext.systemKnowledge.length} entries\n`;
+    // Normal summary
+    enhancedMessage += `Tables: ${systemContext.tables.length} | Logs: ${systemContext.recentLogs.length} | Knowledge: ${systemContext.systemKnowledge.length}\n`;
   }
   
   // Add governance instructions
