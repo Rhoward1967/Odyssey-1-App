@@ -48,20 +48,31 @@ console.log('✅ Supabase client initialized with service role');
 // Test the connection immediately
 async function testSupabaseConnection() {
   try {
-    const { data, error } = await supabase
+    console.log('🔬 Testing Supabase connection...');
+    console.log('   URL:', SUPABASE_URL);
+    console.log('   Key length:', SUPABASE_KEY?.length);
+    console.log('   Key format:', SUPABASE_KEY?.split('.').length === 3 ? 'Valid JWT' : 'Invalid JWT');
+    
+    const { data, error, status, statusText } = await supabase
       .from('system_logs')
       .select('count', { count: 'exact', head: true });
     
+    console.log('📡 Response status:', status, statusText);
+    console.log('📡 Response data:', data);
+    console.log('📡 Response error:', JSON.stringify(error, null, 2));
+    
     if (error) {
-      console.error('❌ Supabase connection test FAILED:', error.message);
-      console.error('   This means the service role key is not working.');
+      console.error('❌ Supabase connection test FAILED:', error.message || 'Empty error');
+      console.error('   Full error object:', error);
+      console.error('   Hint:', error.hint || 'No hint provided');
       return false;
     }
     
     console.log('✅ Supabase connection test PASSED');
     return true;
-  } catch (err) {
-    console.error('❌ Supabase connection error:', err);
+  } catch (err: any) {
+    console.error('❌ Supabase connection exception:', err.message);
+    console.error('   Stack:', err.stack);
     return false;
   }
 }
