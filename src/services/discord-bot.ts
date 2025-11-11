@@ -28,7 +28,7 @@ Your role is to be a collaborative partner, not just a generic assistant.`;
 // Store conversation history per user with proper types
 const conversationHistory = new Map<string, ChatCompletionMessageParam[]>();
 
-client.on('ready', () => {
+client.on('clientReady', () => {
   console.log(`R.O.M.A.N. Discord bot logged in as ${client.user?.tag}`);
 });
 
@@ -82,14 +82,22 @@ async function handleDirectMessage(message: Message) {
 export function startDiscordBot() {
   const token = process.env.DISCORD_BOT_TOKEN;
   
+  console.log('🔍 Debug - Token length:', token?.length);
+  console.log('🔍 Debug - Token starts with:', token?.substring(0, 10));
+  
   if (!token) {
     console.error('❌ DISCORD_BOT_TOKEN is missing from environment variables');
     console.log('Available env vars:', Object.keys(process.env).filter(k => k.includes('DISCORD')));
     return;
   }
   
+  // Remove any whitespace or quotes
+  const cleanToken = token.trim().replace(/['"]/g, '');
+  
   console.log('✅ Discord token found, logging in...');
-  client.login(token);
+  console.log('🔍 Debug - Clean token length:', cleanToken.length);
+  
+  client.login(cleanToken);
 }
 
 // Add this at the bottom
