@@ -32,22 +32,33 @@ const conversationHistory = new Map<string, ChatCompletionMessageParam[]>();
 
 client.on('clientReady', () => {
   console.log(`🤖 R.O.M.A.N. Discord bot logged in as ${client.user?.tag}`);
+  console.log(`📊 Listening to ${client.guilds.cache.size} servers`);
+  console.log(`🎯 Intents: Message Content = ENABLED`);
 });
 
 client.on('messageCreate', async (message: Message) => {
   console.log(`📨 Message received from ${message.author.tag}: "${message.content}"`);
   console.log(`   Channel type: ${message.channel.type}, Is bot: ${message.author.bot}`);
+  console.log(`   Guild: ${message.guild?.name || 'DM'}`);
   
   // Ignore bot messages
   if (message.author.bot) return;
   
-  // Only respond to DMs
-  if (message.channel.type === 1) {
-    console.log('✅ Processing DM...');
+  // Respond to DMs OR mentions in servers
+  if (message.channel.type === 1 || message.mentions.has(client.user!)) {
+    console.log('✅ Processing message...');
     await handleDirectMessage(message);
   } else {
-    console.log('⏭️  Ignoring non-DM message');
+    console.log('⏭️  Ignoring message (not DM or mention)');
   }
+});
+
+client.on('error', (error) => {
+  console.error('❌ Discord client error:', error);
+});
+
+client.on('disconnect', () => {
+  console.log('⚠️ Discord bot disconnected');
 });
 
 async function handleDirectMessage(message: Message) {
