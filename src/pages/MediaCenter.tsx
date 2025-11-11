@@ -3,15 +3,15 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
-    BookOpen,
-    Briefcase,
-    FileText,
-    GraduationCap,
-    Share2,
-    Stethoscope,
-    Upload,
-    Users,
-    Video
+  BookOpen,
+  Briefcase,
+  FileText,
+  GraduationCap,
+  Share2,
+  Stethoscope,
+  Upload,
+  Users,
+  Video
 } from 'lucide-react';
 import { useState } from 'react';
 
