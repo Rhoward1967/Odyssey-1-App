@@ -97,15 +97,19 @@ client.on('disconnect', () => {
 async function getSystemContext() {
   try {
     console.log('📊 Fetching system context from database...');
+    console.log('🔑 Using Supabase URL:', process.env.VITE_SUPABASE_URL);
+    console.log('🔑 Service Role Key exists:', !!process.env.SUPABASE_SERVICE_ROLE_KEY);
     
-    // Get table list using a simpler query
-    const { data: tablesData, error: tablesError } = await supabase
-      .from('information_schema.tables')
-      .select('table_name')
-      .eq('table_schema', 'public');
+    // Test basic connection first
+    const { data: testData, error: testError } = await supabase
+      .from('system_logs')
+      .select('count', { count: 'exact', head: true });
     
-    if (tablesError) {
-      console.error('Error fetching tables:', tablesError);
+    console.log('✅ Database connection test:', testError ? `FAILED: ${testError.message}` : 'SUCCESS');
+    
+    if (testError) {
+      console.error('❌ Connection error details:', JSON.stringify(testError, null, 2));
+      return { tables: [], recentLogs: [], systemKnowledge: [], error: testError.message };
     }
     
     // Get recent system logs
@@ -115,9 +119,7 @@ async function getSystemContext() {
       .order('created_at', { ascending: false })
       .limit(10);
     
-    if (logsError) {
-      console.error('Error fetching logs:', logsError);
-    }
+    console.log('📝 Logs query:', logsError ? `FAILED: ${logsError.message}` : `SUCCESS: ${logs?.length} entries`);
     
     // Get system knowledge
     const { data: knowledge, error: knowledgeError } = await supabase
@@ -126,22 +128,26 @@ async function getSystemContext() {
       .order('updated_at', { ascending: false })
       .limit(20);
     
-    if (knowledgeError) {
-      console.error('Error fetching knowledge:', knowledgeError);
-    }
+    console.log('🧠 Knowledge query:', knowledgeError ? `FAILED: ${knowledgeError.message}` : `SUCCESS: ${knowledge?.length} entries`);
+    
+    // Get list of tables
+    const { data: tables, error: tablesError } = await supabase.rpc('get_table_list');
+    
+    console.log('📊 Tables query:', tablesError ? `FAILED: ${tablesError.message}` : `SUCCESS: ${tables?.length} tables`);
     
     const context = {
-      tables: tablesData || [],
+      tables: tables || [],
       recentLogs: logs || [],
-      systemKnowledge: knowledge || []
+      systemKnowledge: knowledge || [],
+      error: null
     };
     
-    console.log(`✅ Context loaded: ${context.tables.length} tables, ${context.recentLogs.length} logs, ${context.systemKnowledge.length} knowledge entries`);
+    console.log(`✅ Context summary: ${context.tables.length} tables, ${context.recentLogs.length} logs, ${context.systemKnowledge.length} knowledge`);
     
     return context;
   } catch (error) {
-    console.error('Error fetching system context:', error);
-    return { tables: [], recentLogs: [], systemKnowledge: [] };
+    console.error('❌ Critical error in getSystemContext:', error);
+    return { tables: [], recentLogs: [], systemKnowledge: [], error: String(error) };
   }
 }
 
