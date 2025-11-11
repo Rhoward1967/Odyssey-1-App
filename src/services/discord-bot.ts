@@ -36,43 +36,47 @@ const supabase = createClient(
     },
     global: {
       headers: {
-        'apikey': SUPABASE_KEY,
         'Authorization': `Bearer ${SUPABASE_KEY}`
       }
+    },
+    db: {
+      schema: 'public'
     }
   }
 );
 
 console.log('✅ Supabase client initialized with service role');
 
-// Test the connection immediately
+// Test with explicit headers
 async function testSupabaseConnection() {
   try {
     console.log('🔬 Testing Supabase connection...');
     console.log('   URL:', SUPABASE_URL);
     console.log('   Key length:', SUPABASE_KEY?.length);
-    console.log('   Key format:', SUPABASE_KEY?.split('.').length === 3 ? 'Valid JWT' : 'Invalid JWT');
     
-    const { data, error, status, statusText } = await supabase
-      .from('system_logs')
-      .select('count', { count: 'exact', head: true });
+    // Try a raw fetch to verify the key works
+    const testResponse = await fetch(`${SUPABASE_URL}/rest/v1/system_logs?select=count`, {
+      method: 'HEAD',
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'count=exact'
+      }
+    });
     
-    console.log('📡 Response status:', status, statusText);
-    console.log('📡 Response data:', data);
-    console.log('📡 Response error:', JSON.stringify(error, null, 2));
+    console.log('📡 Raw fetch status:', testResponse.status, testResponse.statusText);
     
-    if (error) {
-      console.error('❌ Supabase connection test FAILED:', error.message || 'Empty error');
-      console.error('   Full error object:', error);
-      console.error('   Hint:', error.hint || 'No hint provided');
+    if (testResponse.status === 401) {
+      console.error('❌ Service role key is being rejected by Supabase');
+      console.error('   Key first 30 chars:', SUPABASE_KEY?.substring(0, 30));
       return false;
     }
     
     console.log('✅ Supabase connection test PASSED');
     return true;
   } catch (err: any) {
-    console.error('❌ Supabase connection exception:', err.message);
-    console.error('   Stack:', err.stack);
+    console.error('❌ Connection error:', err.message);
     return false;
   }
 }
