@@ -410,33 +410,36 @@ async function handleDirectMessage(message: Message) {
   
   console.log(`🔍 Checking message for approval pattern: "${message.content}"`);
   
-  // Check for approval commands FIRST, before GPT-4 call
+  // Check for approval commands FIRST
   const approvalPattern = /^(approve|yes|confirmed?|proceed|do it|fix it|go ahead)/i;
   const isApproval = approvalPattern.test(message.content.trim());
   
   console.log(`   Approval pattern match: ${isApproval}`);
   
-  let fixExecuted = false;
-  let fixResult = '';
+  let executionResults = '';
   
   if (isApproval) {
-    console.log('🎯 APPROVAL DETECTED - EXECUTING FIX');
+    console.log('🎯 APPROVAL DETECTED - EXECUTING PENDING FIX');
     
     try {
-      // ACTUALLY EXECUTE the Stripe fix
-      console.log('🔧 Calling fixStripeKey function...');
+      // Execute Stripe fix
+      console.log('🔧 Executing Stripe key verification...');
       const success = await fixStripeKey({
         reason: 'User approved Stripe 401 error fix',
         userId,
         approvedAt: new Date().toISOString()
       });
       
-      console.log(`✅ Fix result: ${success ? 'SUCCESS' : 'FAILED'}`);
-      fixExecuted = true;
-      fixResult = success ? 'Stripe key verification initiated and logged to governance' : 'Fix failed to execute';
+      if (success) {
+        console.log('✅ Fix executed successfully');
+        executionResults = `\n[ACTUAL EXECUTION COMPLETED]\nStripe key verification was executed and logged to governance_changes.\nYou can confirm by checking governance_changes table.\n`;
+      } else {
+        console.log('❌ Fix execution failed');
+        executionResults = `\n[EXECUTION FAILED]\nThe fix could not be completed. Check system logs.\n`;
+      }
     } catch (error) {
       console.error('❌ Fix execution error:', error);
-      fixResult = `Fix execution error: ${error}`;
+      executionResults = `\n[EXECUTION ERROR]\n${error}\n`;
     }
   }
   
@@ -452,16 +455,14 @@ async function handleDirectMessage(message: Message) {
   // Get system context
   const systemContext = await getSystemContext();
   
-  // Enhanced user message
   let enhancedMessage = `${message.content}\n\n[SYSTEM CONTEXT]\n`;
   enhancedMessage += `Tables: ${systemContext.tables.length}\n`;
-  enhancedMessage += `Recent Logs: ${systemContext.recentLogs.length} entries\n`;
-  enhancedMessage += `System Knowledge: ${systemContext.systemKnowledge.length} entries\n`;
   enhancedMessage += `Governance Changes: ${systemContext.governanceChanges.length} recent actions\n`;
   
-  // If fix was executed, tell GPT-4 about it
-  if (fixExecuted) {
-    enhancedMessage += `\n[FIX EXECUTED]\nYou just executed a fix in response to user approval.\nResult: ${fixResult}\nAcknowledge this execution and report the results to the user.\n`;
+  // Add execution results if any
+  if (executionResults) {
+    enhancedMessage += executionResults;
+    enhancedMessage += `Acknowledge the actual execution and report what was logged to governance.\n`;
   }
   
   // If asking about governance specifically, show actual data
