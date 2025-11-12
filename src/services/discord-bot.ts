@@ -455,9 +455,29 @@ async function handleDirectMessage(message: Message) {
   // Get system context
   const systemContext = await getSystemContext();
   
+  // Check for analysis commands
+  const analysisPattern = /(?:analyze.*knowledge|find.*issue|check.*error|what.*wrong)/i;
+  const isAnalysisCommand = analysisPattern.test(message.content);
+  
   let enhancedMessage = `${message.content}\n\n[SYSTEM CONTEXT]\n`;
-  enhancedMessage += `Tables: ${systemContext.tables.length}\n`;
-  enhancedMessage += `Governance Changes: ${systemContext.governanceChanges.length} recent actions\n`;
+  
+  if (isAnalysisCommand) {
+    enhancedMessage += `\n=== SYSTEM KNOWLEDGE ANALYSIS (${systemContext.systemKnowledge.length} entries) ===\n`;
+    systemContext.systemKnowledge.forEach((k: any, i: number) => {
+      enhancedMessage += `${i + 1}. [${k.category}] ${k.knowledge_key}\n`;
+      const value = JSON.stringify(k.value, null, 2);
+      enhancedMessage += `   Value: ${value}\n`;
+      
+      // Highlight issues
+      if (k.value?.fix_required || k.value?.issue || k.category?.includes('issue') || k.category?.includes('error')) {
+        enhancedMessage += `   ⚠️ THIS IS AN ISSUE THAT NEEDS FIXING\n`;
+      }
+    });
+    enhancedMessage += `\nAnalyze this ACTUAL data and propose fixes for any issues found.\n`;
+  } else {
+    enhancedMessage += `Tables: ${systemContext.tables.length}\n`;
+    enhancedMessage += `Governance Changes: ${systemContext.governanceChanges.length} recent actions\n`;
+  }
   
   // Add execution results if any
   if (executionResults) {
