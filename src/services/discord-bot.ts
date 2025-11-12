@@ -398,9 +398,11 @@ client.on('disconnect', () => {
 
 // Add monitoring command handler
 async function handleDirectMessage(message: Message) {
+  console.log('🚀 handleDirectMessage called');
+  console.log(`   Message: "${message.content}"`);
+  
   const userId = message.author.id;
   
-  // Log incoming message
   await logSystemEvent(
     'discord_message',
     `Message from ${message.author.tag}: "${message.content.substring(0, 50)}..."`,
@@ -408,33 +410,17 @@ async function handleDirectMessage(message: Message) {
     { userId, channelType: message.channel.type }
   );
   
-  console.log(`🔍 Checking message for approval: "${message.content}"`);
-  
-  // CHECK FOR APPROVAL FIRST - BEFORE GPT-4
-  const approvalPattern = /^(approve|yes|confirmed?|proceed|do it|fix it|go ahead)/i;
+  console.log(`🔍 Checking for approval pattern`);
+  const approvalPattern = /^(approve|yes|confirmed?|proceed|fix it|go ahead)/i;
   const isApproval = approvalPattern.test(message.content.trim());
+  console.log(`   Is approval: ${isApproval}`);
   
-  console.log(`   Approval match: ${isApproval}`);
-  
-  let executionResult = '';
-  
+  let executionNote = '';
   if (isApproval) {
-    console.log('🎯 APPROVAL DETECTED - EXECUTING FIX NOW');
-    try {
-      const success = await fixStripeKey({
-        reason: 'User approved fix',
-        userId,
-        timestamp: new Date().toISOString()
-      });
-      
-      console.log(`✅ Execution result: ${success}`);
-      executionResult = success 
-        ? '\n[EXECUTION COMPLETED]\nFix was executed and logged to governance_changes.\n'
-        : '\n[EXECUTION FAILED]\nFix could not be completed.\n';
-    } catch (error) {
-      console.error('❌ Execution error:', error);
-      executionResult = `\n[ERROR]\n${error}\n`;
-    }
+    console.log('🎯 EXECUTING FIX');
+    const result = await fixStripeKey({ userId });
+    console.log(`✅ Result: ${result}`);
+    executionNote = result ? '[FIX EXECUTED]\n' : '[FAILED]\n';
   }
   
   // NOW get context and call GPT-4
@@ -448,18 +434,14 @@ async function handleDirectMessage(message: Message) {
   
   const systemContext = await getSystemContext();
   
-  // Check for analysis commands
-  const analysisPattern = /(?:analyze.*knowledge|find.*issue|check.*error|what.*wrong)/i;
-  const isAnalysisCommand = analysisPattern.test(message.content);
-  
-  let enhancedMessage = `${message.content}\n\n[SYSTEM CONTEXT]\n`;
+  let enhancedMessage = executionNote + `${message.content}\n\n[SYSTEM CONTEXT]\n`;
   
   // Add execution result FIRST if it happened
-  if (executionResult) {
-    enhancedMessage += executionResult;
+  if (executionNote) {
+    enhancedMessage += executionNote;
   }
   
-  if (isAnalysisCommand) {
+  if (isApproval) {
     enhancedMessage += `\n=== SYSTEM KNOWLEDGE - DETAILED ANALYSIS ===\n`;
     systemContext.systemKnowledge.forEach((k: any, i: number) => {
       enhancedMessage += `${i + 1}. [${k.category}] ${k.knowledge_key}\n`;
