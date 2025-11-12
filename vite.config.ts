@@ -8,6 +8,9 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
+    fs: {
+      allow: ['..']
+    }
   },
   plugins: [
     react()
@@ -28,8 +31,12 @@ export default defineConfig(({ mode }) => ({
     clearMocks: true,
     restoreMocks: true
   },
+  optimizeDeps: {
+    exclude: ['discord.js', 'zlib-sync', 'bufferutil', 'utf-8-validate']
+  },
   build: {
     rollupOptions: {
+      external: ['discord.js'],
       output: {
         manualChunks: {
           vendor: ['react', 'react-dom'],
