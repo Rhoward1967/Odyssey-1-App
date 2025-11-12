@@ -199,21 +199,16 @@ async function getSystemContext() {
   try {
     console.log('📊 Fetching system context from database...');
     
-    // Get ALL tables from information_schema
-    const { data: allTables, error: tablesError } = await supabase
-      .rpc('exec_sql', {
-        query: `SELECT tablename FROM pg_tables WHERE schemaname = 'public' ORDER BY tablename`
-      });
-    
-    // If RPC doesn't work, use known table list including governance
+    // Fallback to known comprehensive table list
     const knownTables = [
-      'system_logs', 'system_knowledge', 'profiles', 'subscriptions',
-      'businesses', 'system_config', 'stripe_events', 'appointments',
-      'employees', 'time_entries', 'services', 'customers',
-      'governance_approvals', 'governance_log', 'governance_rules'
+      'appointments', 'businesses', 'customers', 'employees',
+      'governance_changes', 'governance_principles', 'governance_approvals',
+      'roman_audit_log', 'roman_commands', 'books',
+      'profiles', 'services', 'stripe_events', 'subscriptions',
+      'system_config', 'system_knowledge', 'system_logs', 'time_entries'
     ];
     
-    const tables = allTables || knownTables.map(t => ({ table_name: t }));
+    const tables = knownTables.map(t => ({ table_name: t }));
     
     // Get recent system logs
     const { data: logs, error: logsError } = await supabase
