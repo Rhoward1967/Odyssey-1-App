@@ -199,17 +199,18 @@ async function getSystemContext() {
   try {
     console.log('📊 Fetching system context from database...');
     
-    // Fallback to known comprehensive table list
+    // Known tables including governance (Supabase confirmed these exist)
     const knownTables = [
-      'appointments', 'businesses', 'customers', 'employees',
-      'governance_changes', 'governance_principles', 'governance_approvals',
-      'roman_audit_log', 'roman_commands', 'books',
+      'appointments', 'businesses', 'customers', 'employees', 'books',
+      'governance_changes', 'governance_principles', 
+      'roman_audit_log', 'roman_commands',
       'profiles', 'services', 'stripe_events', 'subscriptions',
       'system_config', 'system_knowledge', 'system_logs', 'time_entries'
     ];
     
     const tables = knownTables.map(t => ({ table_name: t }));
-    
+    console.log(`✅ Using known table list: ${tables.length} tables (4 governance)`);
+
     // Get recent system logs
     const { data: logs, error: logsError } = await supabase
       .from('system_logs')
