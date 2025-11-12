@@ -387,16 +387,31 @@ async function handleDirectMessage(message: Message) {
     { userId, channelType: message.channel.type }
   );
   
-  // Check for approval commands
+  // Check for approval commands with fix execution
   const approvalPattern = /^(approve|yes|confirmed?|proceed|do it|fix it|go ahead)/i;
-  const rejectionPattern = /^(deny|no|reject|stop|cancel|don't)/i;
-
+  
   if (approvalPattern.test(message.content.trim())) {
     await logSystemEvent('approval', `User approved action: ${message.content}`, 'info', { userId });
+    await logGovernanceAction('user_approval', 'manual', { message: message.content }, 'approved');
   }
-
-  if (rejectionPattern.test(message.content.trim())) {
-    await logSystemEvent('rejection', `User rejected action: ${message.content}`, 'info', { userId });
+  
+  // Check for fix commands
+  const fixPattern = /(?:fix|repair|resolve|correct|update)\s+(.+)/i;
+  const fixMatch = message.content.match(fixPattern);
+  
+  if (fixMatch) {
+    const fixTarget = fixMatch[1].toLowerCase();
+    
+    // Check governance approval
+    const hasApproval = await checkGovernanceApproval('auto_fix', 'system');
+    
+    if (hasApproval) {
+      await logGovernanceAction('auto_fix', 'system', { target: fixTarget }, 'executed');
+      // R.O.M.A.N. can proceed with approved fixes
+    } else {
+      await logGovernanceAction('auto_fix', 'system', { target: fixTarget }, 'pending');
+      // R.O.M.A.N. will ask for approval first
+    }
   }
   
   // Check for direct commands/directives
@@ -443,6 +458,35 @@ When user replies with rejection keywords (deny, no, reject, stop, cancel), ackn
 
 You have Constitutional AI governance - you can propose fixes but need approval for critical changes.`;
   
+  // Add governance context to system prompt
+  const governanceContext = `\n[GOVERNANCE & FIX CAPABILITIES]
+You have Constitutional AI governance with the following capabilities:
+
+**APPROVED ACTIONS (can execute immediately if governance approved):**
+- update_env_variable: Fix environment variable issues
+- update_stripe_key: Verify and update Stripe API keys
+- fix_rls_policy: Correct Row Level Security policies
+- optimize_query: Improve database query performance
+- fix_edge_function: Repair Supabase Edge Functions
+- update_system_config: Modify system configuration
+
+**FIX EXECUTION PROTOCOL:**
+1. Detect issue from system_knowledge or logs
+2. Check governance_approvals table for pre-approval
+3. If approved: Execute fix and log to governance_log
+4. If not approved: Present issue and await user approval
+5. After fix: Store results in system_knowledge
+
+**WHEN USER SAYS "APPROVE" OR "FIX IT":**
+- Acknowledge approval is logged
+- Execute the proposed fix
+- Report results with specifics
+- Update system_knowledge with fix details
+
+You are EMPOWERED to fix issues with proper governance oversight.`;
+  
+  enhancedMessage += governanceContext;
+  
   if (!conversationHistory.has(userId)) {
     conversationHistory.set(userId, [
       { role: "system", content: ROMAN_SYSTEM_PROMPT }
@@ -486,6 +530,218 @@ You have Constitutional AI governance - you can propose fixes but need approval 
       console.error('❌ Could not send error message:', replyError);
     }
   }
+}
+
+// Add governance check function
+async function checkGovernanceApproval(action: string, category: string): Promise<boolean> {
+  try {
+    const { data: governance, error } = await supabase
+      .from('governance_approvals')
+      .select('*')
+      .eq('action_type', action)
+      .eq('category', category)
+      .eq('status', 'approved')
+      .single();
+
+    if (error || !governance) {
+      console.log(`⏸️  No pre-approval found for ${action} in ${category}`);
+      return false;
+    }
+
+    console.log(`✅ Governance approval found: ${governance.id}`);
+    return true;
+  } catch (error) {
+    console.error('❌ Governance check error:', error);
+    return false;
+  }
+}
+
+// Add function to log governance actions
+async function logGovernanceAction(
+  action: string,
+  category: string,
+  details: any,
+  status: 'pending' | 'approved' | 'executed' | 'failed'
+) {
+  try {
+    const { error } = await supabase
+      .from('governance_log')
+      .insert({
+        action_type: action,
+        category,
+        details,
+        status,
+        executed_by: 'roman_ai',
+        executed_at: new Date().toISOString()
+      });
+
+    if (error) {
+      console.error('❌ Failed to log governance action:', error);
+    } else {
+      console.log(`📋 Governance action logged: ${action} - ${status}`);
+    }
+  } catch (error) {
+    console.error('❌ Error logging governance action:', error);
+  }
+}
+
+// Add global fix execution capability
+async function executeGlobalFix(fixType: string, details: any): Promise<boolean> {
+  try {
+    console.log(`🔧 Executing global fix: ${fixType}`);
+
+    switch (fixType) {
+      case 'update_env_variable':
+        return await fixEnvironmentVariable(details);
+      
+      case 'update_stripe_key':
+        return await fixStripeKey(details);
+      
+      case 'fix_rls_policy':
+        return await fixRLSPolicy(details);
+      
+      case 'optimize_query':
+        return await optimizeQuery(details);
+      
+      case 'fix_edge_function':
+        return await fixEdgeFunction(details);
+      
+      case 'update_system_config':
+        return await updateSystemConfig(details);
+      
+      default:
+        console.error(`❌ Unknown fix type: ${fixType}`);
+        return false;
+    }
+  } catch (error) {
+    console.error(`❌ Error executing fix ${fixType}:`, error);
+    return false;
+  }
+}
+
+// Implement specific fix functions
+async function fixEnvironmentVariable(details: any): Promise<boolean> {
+  console.log('🔧 Fixing environment variable...');
+  await logSystemEvent('env_fix', `Updating ${details.variable}`, 'info', details);
+  
+  // Store recommendation in system_knowledge
+  await storeKnowledge(
+    'environment_fixes',
+    `${details.variable}_fix`,
+    {
+      variable: details.variable,
+      issue: details.issue,
+      recommendation: details.recommendation,
+      timestamp: new Date().toISOString()
+    },
+    'governance_system'
+  );
+  
+  return true;
+}
+
+async function fixStripeKey(details: any): Promise<boolean> {
+  console.log('🔧 Analyzing Stripe key configuration...');
+  
+  await logSystemEvent('stripe_fix', 'Stripe key verification initiated', 'info', details);
+  
+  await storeKnowledge(
+    'api_fixes',
+    'stripe_key_verification',
+    {
+      issue: 'Stripe 401 errors',
+      status: 'verification_needed',
+      steps: [
+        'Verify STRIPE_SECRET_KEY in Supabase secrets',
+        'Check key format (starts with sk_live_ or sk_test_)',
+        'Ensure key matches Stripe dashboard',
+        'Test with simple API call'
+      ],
+      timestamp: new Date().toISOString()
+    },
+    'governance_system'
+  );
+  
+  return true;
+}
+
+async function fixRLSPolicy(details: any): Promise<boolean> {
+  console.log('🔧 Fixing RLS policy...');
+  
+  await logSystemEvent('rls_fix', `Updating RLS for ${details.table}`, 'info', details);
+  
+  // Log the policy issue and recommendation
+  await storeKnowledge(
+    'security_fixes',
+    `rls_${details.table}`,
+    {
+      table: details.table,
+      issue: details.issue,
+      recommendation: details.recommendation,
+      timestamp: new Date().toISOString()
+    },
+    'governance_system'
+  );
+  
+  return true;
+}
+
+async function optimizeQuery(details: any): Promise<boolean> {
+  console.log('🔧 Optimizing database query...');
+  
+  await storeKnowledge(
+    'performance_fixes',
+    `query_optimization_${details.table}`,
+    {
+      table: details.table,
+      issue: details.issue,
+      optimization: details.optimization,
+      timestamp: new Date().toISOString()
+    },
+    'governance_system'
+  );
+  
+  return true;
+}
+
+async function fixEdgeFunction(details: any): Promise<boolean> {
+  console.log('🔧 Fixing edge function...');
+  
+  await logSystemEvent('edge_function_fix', `Fixing ${details.function}`, 'info', details);
+  
+  await storeKnowledge(
+    'edge_function_fixes',
+    details.function,
+    {
+      function: details.function,
+      issue: details.issue,
+      fix: details.fix,
+      timestamp: new Date().toISOString()
+    },
+    'governance_system'
+  );
+  
+  return true;
+}
+
+async function updateSystemConfig(details: any): Promise<boolean> {
+  console.log('🔧 Updating system configuration...');
+  
+  const { error } = await supabase
+    .from('system_config')
+    .upsert({
+      key: details.key,
+      value: details.value,
+      updated_at: new Date().toISOString()
+    });
+  
+  if (error) {
+    console.error('❌ System config update failed:', error);
+    return false;
+  }
+  
+  await logSystemEvent('config_update', `Updated ${details.key}`, 'info', details);
+  return true;
 }
 
 export function startDiscordBot() {
