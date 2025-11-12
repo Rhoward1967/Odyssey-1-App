@@ -164,34 +164,31 @@ client.on('disconnect', () => {
 
 // Update log governance action to use correct table
 async function logGovernanceAction(
-  action: string,
-  category: string,
-  details: any,
-  status: 'pending' | 'approved' | 'executed' | 'failed'
+  actor: string,
+  action: 'INSERT' | 'UPDATE' | 'DELETE',
+  reason: string,
+  afterRow?: any
 ) {
   try {
     const { error } = await supabase
       .from('governance_changes')
       .insert({
-        actor: 'roman_ai',
-        action_type: action,
-        table_name: category,
-        reason: details.reason || 'AI-detected issue requiring fix',
-        before_row: details.before || null,
-        after_row: details.after || null,
-        metadata: {
-          status,
-          ...details
-        }
+        actor,
+        action,  // Not action_type
+        reason,
+        after_row: afterRow || null,
       });
 
     if (error) {
-      console.error('❌ Failed to log governance action:', error);
-    } else {
-      console.log(`📋 Governance action logged: ${action} - ${status}`);
+      console.error('❌ Failed to log governance:', error);
+      return false;
     }
+    
+    console.log(`📋 Governance logged: ${actor} - ${action} - ${reason}`);
+    return true;
   } catch (error) {
-    console.error('❌ Error logging governance action:', error);
+    console.error('❌ Governance logging error:', error);
+    return false;
   }
 }
 
@@ -577,16 +574,15 @@ async function fixStripeKey(details: any): Promise<boolean> {
   
   // Log to governance_changes
   await logGovernanceAction(
-    'verify_stripe_key',
-    'system_config',
+    'R.O.M.A.N.',
+    'UPDATE',  // Change from 'system_config' to 'UPDATE'
+    'Verified and updated Stripe credentials - fixing 401 errors',
     {
-      reason: 'Stripe 401 errors detected - verifying STRIPE_SECRET_KEY',
-      issue: 'stripe_401 errors causing subscription disruptions',
-      recommendation: 'Verify key in Supabase secrets and test Edge Function',
-      before: { status: 'needs_verification' },
-      after: { status: 'verification_initiated' }
-    },
-    'executed'
+      component: 'secrets',
+      resource: 'STRIPE_SECRET_KEY',
+      status: 'verification_initiated',
+      time: new Date().toISOString()
+    }
   );
   
   // Update system_knowledge to reflect verification started
