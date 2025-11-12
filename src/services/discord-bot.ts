@@ -464,16 +464,15 @@ async function handleDirectMessage(message: Message) {
     enhancedMessage += `\n[FIX EXECUTED]\nYou just executed a fix in response to user approval.\nResult: ${fixResult}\nAcknowledge this execution and report the results to the user.\n`;
   }
   
-  // If asking about governance/monitoring, show the actual data
-  const monitorPattern = /(?:governance|activity|activities|report|monitor|status|what have you|recent fix)/i;
-  if (monitorPattern.test(message.content)) {
-    enhancedMessage += `\n=== GOVERNANCE CHANGES (Last 10) ===\n`;
+  // If asking about governance specifically, show actual data
+  const governancePattern = /(?:governance|recent changes|what.*changed|latest.*actions)/i;
+  if (governancePattern.test(message.content)) {
+    enhancedMessage += `\n=== RECENT GOVERNANCE CHANGES ===\n`;
     systemContext.governanceChanges.forEach((change: any, i: number) => {
-      enhancedMessage += `${i + 1}. ${change.action_type} on ${change.table_name}\n`;
-      enhancedMessage += `   Actor: ${change.actor}\n`;
-      enhancedMessage += `   Reason: ${change.reason}\n`;
-      enhancedMessage += `   Time: ${change.created_at}\n`;
+      enhancedMessage += `${i + 1}. ${change.actor}: ${change.reason}\n`;
+      enhancedMessage += `   Action: ${change.action} at ${new Date(change.occurred_at).toLocaleString()}\n`;
     });
+    enhancedMessage += `\nReport these changes to the user with details.\n`;
   }
   
   // Add governance instructions
