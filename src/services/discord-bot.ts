@@ -162,6 +162,39 @@ client.on('disconnect', () => {
   console.log('⚠️ Discord bot disconnected');
 });
 
+// Update log governance action to use correct table
+async function logGovernanceAction(
+  action: string,
+  category: string,
+  details: any,
+  status: 'pending' | 'approved' | 'executed' | 'failed'
+) {
+  try {
+    const { error } = await supabase
+      .from('governance_changes')
+      .insert({
+        actor: 'roman_ai',
+        action_type: action,
+        table_name: category,
+        reason: details.reason || 'AI-detected issue requiring fix',
+        before_row: details.before || null,
+        after_row: details.after || null,
+        metadata: {
+          status,
+          ...details
+        }
+      });
+
+    if (error) {
+      console.error('❌ Failed to log governance action:', error);
+    } else {
+      console.log(`📋 Governance action logged: ${action} - ${status}`);
+    }
+  } catch (error) {
+    console.error('❌ Error logging governance action:', error);
+  }
+}
+
 async function getSystemContext() {
   try {
     console.log('📊 Fetching system context from database...');
@@ -196,18 +229,35 @@ async function getSystemContext() {
       .order('updated_at', { ascending: false })
       .limit(20);
     
+    // Get governance activities
+    const { data: governanceLog, error: govError } = await supabase
+      .from('governance_log')
+      .select('*')
+      .order('executed_at', { ascending: false })
+      .limit(10);
+    
+    // Get governance changes (correct table name)
+    const { data: governanceChanges, error: govChangesError } = await supabase
+      .from('governance_changes')
+      .select('*')
+      .order('changed_at', { ascending: false })
+      .limit(10);
+    
+    console.log('🏛️ Governance:', govChangesError ? `FAILED: ${govChangesError.message}` : `SUCCESS: ${governanceChanges?.length} changes`);
+    
     const context = {
       tables: tables,
       recentLogs: logs || [],
-      systemKnowledge: knowledge || []
+      systemKnowledge: knowledge || [],
+      governanceChanges: governanceChanges || []
     };
     
-    console.log(`✅ Context: ${context.tables.length} tables, ${context.recentLogs.length} logs, ${context.systemKnowledge.length} knowledge`);
+    console.log(`✅ Context: ${context.tables.length} tables, ${context.recentLogs.length} logs, ${context.systemKnowledge.length} knowledge, ${context.governanceChanges.length} governance`);
     
     return context;
   } catch (error) {
     console.error('❌ Error in getSystemContext:', error);
-    return { tables: [], recentLogs: [], systemKnowledge: [] };
+    return { tables: [], recentLogs: [], systemKnowledge: [], governanceChanges: [] };
   }
 }
 
@@ -399,21 +449,22 @@ async function handleDirectMessage(message: Message) {
   // Get system context
   const systemContext = await getSystemContext();
   
-  // Enhanced user message with optimized data
   let enhancedMessage = `${message.content}\n\n[SYSTEM CONTEXT]\n`;
+  enhancedMessage += `Tables: ${systemContext.tables.length}\n`;
+  enhancedMessage += `Recent Logs: ${systemContext.recentLogs.length} entries\n`;
+  enhancedMessage += `System Knowledge: ${systemContext.systemKnowledge.length} entries\n`;
+  enhancedMessage += `Governance Changes: ${systemContext.governanceChanges.length} recent actions\n`;
   
-  if (isAnalysisCommand) {
-    // Send summarized knowledge, not full JSON to save tokens
-    enhancedMessage += `\n=== SYSTEM KNOWLEDGE (${systemContext.systemKnowledge.length} entries) ===\n`;
-    systemContext.systemKnowledge.forEach((k: any, i: number) => {
-      const valuePreview = typeof k.value === 'string' 
-        ? k.value.substring(0, 100) 
-        : JSON.stringify(k.value).substring(0, 100);
-      enhancedMessage += `${i + 1}. [${k.category}] ${k.knowledge_key}: ${valuePreview}...\n`;
+  // If asking about governance/monitoring, show the actual data
+  const monitorPattern = /(?:governance|activity|activities|report|monitor|status|what have you|recent fix)/i;
+  if (monitorPattern.test(message.content)) {
+    enhancedMessage += `\n=== GOVERNANCE CHANGES (Last 10) ===\n`;
+    systemContext.governanceChanges.forEach((change: any, i: number) => {
+      enhancedMessage += `${i + 1}. ${change.action_type} on ${change.table_name}\n`;
+      enhancedMessage += `   Actor: ${change.actor}\n`;
+      enhancedMessage += `   Reason: ${change.reason}\n`;
+      enhancedMessage += `   Time: ${change.changed_at}\n`;
     });
-  } else {
-    // Normal summary
-    enhancedMessage += `Tables: ${systemContext.tables.length} | Logs: ${systemContext.recentLogs.length} | Knowledge: ${systemContext.systemKnowledge.length}\n`;
   }
   
   // Add governance instructions
@@ -526,191 +577,41 @@ async function checkGovernanceApproval(action: string, category: string): Promis
   }
 }
 
-// Add function to log governance actions
-async function logGovernanceAction(
-  action: string,
-  category: string,
-  details: any,
-  status: 'pending' | 'approved' | 'executed' | 'failed'
-) {
-  try {
-    const { error } = await supabase
-      .from('governance_log')
-      .insert({
-        action_type: action,
-        category,
-        details,
-        status,
-        executed_by: 'roman_ai',
-        executed_at: new Date().toISOString()
-      });
-
-    if (error) {
-      console.error('❌ Failed to log governance action:', error);
-    } else {
-      console.log(`📋 Governance action logged: ${action} - ${status}`);
-    }
-  } catch (error) {
-    console.error('❌ Error logging governance action:', error);
-  }
-}
-
-// Add global fix execution capability
-async function executeGlobalFix(fixType: string, details: any): Promise<boolean> {
-  try {
-    console.log(`🔧 Executing global fix: ${fixType}`);
-
-    switch (fixType) {
-      case 'update_env_variable':
-        return await fixEnvironmentVariable(details);
-      
-      case 'update_stripe_key':
-        return await fixStripeKey(details);
-      
-      case 'fix_rls_policy':
-        return await fixRLSPolicy(details);
-      
-      case 'optimize_query':
-        return await optimizeQuery(details);
-      
-      case 'fix_edge_function':
-        return await fixEdgeFunction(details);
-      
-      case 'update_system_config':
-        return await updateSystemConfig(details);
-      
-      default:
-        console.error(`❌ Unknown fix type: ${fixType}`);
-        return false;
-    }
-  } catch (error) {
-    console.error(`❌ Error executing fix ${fixType}:`, error);
-    return false;
-  }
-}
-
-// Implement specific fix functions
-async function fixEnvironmentVariable(details: any): Promise<boolean> {
-  console.log('🔧 Fixing environment variable...');
-  await logSystemEvent('env_fix', `Updating ${details.variable}`, 'info', details);
-  
-  // Store recommendation in system_knowledge
-  await storeKnowledge(
-    'environment_fixes',
-    `${details.variable}_fix`,
-    {
-      variable: details.variable,
-      issue: details.issue,
-      recommendation: details.recommendation,
-      timestamp: new Date().toISOString()
-    },
-    'governance_system'
-  );
-  
-  return true;
-}
-
+// Update Stripe fix to log properly
 async function fixStripeKey(details: any): Promise<boolean> {
   console.log('🔧 Analyzing Stripe key configuration...');
   
   await logSystemEvent('stripe_fix', 'Stripe key verification initiated', 'info', details);
   
-  await storeKnowledge(
-    'api_fixes',
-    'stripe_key_verification',
+  // Log to governance_changes
+  await logGovernanceAction(
+    'verify_stripe_key',
+    'system_config',
     {
-      issue: 'Stripe 401 errors',
-      status: 'verification_needed',
-      steps: [
-        'Verify STRIPE_SECRET_KEY in Supabase secrets',
-        'Check key format (starts with sk_live_ or sk_test_)',
-        'Ensure key matches Stripe dashboard',
-        'Test with simple API call'
-      ],
-      timestamp: new Date().toISOString()
+      reason: 'Stripe 401 errors detected - verifying STRIPE_SECRET_KEY',
+      issue: 'stripe_401 errors causing subscription disruptions',
+      recommendation: 'Verify key in Supabase secrets and test Edge Function',
+      before: { status: 'needs_verification' },
+      after: { status: 'verification_initiated' }
+    },
+    'executed'
+  );
+  
+  // Update system_knowledge to reflect verification started
+  await storeKnowledge(
+    'environment',
+    'api_keys_and_secrets',
+    {
+      STRIPE_SECRET_KEY: {
+        status: 'verification_in_progress',
+        last_checked: new Date().toISOString(),
+        action: 'Master Architect needs to verify key in Supabase dashboard',
+        note: 'R.O.M.A.N. detected issue and initiated verification process'
+      }
     },
     'governance_system'
   );
   
-  return true;
-}
-
-async function fixRLSPolicy(details: any): Promise<boolean> {
-  console.log('🔧 Fixing RLS policy...');
-  
-  await logSystemEvent('rls_fix', `Updating RLS for ${details.table}`, 'info', details);
-  
-  // Log the policy issue and recommendation
-  await storeKnowledge(
-    'security_fixes',
-    `rls_${details.table}`,
-    {
-      table: details.table,
-      issue: details.issue,
-      recommendation: details.recommendation,
-      timestamp: new Date().toISOString()
-    },
-    'governance_system'
-  );
-  
-  return true;
-}
-
-async function optimizeQuery(details: any): Promise<boolean> {
-  console.log('🔧 Optimizing database query...');
-  
-  await storeKnowledge(
-    'performance_fixes',
-    `query_optimization_${details.table}`,
-    {
-      table: details.table,
-      issue: details.issue,
-      optimization: details.optimization,
-      timestamp: new Date().toISOString()
-    },
-    'governance_system'
-  );
-  
-  return true;
-}
-
-async function fixEdgeFunction(details: any): Promise<boolean> {
-  console.log('🔧 Fixing edge function...');
-  
-  await logSystemEvent('edge_function_fix', `Fixing ${details.function}`, 'info', details);
-  
-  await storeKnowledge(
-    'edge_function_fixes',
-    details.function,
-    {
-      function: details.function,
-      issue: details.issue,
-      fix: details.fix,
-      timestamp: new Date().toISOString()
-    },
-    'governance_system'
-  );
-  
-  return true;
-}
-
-async function updateSystemConfig(details: any): Promise<boolean> {
-  console.log('🔧 Updating system configuration...');
-  
-  const { error } = await supabase
-    .from('system_config')
-    .upsert({
-      key: details.key,
-      value: details.value,
-      updated_at: new Date().toISOString()
-    });
-  
-  if (error) {
-    console.error('❌ System config update failed:', error);
-    return false;
-  }
-  
-  await logSystemEvent('config_update', `Updated ${details.key}`, 'info', details);
   return true;
 }
 
