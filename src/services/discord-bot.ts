@@ -199,8 +199,8 @@ async function getSystemContext() {
   try {
     console.log('📊 Fetching system context from database...');
     
-    // Known tables including governance (Supabase confirmed these exist)
-    const knownTables = [
+    // Comprehensive table list (Supabase confirmed these exist)
+    const allKnownTables = [
       'appointments', 'businesses', 'customers', 'employees', 'books',
       'governance_changes', 'governance_principles', 
       'roman_audit_log', 'roman_commands',
@@ -208,8 +208,8 @@ async function getSystemContext() {
       'system_config', 'system_knowledge', 'system_logs', 'time_entries'
     ];
     
-    const tables = knownTables.map(t => ({ table_name: t }));
-    console.log(`✅ Using known table list: ${tables.length} tables (4 governance)`);
+    const tables = allKnownTables.map(name => ({ table_name: name }));
+    console.log(`✅ Using comprehensive table list: ${tables.length} tables (includes 4 governance tables)`);
 
     // Get recent system logs
     const { data: logs, error: logsError } = await supabase
@@ -232,20 +232,25 @@ async function getSystemContext() {
       .order('executed_at', { ascending: false })
       .limit(10);
     
-    // Get governance changes (correct table name)
-    const { data: governanceChanges, error: govChangesError } = await supabase
+    // Query governance_changes with correct column name
+    console.log('🏛️ Fetching governance_changes...');
+    const { data: govChanges, error: govChangesError } = await supabase
       .from('governance_changes')
       .select('*')
-      .order('changed_at', { ascending: false })
+      .order('created_at', { ascending: false })
       .limit(10);
     
-    console.log('🏛️ Governance:', govChangesError ? `FAILED: ${govChangesError.message}` : `SUCCESS: ${governanceChanges?.length} changes`);
+    if (govChangesError) {
+      console.error('❌ Governance query failed:', govChangesError.message);
+    } else {
+      console.log(`✅ Governance: ${govChanges?.length || 0} recent changes`);
+    }
     
     const context = {
       tables: tables,
       recentLogs: logs || [],
       systemKnowledge: knowledge || [],
-      governanceChanges: governanceChanges || []
+      governanceChanges: govChanges || []
     };
     
     console.log(`✅ Context: ${context.tables.length} tables, ${context.recentLogs.length} logs, ${context.systemKnowledge.length} knowledge, ${context.governanceChanges.length} governance`);
@@ -471,7 +476,7 @@ async function handleDirectMessage(message: Message) {
       enhancedMessage += `${i + 1}. ${change.action_type} on ${change.table_name}\n`;
       enhancedMessage += `   Actor: ${change.actor}\n`;
       enhancedMessage += `   Reason: ${change.reason}\n`;
-      enhancedMessage += `   Time: ${change.changed_at}\n`;
+      enhancedMessage += `   Time: ${change.created_at}\n`;
     });
   }
   
