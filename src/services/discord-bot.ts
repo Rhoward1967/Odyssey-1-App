@@ -410,76 +410,58 @@ async function handleDirectMessage(message: Message) {
   
   console.log(`🔍 Checking message for approval pattern: "${message.content}"`);
   
-  // Check for approval commands with ACTUAL fix execution
+  // Check for approval commands FIRST, before GPT-4 call
   const approvalPattern = /^(approve|yes|confirmed?|proceed|do it|fix it|go ahead)/i;
   const isApproval = approvalPattern.test(message.content.trim());
   
   console.log(`   Approval pattern match: ${isApproval}`);
   
+  let fixExecuted = false;
+  let fixResult = '';
+  
   if (isApproval) {
     console.log('🎯 APPROVAL DETECTED - EXECUTING FIX');
     
-    // ACTUALLY EXECUTE the Stripe fix
-    console.log('🔧 Calling fixStripeKey function...');
-    const fixResult = await fixStripeKey({
-      reason: 'User approved Stripe 401 error fix',
-      userId,
-      approvedAt: new Date().toISOString()
-    });
-    
-    console.log(`✅ Fix result: ${fixResult ? 'SUCCESS' : 'FAILED'}`);
-  }
-  
-  // Check for fix commands
-  const fixPattern = /(?:fix|repair|resolve|correct|update)\s+(.+)/i;
-  const fixMatch = message.content.match(fixPattern);
-  
-  if (fixMatch) {
-    const fixTarget = fixMatch[1].toLowerCase();
-    
-    // Check governance approval
-    const hasApproval = await checkGovernanceApproval('auto_fix', 'system');
-    
-    if (hasApproval) {
-      await logGovernanceAction('auto_fix', 'system', { target: fixTarget }, 'executed');
-      // R.O.M.A.N. can proceed with approved fixes
-    } else {
-      await logGovernanceAction('auto_fix', 'system', { target: fixTarget }, 'pending');
-      // R.O.M.A.N. will ask for approval first
+    try {
+      // ACTUALLY EXECUTE the Stripe fix
+      console.log('🔧 Calling fixStripeKey function...');
+      const success = await fixStripeKey({
+        reason: 'User approved Stripe 401 error fix',
+        userId,
+        approvedAt: new Date().toISOString()
+      });
+      
+      console.log(`✅ Fix result: ${success ? 'SUCCESS' : 'FAILED'}`);
+      fixExecuted = true;
+      fixResult = success ? 'Stripe key verification initiated and logged to governance' : 'Fix failed to execute';
+    } catch (error) {
+      console.error('❌ Fix execution error:', error);
+      fixResult = `Fix execution error: ${error}`;
     }
   }
   
-  // Check for direct commands/directives
-  const commandPattern = /^R\.O\.M\.A\.N\.|^@R\.O\.M\.A\.N\.|^roman[,:]?\s*/i;
-  const isDirective = commandPattern.test(message.content);
-  
-  if (isDirective) {
-    await logSystemEvent('directive', `Directive received: ${message.content}`, 'info', { userId });
+  // Get or create conversation history
+  if (!conversationHistory.has(userId)) {
+    conversationHistory.set(userId, [
+      { role: "system", content: ROMAN_SYSTEM_PROMPT }
+    ]);
   }
   
-  // Check for learning/analysis commands
-  const analysisPattern = /(?:analyze|find issues|check system|scan for|detect problems)/i;
-  const isAnalysisCommand = analysisPattern.test(message.content);
+  const history: ChatCompletionMessageParam[] = conversationHistory.get(userId)!;
   
+  // Get system context
   const systemContext = await getSystemContext();
   
-  let enhancedMessage = `${message.content}\n\n[SYSTEM CONTEXT - REAL DATA]\n`;
+  // Enhanced user message
+  let enhancedMessage = `${message.content}\n\n[SYSTEM CONTEXT]\n`;
+  enhancedMessage += `Tables: ${systemContext.tables.length}\n`;
+  enhancedMessage += `Recent Logs: ${systemContext.recentLogs.length} entries\n`;
+  enhancedMessage += `System Knowledge: ${systemContext.systemKnowledge.length} entries\n`;
+  enhancedMessage += `Governance Changes: ${systemContext.governanceChanges.length} recent actions\n`;
   
-  if (isAnalysisCommand) {
-    enhancedMessage += `\n=== SYSTEM KNOWLEDGE (${systemContext.systemKnowledge.length} entries) - ANALYZE THIS DATA ===\n`;
-    systemContext.systemKnowledge.forEach((k: any, i: number) => {
-      enhancedMessage += `${i + 1}. [${k.category}] ${k.knowledge_key}\n`;
-      const valueStr = JSON.stringify(k.value);
-      enhancedMessage += `   Content: ${valueStr.substring(0, 200)}...\n`;
-      // Highlight known issues
-      if (k.knowledge_key === 'known_issues' || k.category === 'error_patterns') {
-        enhancedMessage += `   ⚠️ THIS ENTRY CONTAINS SYSTEM ISSUES TO FIX\n`;
-      }
-    });
-    
-    enhancedMessage += `\nYou are analyzing REAL system data. Look for entries with 'known_issues', 'error_patterns', or issues in the data above. Report them with the governance protocol.`;
-  } else {
-    enhancedMessage += `Tables: ${systemContext.tables.length} | Logs: ${systemContext.recentLogs.length} | Knowledge: ${systemContext.systemKnowledge.length} | Governance: ${systemContext.governanceChanges.length}\n`;
+  // If fix was executed, tell GPT-4 about it
+  if (fixExecuted) {
+    enhancedMessage += `\n[FIX EXECUTED]\nYou just executed a fix in response to user approval.\nResult: ${fixResult}\nAcknowledge this execution and report the results to the user.\n`;
   }
   
   // If asking about governance/monitoring, show the actual data
@@ -534,14 +516,6 @@ You have Constitutional AI governance with the following capabilities:
 You are EMPOWERED to fix issues with proper governance oversight.`;
   
   enhancedMessage += governanceContext;
-  
-  if (!conversationHistory.has(userId)) {
-    conversationHistory.set(userId, [
-      { role: "system", content: ROMAN_SYSTEM_PROMPT }
-    ]);
-  }
-  
-  const history: ChatCompletionMessageParam[] = conversationHistory.get(userId)!;
   
   history.push({ role: "user", content: enhancedMessage });
   
