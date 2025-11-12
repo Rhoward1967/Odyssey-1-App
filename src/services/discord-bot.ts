@@ -237,7 +237,7 @@ async function getSystemContext() {
     const { data: govChanges, error: govChangesError } = await supabase
       .from('governance_changes')
       .select('*')
-      .order('created_at', { ascending: false })
+      .order('occurred_at', { ascending: false })
       .limit(10);
     
     if (govChangesError) {
