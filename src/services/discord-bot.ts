@@ -408,26 +408,26 @@ async function handleDirectMessage(message: Message) {
     { userId, channelType: message.channel.type }
   );
   
+  console.log(`🔍 Checking message for approval pattern: "${message.content}"`);
+  
   // Check for approval commands with ACTUAL fix execution
   const approvalPattern = /^(approve|yes|confirmed?|proceed|do it|fix it|go ahead)/i;
+  const isApproval = approvalPattern.test(message.content.trim());
   
-  if (approvalPattern.test(message.content.trim())) {
-    console.log('✅ USER APPROVED - EXECUTING FIX');
-    await logSystemEvent('approval', `User approved action: ${message.content}`, 'info', { userId });
+  console.log(`   Approval pattern match: ${isApproval}`);
+  
+  if (isApproval) {
+    console.log('🎯 APPROVAL DETECTED - EXECUTING FIX');
     
     // ACTUALLY EXECUTE the Stripe fix
-    console.log('🔧 Executing Stripe key verification fix...');
+    console.log('🔧 Calling fixStripeKey function...');
     const fixResult = await fixStripeKey({
       reason: 'User approved Stripe 401 error fix',
       userId,
       approvedAt: new Date().toISOString()
     });
     
-    if (fixResult) {
-      console.log('✅ Fix execution completed');
-    } else {
-      console.error('❌ Fix execution failed');
-    }
+    console.log(`✅ Fix result: ${fixResult ? 'SUCCESS' : 'FAILED'}`);
   }
   
   // Check for fix commands
