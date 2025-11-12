@@ -166,23 +166,21 @@ async function getSystemContext() {
   try {
     console.log('📊 Fetching system context from database...');
     
-    // Test with a simple count query first
-    const { count: logsCount, error: countError } = await supabase
-      .from('system_logs')
-      .select('*', { count: 'exact', head: true });
+    // Get ALL tables from information_schema
+    const { data: allTables, error: tablesError } = await supabase
+      .rpc('exec_sql', {
+        query: `SELECT tablename FROM pg_tables WHERE schemaname = 'public' ORDER BY tablename`
+      });
     
-    console.log('📊 system_logs count:', countError ? `ERROR: ${countError.message}` : `${logsCount} records`);
-    
-    if (countError) {
-      console.error('Full error:', JSON.stringify(countError, null, 2));
-    }
-    
-    // Manually define known tables since information_schema query isn't working
+    // If RPC doesn't work, use known table list including governance
     const knownTables = [
-      'system_logs', 'system_knowledge', 'profiles', 'subscriptions', 
+      'system_logs', 'system_knowledge', 'profiles', 'subscriptions',
       'businesses', 'system_config', 'stripe_events', 'appointments',
-      'employees', 'time_entries', 'services', 'customers'
+      'employees', 'time_entries', 'services', 'customers',
+      'governance_approvals', 'governance_log', 'governance_rules'
     ];
+    
+    const tables = allTables || knownTables.map(t => ({ table_name: t }));
     
     // Get recent system logs
     const { data: logs, error: logsError } = await supabase
@@ -199,7 +197,7 @@ async function getSystemContext() {
       .limit(20);
     
     const context = {
-      tables: knownTables.map(t => ({ table_name: t })),
+      tables: tables,
       recentLogs: logs || [],
       systemKnowledge: knowledge || []
     };
@@ -209,11 +207,7 @@ async function getSystemContext() {
     return context;
   } catch (error) {
     console.error('❌ Error in getSystemContext:', error);
-    return { 
-      tables: [], 
-      recentLogs: [], 
-      systemKnowledge: [] 
-    };
+    return { tables: [], recentLogs: [], systemKnowledge: [] };
   }
 }
 
@@ -351,31 +345,7 @@ client.on('disconnect', () => {
   console.log('⚠️ Discord bot disconnected');
 });
 
-// Add function to execute learning queries
-async function executeDeepLearning() {
-  try {
-    console.log('🧠 R.O.M.A.N. executing deep learning...');
-    
-    // Query all system knowledge
-    const { data: allKnowledge, error } = await supabase
-      .from('system_knowledge')
-      .select('*')
-      .order('updated_at', { ascending: false });
-    
-    if (error) {
-      console.error('❌ Learning query failed:', error);
-      return null;
-    }
-    
-    console.log(`✅ Retrieved ${allKnowledge?.length} knowledge entries for analysis`);
-    return allKnowledge;
-  } catch (error) {
-    console.error('❌ Deep learning error:', error);
-    return null;
-  }
-}
-
-// Add approval/directive pattern matching
+// Add monitoring command handler
 async function handleDirectMessage(message: Message) {
   const userId = message.author.id;
   
