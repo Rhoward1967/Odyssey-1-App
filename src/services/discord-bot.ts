@@ -408,42 +408,36 @@ async function handleDirectMessage(message: Message) {
     { userId, channelType: message.channel.type }
   );
   
-  console.log(`🔍 Checking message for approval pattern: "${message.content}"`);
+  console.log(`🔍 Checking message for approval: "${message.content}"`);
   
-  // Check for approval commands FIRST
+  // CHECK FOR APPROVAL FIRST - BEFORE GPT-4
   const approvalPattern = /^(approve|yes|confirmed?|proceed|do it|fix it|go ahead)/i;
   const isApproval = approvalPattern.test(message.content.trim());
   
-  console.log(`   Approval pattern match: ${isApproval}`);
+  console.log(`   Approval match: ${isApproval}`);
   
-  let executionResults = '';
+  let executionResult = '';
   
   if (isApproval) {
-    console.log('🎯 APPROVAL DETECTED - EXECUTING PENDING FIX');
-    
+    console.log('🎯 APPROVAL DETECTED - EXECUTING FIX NOW');
     try {
-      // Execute Stripe fix
-      console.log('🔧 Executing Stripe key verification...');
       const success = await fixStripeKey({
-        reason: 'User approved Stripe 401 error fix',
+        reason: 'User approved fix',
         userId,
-        approvedAt: new Date().toISOString()
+        timestamp: new Date().toISOString()
       });
       
-      if (success) {
-        console.log('✅ Fix executed successfully');
-        executionResults = `\n[ACTUAL EXECUTION COMPLETED]\nStripe key verification was executed and logged to governance_changes.\nYou can confirm by checking governance_changes table.\n`;
-      } else {
-        console.log('❌ Fix execution failed');
-        executionResults = `\n[EXECUTION FAILED]\nThe fix could not be completed. Check system logs.\n`;
-      }
+      console.log(`✅ Execution result: ${success}`);
+      executionResult = success 
+        ? '\n[EXECUTION COMPLETED]\nFix was executed and logged to governance_changes.\n'
+        : '\n[EXECUTION FAILED]\nFix could not be completed.\n';
     } catch (error) {
-      console.error('❌ Fix execution error:', error);
-      executionResults = `\n[EXECUTION ERROR]\n${error}\n`;
+      console.error('❌ Execution error:', error);
+      executionResult = `\n[ERROR]\n${error}\n`;
     }
   }
   
-  // Get or create conversation history
+  // NOW get context and call GPT-4
   if (!conversationHistory.has(userId)) {
     conversationHistory.set(userId, [
       { role: "system", content: ROMAN_SYSTEM_PROMPT }
@@ -452,7 +446,6 @@ async function handleDirectMessage(message: Message) {
   
   const history: ChatCompletionMessageParam[] = conversationHistory.get(userId)!;
   
-  // Get system context
   const systemContext = await getSystemContext();
   
   // Check for analysis commands
@@ -460,6 +453,11 @@ async function handleDirectMessage(message: Message) {
   const isAnalysisCommand = analysisPattern.test(message.content);
   
   let enhancedMessage = `${message.content}\n\n[SYSTEM CONTEXT]\n`;
+  
+  // Add execution result FIRST if it happened
+  if (executionResult) {
+    enhancedMessage += executionResult;
+  }
   
   if (isAnalysisCommand) {
     enhancedMessage += `\n=== SYSTEM KNOWLEDGE - DETAILED ANALYSIS ===\n`;
@@ -474,12 +472,6 @@ async function handleDirectMessage(message: Message) {
     enhancedMessage += `\nReview entries marked ⚠️ and propose fixes with governance protocol.\n`;
   } else {
     enhancedMessage += `Tables: ${systemContext.tables.length} | Governance: ${systemContext.governanceChanges.length}\n`;
-  }
-  
-  // Add execution results if any
-  if (executionResults) {
-    enhancedMessage += executionResults;
-    enhancedMessage += `Acknowledge the actual execution and report what was logged to governance.\n`;
   }
   
   // If asking about governance specifically, show actual data
