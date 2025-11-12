@@ -443,17 +443,29 @@ async function handleDirectMessage(message: Message) {
   }
   
   // Check for learning/analysis commands
-  const analysisPattern = /(?:analyze|learn|study|examine|review|deep learn|understand all)/i;
+  const analysisPattern = /(?:analyze|find issues|check system|scan for|detect problems)/i;
   const isAnalysisCommand = analysisPattern.test(message.content);
   
-  // Get system context
   const systemContext = await getSystemContext();
   
-  let enhancedMessage = `${message.content}\n\n[SYSTEM CONTEXT]\n`;
-  enhancedMessage += `Tables: ${systemContext.tables.length}\n`;
-  enhancedMessage += `Recent Logs: ${systemContext.recentLogs.length} entries\n`;
-  enhancedMessage += `System Knowledge: ${systemContext.systemKnowledge.length} entries\n`;
-  enhancedMessage += `Governance Changes: ${systemContext.governanceChanges.length} recent actions\n`;
+  let enhancedMessage = `${message.content}\n\n[SYSTEM CONTEXT - REAL DATA]\n`;
+  
+  if (isAnalysisCommand) {
+    enhancedMessage += `\n=== SYSTEM KNOWLEDGE (${systemContext.systemKnowledge.length} entries) - ANALYZE THIS DATA ===\n`;
+    systemContext.systemKnowledge.forEach((k: any, i: number) => {
+      enhancedMessage += `${i + 1}. [${k.category}] ${k.knowledge_key}\n`;
+      const valueStr = JSON.stringify(k.value);
+      enhancedMessage += `   Content: ${valueStr.substring(0, 200)}...\n`;
+      // Highlight known issues
+      if (k.knowledge_key === 'known_issues' || k.category === 'error_patterns') {
+        enhancedMessage += `   ⚠️ THIS ENTRY CONTAINS SYSTEM ISSUES TO FIX\n`;
+      }
+    });
+    
+    enhancedMessage += `\nYou are analyzing REAL system data. Look for entries with 'known_issues', 'error_patterns', or issues in the data above. Report them with the governance protocol.`;
+  } else {
+    enhancedMessage += `Tables: ${systemContext.tables.length} | Logs: ${systemContext.recentLogs.length} | Knowledge: ${systemContext.systemKnowledge.length} | Governance: ${systemContext.governanceChanges.length}\n`;
+  }
   
   // If asking about governance/monitoring, show the actual data
   const monitorPattern = /(?:governance|activity|activities|report|monitor|status|what have you|recent fix)/i;
