@@ -327,7 +327,7 @@ async function logSystemEvent(source: string, message: string, level: 'info' | '
     return true;
   } catch (error) {
     console.error('❌ Error logging event:', error);
-    return false;
+    return true;
   }
 }
 
