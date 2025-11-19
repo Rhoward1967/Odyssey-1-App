@@ -2,7 +2,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAPI } from '@/contexts/APIContext';
-import { Activity, AlertTriangle, CheckCircle, RefreshCw, XCircle, Zap } from 'lucide-react';
+import { Activity, CheckCircle, RefreshCw, XCircle, Zap } from 'lucide-react';
 
 export default function APIStatusIndicator() {
   const { capabilities, hasCapability, refreshCapabilities, isLoading } = useAPI();
@@ -127,21 +127,6 @@ export default function APIStatusIndicator() {
             </div>
           </div>
         )}
-
-        {/* Critical Security Alert */}
-        <div className="bg-red-50 p-4 rounded-lg border border-red-200">
-          <h4 className="font-semibold text-red-800 mb-2">🚨 Security Alert: ACTIVE</h4>
-          <div className="space-y-1 text-sm">
-            <div className="flex items-center gap-2">
-              <AlertTriangle className="h-4 w-4 text-red-600" />
-              <span>2 SECURITY DEFINER views detected</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <XCircle className="h-4 w-4 text-red-600" />
-              <span>R.O.M.A.N. deployment: BLOCKED</span>
-            </div>
-          </div>
-        </div>
 
         {/* Enhancement Notice */}
         <div className="bg-blue-50 p-3 rounded-lg">

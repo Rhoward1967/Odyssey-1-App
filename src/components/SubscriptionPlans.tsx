@@ -46,12 +46,16 @@ const tiers = [
 
 export default function SubscriptionPlans() {
   const [billingPeriod, setBillingPeriod] = useState<'monthly' | 'annual'>('monthly');
+  const [isRedirecting, setIsRedirecting] = useState(false);
   const navigate = useNavigate();
 
   const handleSelectPlan = (tierName: string, price: number) => {
-    console.log('Plan button clicked:', { tierName, price });
+    console.log('✅ Plan button clicked:', { tierName, price });
+    console.log('📍 Navigating to /app/profile with state...');
     
-    navigate('/profile', {
+    setIsRedirecting(true);
+    
+    navigate('/app/profile', {
       state: {
         selectedTier: tierName,
         selectedPrice: `$${price}`,
@@ -179,9 +183,10 @@ export default function SubscriptionPlans() {
                   className="w-full"
                   variant={plan.popular ? 'default' : 'outline'}
                   onClick={() => handleSelectPlan(plan.name, plan.price)}
+                  disabled={isRedirecting}
                   type="button"
                 >
-                  {plan.popular ? 'Most Popular' : 'Get Started'}
+                  {isRedirecting ? 'Redirecting...' : (plan.popular ? 'Most Popular' : 'Get Started')}
                 </Button>
               </CardFooter>
             </Card>

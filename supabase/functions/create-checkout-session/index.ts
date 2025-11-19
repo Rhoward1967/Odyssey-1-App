@@ -34,17 +34,27 @@ serve(async (req) => {
     console.log('🎯 Tier:', tier);
     console.log('💵 Price:', price);
 
-    // Map tiers to your actual Stripe price IDs
+    // Get price IDs from environment variables
+    const priceId99 = Deno.env.get('STRIPE_PRICE_ID_99');
+    const priceId299 = Deno.env.get('STRIPE_PRICE_ID_299');
+    const priceId999 = Deno.env.get('STRIPE_PRICE_ID_999');
+
+    console.log('🔍 Available price IDs:', { priceId99, priceId299, priceId999 });
+
+    // Map tiers to price IDs
     let priceId: string;
     
-    if (price === '99' || tier === 'Professional') {
-      priceId = 'price_1S45KEDPqeWRzwCXi6awuzd4';
+    if (price === '99' || tier === 'Basic' || tier === 'ODYSSEY Basic') {
+      if (!priceId99) throw new Error('STRIPE_PRICE_ID_99 not configured');
+      priceId = priceId99;
       console.log('💰 Selected $99 tier');
-    } else if (price === '299' || tier === 'Business') {
-      priceId = 'price_1S45LLDPqeWRzwCXNSNtLlm0';
+    } else if (price === '299' || tier === 'Professional' || tier === 'ODYSSEY Professional') {
+      if (!priceId299) throw new Error('STRIPE_PRICE_ID_299 not configured');
+      priceId = priceId299;
       console.log('💰 Selected $299 tier');
-    } else if (price === '999' || tier === 'Enterprise') {
-      priceId = 'price_1S45NMDPqeWRzwCXMTAOnP5b';
+    } else if (price === '999' || tier === 'Enterprise' || tier === 'ODYSSEY Enterprise') {
+      if (!priceId999) throw new Error('STRIPE_PRICE_ID_999 not configured');
+      priceId = priceId999;
       console.log('💰 Selected $999 tier');
     } else {
       console.error('❌ Invalid tier/price combination:', { tier, price });

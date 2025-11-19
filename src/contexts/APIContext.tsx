@@ -1,4 +1,3 @@
-import { supabase } from '@/lib/supabase';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
 interface APICapabilities {
@@ -46,42 +45,60 @@ export function APIProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   const checkCapabilities = async () => {
-    const errorDetails: string[] = [];
-    
+    setIsLoading(true);
     try {
-      // TEST 1: RPC call (correct way)
-      const { data: isAdmin, error: adminError } = await supabase
-        .rpc('is_user_org_admin');
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://tvsxloejfsrdganemsmg.supabase.co';
+      const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR2c3hsb2VqZnNyZGdhbmVtc21nIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY3MTg4NDgsImV4cCI6MjA3MjI5NDg0OH0.Lc7jMTuBACILyxksi4Ti4uMNMljNhS3P5OYHPhzm7tY';
       
-      if (adminError) {
-        console.error('❌ Admin RPC error:', adminError);
-        errorDetails.push(`RPC is_user_org_admin: ${adminError.message}`);
-      } else {
-        console.log('✅ RPC is_user_org_admin: Working perfectly', isAdmin);
-      }
+      const url = `${supabaseUrl}/functions/v1/capability-check?quick=1`;
+      console.log('🔍 Calling capability-check:', url);
+      console.log('🔑 Using anon key:', anonKey ? `${anonKey.substring(0, 20)}...` : 'MISSING');
       
-      // TEST 2: Bids table access
-      const { error: bidsError } = await supabase
-        .from('bids')
-        .select('*')
-        .limit(1);
-      
-      if (bidsError) {
-        if (bidsError.code === '42501' || bidsError.message.includes('permission denied')) {
-          console.log('⚠️ Bids table: 401 - Access restricted (expected)');
-        } else {
-          errorDetails.push(`Bids table: ${bidsError.message}`);
+      // Call the capability-check edge function
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'apikey': anonKey,
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${anonKey}`
         }
+      });
+
+      console.log('📡 Response status:', response.status, response.statusText);
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('❌ Response error:', errorText);
+        throw new Error(`Capability check failed: ${response.status} - ${errorText}`);
       }
+
+      const data = await response.json();
+      console.log('📦 Capability data:', data);
       
-      // Report errors if any
-      if (errorDetails.length > 0) {
-        console.log('Critical operation errors:', errorDetails);
-      }
+      // Map the response to capabilities state
+      const newCapabilities: APICapabilities = {
+        openai: data.integrations?.openai?.status === 'ok',
+        anthropic: data.integrations?.anthropic?.status === 'ok',
+        gemini: data.integrations?.gemini?.status === 'ok',
+        google_calendar: data.integrations?.googleCalendar?.status === 'ok',
+        stripe: data.integrations?.stripe?.status === 'ok',
+        twilio: data.integrations?.twilio?.status === 'ok',
+        sam_gov: data.integrations?.samGov?.status === 'ok',
+        arxiv: data.integrations?.arXiv?.status === 'ok',
+        github: data.integrations?.github?.status === 'ok',
+        roman_ready: data.integrations?.romanReady?.status === 'ok',
+        genesis_mode: data.integrations?.genesisMode?.status === 'ok',
+        warning_cleanup_phase: false // Keep existing logic for this
+      };
+
+      setCapabilities(newCapabilities);
+      console.log(`✅ Capability check complete: ${data.summary?.active}/${data.summary?.total} active`);
       
     } catch (error) {
-      console.error('Capability check failed:', error);
-      errorDetails.push('RPC is_user_org_admin: Connection failed');
+      console.error('❌ Capability check failed:', error);
+      // Keep all false on error
+    } finally {
+      setIsLoading(false);
     }
   };
 

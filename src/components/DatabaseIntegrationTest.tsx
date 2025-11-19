@@ -34,8 +34,52 @@ export default function DatabaseIntegrationTest() {
   };
 
   const testBidsRead = async () => {
+    // Bids table has org-scoped RLS - requires authenticated user with org membership
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    
+    if (authError) {
+      throw new Error(`Auth check failed: ${authError.message}`);
+    }
+    
+    // Small delay to ensure session is fully propagated (prevents race conditions)
+    if (user) {
+      await new Promise(resolve => setTimeout(resolve, 50));
+    }
+    
     const { data, error } = await supabase.from('bids').select('*').limit(1);
-    if (error) throw new Error(error.message);
+    
+    if (!user) {
+      // Case 1: Anonymous user - should be blocked by RLS
+      if (error) {
+        // Assert we got the correct RLS permission denied error
+        const isRLSError = error.code === 'PGRST301' || 
+                          error.code === '42501' || // Postgres insufficient privilege
+                          error.message.toLowerCase().includes('permission denied') ||
+                          error.message.toLowerCase().includes('row-level security') ||
+                          error.message.toLowerCase().includes('policy');
+        if (isRLSError) {
+          console.log('✅ Bids test: RLS correctly blocking anonymous access');
+          return; // ✅ Test passes - RLS correctly blocking anonymous access
+        }
+        throw new Error(`Expected RLS error, got: ${error.code} - ${error.message}`);
+      }
+      throw new Error('Expected RLS to block anonymous access to bids');
+    }
+    
+    // Case 2 & 3: Authenticated user
+    if (error) {
+      // Authenticated users should never get permission denied
+      // (they either see their org's bids or get empty array)
+      throw new Error(`Authenticated user got unexpected error: ${error.code} - ${error.message}`);
+    }
+    
+    // ✅ Test passes - authenticated user got result (array may be empty if no bids or not in org)
+    // Empty array is valid: user authenticated but not member of any bid's organization
+    if (!Array.isArray(data)) {
+      throw new Error(`Expected array result, got: ${typeof data}`);
+    }
+    
+    console.log(`✅ Bids test: Authenticated user (${user.email}) got ${data.length} results`);
   };
 
   const testTimeAuditSecurity = async () => {

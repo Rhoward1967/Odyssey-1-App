@@ -2,7 +2,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { supabase } from '@/lib/supabaseClient';
-import { ArrowLeft, ArrowRight, Check, Crown, Star, TrendingUp, Zap } from 'lucide-react';
+import { ArrowLeft, Check, Crown, Star, TrendingUp, Zap } from 'lucide-react';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -139,6 +139,7 @@ export default function Subscribe() {
   const navigate = useNavigate();
   const [user, setUser] = React.useState<any>(null);
   const [selectedPlan, setSelectedPlan] = React.useState(TIERS[0]);
+  const [clickedTier, setClickedTier] = React.useState<string | null>(null);
 
   React.useEffect(() => {
     const getUser = async () => {
@@ -149,37 +150,53 @@ export default function Subscribe() {
   }, []);
 
   const handleSelectTier = (tierId: string) => {
+    console.log('🎯 Tier button clicked:', tierId);
+    setClickedTier(tierId);
     const tier = TIERS.find((t) => t.id === tierId);
     if (tier) {
+      console.log('✅ Setting selected plan:', tier.name);
       setSelectedPlan(tier);
+      // Flash the button to show it was clicked
+      setTimeout(() => setClickedTier(null), 300);
     }
   };
 
   const handleCompleteSubscription = async () => {
     if (!user) {
-      navigate('/');
+      navigate('/login');
       return;
     }
 
-    try {
-      const { data, error } = await supabase
-        .from('subscriptions')
-        .insert({
-          user_id: user.id,
-          plan: selectedPlan.id,
-          tier: selectedPlan.id,
-          status: selectedPlan.price === 0 ? 'trialing' : 'active',
-          current_period_start: new Date().toISOString(),
-          current_period_end: new Date(Date.now() + (selectedPlan.trialDays * 24 * 60 * 60 * 1000)).toISOString(),
-          trial_start: new Date().toISOString(),
-          trial_end: new Date(Date.now() + (selectedPlan.trialDays * 24 * 60 * 60 * 1000)).toISOString(),
-        });
+    // For free trial, just insert the subscription
+    if (selectedPlan.price === 0) {
+      try {
+        const { error } = await supabase
+          .from('subscriptions')
+          .insert({
+            user_id: user.id,
+            plan: selectedPlan.id,
+            tier: selectedPlan.id,
+            status: 'trialing',
+            current_period_start: new Date().toISOString(),
+            current_period_end: new Date(Date.now() + (selectedPlan.trialDays * 24 * 60 * 60 * 1000)).toISOString(),
+            trial_start: new Date().toISOString(),
+            trial_end: new Date(Date.now() + (selectedPlan.trialDays * 24 * 60 * 60 * 1000)).toISOString(),
+          });
 
-      if (error) throw error;
-
-      navigate('/app');
-    } catch (error) {
-      console.error('Error completing subscription:', error);
+        if (error) throw error;
+        navigate('/app');
+      } catch (error) {
+        console.error('Error starting trial:', error);
+      }
+    } else {
+      // For paid plans, go to profile/checkout
+      navigate('/app/profile', {
+        state: {
+          selectedTier: selectedPlan.name,
+          selectedPrice: `$${selectedPlan.price}`,
+          fromPricing: true
+        }
+      });
     }
   };
 
@@ -269,18 +286,33 @@ export default function Subscribe() {
                   </div>
 
                   {/* CTA Button */}
-                  <Button
-                    onClick={() => handleSelectTier(tier.id)}
-                    className={`w-full mt-6 ${
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      alert(`BUTTON CLICKED: ${tier.name}`);
+                      console.log('🔥 BUTTON CLICK FIRED for:', tier.id);
+                      handleSelectTier(tier.id);
+                    }}
+                    onMouseEnter={() => console.log('👆 Mouse entered button:', tier.id)}
+                    className={`w-full mt-6 px-8 py-3 rounded-md text-sm font-medium transition-colors ${
+                      clickedTier === tier.id ? 'ring-4 ring-yellow-400' : ''
+                    } ${
                       tier.popular
-                        ? 'bg-purple-600 hover:bg-purple-700'
+                        ? 'bg-purple-600 hover:bg-purple-700 text-white'
                         : 'bg-white hover:bg-gray-200 text-gray-900'
                     }`}
-                    size="lg"
+                    style={{ 
+                      cursor: 'pointer', 
+                      pointerEvents: 'auto', 
+                      zIndex: 9999, 
+                      position: 'relative',
+                      border: '2px solid yellow'
+                    }}
                   >
                     {tier.id === 'free' ? 'Start Free Trial' : 'Get Started'}
-                    <ArrowRight className="ml-2 w-4 h-4" />
-                  </Button>
+                  </button>
                 </div>
               </CardContent>
             </Card>

@@ -168,7 +168,9 @@
   
   /* Better mobile touch targets */
   button, a, [role="button"] {
-    @apply min-h-[44px] flex items-center justify-center;
+    min-height: 44px;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
   }
   
   /* Prevent content from running off screen */
@@ -180,5 +182,18 @@
   body {
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
+    overscroll-behavior-y: none;
+  }
+  
+  /* Fix iOS button styling */
+  button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  }
+  
+  /* Prevent iOS bounce/scroll issues on modals */
+  .fixed, [role="dialog"] {
+    -webkit-overflow-scrolling: touch;
   }
 }

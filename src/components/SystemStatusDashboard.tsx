@@ -26,12 +26,6 @@ export default function SystemStatusDashboard() {
               <p className="text-red-700 text-sm">Permission denied for function is_user_org_admin</p>
               <p className="text-red-600 text-xs">Impact: AI Agent Monitoring blocked</p>
             </div>
-            
-            <div className="bg-white p-3 rounded border border-orange-200">
-              <h4 className="font-bold text-orange-800">⚠️ R.O.M.A.N. Deployment: BLOCKED</h4>
-              <p className="text-orange-700 text-sm">2 SECURITY DEFINER views detected</p>
-              <p className="text-orange-600 text-xs">Impact: Sovereign-Core Architecture deployment pending</p>
-            </div>
           </div>
         </CardContent>
       </Card>
