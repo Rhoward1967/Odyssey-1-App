@@ -3,6 +3,8 @@
  * © 2025 Rickey A Howard. All Rights Reserved.
  */
 
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import AIIntelligenceLiveFeed from '@/components/AIIntelligenceLiveFeed';
 import AppLayout from '@/components/AppLayout';
 import { AuthProvider } from '@/components/AuthProvider';
@@ -194,6 +196,8 @@ function App() {
           </PositionLotsProvider>
         </FundingProvider>
       </APIProvider>
+      <Analytics />
+      <SpeedInsights />
     </AuthProvider>
   );
 }
