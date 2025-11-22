@@ -1,0 +1,510 @@
+═══════════════════════════════════════════════════════════════════════════════
+                         OPERATING AGREEMENT
+                               OF
+                        ODYSSEY-1 AI LLC
+               A GEORGIA LIMITED LIABILITY COMPANY
+═══════════════════════════════════════════════════════════════════════════════
+
+This Operating Agreement ("Agreement") of ODYSSEY-1 AI LLC (the "Company") is
+entered into and effective as of November 21, 2025 (the "Effective Date"), by
+Rickey Allan Howard, as the sole Member of the Company.
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                            ARTICLE I - ORGANIZATION
+═══════════════════════════════════════════════════════════════════════════════
+
+1.1  FORMATION
+     The Company was formed as a Georgia Limited Liability Company by filing
+     Articles of Organization with the Georgia Secretary of State on October 27,
+     2025, and was certified on November 12, 2025, under Control Number
+     25218129.
+
+1.2  NAME
+     The name of the Company is ODYSSEY-1 AI LLC.
+
+1.3  PRINCIPAL OFFICE
+     The principal office of the Company is located at:
+     
+     595 Macon Hwy, Apt 35
+     Athens, GA 30606
+     
+     The Member may change the location of the principal office at any time.
+
+1.4  REGISTERED AGENT
+     The registered agent for service of process is:
+     
+     Christla L Howard
+     595 Macon Hwy, Apt 35
+     Athens, GA 30606
+
+1.5  PURPOSE
+     The Company is organized for the following purposes:
+     
+     a) Development, commercialization, and licensing of artificial intelligence
+        systems and technologies;
+     
+     b) Development, commercialization, and licensing of hardware computing
+        systems and devices;
+     
+     c) Research and development in artificial intelligence, machine learning,
+        neural interfaces, and computational systems;
+     
+     d) Software as a Service (SaaS) and Platform as a Service (PaaS)
+        operations;
+     
+     e) Patent prosecution, enforcement, and licensing;
+     
+     f) Any and all lawful business purposes permitted under Georgia law.
+
+1.6  DURATION
+     The Company shall continue in existence perpetually unless dissolved in
+     accordance with this Agreement or Georgia law.
+
+1.7  FEDERAL TAX IDENTIFICATION NUMBER
+     The Company's Federal Employer Identification Number (EIN) is 41-2718714.
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                        ARTICLE II - MEMBER AND OWNERSHIP
+═══════════════════════════════════════════════════════════════════════════════
+
+2.1  SOLE MEMBER
+     The sole Member of the Company is:
+     
+     Name:      Rickey Allan Howard
+     Address:   595 Macon Hwy, Apt 35
+                Athens, GA 30606
+     Ownership: 100%
+
+2.2  MEMBERSHIP INTEREST
+     The Member owns 100% of the membership interests in the Company and has
+     full rights to all profits, losses, distributions, and voting rights.
+
+2.3  NO TRANSFER WITHOUT CONSENT
+     The Member may not transfer, sell, assign, pledge, or encumber any
+     membership interest without first dissolving the Company or admitting new
+     members in accordance with this Agreement and Georgia law.
+
+2.4  CAPITAL CONTRIBUTIONS
+     
+     a) Initial Contribution: The Member has contributed the following to the
+        Company as initial capital:
+        
+        - Assignment of all rights, title, and interest in US Patent
+          Application 19/396,082 (ODYSSEY-2.0 Hardware System)
+        
+        - Assignment of all rights, title, and interest in US Provisional
+          Patent Application 63/913,134 (ODYSSEY-1 AI System)
+        
+        - Exclusive, perpetual, royalty-free license to use original
+          copyrighted musical compositions created by Member under the name
+          "Believing Self" (40+ years of songwriting) as operational
+          identifiers in the Company's proprietary "Honey Pot" security
+          logging system
+        
+        - Knowledge, expertise, and labor in developing the Company's
+          intellectual property
+        
+        - Formation costs and filing fees
+     
+     b) Additional Contributions: The Member may make additional capital
+        contributions at any time in the Member's sole discretion.
+     
+     c) No Return of Contributions: The Member shall not be entitled to demand
+        or receive a return of capital contributions except upon dissolution of
+        the Company.
+
+2.5  NO INTEREST ON CAPITAL
+     Capital contributions shall not earn interest unless otherwise determined
+     by the Member.
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                      ARTICLE III - MANAGEMENT AND CONTROL
+═══════════════════════════════════════════════════════════════════════════════
+
+3.1  MEMBER-MANAGED
+     The Company is member-managed. The Member has full and complete authority
+     to manage and control the business and affairs of the Company.
+
+3.2  POWERS OF THE MEMBER
+     The Member has full power and authority to:
+     
+     a) Enter into contracts and agreements on behalf of the Company;
+     
+     b) Hire employees, contractors, and consultants;
+     
+     c) Open bank accounts and manage Company finances;
+     
+     d) Incur debts and obligations on behalf of the Company;
+     
+     e) Purchase, lease, sell, or otherwise acquire or dispose of property;
+     
+     f) File, prosecute, maintain, license, and enforce patents, trademarks,
+        copyrights, and other intellectual property;
+     
+     g) Raise capital through debt or equity financing;
+     
+     h) Make distributions of Company profits;
+     
+     i) File tax returns and maintain books and records;
+     
+     j) Engage attorneys, accountants, and other professionals;
+     
+     k) Take any and all actions necessary or appropriate to carry out the
+        Company's business.
+
+3.3  NO PERSONAL LIABILITY
+     The Member shall not be personally liable for the debts, obligations, or
+     liabilities of the Company, except as required by Georgia law or as the
+     Member may personally guarantee in writing.
+
+3.4  INDEMNIFICATION
+     The Company shall indemnify and hold harmless the Member from any claims,
+     liabilities, damages, or expenses arising from the Member's good faith
+     actions on behalf of the Company, except for acts of gross negligence,
+     willful misconduct, or fraud.
+
+3.5  STANDARD OF CARE
+     The Member shall manage the Company in good faith and in a manner
+     reasonably believed to be in the best interests of the Company.
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                   ARTICLE IV - INTELLECTUAL PROPERTY OWNERSHIP
+═══════════════════════════════════════════════════════════════════════════════
+
+4.1  COMPANY OWNERSHIP OF IP
+     All intellectual property created, developed, or acquired by the Company,
+     or contributed to the Company by the Member, shall be the sole and
+     exclusive property of the Company, including but not limited to:
+     
+     a) Patents and patent applications, including:
+        - US Utility Patent Application 19/396,082
+        - US Provisional Patent Application 63/913,134
+        - All future patent applications filed by or on behalf of the Company
+     
+     b) Trademarks, service marks, and trade names, including:
+        - ODYSSEY-1
+        - ODYSSEY-2.0
+        - All related marks and branding
+     
+     c) Copyrights in software, documentation, and creative works
+     
+     d) Trade secrets, proprietary information, and know-how
+     
+     e) All improvements, modifications, and derivative works of the above
+
+4.2  ASSIGNMENT TO COMPANY
+     The Member hereby confirms and agrees that all intellectual property
+     described in Section 4.1 has been or will be properly assigned to the
+     Company in writing, and that the Company is the sole owner of such
+     intellectual property.
+
+4.3  WORK MADE FOR HIRE
+     All works created by the Member or by employees, contractors, or agents
+     of the Company within the scope of their engagement shall be deemed "works
+     made for hire" and shall be owned by the Company.
+
+4.4  FURTHER ASSURANCES
+     The Member agrees to execute any additional documents necessary to perfect
+     the Company's ownership of intellectual property, including patent
+     assignments, trademark registrations, and copyright filings.
+
+4.5  CONFIDENTIALITY
+     The Member shall maintain the confidentiality of the Company's trade
+     secrets and proprietary information, both during and after membership in
+     the Company.
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                    ARTICLE V - FINANCIAL MATTERS AND ACCOUNTING
+═══════════════════════════════════════════════════════════════════════════════
+
+5.1  FISCAL YEAR
+     The fiscal year of the Company shall be the calendar year ending
+     December 31.
+
+5.2  BOOKS AND RECORDS
+     The Company shall maintain complete and accurate books and records of its
+     business and financial affairs at the principal office, including:
+     
+     a) A copy of this Operating Agreement and all amendments
+     b) A copy of the Articles of Organization and all amendments
+     c) Federal and state tax returns and financial statements
+     d) Records of capital contributions and distributions
+     e) Minutes of any meetings or written consents
+     f) Contracts, agreements, and other material documents
+
+5.3  BANK ACCOUNTS
+     The Member shall open one or more bank accounts in the Company's name and
+     shall ensure that all Company funds are deposited in such accounts. The
+     Member is authorized to sign checks, make withdrawals, and otherwise
+     transact business on behalf of the Company.
+
+5.4  SEPARATE FUNDS
+     The Company's funds and assets shall be kept separate from the personal
+     funds and assets of the Member. The Member shall not commingle personal
+     and Company funds.
+
+5.5  ACCOUNTING METHOD
+     The Company shall use the accrual method of accounting unless otherwise
+     determined by the Member or required by law.
+
+5.6  TAX MATTERS
+     
+     a) Tax Classification: As a single-member LLC, the Company shall be
+        treated as a disregarded entity for federal income tax purposes unless
+        the Member elects otherwise by filing Form 8832 or Form 2553.
+     
+     b) Tax Returns: The Member shall ensure that all required federal, state,
+        and local tax returns are timely filed.
+     
+     c) Tax Compliance: The Company shall comply with all applicable tax laws
+        and regulations.
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                     ARTICLE VI - DISTRIBUTIONS AND ALLOCATIONS
+═══════════════════════════════════════════════════════════════════════════════
+
+6.1  DISTRIBUTIONS
+     The Member may, at any time and in the Member's sole discretion, authorize
+     distributions of Company profits or assets. All distributions shall be made
+     to the Member as the sole owner of the Company.
+
+6.2  NO OBLIGATION TO DISTRIBUTE
+     The Member shall not be obligated to make distributions and may retain
+     profits for working capital, growth, or other business purposes.
+
+6.3  ALLOCATION OF PROFITS AND LOSSES
+     All profits, losses, credits, and deductions of the Company shall be
+     allocated 100% to the Member.
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                        ARTICLE VII - DISSOLUTION AND WINDING UP
+═══════════════════════════════════════════════════════════════════════════════
+
+7.1  EVENTS OF DISSOLUTION
+     The Company shall be dissolved upon:
+     
+     a) The written consent of the Member to dissolve the Company;
+     
+     b) The death, resignation, expulsion, bankruptcy, or dissolution of the
+        Member, unless the business is continued in accordance with Georgia law;
+     
+     c) Entry of a decree of judicial dissolution;
+     
+     d) Any other event that makes it unlawful or impossible to continue the
+        business.
+
+7.2  WINDING UP
+     Upon dissolution, the Member (or a court-appointed liquidator) shall wind
+     up the Company's affairs by:
+     
+     a) Giving notice to creditors;
+     
+     b) Liquidating Company assets;
+     
+     c) Paying or providing for all Company debts and obligations;
+     
+     d) Distributing remaining assets to the Member.
+
+7.3  CERTIFICATE OF CANCELLATION
+     After winding up is complete, the Member shall file a Certificate of
+     Cancellation with the Georgia Secretary of State.
+
+7.4  NO DEFICIT RESTORATION
+     The Member shall not be required to restore any deficit in the Member's
+     capital account.
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                          ARTICLE VIII - GENERAL PROVISIONS
+═══════════════════════════════════════════════════════════════════════════════
+
+8.1  AMENDMENTS
+     This Agreement may be amended at any time by written consent of the Member.
+
+8.2  GOVERNING LAW
+     This Agreement shall be governed by and construed in accordance with the
+     laws of the State of Georgia.
+
+8.3  BINDING EFFECT
+     This Agreement shall be binding upon and inure to the benefit of the Member
+     and the Member's heirs, successors, and assigns.
+
+8.4  ENTIRE AGREEMENT
+     This Agreement constitutes the entire agreement among the parties with
+     respect to the subject matter hereof and supersedes all prior agreements
+     and understandings.
+
+8.5  SEVERABILITY
+     If any provision of this Agreement is held to be invalid or unenforceable,
+     the remaining provisions shall continue in full force and effect.
+
+8.6  WAIVER
+     No waiver of any provision of this Agreement shall be effective unless in
+     writing and signed by the Member.
+
+8.7  NOTICES
+     All notices under this Agreement shall be in writing and delivered to:
+     
+     Rickey Allan Howard
+     595 Macon Hwy, Apt 35
+     Athens, GA 30606
+     Email: rhoward@hjsservices.us
+            generalmanager81@gmail.com
+     Phone: (706) 351-1300
+
+8.8  COUNTERPARTS
+     This Agreement may be executed in counterparts, each of which shall be
+     deemed an original and all of which together shall constitute one
+     instrument.
+
+8.9  HEADINGS
+     Article and section headings are for convenience only and shall not affect
+     the interpretation of this Agreement.
+
+8.10 PROFESSIONAL ADVICE
+     The Member acknowledges that this Agreement has been prepared without the
+     assistance of legal counsel and that the Member has been advised to seek
+     independent legal and tax advice before executing this Agreement.
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                            ARTICLE IX - ADMISSION OF MEMBERS
+═══════════════════════════════════════════════════════════════════════════════
+
+9.1  ADMISSION OF NEW MEMBERS
+     The Member may admit additional members to the Company at any time by:
+     
+     a) Executing a written amendment to this Agreement;
+     
+     b) Specifying the new member's capital contribution and ownership
+        percentage;
+     
+     c) Updating the Company's books and records.
+
+9.2  RIGHTS OF NEW MEMBERS
+     Upon admission, new members shall have the rights and obligations set forth
+     in the amended Operating Agreement.
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                         ARTICLE X - EMPLOYMENT AND COMPENSATION
+═══════════════════════════════════════════════════════════════════════════════
+
+10.1 COMPENSATION
+     The Member may receive reasonable compensation for services rendered to the
+     Company as an employee, officer, or manager. Such compensation shall be
+     determined by the Member and shall be separate from distributions of
+     Company profits.
+
+10.2 REIMBURSEMENT OF EXPENSES
+     The Company shall reimburse the Member for all reasonable business expenses
+     incurred on behalf of the Company, provided that such expenses are properly
+     documented.
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                              EXECUTION AND ACCEPTANCE
+═══════════════════════════════════════════════════════════════════════════════
+
+IN WITNESS WHEREOF, the undersigned Member has executed this Operating Agreement
+as of the date first written above.
+
+
+MEMBER:
+
+________________________________________________     Date: November 21, 2025
+Rickey Allan Howard
+Sole Member, ODYSSEY-1 AI LLC
+
+
+STATE OF: GEORGIA
+
+COUNTY OF: CLARKE
+
+Before me, a Notary Public, personally appeared Rickey Allan Howard, who
+acknowledged that the foregoing instrument was freely executed.
+
+[NOTARY SEAL]
+
+________________________________________________     Date: __________________
+Notary Public Signature
+
+My Commission Expires: _______________________
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                              ACKNOWLEDGMENT AND ACCEPTANCE
+═══════════════════════════════════════════════════════════════════════════════
+
+The undersigned Member acknowledges that:
+
+1. This Operating Agreement governs the Company's operations and the Member's
+   rights and obligations;
+
+2. The Member has read and understands this Agreement;
+
+3. The Member has been advised to seek independent legal and tax counsel;
+
+4. The Member enters into this Agreement voluntarily and with full knowledge
+   of its terms;
+
+5. All intellectual property described in Article IV is owned by the Company;
+
+6. The Member will maintain separate personal and business finances;
+
+7. The Member will comply with all applicable laws and regulations.
+
+
+ACKNOWLEDGED AND ACCEPTED:
+
+________________________________________________     Date: November 21, 2025
+Rickey Allan Howard
+Sole Member, ODYSSEY-1 AI LLC
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                              IMPORTANT REMINDERS
+═══════════════════════════════════════════════════════════════════════════════
+
+✓ BANK ACCOUNT: Open a business bank account immediately using this Operating
+  Agreement, your LLC Certificate, and EIN Notice.
+
+✓ SEPARATE FINANCES: Never commingle personal and business funds. Always pay
+  business expenses from the business account.
+
+✓ ANNUAL REPORTS: File Georgia LLC annual registration by April 1 each year
+  at https://ecorp.sos.ga.gov/
+
+✓ TAX COMPLIANCE: File federal Schedule C with your personal tax return (unless
+  you elect corporate taxation).
+
+✓ RECORD KEEPING: Maintain accurate financial records, receipts, and
+  documentation.
+
+✓ INSURANCE: Consider obtaining general liability insurance and errors &
+  omissions insurance.
+
+✓ CONTRACTS: Always sign contracts as "Rickey Allan Howard, Member, ODYSSEY-1
+  AI LLC" to maintain limited liability protection.
+
+✓ KEEP THIS DOCUMENT SAFE: Store original in secure location with other
+  important business documents.
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                              END OF OPERATING AGREEMENT
+═══════════════════════════════════════════════════════════════════════════════
+
+Document Prepared: November 21, 2025
+Document Version: 1.0
+
+ODYSSEY-1 AI LLC
+EIN: 41-2718714
+Georgia Control Number: 25218129

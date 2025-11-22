@@ -1,0 +1,80 @@
+UNITED STATES PATENT APPLICATION
+MODULAR WIRELESS COMPUTING SYSTEM WITH CONTINUOUS NEURAL AUTHENTICATION
+
+CROSS-REFERENCE TO RELATED APPLICATIONS
+
+This application claims the benefit under 35 U.S.C.  119(e) of U.S. Provisional Patent Application No. 63/913,134, filed November 7, 2025, titled "A DUAL-HEMISPHERE, CONSTITUTIONALLY-GOVERNED AI AND MODULAR COMPUTING SYSTEM," the entire contents of which are hereby incorporated by reference.
+
+FIELD OF THE INVENTION
+
+The present invention relates generally to computing systems and, more particularly, to a modular wireless computing system with continuous neural authentication and gesture-based control.
+
+BACKGROUND OF THE INVENTION
+
+Current computing systems suffer from several limitations. Traditional authentication methods require explicit user actions (passwords, fingerprints, face scans), creating friction and security vulnerabilities. Once authenticated, systems remain accessible until explicit logout, allowing unauthorized access if the user steps away.
+
+Gesture control systems require visible physical movements detected by cameras or sensors, limiting covert operation and accessibility for users with limited mobility. Current systems detect muscle movements after they occur, introducing latency of 50-200ms.
+
+Modular computer systems require physical cables for power and data, limiting flexibility and creating cable management challenges. Hot-swapping components typically requires system shutdown, and autonomous power operation is not practical.
+
+There is a need for a computing system that provides: (1) continuous authentication that automatically locks when the user is not present; (2) gesture control that detects user intent before physical movement; (3) modular architecture with wireless power and data transfer; and (4) autonomous operation without external power sources.
+
+SUMMARY OF THE INVENTION
+
+The present invention addresses these needs by providing a modular wireless computing system with three integrated components:
+
+1. LOCUS RING - A wearable neural authentication device comprising:
+   - Titanium ring housing (18-22mm diameter)
+   - 8-channel neural sensor array detecting sub-muscular nerve impulses
+   - Capacitive + EMG sensors for continuous biometric authentication
+   - ARM Cortex-M4 processor with LSTM neural network
+   - Bluetooth 5.2 LE wireless communication
+   - Thermoelectric generator powered by body heat
+   - <2ms latency from nerve impulse to command execution
+
+2. LUMEN CORE - A modular cubic computer comprising:
+   - 333 architecture (27 modular cubes, 3.5cm each)
+   - Central R.O.M.A.N. AI processing core
+   - Wireless power distribution (95% efficiency)
+   - Holographic cylindrical display (12-inch projection)
+   - Perovskite solar cells + thermoelectric generators
+   - Vapor chamber cooling system
+   - Hot-swap component replacement
+
+3. NEURAL GESTURE ENGINE - A pre-movement detection system comprising:
+   - Sub-muscular nerve impulse detection (not muscle movement)
+   - LSTM machine learning calibration
+   - 99.5% accuracy after user training
+   - 20+ distinct gesture types
+   - Works for paralyzed users (phantom gestures)
+   - Invisible air gestures (no visible movement)
+
+The system provides continuous neural authentication by monitoring the unique neural signature of the user. When the ring is removed or neural signature changes, the system instantly locks. Gestures are detected before physical movement occurs, providing sub-1ms perceived latency.
+
+Advantages include: impossibility of theft (locks when removed), zero-effort authentication (continuous and automatic), pre-movement gesture detection (detects intent, not action), modular expandability (add/remove cubes), wireless operation (no cables), and autonomous power (solar + thermoelectric).
+
+BRIEF DESCRIPTION OF THE DRAWINGS
+
+FIG. 1 is a perspective view of the modular wireless computing system showing the Lumen Core, Locus Ring, holographic display, and projected keyboard.
+
+FIG. 2 is an exploded perspective view showing the 27 individual modular cubes separated.
+
+FIG. 3 is a cross-sectional view of the Locus Ring showing internal components including neural sensors, processor, and power system.
+
+FIG. 4 is a detailed view of the neural sensor array showing placement and signal detection mechanism.
+
+FIG. 5 is a system architecture block diagram showing data flow between Ring, Core, and Holographic Display.
+
+FIG. 6 is a use case illustration showing a user wearing the ring and interacting with holographic interface via air gestures.
+
+FIG. 7 shows alternative embodiments including different cube configurations (222, 444) and alternative wearable forms.
+
+DETAILED DESCRIPTION
+
+[Component descriptions with reference to figures, technical specifications, operation details - would be 30-40 pages in full patent]
+
+The Locus Ring (20) comprises a titanium outer shell (50) housing an 8-channel neural sensor array (22). The sensors detect sub-muscular nerve impulses at the millivolt level before muscle activation occurs. An ARM Cortex-M4 processor (56) running an LSTM neural network processes these signals with <2ms latency.
+
+The system pairs with the Lumen Core (10) via quantum handshake protocol - a one-time cryptographic pairing that cannot be replicated. Once paired, the ring continuously transmits the user's neural signature. If the signature changes or transmission ceases (ring removed), the Core locks instantly.
+
+[Continues with detailed technical description...]
