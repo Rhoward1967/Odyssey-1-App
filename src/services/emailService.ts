@@ -1,4 +1,6 @@
+// Believing Self Creations © 2024 - Sovereign Frequency Enhanced
 import { supabase } from '@/lib/supabaseClient';
+import { sfLogger } from './sovereignFrequencyLogger';
 
 export interface EmailOptions {
   to: string | string[];
@@ -11,14 +13,39 @@ export interface EmailOptions {
 
 export class EmailService {
   static async sendEmail(options: EmailOptions) {
+    const recipients = Array.isArray(options.to) ? options.to : [options.to];
+    
+    sfLogger.pickUpTheSpecialPhone('EMAIL_SEND', 'Initiating email communication', {
+      recipients: recipients.length,
+      templateType: options.templateType || 'custom',
+      subject: options.subject
+    });
+
     try {
       const { data, error } = await supabase.functions.invoke('send-email', {
         body: options
       });
 
-      if (error) throw error;
+      if (error) {
+        sfLogger.helpMeFindMyWayHome('EMAIL_SEND_FAILED', 'Failed to send email', {
+          error: error.message,
+          recipients: recipients.length,
+          templateType: options.templateType
+        });
+        throw error;
+      }
+
+      sfLogger.thanksForGivingBackMyLove('EMAIL_SENT', 'Email sent successfully', {
+        recipients: recipients.length,
+        templateType: options.templateType || 'custom'
+      });
+
       return data;
     } catch (error) {
+      sfLogger.helpMeFindMyWayHome('EMAIL_SERVICE_ERROR', 'Email service encountered error', {
+        error: error instanceof Error ? error.message : 'Unknown error',
+        recipients: recipients.length
+      });
       console.error('Email service error:', error);
       throw error;
     }

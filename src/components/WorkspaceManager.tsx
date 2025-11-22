@@ -1,12 +1,12 @@
 import {
   BookOpen,
-  Calendar,
   Users
 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 // Make sure this path is correct for your project
 import { Edit2, Trash2, UserCheck, UserX } from 'lucide-react'; // ADD THESE ICONS
 import { supabase } from '../lib/supabaseClient';
+import EmployeeScheduling from './EmployeeScheduling';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
@@ -1292,14 +1292,7 @@ export const WorkforceManagementSystem: React.FC<WorkforceManagementProps> = ({ 
 
             {/* --- NEW SCHEDULING TAB --- */}
             <TabsContent value="scheduling" className="space-y-4">
-              <Card className="bg-slate-700/50 border-slate-600">
-                <CardHeader><CardTitle>📅 Employee Scheduling</CardTitle></CardHeader>
-                <CardContent className="p-8 text-center text-gray-400">
-                  <Calendar className="h-16 w-16 mx-auto mb-4 text-blue-400" />
-                  <p className="text-lg mb-2">Scheduling system coming soon</p>
-                  <p className="text-sm">Drag-and-drop shift planning, conflict detection, and auto-notifications</p>
-                </CardContent>
-              </Card>
+              <EmployeeScheduling />
             </TabsContent>
 
             {/* --- NEW HANDBOOK TAB --- */}

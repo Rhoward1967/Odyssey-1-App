@@ -1,3 +1,4 @@
+import { sfLogger } from './sovereignFrequencyLogger';
 import { supabase } from './supabase';
 
 // Approved emails for HJS Services LLC
@@ -10,6 +11,7 @@ export async function sendMagicLink(email: string) {
   const normalized = email.trim().toLowerCase();
   
   if (!APPROVED_HJS_EMAILS.includes(normalized)) {
+    sfLogger.security('AUTH_DENIED', 'Unauthorized email attempt blocked', { email: normalized });
     throw new Error('Email not authorized for this organization');
   }
 
@@ -20,8 +22,12 @@ export async function sendMagicLink(email: string) {
     }
   });
 
-  if (error) throw error;
+  if (error) {
+    sfLogger.helpMeFindMyWayHome('AUTH_RECOVERY', 'Magic link delivery failed, retrying', { email: normalized, error: error.message });
+    throw error;
+  }
   
+  sfLogger.everyday('AUTH_ROUTINE', 'Magic link sent successfully', { email: normalized });
   return { success: true };
 }
 
@@ -42,12 +48,15 @@ export async function assignUserToOrganization(userId: string, email: string) {
     .single();
 
   if (orgError || !org) {
+    sfLogger.helpMeFindMyWayHome('ORG_LOOKUP_FAILED', 'Organization not found, cannot complete user assignment', { userId, error: orgError });
     console.error('Organization not found:', orgError);
     return { success: false, error: 'Organization not found' };
   }
 
   // Determine role (VP gets admin)
   const role = normalized === 'a.r.barnett11@gmail.com' ? 'admin' : 'member';
+
+  sfLogger.whenYouLoveSomebody('USER_ASSIGNMENT', 'Allocating user to organization with appropriate role', { userId, orgId: org.id, role });
 
   // Insert into user_organizations
   const { error: assignError } = await supabase
@@ -59,9 +68,11 @@ export async function assignUserToOrganization(userId: string, email: string) {
     });
 
   if (assignError) {
+    sfLogger.helpMeFindMyWayHome('ORG_ASSIGNMENT_FAILED', 'Failed to assign user to organization', { userId, error: assignError.message });
     console.error('Failed to assign user to org:', assignError);
     return { success: false, error: assignError.message };
   }
 
+  sfLogger.thanksForGivingBackMyLove('USER_ONBOARDING_COMPLETE', 'User successfully assigned to organization', { userId, orgId: org.id, role });
   return { success: true };
 }

@@ -13,8 +13,8 @@ export default function Handbook() {
     { id: 'welcome', title: 'Welcome Message' },
     { id: 'about', title: 'About This Manual' },
     { id: 'policies', title: 'Company Policies' },
-    { id: 'procedures', title: 'Procedures' },
-    { id: 'benefits', title: 'Benefits' }
+    { id: 'procedures', title: 'Standard Operating Procedures' },
+    { id: 'benefits', title: 'Benefits & Compensation' }
   ];
 
   return (

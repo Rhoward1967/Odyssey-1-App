@@ -1121,7 +1121,36 @@ You are EMPOWERED to fix issues with proper governance oversight.`;
     }
     
     console.log('📤 Sending reply to Discord...');
-    await message.reply(response);
+    
+    // Discord has 2000 char limit - split long messages
+    const DISCORD_CHAR_LIMIT = 2000;
+    if (response.length <= DISCORD_CHAR_LIMIT) {
+      await message.reply(response);
+    } else {
+      // Split into chunks at sentence boundaries
+      const chunks: string[] = [];
+      let currentChunk = '';
+      const sentences = response.split(/(?<=[.!?])\s+/);
+      
+      for (const sentence of sentences) {
+        if ((currentChunk + sentence).length > DISCORD_CHAR_LIMIT) {
+          if (currentChunk) chunks.push(currentChunk.trim());
+          currentChunk = sentence;
+        } else {
+          currentChunk += (currentChunk ? ' ' : '') + sentence;
+        }
+      }
+      if (currentChunk) chunks.push(currentChunk.trim());
+      
+      // Send first chunk as reply
+      await message.reply(chunks[0]);
+      // Send remaining chunks as follow-ups
+      for (let i = 1; i < chunks.length; i++) {
+        if ('send' in message.channel) {
+          await message.channel.send(chunks[i]);
+        }
+      }
+    }
     console.log('✅ Reply sent successfully!');
     
     // Log successful interaction

@@ -1,8 +1,24 @@
 {
-  "name": "vite_react_shadcn_ts",
+  "name": "@odyssey-1-ai/odyssey-platform",
+  "version": "2.0.0",
   "private": true,
-  "version": "0.0.0",
   "type": "module",
+  "description": "ODYSSEY-1 AI Platform - Constitutional AI Governance & Neural Computing System",
+  "author": "ODYSSEY-1 AI LLC <rhoward@hjsservices.us>",
+  "license": "PROPRIETARY",
+  "copyright": "Copyright © 2025 ODYSSEY-1 AI LLC. All Rights Reserved.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Rhoward1967/Odyssey-1-App.git"
+  },
+  "keywords": [
+    "artificial-intelligence",
+    "constitutional-ai",
+    "neural-computing",
+    "governance-system",
+    "odyssey",
+    "patent-pending"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "vite build",

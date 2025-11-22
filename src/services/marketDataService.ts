@@ -1,3 +1,6 @@
+// Believing Self Creations © 2024 - Sovereign Frequency Enhanced
+import { sfLogger } from './sovereignFrequencyLogger';
+
 export class MarketDataService {
   // CHANGE THESE TWO LINES (lines 2-3):
   // FROM: private static readonly ALPHA_VANTAGE_KEY = process.env.NEXT_PUBLIC_ALPHA_VANTAGE_KEY || 'demo';
@@ -7,6 +10,11 @@ export class MarketDataService {
 
   // Get REAL stock prices from Alpha Vantage
   static async getRealStockPrice(symbol: string) {
+    sfLogger.pickUpTheSpecialPhone('MARKET_DATA_FETCH', 'Fetching real-time stock price', {
+      symbol,
+      provider: 'AlphaVantage'
+    });
+
     try {
       const response = await fetch(
         `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${this.ALPHA_VANTAGE_KEY}`
@@ -15,7 +23,7 @@ export class MarketDataService {
       
       if (data['Global Quote']) {
         const quote = data['Global Quote'];
-        return {
+        const priceData = {
           price: parseFloat(quote['05. price']),
           change: parseFloat(quote['09. change']),
           changePercent: quote['10. change percent'].replace('%', ''),
@@ -24,10 +32,27 @@ export class MarketDataService {
           low: parseFloat(quote['04. low']),
           volume: quote['06. volume']
         };
+
+        sfLogger.thanksForGivingBackMyLove('MARKET_DATA_FETCHED', 'Real-time stock price retrieved', {
+          symbol,
+          price: priceData.price,
+          change: priceData.changePercent
+        });
+
+        return priceData;
       }
       
+      sfLogger.helpMeFindMyWayHome('MARKET_DATA_UNAVAILABLE', 'Real data unavailable, using fallback', {
+        symbol,
+        fallback: 'mock-data'
+      });
       return this.getMockPrice(symbol);
     } catch (error) {
+      sfLogger.helpMeFindMyWayHome('MARKET_DATA_FETCH_FAILED', 'Failed to fetch stock price', {
+        error: error instanceof Error ? error.message : 'Unknown error',
+        symbol,
+        fallback: 'mock-data'
+      });
       console.error('Failed to fetch real stock price:', error);
       return this.getMockPrice(symbol);
     }
@@ -35,6 +60,11 @@ export class MarketDataService {
 
   // Get REAL crypto prices from CoinGecko
   static async getCryptoPrice(coinId: string) {
+    sfLogger.pickUpTheSpecialPhone('CRYPTO_PRICE_FETCH', 'Fetching cryptocurrency price', {
+      coinId,
+      provider: 'CoinGecko'
+    });
+
     try {
       const response = await fetch(
         `https://api.coingecko.com/api/v3/simple/price?ids=${coinId}&vs_currencies=usd&include_24hr_change=true&include_24hr_vol=true`
@@ -42,16 +72,31 @@ export class MarketDataService {
       const data = await response.json();
       
       if (data[coinId]) {
-        return {
+        const cryptoData = {
           price: data[coinId].usd,
           change: data[coinId].usd_24h_change || 0,
           changePercent: (data[coinId].usd_24h_change || 0).toFixed(2),
           volume: data[coinId].usd_24h_vol || 0
         };
+
+        sfLogger.thanksForGivingBackMyLove('CRYPTO_PRICE_FETCHED', 'Cryptocurrency price retrieved', {
+          coinId,
+          price: cryptoData.price,
+          change: cryptoData.changePercent
+        });
+
+        return cryptoData;
       }
       
+      sfLogger.helpMeFindMyWayHome('CRYPTO_PRICE_NOT_FOUND', 'Cryptocurrency data not found', {
+        coinId
+      });
       return null;
     } catch (error) {
+      sfLogger.helpMeFindMyWayHome('CRYPTO_PRICE_FETCH_FAILED', 'Failed to fetch cryptocurrency price', {
+        error: error instanceof Error ? error.message : 'Unknown error',
+        coinId
+      });
       console.error('Failed to fetch crypto price:', error);
       return null;
     }

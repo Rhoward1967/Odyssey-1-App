@@ -1,15 +1,16 @@
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/lib/supabaseClient';
 import {
-    Calculator,
-    CreditCard,
-    FileText,
-    Home,
-    LogOut,
-    Settings,
-    TrendingUp,
-    Tv,
-    Users
+  BookOpen,
+  Calculator,
+  CreditCard,
+  FileText,
+  Home,
+  LogOut,
+  Settings,
+  TrendingUp,
+  Tv,
+  Users
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
@@ -20,6 +21,7 @@ const menuItems = [
   { icon: Tv, label: 'Media Center', href: '/app/media-center' },
   { icon: Calculator, label: 'Calculator', href: '/app/calculator' },
   { icon: Users, label: 'Workforce', href: '/app/workforce' },
+  { icon: BookOpen, label: 'Handbook', href: '/app/handbook' },
   { icon: Settings, label: 'Admin Center', href: '/app/admin' },
   { icon: FileText, label: 'Manual', href: '/app/user-manual' },
   { icon: CreditCard, label: 'Subscription', href: '/app/subscription' },

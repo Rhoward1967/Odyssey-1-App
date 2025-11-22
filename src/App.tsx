@@ -9,6 +9,7 @@ import ProtectedRoute from '@/components/ProtectedRoute';
 import UserManual from '@/components/UserManual';
 import Admin from '@/pages/Admin';
 import Calculator from '@/pages/Calculator';
+import Handbook from '@/pages/Handbook';
 import Index from '@/pages/Index';
 import LoginPage from '@/pages/LoginPage';
 import Profile from '@/pages/Profile';
@@ -172,6 +173,7 @@ function App() {
                       <Route path="trading" element={<Trading />} />
                       <Route path="calculator" element={<Calculator />} />
                       <Route path="workforce" element={<WorkforceDashboard />} />
+                      <Route path="handbook" element={<Handbook />} />
                       <Route path="user-manual" element={<UserManual />} />
                       <Route path="media-center" element={<MediaCenter />} />
                       <Route path="test-checkout" element={<TestCheckout />} />

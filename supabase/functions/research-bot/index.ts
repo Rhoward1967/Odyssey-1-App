@@ -79,6 +79,72 @@ serve(async (req) => {
 
 *Data sources: Bloomberg, Reuters, McKinsey, PwC market research*`;
 
+    } else if (query.includes('investment') || query.includes('invest') || query.includes('secure') && (query.includes('route') || query.includes('strategy'))) {
+      aiResponse = `💰 **Most Secure Investment Routes (2024-2025)**
+
+**🏦 Low-Risk Investment Options:**
+
+**1. Treasury Securities (Highest Security)**
+• **U.S. Treasury Bonds** - Backed by full faith of U.S. government
+• **Current Yields:** 4-5% annually (varies by maturity)
+• **Risk Level:** Virtually zero default risk
+• **Best For:** Capital preservation, guaranteed returns
+
+**2. High-Yield Savings Accounts & CDs**
+• **FDIC-Insured:** Up to $250,000 per account
+• **Current Rates:** 4-5.5% APY at top online banks
+• **Liquidity:** Instant (savings) or term-based (CDs)
+• **Best For:** Emergency funds, short-term savings
+
+**3. Index Funds (Moderate Risk, Higher Returns)**
+• **S&P 500 Index Funds** - Diversified across 500 companies
+• **Historical Returns:** ~10% annually (long-term average)
+• **Risk:** Market volatility, but diversified
+• **Best For:** Long-term wealth building (5+ years)
+
+**4. Dividend Aristocrat Stocks**
+• **Blue-chip companies** with 25+ years dividend increases
+• **Examples:** Coca-Cola, Johnson & Johnson, Procter & Gamble
+• **Returns:** 3-6% dividend yield + capital appreciation
+• **Best For:** Income generation with relative stability
+
+**5. Municipal Bonds (Tax-Advantaged)**
+• **State/Local Government Bonds** - Often tax-free
+• **Yields:** 3-5% (tax-equivalent may be higher)
+• **Risk:** Low for investment-grade bonds
+• **Best For:** High earners seeking tax-free income
+
+**🛡️ Security Principles:**
+• **Diversification** - Never put all eggs in one basket
+• **Emergency Fund First** - 3-6 months expenses liquid
+• **Risk Tolerance** - Match investments to your timeline
+• **Regular Rebalancing** - Maintain target allocation
+
+**⚠️ What to Avoid for "Secure" Investing:**
+• High-fee actively managed funds
+• Individual stock picking (unless diversified)
+• Cryptocurrency (high volatility)
+• Penny stocks or speculative plays
+• Investments promising guaranteed high returns (likely scams)
+
+**📊 Sample Secure Portfolio (Conservative):**
+• 40% Treasury Bonds/CDs
+• 30% S&P 500 Index Fund
+• 20% Dividend Aristocrats
+• 10% High-Yield Savings (emergency fund)
+
+**Expected Annual Return:** 5-7%  
+**Risk Level:** Low to Moderate
+
+**💡 Action Steps:**
+1. **Assess your timeline** - When do you need the money?
+2. **Determine risk tolerance** - How much volatility can you handle?
+3. **Choose accounts** - Open FDIC-insured accounts with top rates
+4. **Automate investing** - Set up regular contributions
+5. **Review annually** - Adjust as life circumstances change
+
+*Disclaimer: Not financial advice. Consult a fiduciary financial advisor for personalized guidance.*`;
+
     } else if (query.includes('education') || query.includes('learning') || query.includes('study')) {
       aiResponse = `🎓 **Educational Research & Trends**
 
@@ -109,36 +175,60 @@ serve(async (req) => {
 *Sources: UNESCO, academic journals, educational technology reports*`;
 
     } else {
-      // Fallback for general research queries
-      aiResponse = `🔍 **Research Assistant Ready**
+      // Intelligent fallback - analyze the query and provide contextual response
+      aiResponse = `🔍 **Analyzing Your Query:** "${message}"
 
-I can help you research various topics:
+I understand you're asking about **${message}**. Let me help you with that:
 
-**📊 Business & Market Research:**
-• Industry analysis and trends
-• Competitive landscape studies
-• Market sizing and forecasting
-• Consumer behavior insights
+**� Based on your question, here's what I can research:**
 
-**🎓 Academic Research:**
-• Literature reviews and citations
-• Research methodology guidance
-• Data analysis and interpretation
-• Academic writing support
+`;
 
-**💡 Technology Research:**
-• Emerging technology trends
-• Technical specifications and comparisons
-• Innovation case studies
-• Implementation best practices
+      // Detect question type and provide relevant guidance
+      if (query.includes('how') || query.includes('what') || query.includes('why') || query.includes('when')) {
+        aiResponse += `**📚 This appears to be a research question.**
 
-**🏥 Professional Research:**
-• Medical and healthcare studies
-• Legal precedents and case law
-• Scientific papers and journals
-• Policy and regulatory analysis
+I can help by:
+• Finding authoritative sources
+• Summarizing key concepts
+• Providing step-by-step explanations
+• Comparing different perspectives
 
-Please specify what you'd like to research, and I'll provide detailed insights with relevant sources and methodologies.`;
+**� To give you the best answer:**
+• Specify if you need academic, practical, or general information
+• Let me know your background level (beginner, intermediate, expert)
+• Mention any specific aspects you're most interested in
+
+`;
+      }
+
+      if (query.includes('best') || query.includes('recommend') || query.includes('should')) {
+        aiResponse += `**💼 This appears to be seeking recommendations.**
+
+I can provide:
+• Comparative analysis of options
+• Pros and cons breakdown
+• Industry best practices
+• Expert perspectives
+
+**⚠️ Important Note:**
+Recommendations depend on your specific situation. Please share:
+• Your goals and constraints
+• Timeline and budget
+• Any specific preferences or requirements
+
+`;
+      }
+
+      aiResponse += `**📋 Popular Research Topics I Excel At:**
+• **Investment & Finance** - Secure routes, strategies, market analysis
+• **AI & Technology** - Latest trends, tools, implementation guides
+• **Education & Learning** - Study methods, resources, career paths
+• **Business Strategy** - Market research, competitive analysis, growth tactics
+• **Health & Wellness** - Evidence-based practices, medical research
+• **Legal & Regulatory** - Compliance, case law, policy analysis
+
+**🚀 Let's continue:** Ask me your follow-up questions, and I'll provide detailed, sourced answers!`;
     }
 
     // Try Hugging Face API as enhancement, but don't fail if it doesn't work

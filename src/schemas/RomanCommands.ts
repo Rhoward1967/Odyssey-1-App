@@ -23,7 +23,11 @@ export const ROMAN_ACTIONS = [
   "VALIDATE",
   "PROCESS",
   "APPROVE",
-  "GENERATE"
+  "GENERATE",
+  "MONITOR",
+  "ANALYZE",
+  "SUBMIT",
+  "AUTO"
 ] as const;
 
 export type RomanAction = typeof ROMAN_ACTIONS[number];
