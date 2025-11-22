@@ -3,9 +3,12 @@
  * © 2025 Rickey A Howard. All Rights Reserved.
  */
 
+import AIIntelligenceLiveFeed from '@/components/AIIntelligenceLiveFeed';
 import AppLayout from '@/components/AppLayout';
 import { AuthProvider } from '@/components/AuthProvider';
 import ProtectedRoute from '@/components/ProtectedRoute';
+import SystemEvolutionTracker from '@/components/SystemEvolutionTracker';
+import SystemObservabilityDashboard from '@/components/SystemObservabilityDashboard';
 import UserManual from '@/components/UserManual';
 import Admin from '@/pages/Admin';
 import Calculator from '@/pages/Calculator';
@@ -170,6 +173,12 @@ function App() {
                       <Route path="profile" element={<Profile />} />
                       <Route path="subscription" element={<Subscription />} />
                       <Route path="admin" element={<Admin />} />
+                      
+                      {/* R.O.M.A.N. Observability Dashboards */}
+                      <Route path="admin/observability" element={<SystemObservabilityDashboard />} />
+                      <Route path="admin/ai-intelligence" element={<AIIntelligenceLiveFeed />} />
+                      <Route path="admin/evolution" element={<SystemEvolutionTracker />} />
+                      
                       <Route path="trading" element={<Trading />} />
                       <Route path="calculator" element={<Calculator />} />
                       <Route path="workforce" element={<WorkforceDashboard />} />
