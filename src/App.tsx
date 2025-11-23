@@ -3,8 +3,6 @@
  * © 2025 Rickey A Howard. All Rights Reserved.
  */
 
-import { Analytics } from '@vercel/analytics/react';
-import { SpeedInsights } from '@vercel/speed-insights/react';
 import AIIntelligenceLiveFeed from '@/components/AIIntelligenceLiveFeed';
 import AppLayout from '@/components/AppLayout';
 import { AuthProvider } from '@/components/AuthProvider';
@@ -21,6 +19,8 @@ import Profile from '@/pages/Profile';
 import Subscription from '@/pages/Subscription';
 import Trading from '@/pages/Trading';
 import WorkforceDashboard from '@/pages/WorkforceDashboard';
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import { useEffect, useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import PublicHomePage from './components/PublicHomePage';
