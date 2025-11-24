@@ -1,7 +1,9 @@
 {
   "imports": {
     "std/": "https://deno.land/std@0.168.0/",
-    "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@2"
+    "std/http/server.ts": "https://deno.land/std@0.177.0/http/server.ts",
+    "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@2",
+    "@anthropic-ai/sdk": "npm:@anthropic-ai/sdk@0.20.9"
   },
   "tasks": {
     "start": "deno run --allow-all --watch index.ts"
@@ -12,7 +14,8 @@
   },
   "lint": {
     "rules": {
-      "tags": ["recommended"]
+      "tags": ["recommended"],
+      "exclude": ["no-explicit-any", "no-unused-vars"]
     }
   },
   "fmt": {

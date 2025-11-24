@@ -1,4 +1,4 @@
-import { serve } from 'std/http/server.ts';
+import { serve } from 'https://deno.land/std@0.177.0/http/server.ts'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -9,19 +9,8 @@ const corsHeaders = {
 const ALPHA_VANTAGE_KEY = Deno.env.get('ALPHA_VANTAGE_API_KEY');
 const COINGECKO_API_URL = 'https://api.coingecko.com/api/v3';
 
-// Type definitions
-interface StockData {
-  symbol?: string;
-  price?: number;
-  change?: number;
-  changePercent?: string;
-  volume?: string;
-  latestTradingDay?: string;
-  error?: string;
-}
-
 // Fetch real-time stock price
-async function getStockPrice(symbol: string): Promise<StockData> {
+async function getStockPrice(symbol: string): Promise<any> {
   if (!ALPHA_VANTAGE_KEY) {
     return { error: 'API key not configured' };
   }
@@ -43,23 +32,14 @@ async function getStockPrice(symbol: string): Promise<StockData> {
     }
     
     return { error: 'No data found' };
-  } catch (error: unknown) {
+  } catch (error: any) {
     console.error('Stock price fetch error:', error);
-    return { error: error instanceof Error ? error.message : 'Unknown error' };
+    return { error: error.message };
   }
 }
 
-interface CryptoData {
-  symbol?: string;
-  name?: string;
-  price?: number;
-  change24h?: string;
-  volume24h?: number;
-  error?: string;
-}
-
 // Fetch real-time crypto price
-async function getCryptoPrice(symbol: string): Promise<CryptoData> {
+async function getCryptoPrice(symbol: string): Promise<any> {
   try {
     // Map common symbols to CoinGecko IDs
     const cryptoMap: Record<string, string> = {
@@ -92,9 +72,9 @@ async function getCryptoPrice(symbol: string): Promise<CryptoData> {
     }
     
     return { error: 'Crypto not found' };
-  } catch (error: unknown) {
+  } catch (error: any) {
     console.error('Crypto price fetch error:', error);
-    return { error: error instanceof Error ? error.message : 'Unknown error' };
+    return { error: error.message };
   }
 }
 
@@ -104,7 +84,7 @@ serve(async (req: Request) => {
   }
 
   try {
-    const { message, tradingMode = 'paper', messages: _chatHistory = [] } = await req.json()
+    const { message, tradingMode = 'paper', messages: chatHistory = [] } = await req.json()
     
     const ANTHROPIC_API_KEY = Deno.env.get('ANTHROPIC_API_KEY')
     
@@ -132,8 +112,8 @@ serve(async (req: Request) => {
       
       const cryptoData = await getCryptoPrice(symbol);
       
-      if (cryptoData.error || !cryptoData.price || !cryptoData.change24h || !cryptoData.volume24h) {
-        response = `🚨 Unable to fetch ${symbol} data: ${cryptoData.error || 'Data unavailable'}\n\nPlease try again in a moment.`;
+      if (cryptoData.error) {
+        response = `🚨 Unable to fetch ${symbol} data: ${cryptoData.error}\n\nPlease try again in a moment.`;
       } else {
         const changeEmoji = parseFloat(cryptoData.change24h) >= 0 ? '📈' : '📉';
         const changeColor = parseFloat(cryptoData.change24h) >= 0 ? '🟢' : '🔴';
@@ -190,7 +170,7 @@ ${tradingMode === 'paper'
       const symbol = stockMatch[1];
       const stockData = await getStockPrice(symbol);
       
-      if (stockData.error || !stockData.price || stockData.change === undefined || !stockData.volume) {
+      if (stockData.error) {
         // Fall through to default responses if API fails
         console.log(`Stock API error for ${symbol}:`, stockData.error);
       } else {

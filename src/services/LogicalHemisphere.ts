@@ -36,26 +36,109 @@ export class LogicalHemisphere {
   ): Promise<ValidationResult> {
     
     const errors: string[] = [];
+    const warnings: string[] = [];
 
     // Basic structure validation (more flexible)
     if (!command.action) {
-      errors.push('Missing required field: action');
+      errors.push('CRITICAL: Missing required field: action');
     }
 
     if (!command.target) {
-      errors.push('Missing required field: target');
+      errors.push('CRITICAL: Missing required field: target');
     }
 
-    // Validate action is one of the allowed values
-    const validActions = ['READ', 'CREATE', 'UPDATE', 'DELETE', 'PROCESS', 'APPROVE'];
+    // Validate action is one of the allowed values (EXPANDED)
+    const validActions = ['READ', 'CREATE', 'UPDATE', 'DELETE', 'PROCESS', 'APPROVE', 'EXECUTE', 'VALIDATE', 'GENERATE', 'MONITOR', 'ANALYZE', 'SUBMIT', 'AUTO'];
     if (command.action && !validActions.includes(command.action)) {
-      errors.push(`Invalid action: ${command.action}. Must be one of: ${validActions.join(', ')}`);
+      errors.push(`CRITICAL: Invalid action: ${command.action}. Must be one of: ${validActions.join(', ')}`);
     }
 
-    // Validate target is one of the allowed values
-    const validTargets = ['EMPLOYEE', 'PAYROLL_RUN', 'PAYSTUB', 'TIME_ENTRY', 'PROJECT_TASK', 'BID'];
+    // Validate target is one of the allowed values (EXPANDED)
+    const validTargets = [
+      'EMPLOYEE', 'PAYROLL_RUN', 'PAYSTUB', 'TIME_ENTRY', 'PROJECT_TASK', 'BID',
+      'TRADE', 'PORTFOLIO', 'MARKET_DATA', 'AI_RESEARCH', 'AI_CALCULATOR',
+      'EMAIL', 'DISCORD', 'AGENT', 'SYSTEM_STATUS', 'CONTRACT', 'ORGANIZATION', 'USER_PROFILE'
+    ];
     if (command.target && !validTargets.includes(command.target)) {
-      errors.push(`Invalid target: ${command.target}. Must be one of: ${validTargets.join(', ')}`);
+      errors.push(`CRITICAL: Invalid target: ${command.target}. Must be one of: ${validTargets.join(', ')}`);
+    }
+
+    // Target-specific payload validation (ENHANCED)
+    if (command.target && command.payload) {
+      switch (command.target) {
+        case 'TRADE':
+          if (command.action === 'EXECUTE') {
+            if (!command.payload.symbol) {
+              errors.push('CRITICAL: TRADE EXECUTE requires payload.symbol (e.g., "TSLA" or "USDC")');
+            }
+            if (!command.payload.side) {
+              errors.push('CRITICAL: TRADE EXECUTE requires payload.side ("buy" or "sell")');
+            }
+            if (!command.payload.quantity && command.payload.quantity !== 0) {
+              errors.push('CRITICAL: TRADE EXECUTE requires payload.quantity (trade amount)');
+            }
+            
+            // Trade-specific business logic validation
+            const quantity = parseFloat(command.payload.quantity);
+            if (isNaN(quantity) || quantity <= 0) {
+              errors.push('CRITICAL: TRADE quantity must be a positive number');
+            }
+            
+            // Minimum trade size (prevent dust trades with high gas costs)
+            if (quantity < 5 && command.payload.tradingMode === 'live') {
+              warnings.push('WARNING: Live trades under $5 may have gas fees exceeding trade value');
+            }
+            
+            // Maximum trade size (risk management)
+            if (quantity > 1000) {
+              errors.push('CRITICAL: TRADE quantity exceeds maximum allowed ($1000)');
+            }
+            
+            // Validate trading mode
+            if (command.payload.tradingMode && !['paper', 'live'].includes(command.payload.tradingMode)) {
+              errors.push('CRITICAL: tradingMode must be "paper" or "live"');
+            }
+            
+            // Validate slippage tolerance for live trades
+            if (command.payload.tradingMode === 'live' && command.payload.slippage) {
+              const slippage = parseFloat(command.payload.slippage);
+              if (slippage < 0.1 || slippage > 5) {
+                warnings.push('WARNING: Slippage tolerance should be between 0.1% and 5%');
+              }
+            }
+          }
+          break;
+        
+        case 'PAYROLL_RUN':
+          if (command.action === 'PROCESS') {
+            if (!command.payload.periodStart) {
+              warnings.push('WARNING: PAYROLL_RUN PROCESS should include payload.periodStart');
+            }
+            if (!command.payload.periodEnd) {
+              warnings.push('WARNING: PAYROLL_RUN PROCESS should include payload.periodEnd');
+            }
+          }
+          break;
+        
+        case 'EMAIL':
+          if (command.action === 'CREATE') {
+            if (!command.payload.to) {
+              errors.push('CRITICAL: EMAIL CREATE requires payload.to (recipient email)');
+            }
+            if (!command.payload.subject && !command.payload.body) {
+              warnings.push('WARNING: EMAIL CREATE should include payload.subject and payload.body');
+            }
+          }
+          break;
+        
+        case 'AI_RESEARCH':
+          if (command.action === 'PROCESS') {
+            if (!command.payload.query) {
+              errors.push('CRITICAL: AI_RESEARCH PROCESS requires payload.query (search term)');
+            }
+          }
+          break;
+      }
     }
 
     // Metadata validation (flexible - can be missing or incomplete)
@@ -63,7 +146,7 @@ export class LogicalHemisphere {
       command.metadata = {
         requestedBy: userId,
         timestamp: new Date().toISOString(),
-        intent: 'Auto-generated metadata' // Add this line
+        intent: 'Auto-generated metadata'
       };
     }
 
@@ -72,18 +155,19 @@ export class LogicalHemisphere {
       command.payload = {};
     }
 
-    // If no errors, approve the command
+    // If no CRITICAL errors, approve the command (warnings are OK)
     if (errors.length === 0) {
+      const warningNote = warnings.length > 0 ? ` (${warnings.length} warnings: ${warnings.join('; ')})` : '';
       return {
         approved: true,
-        reason: '✓ Command validated successfully'
+        reason: `✅ Command validated successfully${warningNote}`
       };
     }
 
-    // If there are errors, return them
+    // If there are CRITICAL errors, return them with helpful feedback
     return {
       approved: false,
-      reason: errors.join('; '),
+      reason: `❌ VALIDATION FAILED: ${errors.join(' | ')}${warnings.length > 0 ? ' | WARNINGS: ' + warnings.join(' | ') : ''}`,
       errors
     };
   }

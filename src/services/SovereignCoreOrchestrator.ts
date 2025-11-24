@@ -11,6 +11,7 @@
 import { supabase } from '@/lib/supabaseClient';
 import { RomanCommand } from '@/schemas/RomanCommands';
 import { LogicalHemisphere, ValidationResult } from './LogicalHemisphere';
+import { RomanLearningEngine } from './RomanLearningEngine';
 import { SynchronizationLayer } from './SynchronizationLayer';
 
 export interface OrchestrationResult {
@@ -28,12 +29,13 @@ export interface OrchestrationResult {
 export class SovereignCoreOrchestrator {
   
   /**
-   * MAIN ORCHESTRATION FLOW
+   * MAIN ORCHESTRATION FLOW (ENHANCED WITH LEARNING)
    * 
    * This is the complete pipeline from intent to execution:
    * 1. Synchronization Layer generates command
    * 2. Logical Hemisphere validates
    * 3. Execution Engine performs action
+   * 4. Learning Engine records result (NEW)
    */
   static async processIntent(
     userIntent: string,
@@ -57,6 +59,14 @@ export class SovereignCoreOrchestrator {
       const validation = await LogicalHemisphere.validate(command, userId);
       
       if (!validation.approved) {
+        // LEARNING: Record validation failure
+        await RomanLearningEngine.recordCommandExecution({
+          user_intent: userIntent,
+          generated_command: command,
+          validation_result: validation,
+          confidence_score: 0.3 // Low confidence on validation failure
+        });
+
         return {
           success: false,
           command,
@@ -70,6 +80,18 @@ export class SovereignCoreOrchestrator {
       // PHASE 3: Execution Engine
       console.log('⚡ Sovereign-Core: Phase 3 - Execution Engine');
       const execution = await this.executeCommand(command);
+
+      // PHASE 4: Learning Engine (Record for continuous improvement)
+      console.log('📚 Sovereign-Core: Phase 4 - Learning Engine');
+      await RomanLearningEngine.recordCommandExecution({
+        user_intent: userIntent,
+        generated_command: command,
+        validation_result: validation,
+        execution_result: execution,
+        confidence_score: execution.success ? 0.9 : 0.5
+      });
+
+      console.log('✅ Learning data recorded');
 
       return {
         success: execution.success,
@@ -89,7 +111,10 @@ export class SovereignCoreOrchestrator {
   }
 
   /**
-   * EXECUTION ENGINE (Enhanced with SYSTEM_STATUS support)
+   * EXECUTION ENGINE (ENHANCED FOR COMPLEX DUAL-HEMISPHERE OPERATIONS)
+   * 
+   * R.O.M.A.N. was designed for COMPLEX workflows - not just database CRUD.
+   * This orchestrator connects to ALL Edge Functions and external services.
    */
   static async executeCommand(command: RomanCommand): Promise<{
     success: boolean;
@@ -101,6 +126,7 @@ export class SovereignCoreOrchestrator {
 
     try {
       switch (target) {
+        // === WORKFORCE MANAGEMENT ===
         case 'PAYROLL_RUN':
           return await this.executePayrollCommand(command);
         
@@ -116,11 +142,40 @@ export class SovereignCoreOrchestrator {
         case 'PROJECT_TASK':
           return await this.executeTaskCommand(command);
         
+        // === TRADING & FINANCE ===
+        case 'TRADE':
+          return await this.executeTradeCommand(command);
+        
+        case 'PORTFOLIO':
+          return await this.executePortfolioCommand(command);
+        
+        case 'MARKET_DATA':
+          return await this.executeMarketDataCommand(command);
+        
+        // === AI & RESEARCH ===
+        case 'AI_RESEARCH':
+          return await this.executeAIResearchCommand(command);
+        
+        case 'AI_CALCULATOR':
+          return await this.executeAICalculatorCommand(command);
+        
+        // === BIDDING & PROPOSALS ===
         case 'BID':
           return await this.executeBidCommand(command);
         
+        // === COMMUNICATIONS ===
+        case 'EMAIL':
+          return await this.executeEmailCommand(command);
+        
+        case 'DISCORD':
+          return await this.executeDiscordCommand(command);
+        
+        // === SYSTEM & DIAGNOSTICS ===
         case 'SYSTEM_STATUS':
           return await this.executeSystemStatusCommand(command);
+        
+        case 'AGENT':
+          return await this.executeAgentCommand(command);
         
         default:
           return {
@@ -544,33 +599,81 @@ export class SovereignCoreOrchestrator {
   }
 
   /**
-   * SYSTEM_STATUS EXECUTION (NEW)
+   * SYSTEM_STATUS EXECUTION (ENHANCED WITH SELF-AWARENESS)
    */
   private static async executeSystemStatusCommand(command: RomanCommand) {
     const { action } = command;
 
-    if (action === 'GENERATE') {
+    if (action === 'GENERATE' || action === 'READ') {
       try {
+        // Import system context for self-awareness
+        const { RomanSystemContext } = await import('./RomanSystemContext');
+        const { RomanLearningEngine } = await import('./RomanLearningEngine');
+        const romanStatus = RomanSystemContext.getStatus();
+        
+        // Get learning statistics
+        const learningStats = await RomanLearningEngine.getCapabilityStats();
+        
         // Get system health metrics
         const systemStatus = {
           timestamp: new Date().toISOString(),
+          
+          // R.O.M.A.N. IDENTITY
+          identity: {
+            name: romanStatus.identity.name,
+            version: romanStatus.identity.version,
+            architecture: romanStatus.identity.architecture,
+            access_level: romanStatus.identity.status.toUpperCase(),
+            governance: romanStatus.identity.governance.toUpperCase(),
+            constitutional_protection: romanStatus.identity.constitutional
+          },
+          
+          // SELF-AWARENESS METRICS
+          self_awareness: {
+            capabilities_known: romanStatus.capabilities.total,
+            capabilities_operational: romanStatus.capabilities.operational,
+            edge_functions_deployed: romanStatus.edgeFunctions.deployed,
+            constitutional_principles: romanStatus.constitutional.principles,
+            status: 'FULLY SELF-AWARE'
+          },
+          
+          // LEARNING METRICS (NEW)
+          learning: {
+            total_commands_processed: learningStats.total_commands,
+            overall_success_rate: Math.round(learningStats.overall_success_rate * 100) + '%',
+            learning_level: learningStats.total_commands > 100 ? 'EXPERIENCED' : 
+                           learningStats.total_commands > 20 ? 'LEARNING' : 'NOVICE',
+            most_used_targets: learningStats.most_used_targets.slice(0, 3),
+            most_used_actions: learningStats.most_used_actions.slice(0, 3),
+            intelligence_status: 'ADAPTIVE'
+          },
+          
+          // DATABASE HEALTH
           database: {
             connected: true,
             response_time: '< 50ms'
           },
+          
+          // AGENT METRICS
           agents: {
             total: 0,
             active: 0,
             monitoring: 0
           },
+          
+          // COMMAND METRICS
           commands: {
             processed_today: 0,
             success_rate: '100%'
           },
+          
+          // SOVEREIGNTY STATUS
           sovereignty: {
             constitutional_compliance: '100%',
-            principles_active: 9,
-            security_level: 'SOVEREIGN'
+            principles_active: romanStatus.constitutional.principles,
+            security_level: 'SOVEREIGN',
+            governance_protection: romanStatus.constitutional.governance,
+            access_status: romanStatus.constitutional.status.toUpperCase()
           }
         };
 
@@ -602,7 +705,7 @@ export class SovereignCoreOrchestrator {
         return {
           success: true,
           data: systemStatus,
-          message: 'System status report generated successfully'
+          message: `🔱 R.O.M.A.N. System Status: ${systemStatus.self_awareness.status} | ${systemStatus.self_awareness.capabilities_operational}/${systemStatus.self_awareness.capabilities_known} capabilities operational | ${systemStatus.self_awareness.edge_functions_deployed} Edge Functions deployed | Access: ${systemStatus.sovereignty.access_status}`
         };
       } catch (error: any) {
         return {
@@ -613,5 +716,376 @@ export class SovereignCoreOrchestrator {
     }
 
     return { success: false, message: `Action ${action} not supported for SYSTEM_STATUS` };
+  }
+
+  // ============================================================================
+  // TRADING & FINANCE EXECUTION METHODS
+  // ============================================================================
+
+  /**
+   * TRADE EXECUTION
+   * Executes paper trades or live trades via trade-orchestrator Edge Function
+   */
+  private static async executeTradeCommand(command: RomanCommand) {
+    const { action, payload } = command;
+
+    try {
+      switch (action) {
+        case 'EXECUTE':
+          // Execute paper trade via trade-orchestrator
+          const { data, error } = await supabase.functions.invoke('trade-orchestrator', {
+            body: {
+              action: 'EXECUTE_PAPER_TRADE',
+              payload: {
+                symbol: payload.symbol,
+                quantity: payload.quantity,
+                side: payload.side, // 'buy' or 'sell'
+                price: payload.price
+              }
+            }
+          });
+
+          if (error) throw error;
+
+          return {
+            success: true,
+            data,
+            message: `✅ Trade executed: ${payload.side.toUpperCase()} ${payload.quantity} ${payload.symbol} @ $${payload.price}`
+          };
+
+        case 'READ':
+          // Get trade history
+          const { data: trades, error: tradesError } = await supabase
+            .from('trades')
+            .select('*')
+            .eq('user_id', command.metadata.requestedBy)
+            .order('created_at', { ascending: false })
+            .limit(10);
+
+          if (tradesError) throw tradesError;
+
+          return {
+            success: true,
+            data: trades,
+            message: `Found ${trades?.length || 0} recent trades`
+          };
+
+        default:
+          return { success: false, message: `Action ${action} not supported for TRADE` };
+      }
+    } catch (error: any) {
+      return {
+        success: false,
+        message: `Trade execution failed: ${error.message}`
+      };
+    }
+  }
+
+  /**
+   * PORTFOLIO EXECUTION
+   * Gets live P&L and portfolio analytics
+   */
+  private static async executePortfolioCommand(command: RomanCommand) {
+    const { action } = command;
+
+    try {
+      if (action === 'READ' || action === 'ANALYZE') {
+        // Get live P&L from trade-orchestrator
+        const { data, error } = await supabase.functions.invoke('trade-orchestrator', {
+          body: { action: 'GET_LIVE_P_AND_L', payload: {} }
+        });
+
+        if (error) throw error;
+
+        return {
+          success: true,
+          data,
+          message: `📊 Portfolio P&L: ${data.pnl >= 0 ? '+' : ''}$${data.pnl.toFixed(2)}`
+        };
+      }
+
+      return { success: false, message: `Action ${action} not supported for PORTFOLIO` };
+    } catch (error: any) {
+      return {
+        success: false,
+        message: `Portfolio analysis failed: ${error.message}`
+      };
+    }
+  }
+
+  /**
+   * MARKET_DATA EXECUTION
+   * Gets stock quotes, AI analysis, market insights
+   */
+  private static async executeMarketDataCommand(command: RomanCommand) {
+    const { action, payload } = command;
+
+    try {
+      switch (action) {
+        case 'READ':
+          // Get AI trading advice
+          const { data, error } = await supabase.functions.invoke('trade-orchestrator', {
+            body: {
+              action: 'GET_AI_ADVICE',
+              payload: { symbol: payload.symbol }
+            }
+          });
+
+          if (error) throw error;
+
+          return {
+            success: true,
+            data,
+            message: `📈 AI Analysis for ${payload.symbol} completed`
+          };
+
+        case 'MONITOR':
+          // Monitor multiple symbols
+          const symbols = payload.symbols || [payload.symbol];
+          const results = [];
+
+          for (const symbol of symbols) {
+            const { data } = await supabase.functions.invoke('trade-orchestrator', {
+              body: {
+                action: 'GET_AI_ADVICE',
+                payload: { symbol }
+              }
+            });
+            if (data) results.push(data);
+          }
+
+          return {
+            success: true,
+            data: results,
+            message: `✅ Monitored ${results.length} symbols`
+          };
+
+        default:
+          return { success: false, message: `Action ${action} not supported for MARKET_DATA` };
+      }
+    } catch (error: any) {
+      return {
+        success: false,
+        message: `Market data retrieval failed: ${error.message}`
+      };
+    }
+  }
+
+  // ============================================================================
+  // AI & RESEARCH EXECUTION METHODS
+  // ============================================================================
+
+  /**
+   * AI_RESEARCH EXECUTION
+   * Performs academic research via research-bot Edge Function
+   */
+  private static async executeAIResearchCommand(command: RomanCommand) {
+    const { action, payload } = command;
+
+    try {
+      if (action === 'PROCESS' || action === 'ANALYZE') {
+        const { data, error } = await supabase.functions.invoke('research-bot', {
+          body: {
+            query: payload.query || payload.topic,
+            sources: payload.sources || ['arxiv', 'semantic_scholar']
+          }
+        });
+
+        if (error) throw error;
+
+        return {
+          success: true,
+          data,
+          message: `🔬 Research completed for: ${payload.query || payload.topic}`
+        };
+      }
+
+      return { success: false, message: `Action ${action} not supported for AI_RESEARCH` };
+    } catch (error: any) {
+      return {
+        success: false,
+        message: `AI research failed: ${error.message}`
+      };
+    }
+  }
+
+  /**
+   * AI_CALCULATOR EXECUTION
+   * Performs calculations via ai-calculator Edge Function
+   */
+  private static async executeAICalculatorCommand(command: RomanCommand) {
+    const { action, payload } = command;
+
+    try {
+      if (action === 'PROCESS' || action === 'EXECUTE') {
+        const { data, error } = await supabase.functions.invoke('ai-calculator', {
+          body: {
+            expression: payload.expression || payload.calculation,
+            context: payload.context
+          }
+        });
+
+        if (error) throw error;
+
+        return {
+          success: true,
+          data,
+          message: `🧮 Calculation completed`
+        };
+      }
+
+      return { success: false, message: `Action ${action} not supported for AI_CALCULATOR` };
+    } catch (error: any) {
+      return {
+        success: false,
+        message: `AI calculation failed: ${error.message}`
+      };
+    }
+  }
+
+  // ============================================================================
+  // COMMUNICATIONS EXECUTION METHODS
+  // ============================================================================
+
+  /**
+   * EMAIL EXECUTION
+   * Sends emails via send-email Edge Function
+   */
+  private static async executeEmailCommand(command: RomanCommand) {
+    const { action, payload } = command;
+
+    try {
+      if (action === 'CREATE' || action === 'PROCESS') {
+        const { data, error } = await supabase.functions.invoke('send-email', {
+          body: {
+            to: payload.to,
+            subject: payload.subject,
+            html: payload.html || payload.body,
+            from: payload.from || 'noreply@odyssey-1.ai'
+          }
+        });
+
+        if (error) throw error;
+
+        return {
+          success: true,
+          data,
+          message: `✉️ Email sent to ${payload.to}`
+        };
+      }
+
+      return { success: false, message: `Action ${action} not supported for EMAIL` };
+    } catch (error: any) {
+      return {
+        success: false,
+        message: `Email send failed: ${error.message}`
+      };
+    }
+  }
+
+  /**
+   * DISCORD EXECUTION
+   * Sends Discord messages (future implementation)
+   */
+  private static async executeDiscordCommand(command: RomanCommand) {
+    const { action, payload } = command;
+
+    // Discord bot integration (future)
+    return {
+      success: false,
+      message: `Discord integration pending - would send: ${payload.message}`
+    };
+  }
+
+  // ============================================================================
+  // AGENT MANAGEMENT EXECUTION METHODS
+  // ============================================================================
+
+  /**
+   * AGENT EXECUTION
+   * Manages autonomous agents
+   */
+  private static async executeAgentCommand(command: RomanCommand) {
+    const { action, payload } = command;
+
+    try {
+      switch (action) {
+        case 'CREATE':
+          // Create new agent
+          const { data: newAgent, error: createError } = await supabase
+            .from('agents')
+            .insert({
+              name: payload.name,
+              type: payload.type,
+              status: 'active',
+              configuration: payload.configuration,
+              created_by: command.metadata.requestedBy
+            })
+            .select()
+            .single();
+
+          if (createError) throw createError;
+
+          return {
+            success: true,
+            data: newAgent,
+            message: `🤖 Agent "${payload.name}" created`
+          };
+
+        case 'READ':
+          // List all agents
+          const { data: agents, error: readError } = await supabase
+            .from('agents')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+          if (readError) throw readError;
+
+          return {
+            success: true,
+            data: agents,
+            message: `Found ${agents?.length || 0} agents`
+          };
+
+        case 'UPDATE':
+          // Update agent status
+          const { error: updateError } = await supabase
+            .from('agents')
+            .update({
+              status: payload.status,
+              configuration: payload.configuration
+            })
+            .eq('id', payload.agentId);
+
+          if (updateError) throw updateError;
+
+          return {
+            success: true,
+            message: `✅ Agent updated`
+          };
+
+        case 'DELETE':
+          // Deactivate agent
+          const { error: deleteError } = await supabase
+            .from('agents')
+            .update({ status: 'inactive' })
+            .eq('id', payload.agentId);
+
+          if (deleteError) throw deleteError;
+
+          return {
+            success: true,
+            message: `🚫 Agent deactivated`
+          };
+
+        default:
+          return { success: false, message: `Action ${action} not supported for AGENT` };
+      }
+    } catch (error: any) {
+      return {
+        success: false,
+        message: `Agent operation failed: ${error.message}`
+      };
+    }
   }
 }

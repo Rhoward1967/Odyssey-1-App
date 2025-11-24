@@ -20,6 +20,10 @@ import {
   Calculator,
   Calendar,
   Crown,
+  HelpCircle,
+  Mail,
+  MessageSquare,
+  Phone,
   Play,
   Shield,
   TrendingUp,
@@ -515,32 +519,396 @@ export const UserManual: React.FC = () => {
           </TabsTrigger>
         </TabsList>
 
-        {/* GETTING STARTED TAB */}
+        {/* GETTING STARTED TAB - COMPLETE REWRITE WITH ACTUAL GUIDANCE */}
         <TabsContent value='getting-started'>
-          <div className="p-6">
-            <h2 className="text-2xl font-bold text-blue-300 mb-4">📖 Getting Started with ODYSSEY-1</h2>
-            <div className="space-y-4 text-gray-300">
-              <p>
-                ODYSSEY-1 is a professional business management platform with AI-powered tools for:
-              </p>
-              <ul className="list-disc ml-6 space-y-2">
-                <li><strong>Workforce Management:</strong> Complete HR, payroll, and time tracking system</li>
-                <li><strong>Trading Platform:</strong> AI-powered market analysis (access via top navigation)</li>
-                <li><strong>Bidding Calculator:</strong> Project estimation tools (access via top navigation)</li>
-                <li><strong>R.O.M.A.N. AI Core:</strong> Constitutional AI system with dual hemispheres</li>
-                <li><strong>System Administration:</strong> Complete technical documentation for developers</li>
-              </ul>
+          <div className="p-6 space-y-6">
+            {/* HERO WELCOME */}
+            <Card className="bg-gradient-to-r from-blue-900/50 to-purple-900/50 border-blue-500/30">
+              <CardHeader>
+                <CardTitle className="text-3xl font-bold text-white text-center">
+                  🎯 Welcome to ODYSSEY-1!
+                </CardTitle>
+                <p className="text-center text-blue-200 text-lg">
+                  Your AI-powered business command center. Let's get you up and running in 5 minutes.
+                </p>
+              </CardHeader>
+            </Card>
 
-              <div className="mt-6 bg-blue-900/30 p-4 rounded border border-blue-500">
-                <h3 className="font-semibold text-blue-300 mb-2">Quick Navigation:</h3>
-                <div className="space-y-2 text-sm">
-                  <div>• <strong>Workforce Tab:</strong> Manage employees, time tracking, and payroll</div>
-                  <div>• <strong>R.O.M.A.N. Tab:</strong> Interact with the AI core system</div>
-                  <div>• <strong>Supa-Admin Tab:</strong> Complete system documentation (CEO/Developer only)</div>
-                  <div>• <strong>Top Navigation:</strong> Dashboard, Trading, Calculator, Admin Center</div>
+            {/* STEP 1: FIRST THINGS FIRST */}
+            <Card className="bg-slate-800/80 border-green-500/50">
+              <CardHeader>
+                <CardTitle className="text-green-300 flex items-center gap-2">
+                  <div className="bg-green-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold">1</div>
+                  First Things First: Your Account Setup
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4 text-gray-300">
+                <div className="bg-green-900/20 p-4 rounded border border-green-500">
+                  <h4 className="font-semibold text-green-300 mb-2">✅ You're Already Logged In!</h4>
+                  <p className="text-sm">
+                    Since you're reading this, your account is active. Here's what happens behind the scenes:
+                  </p>
+                  <ul className="text-sm mt-2 space-y-1 ml-4">
+                    <li>• Your unique user ID is stored securely in Supabase</li>
+                    <li>• You're assigned to an organization (or you own one)</li>
+                    <li>• Your role determines what you can access</li>
+                  </ul>
                 </div>
-              </div>
-            </div>
+
+                <div className="bg-slate-900 p-4 rounded">
+                  <h4 className="font-semibold text-blue-300 mb-3">🔐 Your Role & Permissions:</h4>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex items-start gap-3">
+                      <span className="text-red-400 font-bold">🛡️ Owner:</span>
+                      <span>Full access to everything in your organization. Can manage all employees, run payroll, view all data.</span>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <span className="text-orange-400 font-bold">👑 Admin:</span>
+                      <span>Can manage employees and data, but can't delete the organization or remove the owner.</span>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <span className="text-blue-400 font-bold">👤 Member:</span>
+                      <span>Can view and edit your own data (time entries, personal info). Limited organizational access.</span>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* STEP 2: EXPLORE THE PLATFORM */}
+            <Card className="bg-slate-800/80 border-purple-500/50">
+              <CardHeader>
+                <CardTitle className="text-purple-300 flex items-center gap-2">
+                  <div className="bg-purple-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold">2</div>
+                  Explore the Platform: What Can You Do?
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4 text-gray-300">
+                <div className="grid md:grid-cols-2 gap-4">
+                  {/* Workforce Management */}
+                  <div className="bg-slate-900 p-4 rounded border border-blue-500/30 hover:border-blue-500 transition-all">
+                    <h4 className="font-semibold text-blue-300 mb-2 flex items-center gap-2">
+                      <Users className="h-5 w-5" />
+                      👥 Workforce Management
+                    </h4>
+                    <p className="text-sm text-gray-400 mb-3">
+                      Complete HR system: manage employees, track time, run payroll.
+                    </p>
+                    <div className="text-xs space-y-1">
+                      <div>• Add employees and contractors</div>
+                      <div>• Clock in/out with time tracking</div>
+                      <div>• Run automated payroll</div>
+                      <div>• Generate paystubs</div>
+                    </div>
+                    <div className="mt-3 text-xs text-blue-400 font-semibold">
+                      👉 Click "Workforce" tab above to start
+                    </div>
+                  </div>
+
+                  {/* R.O.M.A.N. AI */}
+                  <div className="bg-slate-900 p-4 rounded border border-purple-500/30 hover:border-purple-500 transition-all">
+                    <h4 className="font-semibold text-purple-300 mb-2 flex items-center gap-2">
+                      <Brain className="h-5 w-5" />
+                      👑 R.O.M.A.N. AI Core
+                    </h4>
+                    <p className="text-sm text-gray-400 mb-3">
+                      Constitutional AI with dual-hemisphere intelligence.
+                    </p>
+                    <div className="text-xs space-y-1">
+                      <div>• Ask questions in natural language</div>
+                      <div>• Query your database securely</div>
+                      <div>• Get AI-powered insights</div>
+                      <div>• Constitutional validation (follows rules)</div>
+                    </div>
+                    <div className="mt-3 text-xs text-purple-400 font-semibold">
+                      👉 Click "R.O.M.A.N." tab above to try it
+                    </div>
+                  </div>
+
+                  {/* Trading Platform */}
+                  <div className="bg-slate-900 p-4 rounded border border-green-500/30 hover:border-green-500 transition-all">
+                    <h4 className="font-semibold text-green-300 mb-2 flex items-center gap-2">
+                      <TrendingUp className="h-5 w-5" />
+                      📈 Trading Platform
+                    </h4>
+                    <p className="text-sm text-gray-400 mb-3">
+                      AI-powered market analysis and trading tools.
+                    </p>
+                    <div className="text-xs space-y-1">
+                      <div>• Paper trading (practice mode)</div>
+                      <div>• Live trading with MetaMask</div>
+                      <div>• Real-time market data</div>
+                      <div>• R.O.M.A.N. trade recommendations</div>
+                    </div>
+                    <div className="mt-3 text-xs text-green-400 font-semibold">
+                      👉 Click "Trading" in top navigation
+                    </div>
+                  </div>
+
+                  {/* Bidding Calculator */}
+                  <div className="bg-slate-900 p-4 rounded border border-yellow-500/30 hover:border-yellow-500 transition-all">
+                    <h4 className="font-semibold text-yellow-300 mb-2 flex items-center gap-2">
+                      <Calculator className="h-5 w-5" />
+                      🧮 Bidding Calculator
+                    </h4>
+                    <p className="text-sm text-gray-400 mb-3">
+                      Project estimation and proposal tools.
+                    </p>
+                    <div className="text-xs space-y-1">
+                      <div>• Calculate project costs</div>
+                      <div>• Generate bid proposals</div>
+                      <div>• Track profit margins</div>
+                      <div>• Export to PDF</div>
+                    </div>
+                    <div className="mt-3 text-xs text-yellow-400 font-semibold">
+                      👉 Click "Calculator" in top navigation
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* STEP 3: YOUR FIRST TASKS */}
+            <Card className="bg-slate-800/80 border-orange-500/50">
+              <CardHeader>
+                <CardTitle className="text-orange-300 flex items-center gap-2">
+                  <div className="bg-orange-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold">3</div>
+                  Quick Wins: Do These 3 Things First
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4 text-gray-300">
+                <div className="space-y-3">
+                  {/* Quick Win 1 */}
+                  <div className="bg-orange-900/20 p-4 rounded border border-orange-500/50">
+                    <div className="flex items-start gap-3">
+                      <div className="bg-orange-500 text-white rounded-full w-6 h-6 flex items-center justify-center font-bold text-sm flex-shrink-0 mt-0.5">
+                        1
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="font-semibold text-orange-300 mb-1">Add Your First Employee</h4>
+                        <p className="text-sm text-gray-400 mb-2">
+                          Even if it's just you! This sets up your workforce system.
+                        </p>
+                        <div className="text-xs bg-slate-900 p-2 rounded">
+                          <strong>How:</strong> Workforce tab → "Add Employee" → Fill in basic info → Save
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Quick Win 2 */}
+                  <div className="bg-purple-900/20 p-4 rounded border border-purple-500/50">
+                    <div className="flex items-start gap-3">
+                      <div className="bg-purple-500 text-white rounded-full w-6 h-6 flex items-center justify-center font-bold text-sm flex-shrink-0 mt-0.5">
+                        2
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="font-semibold text-purple-300 mb-1">Ask R.O.M.A.N. a Question</h4>
+                        <p className="text-sm text-gray-400 mb-2">
+                          Test the AI! Try: "Show me all employees" or "What can you do?"
+                        </p>
+                        <div className="text-xs bg-slate-900 p-2 rounded">
+                          <strong>How:</strong> R.O.M.A.N. tab → Type your question in the chat → Press Enter
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Quick Win 3 */}
+                  <div className="bg-green-900/20 p-4 rounded border border-green-500/50">
+                    <div className="flex items-start gap-3">
+                      <div className="bg-green-500 text-white rounded-full w-6 h-6 flex items-center justify-center font-bold text-sm flex-shrink-0 mt-0.5">
+                        3
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="font-semibold text-green-300 mb-1">Explore the Dashboard</h4>
+                        <p className="text-sm text-gray-400 mb-2">
+                          Get familiar with where everything is located.
+                        </p>
+                        <div className="text-xs bg-slate-900 p-2 rounded">
+                          <strong>How:</strong> Click "Dashboard" in top navigation → Review all cards and stats
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-blue-900/20 p-4 rounded border border-blue-500 mt-4">
+                  <p className="text-sm text-blue-300">
+                    <strong>⏱️ Time estimate:</strong> 5-10 minutes total. Once these are done, you're ready to use the full platform!
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* STEP 4: NAVIGATION GUIDE */}
+            <Card className="bg-slate-800/80 border-cyan-500/50">
+              <CardHeader>
+                <CardTitle className="text-cyan-300 flex items-center gap-2">
+                  <div className="bg-cyan-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold">4</div>
+                  Navigation: Where Everything Lives
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4 text-gray-300">
+                <div className="space-y-3 text-sm">
+                  <div className="bg-slate-900 p-3 rounded">
+                    <strong className="text-cyan-300">📍 Top Navigation Bar:</strong>
+                    <div className="ml-4 mt-1 space-y-1 text-xs">
+                      <div>• <strong>Dashboard:</strong> Overview of all systems</div>
+                      <div>• <strong>Trading:</strong> Market analysis & trading tools</div>
+                      <div>• <strong>Calculator:</strong> Bidding & project estimation</div>
+                      <div>• <strong>Admin:</strong> System settings & management</div>
+                      <div>• <strong>Help:</strong> You're here! (This manual)</div>
+                    </div>
+                  </div>
+
+                  <div className="bg-slate-900 p-3 rounded">
+                    <strong className="text-cyan-300">📋 This Manual's Tabs:</strong>
+                    <div className="ml-4 mt-1 space-y-1 text-xs">
+                      <div>• <strong>Getting Started:</strong> New user onboarding (you are here)</div>
+                      <div>• <strong>Workforce:</strong> Complete HR/payroll system</div>
+                      <div>• <strong>R.O.M.A.N.:</strong> AI assistant interface</div>
+                      <div>• <strong>Supa-Admin:</strong> Technical documentation (CEO/Developer only)</div>
+                      <div>• <strong>More Coming Soon:</strong> Additional features in development</div>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* STEP 5: COMMON WORKFLOWS */}
+            <Card className="bg-slate-800/80 border-yellow-500/50">
+              <CardHeader>
+                <CardTitle className="text-yellow-300 flex items-center gap-2">
+                  <div className="bg-yellow-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold">5</div>
+                  Common Workflows: How to Actually Use This
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4 text-gray-300">
+                <div className="space-y-4">
+                  {/* Workflow 1: Running Payroll */}
+                  <div className="bg-slate-900 p-4 rounded border border-blue-500/30">
+                    <h4 className="font-semibold text-blue-300 mb-2">💰 Running Payroll (Start to Finish)</h4>
+                    <ol className="text-sm space-y-2 ml-5 list-decimal">
+                      <li>Go to <strong>Workforce</strong> tab</li>
+                      <li>Add all employees (if not done yet)</li>
+                      <li>Employees clock in/out for the pay period</li>
+                      <li>Click <strong>"Run Payroll"</strong></li>
+                      <li>Select date range (e.g., last 2 weeks)</li>
+                      <li>Review gross pay calculations</li>
+                      <li>Click <strong>"Process Payroll"</strong></li>
+                      <li>Paystubs are auto-generated for each employee</li>
+                      <li>Download/print paystubs as needed</li>
+                    </ol>
+                  </div>
+
+                  {/* Workflow 2: Tracking Time */}
+                  <div className="bg-slate-900 p-4 rounded border border-green-500/30">
+                    <h4 className="font-semibold text-green-300 mb-2">⏰ Time Tracking (Employee View)</h4>
+                    <ol className="text-sm space-y-2 ml-5 list-decimal">
+                      <li>Login to your ODYSSEY-1 account</li>
+                      <li>Go to <strong>Workforce</strong> tab</li>
+                      <li>Click <strong>"Clock In"</strong> when starting work</li>
+                      <li>Click <strong>"Start Break"</strong> / <strong>"End Break"</strong> as needed</li>
+                      <li>Click <strong>"Clock Out"</strong> when done</li>
+                      <li>System automatically calculates total hours</li>
+                      <li>View your time entries in the history table</li>
+                    </ol>
+                  </div>
+
+                  {/* Workflow 3: Using R.O.M.A.N. */}
+                  <div className="bg-slate-900 p-4 rounded border border-purple-500/30">
+                    <h4 className="font-semibold text-purple-300 mb-2">🤖 Using R.O.M.A.N. AI Assistant</h4>
+                    <ol className="text-sm space-y-2 ml-5 list-decimal">
+                      <li>Go to <strong>R.O.M.A.N.</strong> tab</li>
+                      <li>Type your question in natural language</li>
+                      <li>Examples:
+                        <ul className="ml-5 mt-1 list-disc text-xs">
+                          <li>"Show me all contractors"</li>
+                          <li>"How many hours did John work this week?"</li>
+                          <li>"What's my total payroll for last month?"</li>
+                        </ul>
+                      </li>
+                      <li>R.O.M.A.N. validates your request (security check)</li>
+                      <li>If approved, query executes and returns data</li>
+                      <li>Results display in chat format</li>
+                    </ol>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* STEP 6: NEED HELP? */}
+            <Card className="bg-gradient-to-r from-red-900/30 to-orange-900/30 border-red-500/50">
+              <CardHeader>
+                <CardTitle className="text-red-300 flex items-center gap-2">
+                  <HelpCircle className="h-6 w-6" />
+                  Need Help? We've Got You Covered
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4 text-gray-300">
+                <div className="grid md:grid-cols-3 gap-4">
+                  <div className="bg-slate-900 p-4 rounded border border-red-500/30">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Phone className="h-5 w-5 text-red-400" />
+                      <h4 className="font-semibold text-red-300">24/7 Support</h4>
+                    </div>
+                    <p className="text-xs text-gray-400 mb-2">Critical system issues</p>
+                    <p className="text-sm font-mono text-red-300">1-800-HJS-HELP</p>
+                  </div>
+
+                  <div className="bg-slate-900 p-4 rounded border border-orange-500/30">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Mail className="h-5 w-5 text-orange-400" />
+                      <h4 className="font-semibold text-orange-300">Email Support</h4>
+                    </div>
+                    <p className="text-xs text-gray-400 mb-2">Technical questions</p>
+                    <p className="text-sm font-mono text-orange-300">admin@hjssystems.com</p>
+                  </div>
+
+                  <div className="bg-slate-900 p-4 rounded border border-blue-500/30">
+                    <div className="flex items-center gap-2 mb-2">
+                      <MessageSquare className="h-5 w-5 text-blue-400" />
+                      <h4 className="font-semibold text-blue-300">Live Chat</h4>
+                    </div>
+                    <p className="text-xs text-gray-400 mb-2">Real-time help</p>
+                    <p className="text-sm text-blue-300">Mon-Fri 8AM-6PM</p>
+                  </div>
+                </div>
+
+                <div className="bg-blue-900/20 p-4 rounded border border-blue-500 text-center">
+                  <p className="text-sm text-blue-300">
+                    <strong>💡 Pro Tip:</strong> Most answers are in this manual! Use the tabs above to find specific guides.
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* FINAL CTA */}
+            <Card className="bg-gradient-to-r from-green-900/50 to-emerald-900/50 border-green-500">
+              <CardContent className="p-6 text-center space-y-4">
+                <h3 className="text-2xl font-bold text-green-300">
+                  🚀 You're Ready to Launch!
+                </h3>
+                <p className="text-gray-300">
+                  You now know the basics. Time to explore and make ODYSSEY-1 work for you.
+                </p>
+                <div className="flex justify-center gap-4 flex-wrap">
+                  <button 
+                    onClick={() => setActiveTab('workforce-management')}
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded font-semibold transition-colors"
+                  >
+                    Start with Workforce →
+                  </button>
+                  <button 
+                    onClick={() => setActiveTab('sovereign-core')}
+                    className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded font-semibold transition-colors"
+                  >
+                    Try R.O.M.A.N. AI →
+                  </button>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </TabsContent>
 

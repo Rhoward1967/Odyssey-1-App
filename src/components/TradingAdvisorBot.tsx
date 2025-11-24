@@ -13,7 +13,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { supabase } from '@/lib/supabaseClient';
-import { AIService } from '@/services/aiService';
 
 interface ChatMessage {
   id: string;
@@ -72,27 +71,38 @@ What market or trading strategy would you like to discuss?`,
     setIsLoading(true);
 
     try {
-      const systemPrompt = `You are a professional trading advisor and market analyst. Provide actionable trading insights, 
-      market analysis, risk assessments, and strategy recommendations. Always include risk warnings.
-      Be conversational but professional. Remember previous context in this conversation.
-      IMPORTANT: Always remind users that this is not financial advice.`;
+      // Format chat history for API (exclude welcome message)
+      const formattedHistory = chatHistory
+        .filter(msg => msg.id !== '1') // Exclude welcome message
+        .map(msg => ({
+          role: msg.type === 'user' ? 'user' : 'assistant',
+          content: msg.message
+        }));
 
-      const aiResponse = await AIService.chat(
-        userMsg.message,
-        sessionId,
-        systemPrompt,
-        'anthropic'
-      );
+      // Call the Edge Function with full chat history for context
+      const { data, error } = await supabase.functions.invoke('chat-trading-advisor', {
+        body: {
+          message: userMsg.message,
+          tradingMode: mode,
+          messages: formattedHistory // Pass chat history for context
+        }
+      });
+
+      if (error) {
+        console.error('Trading advisor error:', error);
+        throw error;
+      }
 
       const botResponse: ChatMessage = {
         id: (Date.now() + 1).toString(),
         type: 'bot',
-        message: aiResponse,
+        message: data?.response || 'Sorry, I could not generate a response. Please try again.',
         timestamp: new Date()
       };
 
       setChatHistory(prev => [...prev, botResponse]);
     } catch (error) {
+      console.error('Chat error:', error);
       setChatHistory(prev => [
         ...prev,
         {

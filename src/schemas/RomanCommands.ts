@@ -37,15 +37,35 @@ export type RomanAction = typeof ROMAN_ACTIONS[number];
 // ============================================================================
 
 export const ROMAN_TARGETS = [
+  // === WORKFORCE MANAGEMENT ===
   "USER_PROFILE",
-  "PROJECT_TASK",
-  "PAYSTUB",
   "EMPLOYEE",
   "TIME_ENTRY",
+  "PAYSTUB",
   "PAYROLL_RUN",
-  "BID",
+  
+  // === PROJECT & TASK MANAGEMENT ===
+  "PROJECT_TASK",
   "CONTRACT",
   "ORGANIZATION",
+  
+  // === TRADING & FINANCE ===
+  "TRADE",
+  "PORTFOLIO",
+  "MARKET_DATA",
+  
+  // === AI & RESEARCH ===
+  "AI_RESEARCH",
+  "AI_CALCULATOR",
+  
+  // === BIDDING & PROPOSALS ===
+  "BID",
+  
+  // === COMMUNICATIONS ===
+  "EMAIL",
+  "DISCORD",
+  
+  // === SYSTEM & AGENTS ===
   "AGENT",
   "SYSTEM_STATUS"
 ] as const;

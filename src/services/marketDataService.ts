@@ -137,9 +137,9 @@ export class MarketDataService {
 
   // Add the missing getAllMarketData method
   static async getAllMarketData() {
-    const stockSymbols = ['AAPL', 'MSFT', 'NVDA', 'TSLA', 'GOOGL', 'AMZN'];
-    const cryptoIds = ['bitcoin', 'ethereum', 'solana', 'cardano', 'polkadot', 'avalanche-2'];
-    const etfSymbols = ['SPY', 'QQQ', 'VTI', 'ARKK', 'TQQQ', 'SQQQ'];
+    const stockSymbols = ['AAPL', 'MSFT', 'NVDA', 'TSLA', 'GOOGL', 'AMZN', 'META', 'AMD', 'NFLX', 'DIS', 'BABA', 'JPM', 'V', 'WMT', 'BA', 'NKE'];
+    const cryptoIds = ['bitcoin', 'ethereum', 'solana', 'cardano', 'polkadot', 'avalanche-2', 'ripple', 'dogecoin', 'matic-network', 'chainlink', 'uniswap', 'cosmos', 'litecoin', 'bitcoin-cash', 'algorand', 'stellar'];
+    const etfSymbols = ['SPY', 'QQQ', 'VTI', 'ARKK', 'TQQQ', 'SQQQ', 'VOO', 'IVV', 'VUG', 'VTV', 'DIA', 'IWM', 'EEM', 'GLD', 'SLV', 'XLK'];
 
     try {
       const allData = await Promise.all([
