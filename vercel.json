@@ -29,9 +29,5 @@
   ],
   "github": {
     "silent": true
-  },
-  "analytics": true,
-  "speedInsights": {
-    "enabled": true
   }
 }
