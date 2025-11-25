@@ -15,8 +15,8 @@
  * ============================================================================
  */
 
-import { sfLogger } from './sovereignFrequencyLogger';
 import { THE_NINE_PRINCIPLES } from './RomanSystemContext';
+import { sfLogger } from './sovereignFrequencyLogger';
 
 // ============================================================================
 // CONFIGURATION

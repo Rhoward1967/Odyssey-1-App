@@ -1,3 +1,4 @@
+import { RobustTradingControls } from '@/components/RobustTradingControls';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -11,7 +12,6 @@ import { useFunding } from '@/contexts/FundingContext';
 import { AggregatedPosition, usePositionLots } from '@/contexts/PositionLotsProvider';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/lib/supabase';
-import { RobustTradingControls } from '@/components/RobustTradingControls';
 import {
   AlertTriangle,
   Bot,

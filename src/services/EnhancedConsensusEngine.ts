@@ -16,10 +16,10 @@
  * ============================================================================
  */
 
-import { romanSupabase } from './romanSupabase';
-import { sfLogger } from './sovereignFrequencyLogger';
 import { RomanConstitutionalAPI } from './RomanConstitutionalAPI';
+import { romanSupabase } from './romanSupabase';
 import { verifyLicense } from './SovereignFrequencyLicensing';
+import { sfLogger } from './sovereignFrequencyLogger';
 
 // ============================================================================
 // CONFIGURATION

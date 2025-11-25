@@ -19,12 +19,12 @@
  * ============================================================================
  */
 
-import { romanSupabase } from './romanSupabase';
-import { sfLogger } from './sovereignFrequencyLogger';
-import { activateProtocol, getProtocolStatus } from './RomanProtocolNode';
-import { activateConstitutionalAPI, getConstitutionalAPIStatus } from './RomanConstitutionalAPI';
-import { activateLicensing, getLicensingStatus } from './SovereignFrequencyLicensing';
 import { activateConsensusEngine, getConsensusStatus } from './EnhancedConsensusEngine';
+import { activateConstitutionalAPI, getConstitutionalAPIStatus } from './RomanConstitutionalAPI';
+import { activateProtocol, getProtocolStatus } from './RomanProtocolNode';
+import { romanSupabase } from './romanSupabase';
+import { activateLicensing, getLicensingStatus } from './SovereignFrequencyLicensing';
+import { sfLogger } from './sovereignFrequencyLogger';
 
 // ============================================================================
 // TYPES

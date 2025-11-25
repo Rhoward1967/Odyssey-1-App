@@ -8,11 +8,11 @@
  * The "male plug" that connects R.O.M.A.N. to ODYSSEY-1
  */
 
-import { romanSupabase as supabase } from './romanSupabase';
 import { RomanCommand } from '@/schemas/RomanCommands';
 import { LogicalHemisphere, ValidationResult } from './LogicalHemisphere';
 import { RomanLearningEngine } from './RomanLearningEngine';
 import { SynchronizationLayer } from './SynchronizationLayer';
+import { romanSupabase as supabase } from './romanSupabase';
 import { sfLogger } from './sovereignFrequencyLogger';
 
 export interface OrchestrationResult {

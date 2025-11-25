@@ -18,11 +18,11 @@
  * 8. Harmonic authentication (sovereign frequencies)
  */
 
+import { auditDatabaseSchema } from './roman-auto-audit';
+import { AIResearchMonitor } from './romanAIIntelligence';
 import { romanSupabase } from './romanSupabase';
 import { RomanSystemContext } from './RomanSystemContext';
 import { sfLogger } from './sovereignFrequencyLogger';
-import { auditDatabaseSchema, auditFileStructure } from './roman-auto-audit';
-import { AIResearchMonitor } from './romanAIIntelligence';
 
 interface AutonomousOperationResult {
   timestamp: string;
