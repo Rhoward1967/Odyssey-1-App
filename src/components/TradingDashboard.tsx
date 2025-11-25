@@ -11,6 +11,7 @@ import { useFunding } from '@/contexts/FundingContext';
 import { AggregatedPosition, usePositionLots } from '@/contexts/PositionLotsProvider';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/lib/supabase';
+import { RobustTradingControls } from '@/components/RobustTradingControls';
 import {
   AlertTriangle,
   Bot,
@@ -350,17 +351,16 @@ const TradingDashboard: React.FC = () => {
                     className="bg-gray-700 border-gray-600 text-white"
                     placeholder="0.00"
                   />
-                </div>
-              )}
+              </div>
+            )}
 
               <div className="flex space-x-4">
-                <Button 
-                  onClick={executePaperTrade}
-                  disabled={trading || !selectedAsset || !quantity}
-                  className="bg-blue-600 hover:bg-blue-700"
-                >
-                  {trading ? 'Executing...' : `${orderSide.toUpperCase()} ${selectedAsset}`}
-                </Button>
+                <RobustTradingControls
+                  selectedAsset={selectedAsset}
+                  quantity={quantity}
+                  orderSide={orderSide}
+                  onTradeComplete={fetchLivePortfolioData}
+                />
                 
                 <Button 
                   onClick={() => getAIAnalysis(selectedAsset)}
