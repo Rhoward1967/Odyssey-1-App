@@ -1048,6 +1048,40 @@ async function handleDirectMessage(message: Message) {
     enhancedMessage += `You are TEACHING and RESEARCHING, not just answering.\n`;
   }
   
+  // Check if this is a TRADING query - route to specialized trading advisor
+  const tradingPattern = /(?:stock|crypto|bitcoin|btc|eth|ethereum|xrp|trading|trade|market|price|ticker|analyze|chart|aapl|tsla|nvda|googl|amzn|msft|meta|sol|ada|doge|matic|link|avax)/i;
+  if (tradingPattern.test(message.content)) {
+    console.log('🎯 Trading query detected - routing to Genesis Trading Advisor...');
+    try {
+      // Call the specialized trading advisor edge function
+      const response = await fetch(`${SUPABASE_URL}/functions/v1/chat-trading-advisor`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${SUPABASE_KEY}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          message: message.content,
+          tradingMode: 'paper', // Default to paper trading for Discord
+          messages: []
+        })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log('✅ Trading advisor response received');
+        await message.reply(data.response || 'Trading advisor service unavailable.');
+        return; // Exit early - trading advisor handled it
+      } else {
+        console.error('❌ Trading advisor returned error:', response.status);
+        // Fall through to GPT-4 if trading advisor fails
+      }
+    } catch (error) {
+      console.error('❌ Trading advisor fetch error:', error);
+      // Fall through to GPT-4 if trading advisor fails
+    }
+  }
+
   // If asking about governance specifically, show actual data
   const governancePattern = /(?:governance|recent changes|what.*changed|latest.*actions)/i;
   if (governancePattern.test(message.content)) {

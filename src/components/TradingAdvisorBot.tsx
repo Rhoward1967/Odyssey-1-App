@@ -83,7 +83,7 @@ What market or trading strategy would you like to discuss?`,
       const { data, error } = await supabase.functions.invoke('chat-trading-advisor', {
         body: {
           message: userMsg.message,
-          tradingMode: mode,
+          tradingMode: mode || 'paper', // Default to paper mode
           messages: formattedHistory // Pass chat history for context
         }
       });
@@ -93,10 +93,12 @@ What market or trading strategy would you like to discuss?`,
         throw error;
       }
 
+      console.log('Trading advisor response:', data); // Debug log
+
       const botResponse: ChatMessage = {
         id: (Date.now() + 1).toString(),
         type: 'bot',
-        message: data?.response || 'Sorry, I could not generate a response. Please try again.',
+        message: data?.response || '🚨 No response received from trading advisor. Please try a specific query like "AAPL analysis" or "BTC price".',
         timestamp: new Date()
       };
 
@@ -117,108 +119,9 @@ What market or trading strategy would you like to discuss?`,
     }
   };
 
-  const [messages, setMessages] = useState<Array<{ role: 'user' | 'assistant'; content: string }>>([]);
-  const [input, setInput] = useState('');
 
-  const sendMessage = async () => {
-    if (!input.trim()) return;
 
-    const userMessage = { role: 'user' as const, content: input };
-    setMessages(prev => [...prev, userMessage]);
-    setInput('');
-    setIsLoading(true);
 
-    try {
-      // Make sure we're calling the correct function name
-      const { data, error } = await supabase.functions.invoke('chat-trading-advisor', {
-        body: { 
-          message: input,
-          tradingMode: mode,
-          messages: messages 
-        }
-      });
-
-      if (error) {
-        console.error('Supabase function error:', error);
-        throw error;
-      }
-
-      const aiMessage = { 
-        role: 'assistant' as const, 
-        content: data?.response || 'I apologize, but I encountered an error. Please try again.' 
-      };
-      setMessages(prev => [...prev, aiMessage]);
-
-    } catch (error) {
-      console.error('Trading Advisor Error:', error);
-      const errorMessage = { 
-        role: 'assistant' as const, 
-        content: 'I apologize, but I encountered an error. Please try again.' 
-      };
-      setMessages(prev => [...prev, errorMessage]);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const [message, setMessage] = useState('');
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!message.trim()) return;
-
-    const userMessage = message.trim();
-    setMessage('');
-    
-    // FIX: Use proper role types
-    const userMsg = { role: 'user' as 'user' | 'assistant', content: userMessage };
-    setMessages(prev => [...prev, userMsg]);
-    setIsLoading(true);
-
-    try {
-      const { data, error } = await supabase.functions.invoke('chat-trading-advisor', {
-        body: { 
-          message: userMessage, 
-          tradingMode: mode,
-          messages: messages 
-        }
-      });
-
-      if (error) {
-        console.error('Supabase function error:', error);
-        throw error;
-      }
-
-      if (data?.response) {
-        setMessages(prev => [...prev, { role: 'assistant' as 'user' | 'assistant', content: data.response }]);
-      } else {
-        throw new Error('No response from trading advisor');
-      }
-    } catch (error) {
-      console.error('Trading advisor error:', error);
-      setMessages(prev => [...prev, { 
-        role: 'assistant' as 'user' | 'assistant', 
-        content: `🚨 **Trading Bot Connection Error**
-
-I'm having trouble connecting to the trading analysis server. Here's what I can tell you:
-
-**📊 For AAPL Analysis:**
-• Current market cap: ~$3.0 trillion
-• Strong fundamentals with iPhone revenue
-• Watch support at $175-180 range
-• Resistance around $200-205
-
-**💡 ${mode === 'paper' ? 'Paper Trading Tips' : 'Live Trading Notes'}:**
-• Always use stop losses
-• Position size: 1-2% of portfolio max
-• Check volume before entries
-
-*I'm working to restore full analysis capabilities. Please try again in a moment.*`
-      }]);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   return (
     <div className="space-y-6">

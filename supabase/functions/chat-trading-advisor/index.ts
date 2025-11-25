@@ -120,9 +120,12 @@ serve(async (req: Request) => {
     const cryptoSymbols = ['xrp', 'btc', 'bitcoin', 'eth', 'ethereum', 'sol', 'solana', 'ada', 'cardano', 'dot', 'polkadot', 'avax', 'doge', 'dogecoin', 'matic', 'link'];
     const foundCrypto = cryptoSymbols.find(symbol => query.includes(symbol));
     
-    if (foundCrypto) {
-      // Extract symbol
-      let symbol = foundCrypto.toUpperCase();
+    // If user just says "crypto" without specific symbol, show BTC as default
+    const isCryptoGeneral = query === 'crypto' || query === 'cryptocurrency' || query.includes('crypto market');
+    
+    if (foundCrypto || isCryptoGeneral) {
+      // Extract symbol - default to BTC for general crypto queries
+      let symbol = isCryptoGeneral ? 'BTC' : foundCrypto.toUpperCase();
       if (foundCrypto === 'bitcoin') symbol = 'BTC';
       if (foundCrypto === 'ethereum') symbol = 'ETH';
       if (foundCrypto === 'solana') symbol = 'SOL';
