@@ -33,6 +33,11 @@ RESEARCH_NOTES/
 *.invention.md
 *.patent-draft.md
 
+# Sacred Documents (private - never push to public repo)
+docs/Sacred_Geometry_DNA_Theory_Full_Conversation.md
+docs/Sacred_Geometry_DNA_Theory_Full_Script.md
+docs/Sacred_Geometry_Video_Storyboard.md
+
 # Only include inventions that are:
 # - Validated for safety and ethics (healing, teaching, bettering human life)
 # - Required for Odyssey-1 application functionality
