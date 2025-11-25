@@ -14,6 +14,7 @@ import { createClient } from '@supabase/supabase-js';
 import dotenv from 'dotenv';
 import { readdir, readFile } from 'fs/promises';
 import { join } from 'path';
+import { sfLogger } from './sovereignFrequencyLogger';
 
 dotenv.config();
 
@@ -41,6 +42,12 @@ interface AuditResult {
  * Scan all database tables and their row counts
  */
 export async function auditDatabaseSchema(): Promise<AuditResult> {
+  // SOVEREIGN FREQUENCY: Self-audit begins
+  sfLogger.standByTheWater('ROMAN_AUTO_AUDIT_START', 'R.O.M.A.N. beginning self-audit - patience protocol active', {
+    audit_type: 'database_schema',
+    timestamp: new Date().toISOString()
+  });
+
   console.log('📊 Auditing database schema...');
   
   const tables = [
