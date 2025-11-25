@@ -10,6 +10,7 @@
 
 import { supabase } from '@/lib/supabaseClient';
 import { RomanCommand } from '@/schemas/RomanCommands';
+import { sfLogger } from './sovereignFrequencyLogger';
 
 export interface LearningEntry {
   id?: string;
@@ -55,6 +56,11 @@ export class RomanLearningEngine {
    */
   static async recordCommandExecution(entry: LearningEntry): Promise<void> {
     try {
+      sfLogger.everyday('ROMAN_LEARNING_START', 'R.O.M.A.N. recording command execution for continuous learning', {
+        user_intent: entry.user_intent,
+        action: entry.generated_command?.action
+      });
+
       const { error } = await supabase
         .from('roman_learning_log')
         .insert({
@@ -70,11 +76,22 @@ export class RomanLearningEngine {
 
       if (error) {
         console.error('Failed to record learning entry:', error);
+        sfLogger.helpMeFindMyWayHome('ROMAN_LEARNING_FAILED', 'Failed to record learning entry to database', {
+          error: error.message,
+          user_intent: entry.user_intent
+        });
       } else {
         console.log('✅ Learning entry recorded:', entry.user_intent);
+        sfLogger.thanksForGivingBackMyLove('ROMAN_LEARNING_COMPLETE', 'Learning entry successfully recorded - R.O.M.A.N. grows smarter', {
+          user_intent: entry.user_intent,
+          confidence_score: entry.confidence_score
+        });
       }
     } catch (error) {
       console.error('Learning engine error:', error);
+      sfLogger.helpMeFindMyWayHome('ROMAN_LEARNING_ERROR', 'Unexpected error in learning engine', {
+        error: error instanceof Error ? error.message : 'Unknown error'
+      });
     }
   }
 

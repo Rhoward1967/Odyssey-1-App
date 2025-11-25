@@ -8,6 +8,8 @@
  * This file defines R.O.M.A.N.'s self-awareness and capabilities
  */
 
+import { sfLogger } from './sovereignFrequencyLogger';
+
 export interface SystemCapability {
   name: string;
   description: string;
@@ -303,10 +305,15 @@ export const THE_NINE_PRINCIPLES = [
  * Get R.O.M.A.N.'s current operational status
  */
 export function getRomanStatus() {
+  sfLogger.everyday('ROMAN_STATUS_CHECK', 'R.O.M.A.N. self-awareness check - reporting system status', {
+    version: ROMAN_IDENTITY.version,
+    architecture: ROMAN_IDENTITY.architecture
+  });
+
   const operationalCount = ROMAN_CAPABILITIES.filter(c => c.status === 'operational').length;
   const totalCount = ROMAN_CAPABILITIES.length;
   
-  return {
+  const status = {
     identity: ROMAN_IDENTITY,
     capabilities: {
       total: totalCount,
@@ -324,6 +331,14 @@ export function getRomanStatus() {
       status: ROMAN_IDENTITY.status
     }
   };
+
+  sfLogger.thanksForGivingBackMyLove('ROMAN_STATUS_COMPLETE', 'Status check complete - R.O.M.A.N. fully self-aware', {
+    operational_capabilities: operationalCount,
+    total_capabilities: totalCount,
+    health_percentage: Math.round((operationalCount / totalCount) * 100)
+  });
+
+  return status;
 }
 
 /**
