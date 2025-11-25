@@ -8,7 +8,7 @@
  * Enables R.O.M.A.N. to LEARN from every interaction and improve over time
  */
 
-import { supabase } from '@/lib/supabaseClient';
+import { romanSupabase as supabase } from './romanSupabase';
 import { RomanCommand } from '@/schemas/RomanCommands';
 import { sfLogger } from './sovereignFrequencyLogger';
 

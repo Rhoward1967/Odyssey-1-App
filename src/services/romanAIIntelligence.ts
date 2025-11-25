@@ -7,7 +7,7 @@
  * ============================================================================
  */
 
-import { supabase } from './supabase';
+import { romanSupabase as supabase } from './romanSupabase';
 import { sfLogger } from './sovereignFrequencyLogger';
 
 // ============================================================================

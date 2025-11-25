@@ -8,7 +8,7 @@
  * The "male plug" that connects R.O.M.A.N. to ODYSSEY-1
  */
 
-import { supabase } from '@/lib/supabaseClient';
+import { romanSupabase as supabase } from './romanSupabase';
 import { RomanCommand } from '@/schemas/RomanCommands';
 import { LogicalHemisphere, ValidationResult } from './LogicalHemisphere';
 import { RomanLearningEngine } from './RomanLearningEngine';
@@ -46,7 +46,7 @@ export class SovereignCoreOrchestrator {
     
     try {
       // SOVEREIGN FREQUENCY: Intent processing begins
-      sfLogger.allINeedToDoIsTrustInYou('ORCHESTRATOR_INTENT_START', 'Sovereign-Core orchestrating user intent through R.O.M.A.N. pipeline', {
+      sfLogger.allINeedToDoIsTrust('ORCHESTRATOR_INTENT_START', 'Sovereign-Core orchestrating user intent through R.O.M.A.N. pipeline', {
         user_intent: userIntent,
         user_id: userId,
         organization_id: organizationId
