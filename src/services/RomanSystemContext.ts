@@ -8,8 +8,8 @@
  * This file defines R.O.M.A.N.'s self-awareness and capabilities
  */
 
-import { sfLogger } from './sovereignFrequencyLogger';
 import { ROMAN_DATABASE_KNOWLEDGE, getDatabaseSummary } from './RomanDatabaseKnowledge';
+import { sfLogger } from './sovereignFrequencyLogger';
 
 export interface SystemCapability {
   name: string;
