@@ -2,7 +2,9 @@ import APIStatusIndicator from '@/components/APIStatusIndicator';
 import DatabaseIntegrationTest from '@/components/DatabaseIntegrationTest';
 import SchemaVerificationReport from '@/components/SchemaVerificationReport';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { supabase } from '@/lib/supabase';
 import { Activity, BarChart3, Brain, Database, Shield, TrendingUp, Users } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 /**
@@ -16,6 +18,28 @@ import { Link } from 'react-router-dom';
  * - Evolution Engine Controls
  */
 export default function Admin() {
+  const [employeeCount, setEmployeeCount] = useState<number>(0);
+  const [isLoadingCount, setIsLoadingCount] = useState(true);
+
+  useEffect(() => {
+    async function fetchEmployeeCount() {
+      try {
+        const { count, error } = await supabase
+          .from('employees')
+          .select('*', { count: 'exact', head: true });
+        
+        if (!error && count !== null) {
+          setEmployeeCount(count);
+        }
+      } catch (err) {
+        console.error('Error fetching employee count:', err);
+      } finally {
+        setIsLoadingCount(false);
+      }
+    }
+
+    fetchEmployeeCount();
+  }, []);
   return (
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
@@ -109,7 +133,9 @@ export default function Admin() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold">24</p>
+            <p className="text-2xl font-bold">
+              {isLoadingCount ? '...' : employeeCount}
+            </p>
             <p className="text-sm text-gray-600">Employees registered</p>
           </CardContent>
         </Card>

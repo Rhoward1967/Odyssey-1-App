@@ -1,3 +1,10 @@
+
+
+import 'dotenv/config';
+console.log('[DEBUG] STRIPE_SECRET_KEY present?', !!process.env.STRIPE_SECRET_KEY);
+console.log('[DEBUG] STRIPE_SECRET_KEY value:', process.env.STRIPE_SECRET_KEY);
+console.log('[DEBUG] CWD:', process.cwd());
+
 /**
  * R.O.M.A.N. Auto-Audit and Learning System
  * 
@@ -10,13 +17,16 @@
  * - Recent changes and governance
  */
 
+
 import { createClient } from '@supabase/supabase-js';
-import dotenv from 'dotenv';
 import { readdir, readFile } from 'fs/promises';
 import { join } from 'path';
 import { sfLogger } from './sovereignFrequencyLogger';
 
-dotenv.config();
+// DEBUG: Print STRIPE_SECRET_KEY and CWD for troubleshooting
+console.log('[DEBUG] STRIPE_SECRET_KEY present?', !!process.env.STRIPE_SECRET_KEY);
+console.log('[DEBUG] STRIPE_SECRET_KEY value:', process.env.STRIPE_SECRET_KEY);
+console.log('[DEBUG] CWD:', process.cwd());
 
 const SUPABASE_URL = process.env.VITE_SUPABASE_URL!;
 const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY!;

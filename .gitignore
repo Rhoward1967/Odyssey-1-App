@@ -39,6 +39,9 @@ docs/Sacred_Geometry_DNA_Theory_Full_Script.md
 docs/Sacred_Geometry_Video_Storyboard.md
 docs/Video_Production_Guide_AI_Tools.md
 
+# Audit logs (local only, never push)
+AUDIT_WEEKLY_SUMMARY_*.md
+
 # Only include inventions that are:
 # - Validated for safety and ethics (healing, teaching, bettering human life)
 # - Required for Odyssey-1 application functionality
