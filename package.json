@@ -31,7 +31,8 @@
     "dev:all": "concurrently --kill-others \"npm run dev\" \"npm run bot\"",
     "dev:separate": "echo Run 'npm run dev' in one terminal and 'npm run bot' in another",
     "audit:system": "tsx src/services/roman-auto-audit.ts",
-    "audit:roman": "tsx src/services/roman-auto-audit.ts"
+    "audit:roman": "tsx src/services/roman-auto-audit.ts",
+    "auto:config-backup": "node scripts/auto_config_backup.js"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.68.0",
@@ -87,6 +88,7 @@
     "lucide-react": "^0.462.0",
     "marked": "^12.0.1",
     "next-themes": "^0.3.0",
+    "node-cron": "^4.2.1",
     "openai": "^6.7.0",
     "papaparse": "^5.5.3",
     "react": "^18.3.1",

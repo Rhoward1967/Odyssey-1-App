@@ -1,3 +1,24 @@
+// Send urgent report notification to a Discord channel
+export async function sendUrgentReportToDiscord(reportText, channelId) {
+  try {
+    if (!client.isReady()) {
+      await client.login(process.env.DISCORD_BOT_TOKEN);
+    }
+    const channel = await client.channels.fetch(channelId);
+    if (!channel) {
+      console.error('[R.O.M.A.N. Discord] Channel not found:', channelId);
+      return;
+    }
+    // Discord message limit is 2000 chars; split if needed
+    const chunks = reportText.match(/.{1,1900}/gs) || [];
+    for (const chunk of chunks) {
+      await channel.send('🚨 **URGENT SYSTEM REPORT** 🚨\n' + chunk);
+    }
+    console.log('[R.O.M.A.N. Discord] Urgent report sent.');
+  } catch (err) {
+    console.error('[R.O.M.A.N. Discord] Failed to send urgent report:', err.message);
+  }
+}
 import { createClient } from '@supabase/supabase-js';
 import { Client, GatewayIntentBits, Message, Partials } from 'discord.js';
 import dotenv from 'dotenv';
