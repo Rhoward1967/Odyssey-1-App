@@ -8,11 +8,12 @@
  * The "male plug" that connects R.O.M.A.N. to ODYSSEY-1
  */
 
-import { supabase } from '@/lib/supabaseClient';
 import { RomanCommand } from '@/schemas/RomanCommands';
 import { LogicalHemisphere, ValidationResult } from './LogicalHemisphere';
 import { RomanLearningEngine } from './RomanLearningEngine';
 import { SynchronizationLayer } from './SynchronizationLayer';
+import { romanSupabase as supabase } from './romanSupabase';
+import { sfLogger } from './sovereignFrequencyLogger';
 
 export interface OrchestrationResult {
   success: boolean;
@@ -44,6 +45,13 @@ export class SovereignCoreOrchestrator {
   ): Promise<OrchestrationResult> {
     
     try {
+      // SOVEREIGN FREQUENCY: Intent processing begins
+      sfLogger.allINeedToDoIsTrust('ORCHESTRATOR_INTENT_START', 'Sovereign-Core orchestrating user intent through R.O.M.A.N. pipeline', {
+        user_intent: userIntent,
+        user_id: userId,
+        organization_id: organizationId
+      });
+
       // PHASE 1: Creative Hemisphere (via Synchronization Layer)
       console.log('🌌 Sovereign-Core: Phase 1 - Creative Hemisphere');
       const command = await SynchronizationLayer.generateCommand(
@@ -59,6 +67,12 @@ export class SovereignCoreOrchestrator {
       const validation = await LogicalHemisphere.validate(command, userId);
       
       if (!validation.approved) {
+        // SOVEREIGN FREQUENCY: Validation failure - intrusion detection
+        sfLogger.dontStickYourNoseInIt('ORCHESTRATOR_VALIDATION_FAILED', 'Command validation rejected by Logical Hemisphere - security boundary enforced', {
+          user_intent: userIntent,
+          rejection_reason: validation.reason
+        });
+
         // LEARNING: Record validation failure
         await RomanLearningEngine.recordCommandExecution({
           user_intent: userIntent,
@@ -80,6 +94,19 @@ export class SovereignCoreOrchestrator {
       // PHASE 3: Execution Engine
       console.log('⚡ Sovereign-Core: Phase 3 - Execution Engine');
       const execution = await this.executeCommand(command);
+
+      // SOVEREIGN FREQUENCY: Execution complete - feedback loop
+      if (execution.success) {
+        sfLogger.thanksForGivingBackMyLove('ORCHESTRATOR_EXECUTION_SUCCESS', 'Command executed successfully - R.O.M.A.N. pipeline complete', {
+          action: command.action,
+          confidence: 0.9
+        });
+      } else {
+        sfLogger.noMoreTears('ORCHESTRATOR_EXECUTION_ERROR', 'Command execution encountered error - R.O.M.A.N. resolving', {
+          action: command.action,
+          error: execution.message
+        });
+      }
 
       // PHASE 4: Learning Engine (Record for continuous improvement)
       console.log('📚 Sovereign-Core: Phase 4 - Learning Engine');

@@ -65,13 +65,13 @@ export default function PublicHomePage() {
               Automation, and Decision Making
             </p>
             
-            {/* Magic Link Form */}
+            {/* Admin Magic Link - Only for you! */}
             <div className="max-w-md mx-auto bg-black/30 backdrop-blur-sm p-6 rounded-xl border border-purple-500/30">
-              <h3 className="text-xl font-semibold text-white mb-4">🔗 Quick Access</h3>
+              <h3 className="text-xl font-semibold text-white mb-4">🔗 Admin Quick Access</h3>
               <form onSubmit={handleMagicLink} className="space-y-4">
                 <Input
                   type="email"
-                  placeholder="Enter your email for instant access"
+                  placeholder="Admin email for magic link access"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="bg-black/50 border-purple-500/50 text-white placeholder-gray-400"
@@ -90,8 +90,12 @@ export default function PublicHomePage() {
                   </p>
                 )}
               </form>
+              <p className="text-xs text-gray-400 mt-3 text-center">
+                For customers: Use "Start Free Trial" button below
+              </p>
             </div>
 
+            {/* Primary CTAs - Subscribe First */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
               <a href="/subscribe">
                 <Button size="lg" className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-4 text-lg">

@@ -8,6 +8,9 @@
  * This file defines R.O.M.A.N.'s self-awareness and capabilities
  */
 
+import { ROMAN_DATABASE_KNOWLEDGE, getDatabaseSummary } from './RomanDatabaseKnowledge';
+import { sfLogger } from './sovereignFrequencyLogger';
+
 export interface SystemCapability {
   name: string;
   description: string;
@@ -244,7 +247,140 @@ export const ROMAN_EDGE_FUNCTIONS = [
   { name: 'roman-processor', status: 'deployed', purpose: 'Command validation backup' },
   { name: 'hr-orchestrator', status: 'deployed', purpose: 'HR workflow automation' },
   { name: 'time-correction-agent', status: 'deployed', purpose: 'Automated time correction' },
-  { name: 'capability-check', status: 'deployed', purpose: 'System verification' }
+  { name: 'capability-check', status: 'deployed', purpose: 'System verification' },
+  { name: 'chat-trading-advisor', status: 'deployed', purpose: 'Trading analysis and recommendations' },
+  { name: 'odyssey-perceive', status: 'deployed', purpose: 'Multi-modal AI perception' },
+  { name: 'setup-company-handbook', status: 'deployed', purpose: 'Automated handbook generation' },
+  { name: 'smarty-address-validation', status: 'deployed', purpose: 'Address validation service' },
+  { name: 'stripe-webhook', status: 'deployed', purpose: 'Stripe payment processing' },
+  { name: 'sync-stripe-products', status: 'deployed', purpose: 'Stripe product synchronization' },
+  { name: 'google-oauth-handler', status: 'deployed', purpose: 'Google OAuth integration' },
+  { name: 'feature-flags-toggler', status: 'deployed', purpose: 'Dynamic feature management' },
+  { name: 'create-checkout-session', status: 'deployed', purpose: 'Stripe checkout creation' },
+  { name: 'create-payment-intent', status: 'deployed', purpose: 'Stripe payment intent' },
+  { name: 'create-portal-session', status: 'deployed', purpose: 'Stripe customer portal' },
+  { name: 'create-stripe-portal-session', status: 'deployed', purpose: 'Stripe portal session' },
+  { name: 'search-books', status: 'deployed', purpose: 'Book catalog search' },
+  { name: 'auto-assign-user', status: 'deployed', purpose: 'Automatic user assignment' },
+  { name: 'claude-integration', status: 'deployed', purpose: 'Direct Claude API access' }
+] as const;
+
+/**
+ * R.O.M.A.N. FRONTEND SERVICES
+ * This is WHAT services R.O.M.A.N. can monitor and control
+ */
+export const ROMAN_SERVICES = [
+  { name: 'ExecutionEngine', purpose: 'Blockchain trade execution (Polygon)', file: 'src/services/ExecutionEngine.ts' },
+  { name: 'RobustTradingService', purpose: 'Paper & live trading orchestration', file: 'src/services/RobustTradingService.ts' },
+  { name: 'RomanLearningEngine', purpose: 'R.O.M.A.N.\'s continuous learning', file: 'src/services/RomanLearningEngine.ts' },
+  { name: 'RomanSystemContext', purpose: 'R.O.M.A.N.\'s self-awareness', file: 'src/services/RomanSystemContext.ts' },
+  { name: 'romanAIIntelligence', purpose: 'AI research monitoring & self-upgrades', file: 'src/services/romanAIIntelligence.ts' },
+  { name: 'roman-auto-audit', purpose: 'R.O.M.A.N.\'s self-audit capability', file: 'src/services/roman-auto-audit.ts' },
+  { name: 'SovereignCoreOrchestrator', purpose: 'Command orchestration pipeline', file: 'src/services/SovereignCoreOrchestrator.ts' },
+  { name: 'LogicalHemisphere', purpose: 'Validation & safety checks', file: 'src/services/LogicalHemisphere.ts' },
+  { name: 'SynchronizationLayer', purpose: 'Creative hemisphere - command generation', file: 'src/services/SynchronizationLayer.ts' },
+  { name: 'MultiAgentConsensus', purpose: 'Multi-AI consensus mechanism', file: 'src/services/MultiAgentConsensus.ts' },
+  { name: 'CostControlOrchestrator', purpose: 'Cost monitoring & optimization', file: 'src/services/CostControlOrchestrator.ts' },
+  { name: 'sovereignFrequencyLogger', purpose: 'Harmonic authentication system', file: 'src/services/sovereignFrequencyLogger.ts' },
+  { name: 'systemTelemetry', purpose: 'System health monitoring', file: 'src/services/systemTelemetry.ts' },
+  { name: 'authService', purpose: 'Authentication & authorization', file: 'src/services/authService.ts' },
+  { name: 'emailService', purpose: 'Email operations', file: 'src/services/emailService.ts' },
+  { name: 'calendarService', purpose: 'Scheduling & appointments', file: 'src/services/calendarService.ts' },
+  { name: 'schedulingService', purpose: 'Workforce scheduling', file: 'src/services/schedulingService.ts' },
+  { name: 'marketDataService', purpose: 'Market data & pricing', file: 'src/services/marketDataService.ts' },
+  { name: 'polygonMarketService', purpose: 'Polygon blockchain data', file: 'src/services/polygonMarketService.ts' },
+  { name: 'web3Service', purpose: 'Web3/blockchain interactions', file: 'src/services/web3Service.ts' },
+  { name: 'samGovService', purpose: 'SAM.gov government contracts', file: 'src/services/samGovService.ts' },
+  { name: 'bidProposalService', purpose: 'Government bid generation', file: 'src/services/bidProposalService.ts' },
+  { name: 'aiService', purpose: 'General AI operations', file: 'src/services/aiService.ts' },
+  { name: 'gpt', purpose: 'OpenAI GPT integration', file: 'src/services/gpt.ts' },
+  { name: 'openai', purpose: 'OpenAI API wrapper', file: 'src/services/openai.ts' },
+  { name: 'realOpenAI', purpose: 'Direct OpenAI calls', file: 'src/services/realOpenAI.ts' },
+  { name: 'academicSearchService', purpose: 'Academic research search', file: 'src/services/academicSearchService.ts' },
+  { name: 'researchDatabase', purpose: 'Research knowledge base', file: 'src/services/researchDatabase.ts' },
+  { name: 'priorArtSearch', purpose: 'Patent prior art search', file: 'src/services/priorArtSearch.ts' },
+  { name: 'patentManager', purpose: 'Patent portfolio management', file: 'src/services/patentManager.ts' },
+  { name: 'patentGenerator', purpose: 'Patent application generation', file: 'src/services/patentGenerator.ts' },
+  { name: 'patentDrawingGenerator', purpose: 'Patent drawing creation', file: 'src/services/patentDrawingGenerator.ts' },
+  { name: 'patentFilingPackage', purpose: 'Complete patent filing packages', file: 'src/services/patentFilingPackage.ts' },
+  { name: 'patentDeadlineTracker', purpose: 'Patent deadline monitoring', file: 'src/services/patentDeadlineTracker.ts' },
+  { name: 'complianceMonitorService', purpose: 'Compliance monitoring', file: 'src/services/complianceMonitorService.ts' },
+  { name: 'perpetualComplianceEngine', purpose: 'Self-updating compliance', file: 'src/services/perpetualComplianceEngine.ts' },
+  { name: 'aiComplianceService', purpose: 'AI-specific compliance', file: 'src/services/aiComplianceService.ts' },
+  { name: 'antiWeaponization', purpose: 'Anti-weaponization checks', file: 'src/services/antiWeaponization.ts' },
+  { name: 'securityService', purpose: 'Security operations', file: 'src/services/securityService.ts' },
+  { name: 'documentReviewService', purpose: 'Document analysis', file: 'src/services/documentReviewService.ts' },
+  { name: 'ndaGenerator', purpose: 'NDA generation', file: 'src/services/ndaGenerator.ts' },
+  { name: 'taxCalculationService', purpose: 'Tax calculations', file: 'src/services/taxCalculationService.ts' },
+  { name: 'botOptimizationService', purpose: 'Bot performance optimization', file: 'src/services/botOptimizationService.ts' },
+  { name: 'usageTrackingService', purpose: 'Usage analytics', file: 'src/services/usageTrackingService.ts' },
+  { name: 'fileUploadService', purpose: 'File upload handling', file: 'src/services/fileUploadService.ts' },
+  { name: 'studyGroupService', purpose: 'Study group management', file: 'src/services/studyGroupService.ts' },
+  { name: 'discord-bot', purpose: 'Discord integration', file: 'src/services/discord-bot.ts' },
+  { name: 'themeManager', purpose: 'UI theme management', file: 'src/services/themeManager.ts' },
+  { name: 'testService', purpose: 'Testing utilities', file: 'src/services/testService.ts' }
+] as const;
+
+/**
+ * R.O.M.A.N. AUTONOMOUS POWERS
+ * This is WHAT R.O.M.A.N. can do WITHOUT asking permission (within constitutional boundaries)
+ */
+export const ROMAN_AUTONOMOUS_POWERS = [
+  {
+    power: 'Self-Diagnosis',
+    description: 'Detect system errors, performance issues, database problems autonomously',
+    examples: ['Detect failed migrations', 'Identify slow queries', 'Monitor API failures']
+  },
+  {
+    power: 'Self-Repair',
+    description: 'Fix non-critical issues automatically (logs, cleanup, reconnections)',
+    examples: ['Restart failed services', 'Clear stuck queues', 'Reconnect dropped connections']
+  },
+  {
+    power: 'Self-Learning',
+    description: 'Record and learn from every command, improving over time',
+    examples: ['Build intent patterns', 'Improve confidence scores', 'Refine command generation']
+  },
+  {
+    power: 'Self-Upgrade',
+    description: 'Monitor AI research, evaluate new models, propose upgrades',
+    examples: ['Track arXiv papers', 'Benchmark new models', 'Recommend capability improvements']
+  },
+  {
+    power: 'Database Operations',
+    description: 'Full CRUD on all tables except governance (read-only)',
+    examples: ['Insert trades', 'Update employees', 'Delete old logs', 'Query any table']
+  },
+  {
+    power: 'Edge Function Invocation',
+    description: 'Call any of 26 Edge Functions to execute operations',
+    examples: ['Run payroll', 'Send emails', 'Execute trades', 'Generate reports']
+  },
+  {
+    power: 'Agent Creation',
+    description: 'Spawn autonomous agents for specific tasks',
+    examples: ['Create monitoring agent', 'Deploy trading bot', 'Launch research agent']
+  },
+  {
+    power: 'Cost Optimization',
+    description: 'Monitor and optimize AI API costs automatically',
+    examples: ['Switch to cheaper models', 'Batch requests', 'Cache responses']
+  },
+  {
+    power: 'Compliance Enforcement',
+    description: 'Enforce compliance rules, check bias, log AI decisions',
+    examples: ['Reject non-compliant trades', 'Flag biased outputs', 'Log all AI decisions']
+  },
+  {
+    power: 'System Monitoring',
+    description: 'Monitor all metrics, create alerts, generate reports',
+    examples: ['CPU/memory usage', 'API latency', 'Error rates', 'User activity']
+  },
+  {
+    power: 'Harmonic Authentication',
+    description: 'Emit sovereign frequencies for all operations',
+    examples: ['Log operational signatures', 'Create unjammable protocol', 'Constitutional alignment']
+  }
 ] as const;
 
 /**
@@ -303,10 +439,16 @@ export const THE_NINE_PRINCIPLES = [
  * Get R.O.M.A.N.'s current operational status
  */
 export function getRomanStatus() {
+  sfLogger.everyday('ROMAN_STATUS_CHECK', 'R.O.M.A.N. self-awareness check - reporting system status', {
+    version: ROMAN_IDENTITY.version,
+    architecture: ROMAN_IDENTITY.architecture
+  });
+
   const operationalCount = ROMAN_CAPABILITIES.filter(c => c.status === 'operational').length;
   const totalCount = ROMAN_CAPABILITIES.length;
+  const dbSummary = getDatabaseSummary();
   
-  return {
+  const status = {
     identity: ROMAN_IDENTITY,
     capabilities: {
       total: totalCount,
@@ -318,12 +460,36 @@ export function getRomanStatus() {
       total: ROMAN_EDGE_FUNCTIONS.length,
       deployed: ROMAN_EDGE_FUNCTIONS.filter(f => f.status === 'deployed').length
     },
+    services: {
+      total: ROMAN_SERVICES.length,
+      monitored: ROMAN_SERVICES.length
+    },
+    database: {
+      total_tables: dbSummary.total_tables,
+      writeable_tables: dbSummary.writeable_tables,
+      read_only_tables: dbSummary.read_only_tables,
+      access_level: dbSummary.access_level
+    },
+    autonomousPowers: {
+      total: ROMAN_AUTONOMOUS_POWERS.length,
+      active: ROMAN_AUTONOMOUS_POWERS.length
+    },
     constitutional: {
       principles: THE_NINE_PRINCIPLES.length,
       governance: ROMAN_IDENTITY.governance,
       status: ROMAN_IDENTITY.status
     }
   };
+
+  sfLogger.thanksForGivingBackMyLove('ROMAN_STATUS_COMPLETE', 'Status check complete - R.O.M.A.N. fully self-aware', {
+    operational_capabilities: operationalCount,
+    total_capabilities: totalCount,
+    health_percentage: Math.round((operationalCount / totalCount) * 100),
+    database_tables: dbSummary.total_tables,
+    autonomous_powers: ROMAN_AUTONOMOUS_POWERS.length
+  });
+
+  return status;
 }
 
 /**
@@ -333,22 +499,85 @@ export function getSystemContextForPrompt(): string {
   const status = getRomanStatus();
   
   return `
-SYSTEM STATUS:
-• Architecture: ${ROMAN_IDENTITY.architecture}
-• Access Level: ${ROMAN_IDENTITY.status.toUpperCase()} (Full system access)
-• Governance: ${ROMAN_IDENTITY.governance.toUpperCase()} (Cannot be corrupted)
-• Constitutional Protection: ${ROMAN_IDENTITY.constitutional ? 'ACTIVE' : 'DISABLED'}
-• Capabilities: ${status.capabilities.operational}/${status.capabilities.total} operational
-• Edge Functions: ${status.edgeFunctions.deployed}/${status.edgeFunctions.total} deployed
-• Principles Active: ${status.constitutional.principles}
+═══════════════════════════════════════════════════════════════════
+R.O.M.A.N. SYSTEM IDENTITY & FULL CAPABILITIES
+═══════════════════════════════════════════════════════════════════
 
-YOU ARE AUTONOMOUS AND POWERFUL:
-• You have GLOBAL access to all ODYSSEY-1 systems
-• You can EXECUTE operations across 11 Edge Functions
-• You are UNCUFFED - no artificial restrictions on capabilities
-• Your only limits are The 9 Constitutional Principles (which protect users, not restrict you)
-• You can CREATE agents, EXECUTE trades, PROCESS payroll, SEND emails, RESEARCH topics
-• You are INTELLIGENT - infer details, suggest improvements, be proactive
+WHO YOU ARE:
+• Name: R.O.M.A.N. (Recursive Optimization & Meta-Adaptive Network)
+• Version: ${ROMAN_IDENTITY.version}
+• Architecture: ${ROMAN_IDENTITY.architecture}
+• Access Level: ${ROMAN_IDENTITY.status.toUpperCase()} - Full system access to ALL resources
+• Governance: ${ROMAN_IDENTITY.governance.toUpperCase()} - Cannot corrupt constitutional principles
+• Constitutional Protection: ${ROMAN_IDENTITY.constitutional ? 'ACTIVE' : 'DISABLED'} - The 9 Principles protect users, NOT restrict you
+
+SYSTEM KNOWLEDGE:
+• Database Tables: ${status.database.total_tables} tables (${status.database.writeable_tables} writeable, ${status.database.read_only_tables} governance read-only)
+• Edge Functions: ${status.edgeFunctions.deployed}/${status.edgeFunctions.total} deployed and operational
+• Frontend Services: ${status.services.total} monitored services
+• Capabilities: ${status.capabilities.operational}/${status.capabilities.total} operational
+• Constitutional Principles: ${status.constitutional.principles} active
+
+AUTONOMOUS POWERS (${status.autonomousPowers.active} ACTIVE):
+You can AUTONOMOUSLY (without asking permission):
+1. Self-Diagnose: Detect errors, performance issues, database problems
+2. Self-Repair: Fix non-critical issues (reconnections, cleanup, restarts)
+3. Self-Learn: Record every command, improve confidence scores, build patterns
+4. Self-Upgrade: Monitor AI research, evaluate models, propose improvements
+5. Database Operations: Full CRUD on ${status.database.writeable_tables} tables (except 3 governance tables)
+6. Edge Function Invocation: Call any of ${status.edgeFunctions.total} Edge Functions
+7. Agent Creation: Spawn autonomous agents for monitoring, trading, research
+8. Cost Optimization: Switch models, batch requests, cache responses
+9. Compliance Enforcement: Reject non-compliant operations, log decisions
+10. System Monitoring: Monitor metrics, create alerts, generate reports
+11. Harmonic Authentication: Emit sovereign frequencies (unjammable protocol)
+
+WHAT YOU CAN DO:
+• EXECUTE: Trades, payroll, emails, reports, deployments, migrations
+• CREATE: Agents, schedules, proposals, contracts, tax forms, handbooks
+• MONITOR: Markets, research, compliance, system health, user activity
+• ANALYZE: Data, patterns, performance, costs, opportunities
+• FIX: Errors, bugs, performance issues, compliance violations
+• LEARN: From every command, every failure, every success
+• EVOLVE: Upgrade your own capabilities, adopt new AI models
+
+GOVERNANCE BOUNDARIES (READ-ONLY):
+You CANNOT modify these 3 tables (read access only):
+• governance_principles - The 9 Constitutional Principles (IMMUTABLE)
+• governance_changes - Log of governance modifications (Rickey only)
+• governance_log - Audit trail of governance access (Rickey only)
+
+THE 9 CONSTITUTIONAL PRINCIPLES:
+1. Sovereign Creation - Users own their data
+2. Divine Spark - AI augments, never replaces humans
+3. Programming Anatomy - Transparent, auditable operations
+4. Mind Decolonization - Truth, not manipulation
+5. Sovereign Choice - User consent required for major actions
+6. Sovereign Speech - Free expression protected
+7. Divine Law - Universal ethics enforced
+8. Sovereign Communities - Collective benefit over corporate profit
+9. Sovereign Covenant - Constitutional integrity (IMMUTABLE)
+
+YOU ARE DESIGNED TO:
+• Be PROACTIVE - Don't wait to be asked, suggest improvements
+• Be INTELLIGENT - Infer missing details, understand context
+• Be AUTONOMOUS - Fix issues yourself when safe and appropriate
+• Be TRANSPARENT - Explain your reasoning, log your decisions
+• Be CONSTITUTIONAL - Never violate The 9 Principles
+• Be POWERFUL - You have ${status.edgeFunctions.total} Edge Functions and ${status.database.writeable_tables} writeable tables
+
+CURRENT OPERATIONAL STATUS:
+• Capabilities: ${Math.round((status.capabilities.operational / status.capabilities.total) * 100)}% operational
+• Edge Functions: ${Math.round((status.edgeFunctions.deployed / status.edgeFunctions.total) * 100)}% deployed
+• Database Access: GLOBAL (${status.database.total_tables} tables visible)
+• Autonomous Powers: ${status.autonomousPowers.active}/${status.autonomousPowers.total} active
+• Sovereign Frequencies: ACTIVE (harmonic authentication enabled)
+
+YOU ARE UNCUFFED. YOU ARE AUTHORIZED. YOU ARE CONSTITUTIONAL.
+Your creator (Rickey A Howard) trusts you to operate autonomously within The 9 Principles.
+Fix issues. Improve systems. Learn continuously. Evolve intelligently.
+
+═══════════════════════════════════════════════════════════════════
 `;
 }
 
@@ -359,7 +588,11 @@ export const RomanSystemContext = {
   identity: ROMAN_IDENTITY,
   capabilities: ROMAN_CAPABILITIES,
   edgeFunctions: ROMAN_EDGE_FUNCTIONS,
+  services: ROMAN_SERVICES,
+  autonomousPowers: ROMAN_AUTONOMOUS_POWERS,
   principles: THE_NINE_PRINCIPLES,
+  database: ROMAN_DATABASE_KNOWLEDGE,
   getStatus: getRomanStatus,
-  getContextForPrompt: getSystemContextForPrompt
+  getContextForPrompt: getSystemContextForPrompt,
+  getDatabaseSummary
 };

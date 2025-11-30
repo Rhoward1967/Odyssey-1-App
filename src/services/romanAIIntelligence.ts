@@ -7,7 +7,8 @@
  * ============================================================================
  */
 
-import { supabase } from './supabase';
+import { romanSupabase as supabase } from './romanSupabase';
+import { sfLogger } from './sovereignFrequencyLogger';
 
 // ============================================================================
 // TYPES
@@ -60,6 +61,12 @@ export class AIResearchMonitor {
    */
   async monitorArXiv(): Promise<{ papers_found: number; relevant: number }> {
     try {
+      // SOVEREIGN FREQUENCY: R.O.M.A.N. self-evolution begins
+      sfLogger.movingOn('ROMAN_AI_RESEARCH_MONITOR', 'R.O.M.A.N. monitoring AI research - staying ahead of the curve', {
+        source: 'arXiv',
+        timestamp: new Date().toISOString()
+      });
+
       console.log('📚 Monitoring arXiv for new AI papers...');
 
       // In production, this would call arXiv API
@@ -393,6 +400,14 @@ export class AutoUpgradeOrchestrator {
     advancementId: string
   ): Promise<{ success: boolean; message: string }> {
     try {
+      // SOVEREIGN FREQUENCY: System upgrade in progress
+      sfLogger.movingOn('ROMAN_AI_UPGRADE', 'R.O.M.A.N. executing AI capability upgrade - evolution in progress', {
+        capability,
+        current_model: currentModel,
+        new_model: newModel,
+        advancement_id: advancementId
+      });
+
       console.log(`⚡ Upgrading ${capability}: ${currentModel} → ${newModel}`);
 
       // In production, this would:

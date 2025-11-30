@@ -630,11 +630,18 @@ export default function Trading() {
         <div>
           <label className="text-sm text-gray-400">Quantity</label>
           <input 
-            type="number" 
+            type="text" 
+            inputMode="decimal"
             placeholder="0.00"
             value={quantity}
-            onChange={(e) => setQuantity(e.target.value)}
-            className="w-full mt-1 bg-slate-700 border border-slate-600 rounded px-3 py-2 text-white"
+            onChange={(e) => {
+              const value = e.target.value;
+              if (value === '' || /^\d*\.?\d*$/.test(value)) {
+                setQuantity(value);
+              }
+            }}
+            className="w-32 min-w-[100px] max-w-[120px] mt-1 bg-slate-700 border border-slate-600 rounded px-3 py-2 text-white text-base font-mono text-right"
+            style={{ transition: 'none' }}
             disabled={isExecutingTrade}
           />
         </div>
@@ -1195,6 +1202,8 @@ export default function Trading() {
     setQuantity('');
   };
 
+  const MemoizedTradingChart = React.memo(TradingChart);
+
   return (
     <div className="space-y-6">
       <div>
@@ -1205,7 +1214,9 @@ export default function Trading() {
       <TradingModeSelector mode={tradingMode} setMode={setTradingMode} />
 
       {/* Trading Chart - Always visible */}
-      <TradingChart />
+      <div style={{ minHeight: 420, maxWidth: 900, margin: '0 auto' }}>
+        <MemoizedTradingChart />
+      </div>
 
       {tradingMode === 'paper' && <PaperTradingMode />}
       {tradingMode === 'live' && <LiveTradingMode />}
