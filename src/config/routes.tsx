@@ -4,6 +4,7 @@ import {
   Calendar,
   Clock,
   CreditCard,
+  DollarSign,
   Home,
   Shield,
   TrendingUp,

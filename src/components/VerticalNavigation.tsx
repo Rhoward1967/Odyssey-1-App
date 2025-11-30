@@ -1,10 +1,13 @@
-import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Link, useLocation } from 'react-router-dom';
-import { 
-  Home, Settings, DollarSign, HelpCircle, 
-  CreditCard, BarChart3, Calculator, Search, Wallet, Calendar
+import {
+  BarChart3,
+  Calendar,
+  CreditCard,
+  DollarSign, HelpCircle,
+  Home
 } from 'lucide-react';
+import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
 
 const VerticalNavigation: React.FC = () => {
   const location = useLocation();
