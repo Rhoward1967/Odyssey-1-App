@@ -17,10 +17,13 @@ import { join } from 'path';
 
 dotenv.config();
 
-const SUPABASE_URL = process.env.VITE_SUPABASE_URL!;
-const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+const SUPABASE_URL = process.env.SUPABASE_URL!;
+const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+const k = SUPABASE_SERVICE_ROLE_KEY || '';
+console.log('SRK looks like JWT:', k.startsWith('eyJ'), 'len:', k.length);
+console.log('URL ok:', (SUPABASE_URL || '').includes('tvsxloejfsrdganemsmg'));
 
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY, {
+const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
   auth: {
     autoRefreshToken: false,
     persistSession: false,

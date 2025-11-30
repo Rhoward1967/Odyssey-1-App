@@ -19,7 +19,7 @@ const VerticalNavigation: React.FC = () => {
   ];
 
   return (
-    <nav className="fixed left-0 top-0 h-full w-64 bg-slate-800/95 border-r border-slate-700 z-50 flex flex-col md:flex hidden">
+    <nav className="fixed left-0 top-0 h-full w-64 bg-slate-800/95 border-r border-slate-700 z-50 flex flex-col md:flex">
       {/* Logo */}
       <div className="p-4 border-b border-slate-700">
         <div className="text-xl font-bold bg-gradient-to-r from-purple-400 to-blue-500 bg-clip-text text-transparent">

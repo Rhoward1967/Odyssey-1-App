@@ -15,10 +15,16 @@ import {
 } from './roman-auto-audit';
 
 // Make sure dotenv loads BEFORE we read env vars
+import path from 'path';
+console.log('DEBUG CWD:', process.cwd());
+console.log('DEBUG ENV PATH:', path.resolve('.env'));
 dotenv.config();
+console.log('DEBUG OPENAI KEY:', process.env.OPENAI_API_KEY ? process.env.OPENAI_API_KEY.substring(0, 8) + '...' : 'undefined');
+console.log('DEBUG DISCORD BOT TOKEN:', process.env.DISCORD_BOT_TOKEN ? process.env.DISCORD_BOT_TOKEN.substring(0, 8) + '...' : 'undefined');
+console.log('DEBUG OPENAI KEY:', process.env.OPENAI_API_KEY ? process.env.OPENAI_API_KEY.substring(0, 8) + '...' : 'undefined');
 
 // Read and validate IMMEDIATELY after dotenv loads
-const SUPABASE_URL = process.env.VITE_SUPABASE_URL?.trim();
+const SUPABASE_URL = process.env.SUPABASE_URL?.trim();
 const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
 
 console.log('🔍 Environment check:');

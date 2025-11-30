@@ -65,10 +65,10 @@ export const appRoutes: AppRoute[] = [
   { path: '/', component: () => <DynamicComponent componentPath="Index" fallbackName="Dashboard" />, name: 'Dashboard', icon: Home, category: 'core' },
   { path: '/trading', component: () => <DynamicComponent componentPath="Trading" fallbackName="Trading" />, name: 'Trading', icon: TrendingUp, category: 'trading' },
   { path: '/profile', component: () => <DynamicComponent componentPath="Profile" fallbackName="Profile" />, name: 'Profile', icon: User, category: 'core' },
+  { path: '/budget', component: () => <DynamicComponent componentPath="Budget" fallbackName="Budget" />, name: 'Budget', icon: DollarSign, category: 'core' },
   { path: '/subscription', component: () => <DynamicComponent componentPath="Subscription" fallbackName="Subscription" />, name: 'Subscription', icon: CreditCard, category: 'core' },
   { path: '/timeclock', component: () => <DynamicComponent componentPath="TimeClock" fallbackName="Time Clock" />, name: 'Time Clock', icon: Clock, category: 'business' },
   { path: '/schedule', component: () => <DynamicComponent componentPath="Schedule" fallbackName="Schedule" />, name: 'Schedule', icon: Calendar, category: 'business' },
-  
   { path: '/hr', component: () => <DynamicComponent componentPath="HRDashboard" fallbackName="HR Dashboard" />, name: 'HR', icon: Users, category: 'business', requiredRole: 'manager' },
   { path: '/admin', component: () => <DynamicComponent componentPath="Admin" fallbackName="Admin" />, name: 'Admin', icon: Shield, category: 'admin', requiredRole: 'admin' },
 ];
