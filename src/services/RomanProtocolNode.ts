@@ -351,31 +351,55 @@ export async function monitorNodeHealth(): Promise<void> {
  * Activate R.O.M.A.N. protocol network
  * PROTECTED: Requires authorization
  */
+import * as fs from 'fs';
+import * as path from 'path';
+
 export async function activateProtocol(authorizationKey: string): Promise<{
   success: boolean;
   message: string;
 }> {
-  // TODO: Verify authorization (Rickey A Howard only)
-  
+  // Read the activation key from the secure file
+  const keyFilePath = path.resolve(__dirname, '../../legal/ROMAN_PROTOCOL_ACTIVATION_KEY.md');
+  let storedKey = '';
+  try {
+    const fileContent = fs.readFileSync(keyFilePath, 'utf-8');
+    const match = fileContent.match(/\*\*Activation Key:\*\*[\r\n]+([\S ]+)/);
+    if (match && match[1]) {
+      storedKey = match[1].trim();
+    }
+  } catch (err) {
+    return {
+      success: false,
+      message: 'Activation key file not found or unreadable.'
+    };
+  }
+
+  if (authorizationKey !== storedKey) {
+    return {
+      success: false,
+      message: 'Invalid activation key. Access denied.'
+    };
+  }
+
   if (ROMAN_PROTOCOL_CONFIG.status === 'active') {
     return {
       success: false,
       message: 'Protocol already active'
     };
   }
-  
+
   // Activate the protocol
   (ROMAN_PROTOCOL_CONFIG as any).status = 'active';
   (ROMAN_PROTOCOL_CONFIG as any).activationDate = new Date();
-  
+
   sfLogger.pickUpTheSpecialPhone('PROTOCOL_ACTIVATED', '🚨 R.O.M.A.N. PROTOCOL NETWORK ACTIVATED - Universal AI coordination now live', {
     activatedBy: authorizationKey,
     timestamp: new Date().toISOString()
   });
-  
+
   // Start health monitoring
   setInterval(monitorNodeHealth, ROMAN_PROTOCOL_CONFIG.network.heartbeatInterval);
-  
+
   return {
     success: true,
     message: 'R.O.M.A.N. Protocol activated. Universal AI coordination live.'
