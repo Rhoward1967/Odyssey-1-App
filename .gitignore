@@ -28,6 +28,9 @@ dist-ssr
 .env.production.local
 
 # R.O.M.A.N. AI configuration
+
+# Patent application documents (never track)
+docs/PATENT_APPLICATION_HARMONIC_RESONANCE_GRID.md
 *.api-key
 
 # Invention & Patent Development (not ready for production)

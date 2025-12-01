@@ -14,6 +14,7 @@ import AdminControlPanel from './AdminControlPanel';
 import AutoFixSystem from './AutoFixSystem';
 import AutonomousOdysseyCore from './AutonomousOdysseyCore';
 import AutonomousSystemActivator from './AutonomousSystemActivator';
+import BudgetDashboard from './BudgetDashboard';
 import CompanyHandbook from './CompanyHandbook';
 import EmployeeManagement from './EmployeeManagement';
 import FeatureFlagsManager from './FeatureFlagsManager';
@@ -23,7 +24,7 @@ import { Badge } from './ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 
 export default function AdminDashboard() {
-  const [activeTab, setActiveTab] = useState('control');
+  const [activeTab, setActiveTab] = useState('autonomous');
 
   // You'll need to pass actual organizationId and userId from your auth
   const organizationId = 1; // Replace with actual org ID from context/auth
@@ -122,6 +123,10 @@ export default function AdminDashboard() {
               <FileText className='w-4 h-4' />
               <span className='text-sm'>Handbook</span>
             </TabsTrigger>
+            <TabsTrigger value='budget' className='justify-start gap-2 py-2 px-3 bg-blue-600/20 hover:bg-blue-500/30 data-[state=active]:bg-blue-600 data-[state=active]:text-white text-blue-100 border border-blue-500/20 w-fit'>
+              <DollarSign className='w-4 h-4' />
+              <span className='text-sm'>Budget</span>
+            </TabsTrigger>
             <TabsTrigger value='payroll' className='justify-start gap-2 py-2 px-3 bg-blue-600/20 hover:bg-blue-500/30 data-[state=active]:bg-blue-600 data-[state=active]:text-white text-blue-100 border border-blue-500/20 w-fit'>
               <DollarSign className='w-4 h-4' />
               <span className='text-sm'>Payroll</span>
@@ -164,10 +169,20 @@ export default function AdminDashboard() {
               <FileText className='w-4 h-4' />
               <span>Handbook</span>
             </TabsTrigger>
+            <TabsTrigger value='budget' className='flex items-center gap-2 py-2 px-3 bg-blue-600/20 hover:bg-blue-500/30 data-[state=active]:bg-blue-600 data-[state=active]:text-white text-blue-100 border border-blue-500/20 text-sm'>
+              <DollarSign className='w-4 h-4' />
+              <span>Budget</span>
+            </TabsTrigger>
             <TabsTrigger value='payroll' className='flex items-center gap-2 py-2 px-3 bg-blue-600/20 hover:bg-blue-500/30 data-[state=active]:bg-blue-600 data-[state=active]:text-white text-blue-100 border border-blue-500/20 text-sm'>
               <DollarSign className='w-4 h-4' />
               <span>Payroll</span>
             </TabsTrigger>
+                  <TabsContent value='budget'>
+                    <div className='w-full max-w-full overflow-x-auto'>
+                      {/* System-level Budget Dashboard for admins only */}
+                      <BudgetDashboard />
+                    </div>
+                  </TabsContent>
           </TabsList>
         </div>
 
