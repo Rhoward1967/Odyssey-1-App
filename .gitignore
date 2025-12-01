@@ -1,4 +1,10 @@
-﻿# Logs
+﻿# Patent Applications (private - never push to repo)
+patent-filing-package/*application*
+# Patent Receipts (private - never push to repo)
+patent-filing-package/*.pdf
+patent-filing-package/*.docx
+patent-filing-package/*.txt
+# Logs
 logs
 *.log
 npm-debug.log*
@@ -38,6 +44,9 @@ docs/Sacred_Geometry_DNA_Theory_Full_Conversation.md
 docs/Sacred_Geometry_DNA_Theory_Full_Script.md
 docs/Sacred_Geometry_Video_Storyboard.md
 docs/Video_Production_Guide_AI_Tools.md
+
+# R.O.M.A.N. Protocol Activation Key (private)
+legal/ROMAN_PROTOCOL_ACTIVATION_KEY.md
 
 # Audit logs (local only, never push)
 AUDIT_WEEKLY_SUMMARY_*.md

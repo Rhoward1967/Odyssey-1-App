@@ -1,13 +1,13 @@
 import {
-    AlertTriangle,
-    Brain,
-    CheckCircle,
-    DollarSign,
-    FileText,
-    Flag,
-    Settings,
-    Users,
-    Zap
+  AlertTriangle,
+  Brain,
+  CheckCircle,
+  DollarSign,
+  FileText,
+  Flag,
+  Settings,
+  Users,
+  Zap
 } from 'lucide-react';
 import { useState } from 'react';
 import AdminControlPanel from './AdminControlPanel';
@@ -29,6 +29,21 @@ export default function AdminDashboard() {
   const organizationId = 1; // Replace with actual org ID from context/auth
   const userId = 'user-uuid'; // Replace with actual user ID from auth
 
+  const [activationKey, setActivationKey] = useState('');
+  const [activationStatus, setActivationStatus] = useState<string | null>(null);
+  const handleActivate = async () => {
+    // Placeholder: Replace with actual API call or function
+    if (!activationKey) {
+      setActivationStatus('Please enter your activation key.');
+      return;
+    }
+    // Simulate activation (replace with real logic)
+    setActivationStatus('Activating...');
+    setTimeout(() => {
+      setActivationStatus('Activation request sent. (Integrate backend logic)');
+    }, 1000);
+  };
+
   return (
     <div className='space-y-4 px-2 py-2 sm:px-4 sm:py-6 max-w-full overflow-x-hidden'>
       <div className='text-center space-y-2'>
@@ -44,6 +59,27 @@ export default function AdminDashboard() {
         <Badge className='mt-1 md:mt-2 bg-green-600/20 text-green-300 text-xs md:text-base'>
           FULLY OPERATIONAL
         </Badge>
+      </div>
+
+      {/* R.O.M.A.N. Protocol Activation Prompt */}
+      <div className='flex flex-col items-center gap-2 my-4 bg-blue-900/30 p-4 rounded-lg border border-blue-700 max-w-md mx-auto'>
+        <div className='font-semibold text-blue-200 mb-1'>R.O.M.A.N. Protocol Activation</div>
+        <input
+          type='password'
+          value={activationKey}
+          onChange={e => setActivationKey(e.target.value)}
+          placeholder='Enter activation key'
+          className='px-3 py-2 rounded border border-blue-500 bg-blue-950 text-blue-100 w-full'
+        />
+        <button
+          onClick={handleActivate}
+          className='bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded mt-1 w-full font-semibold'
+        >
+          Activate Protocol
+        </button>
+        {activationStatus && (
+          <div className='text-xs text-blue-300 mt-2'>{activationStatus}</div>
+        )}
       </div>
 
       <Tabs
