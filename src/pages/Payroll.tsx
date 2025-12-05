@@ -1,3 +1,5 @@
+import { ContractorManager } from '@/components/ContractorManager';
+import { PayrollReconciliation } from '@/components/PayrollReconciliation';
 import TimeTrackingSystem from '@/components/TimeTrackingSystem';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -15,7 +17,7 @@ export default function Payroll() {
       </div>
 
       <Tabs defaultValue="timeclock" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-5">
+        <TabsList className="grid w-full grid-cols-7">
           <TabsTrigger value="timeclock">
             <Clock className="w-4 h-4 mr-2" />
             Time Clock
@@ -33,6 +35,8 @@ export default function Payroll() {
             Timesheet Approval
           </TabsTrigger>
           <TabsTrigger value="processing">
+                      <TabsTrigger value="contractors">Contractors</TabsTrigger>
+                      <TabsTrigger value="reconciliation">Reconciliation</TabsTrigger>
             <DollarSign className="w-4 h-4 mr-2" />
             Payroll Processing
           </TabsTrigger>
@@ -79,6 +83,12 @@ export default function Payroll() {
         </TabsContent>
 
         <TabsContent value="processing">
+                  <TabsContent value="contractors">
+                    <ContractorManager organizationId={1} />
+                  </TabsContent>
+                  <TabsContent value="reconciliation">
+                    <PayrollReconciliation organizationId={1} />
+                  </TabsContent>
           {/* Final payroll processing */}
           <Card>
             <CardHeader>

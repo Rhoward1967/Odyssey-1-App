@@ -1,0 +1,5 @@
+{
+  "refresh_roman_event_daily": {
+    "verify_jwt": false
+  }
+}

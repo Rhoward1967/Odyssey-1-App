@@ -36,6 +36,28 @@ serve(async (req) => {
     const body = await req.text();
     const event = stripe.webhooks.constructEvent(body, signature, STRIPE_WEBHOOK_SECRET);
 
+      // Idempotency: log event and skip if already processed
+      const eventId = event.id;
+      const { data: existingEvent } = await supabase
+        .from('stripe_event_log')
+        .select('event_id')
+        .eq('event_id', eventId)
+        .single();
+
+      if (existingEvent) {
+        return new Response(JSON.stringify({ received: true, duplicate: true }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        });
+      }
+
+      // Log event for audit
+      await supabase.from('stripe_event_log').insert({
+        event_id: eventId,
+        event_type: event.type,
+        payload: event,
+        received_at: new Date().toISOString()
+      });
+
     switch (event.type) {
       case 'checkout.session.completed': {
         const session = event.data.object as Stripe.Checkout.Session;

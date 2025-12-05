@@ -1,6 +1,34 @@
-import React, { useState } from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+// --- R.O.M.A.N. frontend event logging utility ---
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 import { Brain, Sparkles } from 'lucide-react';
+import React, { useState } from 'react';
+const romanSupabase = createSupabaseClient(
+  import.meta.env.VITE_SUPABASE_URL,
+  import.meta.env.VITE_SUPABASE_ANON_KEY
+);
+type RomanEvent = {
+  actor?: string;
+  action_type: string;
+  context?: Record<string, any>;
+  payload?: Record<string, any>;
+  severity?: 'info' | 'warn' | 'error';
+};
+async function recordRomanEvent(e: RomanEvent) {
+  try {
+    await romanSupabase
+      .from('ops.roman_events')
+      .insert({
+        actor: e.actor ?? 'roman',
+        action_type: e.action_type,
+        context: e.context ?? {},
+        payload: e.payload ?? {},
+        severity: e.severity ?? 'info',
+      });
+  } catch (error) {
+    // Fail silently in UI
+  }
+}
 
 interface AIExpertAdvisorProps {
   name?: string;
@@ -124,25 +152,43 @@ const AIExpertAdvisor: React.FC<AIExpertAdvisorProps> = ({
     }
   };
 
-  // Unified handler
+  // Unified handler (calls Supabase Edge Function for secure AI proxy)
   const getAIResponse = async (userMsg: string) => {
-    setLoading(true);
+    setLoading(true)
     try {
-      let response = '';
-      if (aiProvider === 'openai') {
-        response = await getOpenAIResponse(userMsg);
-      } else if (aiProvider === 'anthropic') {
-        response = await getAnthropicResponse(userMsg);
-      } else {
-        response = await getGeminiResponse(userMsg);
+      const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-advisor`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+        },
+        body: JSON.stringify({
+          provider: aiProvider, // 'openai' | 'anthropic' | 'gemini'
+          system: `You are Dr. Athena, an expert AI trading advisor. Give concise, actionable, and friendly advice about crypto trading, strategies, and market trends.`,
+          messages: [
+            ...chat.slice(-8).map(m => ({
+              role: m.sender === 'user' ? 'user' : 'assistant',
+              content: m.text
+            })),
+            { role: 'user', content: userMsg }
+          ],
+          max_tokens: 120,
+          temperature: 0.7
+        }),
+      })
+
+      if (!res.ok) {
+        const err = await res.text()
+        return `AI backend error: ${err}`
       }
-      setLoading(false);
-      return response;
-    } catch (err) {
-      setLoading(false);
-      return 'Error connecting to AI backend.';
+      const data = await res.json()
+      return data.text ?? 'No response.'
+    } catch {
+      return 'Error connecting to AI backend.'
+    } finally {
+      setLoading(false)
     }
-  };
+  }
 
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -150,8 +196,22 @@ const AIExpertAdvisor: React.FC<AIExpertAdvisorProps> = ({
     const userMsg = input.trim();
     setChat(prev => [...prev, { sender: 'user', text: userMsg }]);
     setInput('');
+    // Log user message as event
+    await recordRomanEvent({
+      action_type: 'user_message',
+      context: { component: 'AIExpertAdvisor', provider: aiProvider },
+      payload: { text: userMsg },
+      severity: 'info',
+    });
     const aiMsg = await getAIResponse(userMsg);
     setChat(prev => [...prev, { sender: 'ai', text: aiMsg }]);
+    // Log AI response as event
+    await recordRomanEvent({
+      action_type: 'ai_response',
+      context: { component: 'AIExpertAdvisor', provider: aiProvider },
+      payload: { text: aiMsg },
+      severity: 'info',
+    });
   };
 
   return (

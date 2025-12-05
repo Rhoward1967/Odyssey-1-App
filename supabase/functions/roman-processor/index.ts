@@ -1,5 +1,6 @@
 import { serve } from 'https://deno.land/std@0.177.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.38.4';
+import { writeAudit } from '../_shared/audit.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -29,8 +30,10 @@ serve(async (req) => {
     return new Response('ok', { headers: corsHeaders })
   }
 
+  let correlation_id: string | undefined;
   try {
-    const { userIntent, userId, organizationId } = await req.json()
+    const { userIntent, userId, organizationId, correlation_id: incomingCorrelationId } = await req.json();
+    correlation_id = incomingCorrelationId;
 
     const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
@@ -44,6 +47,14 @@ serve(async (req) => {
     const validation = validateAgainstPrinciples(romanCommand)
     
     if (!validation.approved) {
+      await writeAudit({
+        table_schema: 'public',
+        table_name: 'roman_commands',
+        action: 'EXECUTE',
+        user_role: 'service_role',
+        after_row: { fn: 'roman-processor', input: { userIntent, userId, organizationId }, result: 'principle_violation', validation },
+        correlation_id,
+      });
       return new Response(
         JSON.stringify({ 
           success: false, 
@@ -56,7 +67,14 @@ serve(async (req) => {
 
     // Execute approved command
     const result = executeCommand(romanCommand, supabaseClient)
-
+    await writeAudit({
+      table_schema: 'public',
+      table_name: 'roman_commands',
+      action: 'EXECUTE',
+      user_role: 'service_role',
+      after_row: { fn: 'roman-processor', input: { userIntent, userId, organizationId }, result, validation },
+      correlation_id,
+    });
     return new Response(
       JSON.stringify({ 
         success: true, 
@@ -69,6 +87,14 @@ serve(async (req) => {
 
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
+    await writeAudit({
+      table_schema: 'public',
+      table_name: 'roman_commands',
+      action: 'EXECUTE',
+      user_role: 'service_role',
+      after_row: { fn: 'roman-processor', error: errorMessage },
+      correlation_id,
+    });
     return new Response(
       JSON.stringify({ error: errorMessage }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400 }

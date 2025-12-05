@@ -81,6 +81,24 @@ export class SovereignCoreOrchestrator {
           confidence_score: 0.3 // Low confidence on validation failure
         });
 
+        // Log validation failure to audit via Edge Function
+        try {
+          await fetch(`${process.env.SUPABASE_URL}/functions/v1/roman-processor`, {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              userIntent: userIntent,
+              userId: userId,
+              organizationId: organizationId,
+              correlation_id: `intent-${Date.now()}`
+            })
+          });
+        } catch (err) {
+          console.log('Audit log failed:', err?.message || String(err));
+        }
         return {
           success: false,
           command,
@@ -120,6 +138,24 @@ export class SovereignCoreOrchestrator {
 
       console.log('✅ Learning data recorded');
 
+      // Log orchestration result to audit via Edge Function
+      try {
+        await fetch(`${process.env.SUPABASE_URL}/functions/v1/roman-processor`, {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            userIntent: userIntent,
+            userId: userId,
+            organizationId: organizationId,
+            correlation_id: `intent-${Date.now()}`
+          })
+        });
+      } catch (err) {
+        console.log('Audit log failed:', err?.message || String(err));
+      }
       return {
         success: execution.success,
         command,

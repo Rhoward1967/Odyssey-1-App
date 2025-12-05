@@ -1,4 +1,5 @@
 import { createClient } from 'npm:@supabase/supabase-js@2.46.2';
+import { writeAudit } from '../_shared/audit.ts';
 
 interface CapabilityResult { status: 'ok' | 'missing' | 'error'; message?: string }
 
@@ -276,109 +277,116 @@ async function persistStatus(value: Record<string, unknown>) {
 }
 
 console.info('capability-check with ALL 11 integrations started')
+// --- Serve with audit logging ---
 Deno.serve(async (req: Request) => {
   try {
     const url = new URL(req.url)
     const quick = url.searchParams.get('quick') === '1'
 
-  // Check all integrations (quick mode just checks if keys exist)
-  const openai = quick
-    ? ({ status: Deno.env.get('OPENAI_API_KEY') ? 'ok' : 'missing' } as CapabilityResult)
-    : await checkOpenAI()
-  
-  const anthropic = quick
-    ? ({ status: Deno.env.get('ANTHROPIC_API_KEY') ? 'ok' : 'missing' } as CapabilityResult)
-    : await checkAnthropic()
-  
-  const gemini = quick
-    ? ({ status: Deno.env.get('GEMINI_API_KEY') ? 'ok' : 'missing' } as CapabilityResult)
-    : await checkGemini()
-  
-  const googleCalendar = quick
-    ? ({ status: Deno.env.get('GOOGLE_CALENDAR_API_KEY') ? 'ok' : 'missing' } as CapabilityResult)
-    : await checkGoogleCalendar()
-  
-  const stripe = quick
-    ? ({ status: Deno.env.get('STRIPE_SECRET_KEY') ? 'ok' : 'missing' } as CapabilityResult)
-    : await checkStripe()
-  
-  const twilio = quick
-    ? ({ status: (Deno.env.get('TWILIO_ACCOUNT_SID') && Deno.env.get('TWILIO_AUTH_TOKEN')) ? 'ok' : 'missing' } as CapabilityResult)
-    : await checkTwilio()
-  
-  const samGov = quick
-    ? ({ status: Deno.env.get('SAM_GOV_API_KEY') ? 'ok' : 'missing' } as CapabilityResult)
-    : await checkSAMGov()
-  
-  const arXiv = quick
-    ? ({ status: 'ok' } as CapabilityResult) // Public API, always available
-    : await checkArXiv()
-  
-  const github = quick
-    ? ({ status: Deno.env.get('GITHUB_TOKEN') ? 'ok' : 'missing' } as CapabilityResult)
-    : await checkGitHub()
-  
-  const romanReady = quick
-    ? ({ status: Deno.env.get('DISCORD_BOT_TOKEN') ? 'ok' : 'missing' } as CapabilityResult)
-    : await checkROMANReady()
-  
-  const genesisMode = quick
-    ? ({ status: 'ok' } as CapabilityResult) // Assume active
-    : await checkGenesisMode()
+    // Check all integrations (quick mode just checks if keys exist)
+    const openai = quick
+      ? ({ status: Deno.env.get('OPENAI_API_KEY') ? 'ok' : 'missing' } as CapabilityResult)
+      : await checkOpenAI()
+    const anthropic = quick
+      ? ({ status: Deno.env.get('ANTHROPIC_API_KEY') ? 'ok' : 'missing' } as CapabilityResult)
+      : await checkAnthropic()
+    const gemini = quick
+      ? ({ status: Deno.env.get('GEMINI_API_KEY') ? 'ok' : 'missing' } as CapabilityResult)
+      : await checkGemini()
+    const googleCalendar = quick
+      ? ({ status: Deno.env.get('GOOGLE_CALENDAR_API_KEY') ? 'ok' : 'missing' } as CapabilityResult)
+      : await checkGoogleCalendar()
+    const stripe = quick
+      ? ({ status: Deno.env.get('STRIPE_SECRET_KEY') ? 'ok' : 'missing' } as CapabilityResult)
+      : await checkStripe()
+    const twilio = quick
+      ? ({ status: (Deno.env.get('TWILIO_ACCOUNT_SID') && Deno.env.get('TWILIO_AUTH_TOKEN')) ? 'ok' : 'missing' } as CapabilityResult)
+      : await checkTwilio()
+    const samGov = quick
+      ? ({ status: Deno.env.get('SAM_GOV_API_KEY') ? 'ok' : 'missing' } as CapabilityResult)
+      : await checkSAMGov()
+    const arXiv = quick
+      ? ({ status: 'ok' } as CapabilityResult) // Public API, always available
+      : await checkArXiv()
+    const github = quick
+      ? ({ status: Deno.env.get('GITHUB_TOKEN') ? 'ok' : 'missing' } as CapabilityResult)
+      : await checkGitHub()
+    const romanReady = quick
+      ? ({ status: Deno.env.get('DISCORD_BOT_TOKEN') ? 'ok' : 'missing' } as CapabilityResult)
+      : await checkROMANReady()
+    const genesisMode = quick
+      ? ({ status: 'ok' } as CapabilityResult) // Assume active
+      : await checkGenesisMode()
 
-  // Build comprehensive payload
-  const payload = {
-    integrations: {
-      openai,
-      anthropic,
-      gemini,
-      googleCalendar,
-      stripe,
-      twilio,
-      samGov,
-      arXiv,
-      github,
-      romanReady,
-      genesisMode
-    },
-    summary: {
-      total: 11,
-      active: [openai, anthropic, gemini, googleCalendar, stripe, twilio, samGov, arXiv, github, romanReady, genesisMode]
-        .filter(r => r.status === 'ok').length,
-      missing: [openai, anthropic, gemini, googleCalendar, stripe, twilio, samGov, arXiv, github, romanReady, genesisMode]
-        .filter(r => r.status === 'missing').length,
-      errors: [openai, anthropic, gemini, googleCalendar, stripe, twilio, samGov, arXiv, github, romanReady, genesisMode]
-        .filter(r => r.status === 'error').length
-    },
-    checked_at: new Date().toISOString(),
-    quick_mode: quick
-  }
+    // Build comprehensive payload
+    const payload = {
+      integrations: {
+        openai,
+        anthropic,
+        gemini,
+        googleCalendar,
+        stripe,
+        twilio,
+        samGov,
+        arXiv,
+        github,
+        romanReady,
+        genesisMode
+      },
+      summary: {
+        total: 11,
+        active: [openai, anthropic, gemini, googleCalendar, stripe, twilio, samGov, arXiv, github, romanReady, genesisMode]
+          .filter(r => r.status === 'ok').length,
+        missing: [openai, anthropic, gemini, googleCalendar, stripe, twilio, samGov, arXiv, github, romanReady, genesisMode]
+          .filter(r => r.status === 'missing').length,
+        errors: [openai, anthropic, gemini, googleCalendar, stripe, twilio, samGov, arXiv, github, romanReady, genesisMode]
+          .filter(r => r.status === 'error').length
+      },
+      checked_at: new Date().toISOString(),
+      quick_mode: quick
+    }
 
-  // Store results in database (async, don't wait)
-  if (!quick) {
-    try {
-      // @ts-ignore available in Supabase Edge Runtime
-      EdgeRuntime.waitUntil(persistStatus(payload))
-    } catch (_e) {
-      try { 
-        await persistStatus(payload) 
-      } catch (_fallbackError) {
-        // Silently fail - this is optional background storage
+    // Store results in database (async, don't wait)
+    if (!quick) {
+      try {
+        // @ts-ignore available in Supabase Edge Runtime
+        EdgeRuntime.waitUntil(persistStatus(payload))
+      } catch (_e) {
+        try { 
+          await persistStatus(payload) 
+        } catch (_fallbackError) {
+          // Silently fail - this is optional background storage
+        }
       }
     }
-  }
 
-  return new Response(JSON.stringify(payload), {
-    headers: { 
-      'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-    },
-    status: 200,
-  })
+    // --- Audit log ---
+    await writeAudit({
+      table_schema: 'public',
+      table_name: 'system_knowledge',
+      action: 'EXECUTE',
+      user_role: 'service_role',
+      after_row: { fn: 'capability-check', payload },
+    });
+
+    return new Response(JSON.stringify(payload), {
+      headers: { 
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+      },
+      status: 200,
+    })
   } catch (error) {
     console.error('Edge function error:', error)
     const err = error as Error
+    await writeAudit({
+      table_schema: 'public',
+      table_name: 'system_knowledge',
+      action: 'EXECUTE',
+      user_role: 'service_role',
+      after_row: { fn: 'capability-check', error: err?.message || String(error) },
+    });
     return new Response(JSON.stringify({ error: err?.message || String(error) }), {
       headers: { 
         'Content-Type': 'application/json',

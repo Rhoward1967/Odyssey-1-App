@@ -114,32 +114,29 @@ export async function initializeAutonomousRoman(): Promise<{
 
     // Step 5: Record autonomous initialization
     console.log('\n📝 Step 5: Recording autonomous initialization...');
-    const { error: logError } = await romanSupabase
-      .from('roman_audit_log')
-      .insert({
-        audit_type: 'autonomous_initialization',
-        timestamp: new Date().toISOString(),
-        findings: {
-          status: 'OPERATIONAL',
-          capabilities: status.capabilities.operational,
-          database_tables: status.database.total_tables,
-          edge_functions: status.edgeFunctions.deployed,
-          autonomous_powers: status.autonomousPowers.active
-        },
-        recommendations: [
-          'Begin daily self-audits',
-          'Monitor AI research (arXiv)',
-          'Track system costs',
-          'Enforce compliance rules',
-          'Emit sovereign frequencies for all operations'
-        ]
-      });
-
-    if (logError) {
-      console.log(`⚠️ Could not log to roman_audit_log: ${logError.message}`);
-    } else {
-      console.log('✅ Initialization logged to audit trail');
-    }
+      try {
+        const res = await fetch(`${process.env.SUPABASE_URL}/functions/v1/roman-processor`, {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            userIntent: 'AUTONOMOUS_INITIALIZATION',
+            userId: 'system',
+            organizationId: 1,
+            correlation_id: `init-${Date.now()}`
+          })
+        });
+        const result = await res.json();
+        if (!res.ok) {
+          console.log(`⚠️ Could not log to roman_audit_log via Edge Function: ${result?.error || res.status}`);
+        } else {
+          console.log('✅ Initialization logged to audit trail via Edge Function');
+        }
+      } catch (err) {
+        console.log(`⚠️ Edge Function audit log failed: ${err?.message || String(err)}`);
+      }
 
     // Step 6: Emit success frequency
     sfLogger.thanksForGivingBackMyLove(

@@ -10,14 +10,14 @@
 
 import { useToast } from '@/hooks/use-toast';
 import {
-    AlertCircle,
-    CheckCircle,
-    DollarSign,
-    Edit,
-    FileText,
-    RefreshCw,
-    Save,
-    UserPlus,
+  AlertCircle,
+  CheckCircle,
+  DollarSign,
+  Edit,
+  FileText,
+  RefreshCw,
+  Save,
+  UserPlus,
 } from 'lucide-react';
 import React, { useCallback, useEffect, useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
@@ -29,6 +29,7 @@ import { Label } from './ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
+// import BankAccountManager from './BankAccountManager';
 
 interface Employee {
   id: string;
@@ -109,14 +110,29 @@ export const WorkforceManagementSystem: React.FC<WorkforceManagementProps> = ({ 
     
     setIsLoading(true);
     try {
-      // OPTION 1: Direct Supabase call (current implementation)
-      const { data, error } = await supabase.functions.invoke('run-payroll', { 
-        body: { organization_id: organizationId, period_start: payrollStartDate, period_end: payrollEndDate } 
+      // Use Edge Function with correlation_id for audit trace
+      const correlation_id = `payroll-${organizationId}-${payrollStartDate}-${payrollEndDate}`;
+      const { data, error } = await supabase.functions.invoke('run-payroll', {
+        body: {
+          organization_id: organizationId,
+          period_start: payrollStartDate,
+          period_end: payrollEndDate,
+          correlation_id
+        }
       });
 
-      // OPTION 2: Use R.O.M.A.N. Orchestrator (new capability)
-      // const result = await SovereignCoreOrchestrator.processIntent(
-      //   `Run payroll for ${payrollStartDate} to ${payrollEndDate}`,
+      // Fetch audit log for this payroll run
+      const { data: auditEntries, error: auditError } = await supabase
+        .from('roman_audit_log')
+        .select('*')
+        .eq('correlation_id', correlation_id)
+        .order('timestamp', { ascending: false });
+
+      if (error) {
+        toast({ title: 'Payroll Error', description: error.message, variant: 'destructive' });
+      } else {
+        toast({ title: 'Payroll Run Complete', description: `Audit entries: ${auditEntries?.length ?? 0}`, variant: 'default' });
+      }
       //   userId,
       //   organizationId
       // );
@@ -171,11 +187,74 @@ export const WorkforceManagementSystem: React.FC<WorkforceManagementProps> = ({ 
         <CardHeader><CardTitle className="flex items-center gap-2 text-blue-300"><DollarSign className="h-6 w-6"/>Professional Payroll System</CardTitle><CardDescription className="text-gray-400">Prepare, Review, Approve & Process Payroll</CardDescription></CardHeader>
         <CardContent>
           <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="grid w-full grid-cols-4 mb-6 bg-slate-900/70"><TabsTrigger value="prepare">1. Prepare</TabsTrigger><TabsTrigger value="review">2. Review & Edit</TabsTrigger><TabsTrigger value="approve">3. Approve</TabsTrigger><TabsTrigger value="process">4. Process</TabsTrigger></TabsList>
-            <TabsContent value="prepare" className="space-y-4"><Card className="bg-slate-700/50"><CardHeader><CardTitle>Select Pay Period</CardTitle></CardHeader><CardContent className="space-y-4"><div className="grid grid-cols-2 gap-4"><div><Label>Start Date</Label><Input type="date" value={payrollStartDate} onChange={e => setPayrollStartDate(e.target.value)} className="bg-slate-800"/></div><div><Label>End Date</Label><Input type="date" value={payrollEndDate} onChange={e => setPayrollEndDate(e.target.value)} className="bg-slate-800"/></div></div><Button onClick={handlePreparePayroll} disabled={isLoading} className="w-full">{isLoading ? 'Preparing...' : 'Prepare Payroll'}</Button></CardContent></Card><Card className="bg-slate-700/50"><CardHeader><CardTitle className="flex items-center gap-2"><UserPlus className="h-5 w-5"/>Add Contractor Payment</CardTitle></CardHeader><CardContent className="space-y-4"><Select value={contractorId} onValueChange={setContractorId}><SelectTrigger className="bg-slate-800"><SelectValue placeholder="Select Contractor"/></SelectTrigger><SelectContent>{employees.filter(e => e.employment_type === 'Contractor').map(e => <SelectItem key={e.id} value={e.id}>{e.first_name} {e.last_name}</SelectItem>)}</SelectContent></Select><Input type="number" placeholder="Payment Amount" value={contractorAmount} onChange={e => setContractorAmount(e.target.value)} className="bg-slate-800"/><Button onClick={handleAddContractor} variant="outline">Add Contractor Payment</Button></CardContent></Card></TabsContent>
-            <TabsContent value="review" className="space-y-4"><Card className="bg-slate-700/50"><CardHeader><CardTitle>Review Paystubs ({paystubs.length})</CardTitle><CardDescription>Edit deductions, taxes, bonuses before approval</CardDescription></CardHeader><CardContent><div className="overflow-x-auto"><Table><TableHeader><TableRow><TableHead>Employee</TableHead><TableHead>Gross</TableHead><TableHead>Fed Tax</TableHead><TableHead>State Tax</TableHead><TableHead>Child Support</TableHead><TableHead>Garnishments</TableHead><TableHead>Bonus</TableHead><TableHead>Net Pay</TableHead><TableHead>Actions</TableHead></TableRow></TableHeader><TableBody>{paystubs.map(stub => <TableRow key={stub.id}><TableCell>{stub.employee_name}</TableCell><TableCell>{editingPaystubId === stub.id ? <Input type="number" value={editedPaystub.grosspay} onChange={e => setEditedPaystub({...editedPaystub, grosspay: parseFloat(e.target.value)})} className="w-24 bg-slate-800"/> : `$${stub.grosspay.toFixed(2)}`}</TableCell><TableCell>{editingPaystubId === stub.id ? <Input type="number" value={editedPaystub.federal_tax} onChange={e => setEditedPaystub({...editedPaystub, federal_tax: parseFloat(e.target.value)})} className="w-24 bg-slate-800"/> : `$${stub.federal_tax.toFixed(2)}`}</TableCell><TableCell>{editingPaystubId === stub.id ? <Input type="number" value={editedPaystub.state_tax} onChange={e => setEditedPaystub({...editedPaystub, state_tax: parseFloat(e.target.value)})} className="w-24 bg-slate-800"/> : `$${stub.state_tax.toFixed(2)}`}</TableCell><TableCell>{editingPaystubId === stub.id ? <Input type="number" value={editedPaystub.child_support || 0} onChange={e => setEditedPaystub({...editedPaystub, child_support: parseFloat(e.target.value)})} className="w-24 bg-slate-800"/> : `$${(stub.child_support || 0).toFixed(2)}`}</TableCell><TableCell>{editingPaystubId === stub.id ? <Input type="number" value={editedPaystub.garnishments || 0} onChange={e => setEditedPaystub({...editedPaystub, garnishments: parseFloat(e.target.value)})} className="w-24 bg-slate-800"/> : `$${(stub.garnishments || 0).toFixed(2)}`}</TableCell><TableCell>{editingPaystubId === stub.id ? <Input type="number" value={editedPaystub.bonus || 0} onChange={e => setEditedPaystub({...editedPaystub, bonus: parseFloat(e.target.value)})} className="w-24 bg-slate-800"/> : `$${(stub.bonus || 0).toFixed(2)}`}</TableCell><TableCell className="font-bold">${stub.netpay.toFixed(2)}</TableCell><TableCell>{editingPaystubId === stub.id ? <Button size="sm" onClick={saveEditedPaystub}><Save className="w-4 h-4"/></Button> : <Button size="sm" variant="outline" onClick={() => startEditingPaystub(stub)}><Edit className="w-4 h-4"/></Button>}</TableCell></TableRow>)}</TableBody></Table></div><Button onClick={() => setActiveTab('approve')} className="mt-4 w-full">Continue to Approval</Button></CardContent></Card></TabsContent>
-            <TabsContent value="approve" className="space-y-4"><Card className="bg-slate-700/50"><CardHeader><CardTitle className="flex items-center gap-2"><CheckCircle className="h-5 w-5 text-green-400"/>Approve Payroll</CardTitle></CardHeader><CardContent className="space-y-4"><Alert className="bg-yellow-900/50 border-yellow-500/50"><AlertCircle className="h-4 w-4"/><AlertDescription>Review all paystubs carefully. Once approved, they will be queued for processing.</AlertDescription></Alert><div className="text-lg">Total Paystubs: <strong>{paystubs.length}</strong></div><div className="text-lg">Total Net Pay: <strong>${paystubs.reduce((sum, s) => sum + s.netpay, 0).toFixed(2)}</strong></div><Button onClick={handleApprovePayroll} className="w-full bg-green-600 hover:bg-green-700">Approve All Paystubs</Button></CardContent></Card></TabsContent>
-            <TabsContent value="process" className="space-y-4"><Card className="bg-slate-700/50"><CardHeader><CardTitle className="flex items-center gap-2"><FileText className="h-5 w-5 text-blue-400"/>Process Payments</CardTitle></CardHeader><CardContent className="space-y-4"><Alert className="bg-blue-900/50 border-blue-500/50"><AlertDescription>Approved paystubs ready for payment processing. This will mark them as "processed".</AlertDescription></Alert><Button onClick={handleProcessPayments} className="w-full bg-blue-600 hover:bg-blue-700">Process Payments</Button></CardContent></Card></TabsContent>
+            <TabsList className="grid w-full grid-cols-4 mb-6 bg-slate-900/70">
+              <TabsTrigger value="prepare">1. Prepare</TabsTrigger>
+              <TabsTrigger value="review">2. Review & Edit</TabsTrigger>
+              <TabsTrigger value="approve">3. Approve</TabsTrigger>
+              <TabsTrigger value="process">4. Process</TabsTrigger>
+              {/* <TabsTrigger value="bankaccounts">Bank Accounts</TabsTrigger> */}
+            </TabsList>
+            <TabsContent value="prepare" className="space-y-4">
+              <Card className="bg-slate-700/50">
+                <CardHeader><CardTitle>Select Pay Period</CardTitle></CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div><Label>Start Date</Label><Input type="date" value={payrollStartDate} onChange={e => setPayrollStartDate(e.target.value)} className="bg-slate-800"/></div>
+                    <div><Label>End Date</Label><Input type="date" value={payrollEndDate} onChange={e => setPayrollEndDate(e.target.value)} className="bg-slate-800"/></div>
+                  </div>
+                  <Button onClick={handlePreparePayroll} disabled={isLoading} className="w-full">{isLoading ? 'Preparing...' : 'Prepare Payroll'}</Button>
+                </CardContent>
+              </Card>
+              <Card className="bg-slate-700/50">
+                <CardHeader><CardTitle className="flex items-center gap-2"><UserPlus className="h-5 w-5"/>Add Contractor Payment</CardTitle></CardHeader>
+                <CardContent className="space-y-4">
+                  <Select value={contractorId} onValueChange={setContractorId}>
+                    <SelectTrigger className="bg-slate-800"><SelectValue placeholder="Select Contractor"/></SelectTrigger>
+                    <SelectContent>{employees.filter(e => e.employment_type === 'Contractor').map(e => <SelectItem key={e.id} value={e.id}>{e.first_name} {e.last_name}</SelectItem>)}</SelectContent>
+                  </Select>
+                  <Input type="number" placeholder="Payment Amount" value={contractorAmount} onChange={e => setContractorAmount(e.target.value)} className="bg-slate-800"/>
+                  <Button onClick={handleAddContractor} variant="outline">Add Contractor Payment</Button>
+                </CardContent>
+              </Card>
+            </TabsContent>
+            <TabsContent value="review" className="space-y-4">
+              <Card className="bg-slate-700/50">
+                <CardHeader><CardTitle>Review Paystubs ({paystubs.length})</CardTitle><CardDescription>Edit deductions, taxes, bonuses before approval</CardDescription></CardHeader>
+                <CardContent>
+                  <div className="overflow-x-auto">
+                    <Table>
+                      <TableHeader><TableRow><TableHead>Employee</TableHead><TableHead>Gross</TableHead><TableHead>Fed Tax</TableHead><TableHead>State Tax</TableHead><TableHead>Child Support</TableHead><TableHead>Garnishments</TableHead><TableHead>Bonus</TableHead><TableHead>Net Pay</TableHead><TableHead>Actions</TableHead></TableRow></TableHeader>
+                      <TableBody>{paystubs.map(stub => <TableRow key={stub.id}><TableCell>{stub.employee_name}</TableCell><TableCell>{editingPaystubId === stub.id ? <Input type="number" value={editedPaystub.grosspay} onChange={e => setEditedPaystub({...editedPaystub, grosspay: parseFloat(e.target.value)})} className="w-24 bg-slate-800"/> : `$${stub.grosspay.toFixed(2)}`}</TableCell><TableCell>{editingPaystubId === stub.id ? <Input type="number" value={editedPaystub.federal_tax} onChange={e => setEditedPaystub({...editedPaystub, federal_tax: parseFloat(e.target.value)})} className="w-24 bg-slate-800"/> : `$${stub.federal_tax.toFixed(2)}`}</TableCell><TableCell>{editingPaystubId === stub.id ? <Input type="number" value={editedPaystub.state_tax} onChange={e => setEditedPaystub({...editedPaystub, state_tax: parseFloat(e.target.value)})} className="w-24 bg-slate-800"/> : `$${stub.state_tax.toFixed(2)}`}</TableCell><TableCell>{editingPaystubId === stub.id ? <Input type="number" value={editedPaystub.child_support || 0} onChange={e => setEditedPaystub({...editedPaystub, child_support: parseFloat(e.target.value)})} className="w-24 bg-slate-800"/> : `$${(stub.child_support || 0).toFixed(2)}`}</TableCell><TableCell>{editingPaystubId === stub.id ? <Input type="number" value={editedPaystub.garnishments || 0} onChange={e => setEditedPaystub({...editedPaystub, garnishments: parseFloat(e.target.value)})} className="w-24 bg-slate-800"/> : `$${(stub.garnishments || 0).toFixed(2)}`}</TableCell><TableCell>{editingPaystubId === stub.id ? <Input type="number" value={editedPaystub.bonus || 0} onChange={e => setEditedPaystub({...editedPaystub, bonus: parseFloat(e.target.value)})} className="w-24 bg-slate-800"/> : `$${(stub.bonus || 0).toFixed(2)}`}</TableCell><TableCell className="font-bold">${stub.netpay.toFixed(2)}</TableCell><TableCell>{editingPaystubId === stub.id ? <Button size="sm" onClick={saveEditedPaystub}><Save className="w-4 h-4"/></Button> : <Button size="sm" variant="outline" onClick={() => startEditingPaystub(stub)}><Edit className="w-4 h-4"/></Button>}</TableCell></TableRow>)}</TableBody></Table>
+                  </div>
+                  <Button onClick={() => setActiveTab('approve')} className="mt-4 w-full">Continue to Approval</Button>
+                </CardContent>
+              </Card>
+            </TabsContent>
+            <TabsContent value="approve" className="space-y-4">
+              <Card className="bg-slate-700/50">
+                <CardHeader><CardTitle className="flex items-center gap-2"><CheckCircle className="h-5 w-5 text-green-400"/>Approve Payroll</CardTitle></CardHeader>
+                <CardContent className="space-y-4">
+                  <Alert className="bg-yellow-900/50 border-yellow-500/50"><AlertCircle className="h-4 w-4"/><AlertDescription>Review all paystubs carefully. Once approved, they will be queued for processing.</AlertDescription></Alert>
+                  <div className="text-lg">Total Paystubs: <strong>{paystubs.length}</strong></div>
+                  <div className="text-lg">Total Net Pay: <strong>${paystubs.reduce((sum, s) => sum + s.netpay, 0).toFixed(2)}</strong></div>
+                  <Button onClick={handleApprovePayroll} className="w-full bg-green-600 hover:bg-green-700">Approve All Paystubs</Button>
+                </CardContent>
+              </Card>
+            </TabsContent>
+            <TabsContent value="process" className="space-y-4">
+              <Card className="bg-slate-700/50">
+                <CardHeader><CardTitle className="flex items-center gap-2"><FileText className="h-5 w-5 text-blue-400"/>Process Payments</CardTitle></CardHeader>
+                <CardContent className="space-y-4">
+                  <Alert className="bg-blue-900/50 border-blue-500/50"><AlertDescription>Approved paystubs ready for payment processing. This will mark them as "processed".</AlertDescription></Alert>
+                  <Button onClick={handleProcessPayments} className="w-full bg-blue-600 hover:bg-blue-700">Process Payments</Button>
+                </CardContent>
+              </Card>
+            </TabsContent>
+            {/*
+            <TabsContent value="bankaccounts" className="space-y-4">
+              <BankAccountManager organizationId={organizationId} userId={userId} />
+            </TabsContent>
+            */}
           </Tabs>
         </CardContent>
       </Card>

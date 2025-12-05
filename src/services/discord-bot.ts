@@ -6,6 +6,7 @@ import { readdir } from 'fs/promises';
 import OpenAI from 'openai';
 import type { ChatCompletionMessageParam } from 'openai/resources/chat/completions';
 import { join } from 'path';
+import { recordRomanEvent } from '../lib/roman-logger';
 import {
   auditDatabaseSchema,
   auditEnvironmentConfig,
@@ -412,10 +413,26 @@ client.on('messageCreate', async (message: Message) => {
   console.log(`📨 Message received from ${message.author.tag}: "${message.content}"`);
   console.log(`   Channel type: ${message.channel.type}, Is bot: ${message.author.bot}`);
   console.log(`   Guild: ${message.guild?.name || 'DM'}`);
-  
+
   // Ignore bot messages
   if (message.author.bot) return;
-  
+
+  // Log every user message as a roman_event
+  await recordRomanEvent({
+    actor: message.author.tag,
+    action_type: 'discord_message',
+    context: {
+      channel: message.channel.id,
+      guild: message.guild?.id || 'DM',
+      isDM: message.channel.type === 1,
+    },
+    payload: {
+      content: message.content,
+      messageId: message.id,
+    },
+    severity: 'info',
+  });
+
   // Respond to DMs OR mentions in servers
   if (message.channel.type === 1 || message.mentions.has(client.user!)) {
     console.log('✅ Processing message...');
@@ -432,6 +449,8 @@ client.on('error', (error) => {
 client.on('disconnect', () => {
   console.log('⚠️ Discord bot disconnected');
 });
+
+// ...existing code...
 
 // Update log governance action to use correct table
 async function logGovernanceAction(
@@ -1104,6 +1123,15 @@ async function handleDirectMessage(message: Message) {
         const data = await response.json();
         console.log('✅ Trading advisor response received');
         await message.reply(data.response || 'Trading advisor service unavailable.');
+        
+        // Log trading advisor command as roman_event
+        await recordRomanEvent({
+          action_type: 'command_run',
+          context: { userId, repo: 'Odyssey-1-App', command: 'chat-trading-advisor' },
+          payload: { input: message.content, output: data.response },
+          severity: 'info',
+        });
+        
         return; // Exit early - trading advisor handled it
       } else {
         console.error('❌ Trading advisor returned error:', response.status);
@@ -1222,6 +1250,14 @@ You are EMPOWERED to fix issues with proper governance oversight.`;
     
     // Log successful interaction
     await logSystemEvent('discord_response', 'Successfully responded to user message', 'info', { userId, responseLength: response.length });
+    
+    // Log Discord reply as roman_event
+    await recordRomanEvent({
+      action_type: 'discord_reply',
+      context: { userId, channelId: message.channel.id, repo: 'Odyssey-1-App' },
+      payload: { message: message.content, reply: response },
+      severity: 'info',
+    });
   } catch (error) {
     console.error('❌ Error in handleDirectMessage:', error);
     await logSystemEvent('discord_error', `Error processing message: ${error}`, 'error', { userId, error: String(error) });
@@ -1296,19 +1332,12 @@ async function fixStripeKey(details: any): Promise<boolean> {
 
 export function startDiscordBot() {
   const token = process.env.DISCORD_BOT_TOKEN;
-  
   if (!token) {
     console.error('❌ DISCORD_BOT_TOKEN is missing from environment variables');
     return;
   }
-  
   const cleanToken = token.trim().replace(/['"]/g, '');
   console.log('✅ Discord token found, logging in...');
-  
   client.login(cleanToken);
 }
 
-// Add this at the bottom
-if (import.meta.url === `file://${process.argv[1]}`) {
-  startDiscordBot();
-}
