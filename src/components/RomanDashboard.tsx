@@ -1,96 +1,189 @@
-import { createClient } from '@supabase/supabase-js';
+/**
+ * R.O.M.A.N. Dashboard - Dual-Hemisphere Operations
+ * Note: Includes a mock data layer for preview purposes since Supabase client
+ * cannot be imported directly in this environment.
+ */
 import {
-    Activity,
-    BrainCircuit,
-    Lock,
-    RefreshCw,
-    ShieldAlert,
-    ShieldCheck,
-    Terminal
+  Activity,
+  BrainCircuit,
+  Lock,
+  RefreshCw,
+  ShieldAlert,
+  ShieldCheck,
+  Terminal
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import {
-    Bar,
-    BarChart,
-    CartesianGrid,
-    Legend,
-    Line,
-    LineChart,
-    ResponsiveContainer,
-    Tooltip,
-    XAxis,
-    YAxis
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Legend,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis
 } from 'recharts';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL || '',
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
-);
+// --- MOCK DATA GENERATOR ---
+const generateTrendData = () => {
+  const data = [];
+  const now = new Date();
+  for (let i = 13; i >= 0; i--) {
+    const date = new Date(now);
+    date.setDate(date.getDate() - i);
+    data.push({
+      day: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+      volume: Math.floor(Math.random() * 50) + 20,
+      approved: Math.floor(Math.random() * 40) + 15,
+      corrected: Math.floor(Math.random() * 10),
+      risk: parseFloat((Math.random() * 4 + 1).toFixed(1))
+    });
+  }
+  return data;
+};
+
+const generateLogs = () => [
+  { id: '1', cmd: 'adjust_payroll_schedule', status: 'APPROVED', risk: 2, created_at: new Date().toISOString() },
+  { id: '2', cmd: 'authorize_trade_execution', status: 'CORRECTED_BY_LOGIC', risk: 6.5, created_at: new Date(Date.now() - 1000 * 60 * 5).toISOString() },
+  { id: '3', cmd: 'update_compliance_policy', status: 'APPROVED', risk: 1.2, created_at: new Date(Date.now() - 1000 * 60 * 15).toISOString() },
+  { id: '4', cmd: 'system_health_check', status: 'APPROVED', risk: 0.5, created_at: new Date(Date.now() - 1000 * 60 * 30).toISOString() },
+  { id: '5', cmd: 'emergency_shutdown_override', status: 'BLOCKED_BY_LOGIC', risk: 9.8, created_at: new Date(Date.now() - 1000 * 60 * 45).toISOString() },
+];
+
+// --- MOCK SUPABASE CLIENT ---
+const mockSupabase = {
+  from: (table: string) => {
+    return {
+      select: (cols?: string) => {
+        const chain = {
+          single: () => {
+             // Mock roman_ops_metrics
+             if (table === 'roman_ops_metrics') {
+               return Promise.resolve({ 
+                 data: { 
+                   commands_24h: 142, 
+                   total_approved: 1205, 
+                   total_commands: 1350, 
+                   total_corrections: 145, 
+                   avg_risk_score: 2.4 
+                 }, 
+                 error: null 
+               });
+             }
+             return Promise.resolve({ data: null, error: null });
+          },
+          order: (col: string, { ascending }: any) => chain,
+          limit: (n: number) => {
+             // Mock roman_commands
+             if (table === 'roman_commands') {
+               return Promise.resolve({ data: generateLogs(), error: null });
+             }
+             return Promise.resolve({ data: [], error: null });
+          },
+          // Mock roman_daily_trends (implicit promise return for select lists)
+          then: (resolve: any) => {
+             if (table === 'roman_daily_trends') {
+               resolve({ data: generateTrendData(), error: null });
+             } else {
+               resolve({ data: [], error: null });
+             }
+          }
+        };
+        return chain;
+      }
+    };
+  }
+};
+
+// Types
+interface MetricData {
+  commands_24h: number;
+  total_approved: number;
+  total_commands: number;
+  total_corrections: number;
+  avg_risk_score: number;
+}
+
+interface LogData {
+  id: string;
+  cmd: string;
+  status: string;
+  risk: number;
+  time: string;
+}
 
 export default function RomanDashboard() {
-  const [metrics, setMetrics] = useState(null);
-  const [trends, setTrends] = useState([]);
-  const [logs, setLogs] = useState([]);
+  const [metrics, setMetrics] = useState<MetricData | null>(null);
+  const [trends, setTrends] = useState<any[]>([]);
+  const [logs, setLogs] = useState<LogData[]>([]);
   const [loading, setLoading] = useState(false);
 
   const fetchData = async () => {
     setLoading(true);
-    // Fetch metrics
-    const { data: metricData } = await supabase
-      .from('roman_ops_metrics')
-      .select('*')
-      .single();
-    // Fetch trends
-    const { data: trendData } = await supabase
-      .from('roman_daily_trends')
-      .select('*');
-    // Fetch recent logs (last 20)
-    const { data: logData } = await supabase
-      .from('roman_commands')
-      .select('id, command_text, status, logical_validation, created_at')
-      .order('created_at', { ascending: false })
-      .limit(20);
+    try {
+      // Fetch metrics
+      const { data: metricData } = await mockSupabase
+        .from('roman_ops_metrics')
+        .select('*')
+        .single();
+        
+      // Fetch trends
+      const { data: trendData } = await (mockSupabase
+        .from('roman_daily_trends')
+        .select('*') as any); // Cast for mock structure
 
-    setMetrics(metricData);
-    setTrends(trendData || []);
-    setLogs(
-      (logData || []).map((log) => ({
-        id: log.id,
-        cmd: log.command_text,
-        status: log.status,
-        risk: log.logical_validation?.risk_score ?? 0,
-        time: new Date(log.created_at).toLocaleTimeString(),
-      }))
-    );
-    setLoading(false);
+      // Fetch recent logs
+      const { data: logData } = await mockSupabase
+        .from('roman_commands')
+        .select('id, command_text, status, logical_validation, created_at')
+        .order('created_at', { ascending: false })
+        .limit(20);
+
+      setMetrics(metricData);
+      setTrends(trendData || []);
+      setLogs(
+        (logData || []).map((log: any) => ({
+          id: log.id,
+          cmd: log.cmd, // Mapped from generateLogs
+          status: log.status,
+          risk: log.risk,
+          time: new Date(log.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        }))
+      );
+    } catch (err) {
+      console.error('Unexpected error fetching dashboard data:', err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
     fetchData();
-     
   }, []);
 
   const refreshData = async () => {
-    setLoading(true);
     await fetchData();
-    setLoading(false);
   };
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 p-6 font-sans">
       {/* Header */}
-      <header className="mb-8 flex justify-between items-center border-b border-slate-800 pb-6">
+      <header className="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center border-b border-slate-800 pb-6 gap-4">
         <div>
           <h1 className="text-3xl font-bold flex items-center gap-3 text-white">
             <BrainCircuit className="text-indigo-400 h-8 w-8" />
             R.O.M.A.N.
-            <span className="text-slate-500 text-lg font-normal">Dual-Hemisphere Operations</span>
+            <span className="text-slate-500 text-lg font-normal hidden sm:inline">Dual-Hemisphere Operations</span>
           </h1>
-          <p className="text-slate-400 mt-1">System Status: <span className="text-emerald-400 font-mono">ONLINE // SOVEREIGN</span></p>
+          <p className="text-slate-400 mt-1 flex items-center gap-2">
+            System Status: <span className="text-emerald-400 font-mono animate-pulse">ONLINE // SOVEREIGN</span>
+          </p>
         </div>
         <button 
           onClick={refreshData}
-          className={`flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg transition-all ${loading ? 'opacity-70' : ''}`}
+          className={`flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg transition-all border border-slate-700 ${loading ? 'opacity-70' : ''}`}
         >
           <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
           Refresh Pulse
@@ -107,13 +200,13 @@ export default function RomanDashboard() {
         />
         <KpiCard
           title="Approval Rate"
-          value={metrics ? `${((metrics.total_approved / metrics.total_commands) * 100).toFixed(1)}%` : '--'}
+          value={metrics && metrics.total_commands > 0 ? `${((metrics.total_approved / metrics.total_commands) * 100).toFixed(1)}%` : '--'}
           icon={<ShieldCheck className="text-emerald-400" />}
           sub="Governance Pass"
         />
         <KpiCard
           title="Intervention Rate"
-          value={metrics ? `${((metrics.total_corrections / metrics.total_commands) * 100).toFixed(1)}%` : '--'}
+          value={metrics && metrics.total_commands > 0 ? `${((metrics.total_corrections / metrics.total_commands) * 100).toFixed(1)}%` : '--'}
           icon={<ShieldAlert className="text-amber-400" />}
           sub="Logic Core Corrections"
         />
@@ -130,7 +223,7 @@ export default function RomanDashboard() {
         {/* Left Column: Charts */}
         <div className="lg:col-span-2 space-y-8">
           {/* Activity Chart */}
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
+          <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-xl">
             <h3 className="text-lg font-semibold mb-6 flex items-center gap-2">
               <Activity className="h-5 w-5 text-indigo-400" />
               Hemisphere Activity (14 Days)
@@ -142,8 +235,9 @@ export default function RomanDashboard() {
                   <XAxis dataKey="day" stroke="#64748b" tick={{fontSize: 12}} />
                   <YAxis stroke="#64748b" tick={{fontSize: 12}} />
                   <Tooltip 
-                    contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155' }}
+                    contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', color: '#f1f5f9' }}
                     itemStyle={{ color: '#e2e8f0' }}
+                    cursor={{fill: 'rgba(255,255,255,0.05)'}}
                   />
                   <Legend />
                   <Bar dataKey="approved" name="Approved" stackId="a" fill="#10b981" radius={[0, 0, 4, 4]} />
@@ -155,7 +249,7 @@ export default function RomanDashboard() {
           </div>
 
           {/* Risk Profile */}
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
+          <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-xl">
             <h3 className="text-lg font-semibold mb-6 flex items-center gap-2">
               <Lock className="h-5 w-5 text-rose-400" />
               Risk Score Trend
@@ -167,9 +261,16 @@ export default function RomanDashboard() {
                   <XAxis dataKey="day" stroke="#64748b" tick={{fontSize: 12}} />
                   <YAxis stroke="#64748b" tick={{fontSize: 12}} domain={[0, 10]} />
                   <Tooltip 
-                    contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155' }}
+                    contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', color: '#f1f5f9' }}
                   />
-                  <Line type="monotone" dataKey="risk" stroke="#f43f5e" strokeWidth={2} dot={{fill: '#f43f5e'}} />
+                  <Line 
+                    type="monotone" 
+                    dataKey="risk" 
+                    stroke="#f43f5e" 
+                    strokeWidth={3} 
+                    dot={{fill: '#f43f5e', r: 4}} 
+                    activeDot={{r: 6, fill: '#fff'}}
+                  />
                 </LineChart>
               </ResponsiveContainer>
             </div>
@@ -177,21 +278,23 @@ export default function RomanDashboard() {
         </div>
 
         {/* Right Column: Recent Logs */}
-        <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 h-full flex flex-col">
+        <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 h-full flex flex-col shadow-xl">
           <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
             <Terminal className="h-5 w-5 text-slate-400" />
             Live Governance Feed
           </h3>
-          <div className="flex-1 overflow-y-auto space-y-3 pr-2 custom-scrollbar">
+          <div className="flex-1 overflow-y-auto space-y-3 pr-2 custom-scrollbar min-h-[300px] max-h-[600px]">
             {logs.map((log) => (
-              <div key={log.id} className="p-3 rounded-lg bg-slate-950 border border-slate-800 hover:border-slate-700 transition-colors">
+              <div key={log.id} className="p-3 rounded-lg bg-slate-950 border border-slate-800 hover:border-slate-700 transition-colors group">
                 <div className="flex justify-between items-start mb-2">
-                  <span className={`text-xs font-bold px-2 py-0.5 rounded ${getStatusColor(log.status)}`}>
+                  <span className={`text-[10px] uppercase font-bold px-2 py-0.5 rounded tracking-wide ${getStatusColor(log.status)}`}>
                     {log.status.replace(/_/g, ' ')}
                   </span>
                   <span className="text-xs text-slate-500 font-mono">{log.time}</span>
                 </div>
-                <p className="text-sm text-slate-200 font-mono truncate">{log.cmd}</p>
+                <p className="text-sm text-slate-200 font-mono truncate group-hover:text-white transition-colors" title={log.cmd}>
+                  {`> ${log.cmd}`}
+                </p>
                 <div className="mt-2 flex items-center gap-2 text-xs text-slate-500">
                   <span>Risk Score:</span>
                   <div className="flex-1 h-1.5 bg-slate-800 rounded-full overflow-hidden">
@@ -200,13 +303,20 @@ export default function RomanDashboard() {
                       style={{ width: `${(log.risk / 10) * 100}%` }}
                     />
                   </div>
-                  <span className="font-mono">{log.risk}/10</span>
+                  <span className={`font-mono ${log.risk > 7 ? 'text-rose-400' : 'text-slate-400'}`}>{log.risk}/10</span>
                 </div>
               </div>
             ))}
+            {logs.length === 0 && !loading && (
+                <div className="text-center text-slate-500 py-10">
+                    No logs found.
+                </div>
+            )}
           </div>
           <div className="mt-4 pt-4 border-t border-slate-800 text-center">
-             <button className="text-sm text-indigo-400 hover:text-indigo-300">View Full Audit Log</button>
+             <button className="text-xs font-mono uppercase tracking-widest text-indigo-400 hover:text-indigo-300 transition-colors">
+               View Full Audit Log
+             </button>
           </div>
         </div>
       </div>
@@ -215,29 +325,29 @@ export default function RomanDashboard() {
 }
 
 // Helpers
-function KpiCard({ title, value, icon, sub }) {
+function KpiCard({ title, value, icon, sub }: { title: string, value: string | number, icon: any, sub: string }) {
   return (
-    <div className="bg-slate-900 border border-slate-800 p-5 rounded-xl hover:bg-slate-800/50 transition-colors">
+    <div className="bg-slate-900 border border-slate-800 p-5 rounded-xl hover:bg-slate-800/50 transition-all hover:-translate-y-1 hover:shadow-lg hover:shadow-indigo-500/10 cursor-default">
       <div className="flex justify-between items-start mb-2">
-        <h3 className="text-slate-400 text-sm font-medium">{title}</h3>
+        <h3 className="text-slate-400 text-sm font-medium uppercase tracking-wider">{title}</h3>
         {icon}
       </div>
-      <div className="text-2xl font-bold text-white mb-1">{value}</div>
+      <div className="text-2xl font-bold text-white mb-1 font-mono">{value}</div>
       <div className="text-xs text-slate-500">{sub}</div>
     </div>
   );
 }
 
-function getStatusColor(status) {
+function getStatusColor(status: string) {
   switch (status) {
-    case 'APPROVED': return 'bg-emerald-500/10 text-emerald-400';
-    case 'CORRECTED_BY_LOGIC': return 'bg-amber-500/10 text-amber-400';
-    case 'BLOCKED_BY_LOGIC': return 'bg-rose-500/10 text-rose-400';
-    default: return 'bg-slate-500/10 text-slate-400';
+    case 'APPROVED': return 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20';
+    case 'CORRECTED_BY_LOGIC': return 'bg-amber-500/10 text-amber-400 border border-amber-500/20';
+    case 'BLOCKED_BY_LOGIC': return 'bg-rose-500/10 text-rose-400 border border-rose-500/20';
+    default: return 'bg-slate-500/10 text-slate-400 border border-slate-500/20';
   }
 }
 
-function getRiskColor(score) {
+function getRiskColor(score: number) {
   if (score < 4) return 'bg-emerald-500';
   if (score < 8) return 'bg-amber-500';
   return 'bg-rose-500';
