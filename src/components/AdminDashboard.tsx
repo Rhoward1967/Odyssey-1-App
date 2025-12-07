@@ -109,7 +109,7 @@ export default function AdminDashboard() {
         </div>
         {/* Desktop: Compact Horizontal Flow */}
         <div className='hidden md:block'>
-          <TabsList className='bg-blue-900/30 flex flex-wrap gap-1 p-2 border border-blue-500/30 w-fit mb-4 items-center'>
+          <TabsList className='flex flex-wrap gap-1 p-2 w-full mb-4 items-center'>
             <TabsTrigger value='control' className='flex items-center gap-2 py-2 px-3 bg-blue-600/20 hover:bg-blue-500/30 data-[state=active]:bg-blue-600 data-[state=active]:text-white text-blue-100 border border-blue-500/20 text-sm'><Settings className='w-4 h-4' /><span>Control</span></TabsTrigger>
             <TabsTrigger value='autonomous' className='flex items-center gap-2 py-2 px-3 bg-blue-600/20 hover:bg-blue-500/30 data-[state=active]:bg-blue-600 data-[state=active]:text-white text-blue-100 border border-blue-500/20 text-sm'><Brain className='w-4 h-4' /><span>Autonomous</span></TabsTrigger>
             <TabsTrigger value='core' className='flex items-center gap-2 py-2 px-3 bg-blue-600/20 hover:bg-blue-500/30 data-[state=active]:bg-blue-600 data-[state=active]:text-white text-blue-100 border border-blue-500/20 text-sm'><Zap className='w-4 h-4' /><span>Core</span></TabsTrigger>

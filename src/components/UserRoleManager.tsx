@@ -1,13 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { Button } from './ui/button';
+import { supabase } from '@/lib/supabase';
+import { Crown, Edit, Key, Plus, Shield, Users } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { Badge } from './ui/badge';
+import { Button } from './ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Input } from './ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from './ui/alert-dialog';
-import { Shield, Users, Settings, Plus, Edit, Trash2, Crown, Key, Eye } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
 
 interface User {
   id: string;
@@ -84,56 +83,8 @@ export default function UserRoleManager() {
 
         if (error) {
           console.error('Database error:', error);
-          // Fall back to enhanced demo data if database query fails
-          const enhancedMockUsers = [
-            {
-              id: '1',
-              email: 'architect@odyssey.local',
-              name: 'System Architect',
-              role: 'super-admin' as const,
-              status: 'active' as const,
-              lastLogin: new Date().toISOString(),
-              permissions: ['all']
-            },
-            {
-              id: '2',
-              email: 'admin@odyssey.local',
-              name: 'Database Administrator',
-              role: 'admin' as const,
-              status: 'active' as const,
-              lastLogin: new Date(Date.now() - 1800000).toISOString(), // 30 minutes ago
-              permissions: ['basic_access', 'email_tools', 'ai_features', 'user_management']
-            },
-            {
-              id: '3',
-              email: 'manager@odyssey.local',
-              name: 'Operations Manager',
-              role: 'pro' as const,
-              status: 'active' as const,
-              lastLogin: new Date(Date.now() - 3600000).toISOString(), // 1 hour ago
-              permissions: ['basic_access', 'email_tools', 'ai_features']
-            },
-            {
-              id: '4',
-              email: 'employee@odyssey.local',
-              name: 'Staff Member',
-              role: 'basic' as const,
-              status: 'active' as const,
-              lastLogin: new Date(Date.now() - 7200000).toISOString(), // 2 hours ago
-              permissions: ['basic_access', 'email_tools']
-            },
-            {
-              id: '5',
-              email: 'trial@odyssey.local',
-              name: 'Trial User',
-              role: 'trial' as const,
-              status: 'active' as const,
-              lastLogin: new Date(Date.now() - 86400000).toISOString(), // 1 day ago
-              permissions: ['basic_access']
-            }
-          ];
-          setUsers(enhancedMockUsers);
-          setError('Demo Mode: Showing sample role management data');
+          setError('Database error: Unable to fetch user roles.');
+          setUsers([]);
           return;
         }
 
@@ -153,18 +104,7 @@ export default function UserRoleManager() {
       } catch (err: any) {
         console.error("Error fetching user roles:", err);
         setError(`Database error: ${err.message || 'Unknown error'}`);
-        // Fall back to mock data on error
-        setUsers([
-          {
-            id: '1',
-            email: 'admin@odyssey.local',
-            name: 'System Administrator',
-            role: 'super-admin',
-            status: 'active',
-            lastLogin: new Date().toISOString(),
-            permissions: ['all']
-          }
-        ]);
+        setUsers([]);
       } finally {
         setLoading(false);
       }

@@ -1,8 +1,8 @@
 /**
  * R.O.M.A.N. Dashboard - Dual-Hemisphere Operations
- * Note: Includes a mock data layer for preview purposes since Supabase client
- * cannot be imported directly in this environment.
+ * Uses live Supabase data.
  */
+import { createClient } from '@supabase/supabase-js';
 import {
   Activity,
   BrainCircuit,
@@ -26,76 +26,10 @@ import {
   YAxis
 } from 'recharts';
 
-// --- MOCK DATA GENERATOR ---
-const generateTrendData = () => {
-  const data = [];
-  const now = new Date();
-  for (let i = 13; i >= 0; i--) {
-    const date = new Date(now);
-    date.setDate(date.getDate() - i);
-    data.push({
-      day: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-      volume: Math.floor(Math.random() * 50) + 20,
-      approved: Math.floor(Math.random() * 40) + 15,
-      corrected: Math.floor(Math.random() * 10),
-      risk: parseFloat((Math.random() * 4 + 1).toFixed(1))
-    });
-  }
-  return data;
-};
-
-const generateLogs = () => [
-  { id: '1', cmd: 'adjust_payroll_schedule', status: 'APPROVED', risk: 2, created_at: new Date().toISOString() },
-  { id: '2', cmd: 'authorize_trade_execution', status: 'CORRECTED_BY_LOGIC', risk: 6.5, created_at: new Date(Date.now() - 1000 * 60 * 5).toISOString() },
-  { id: '3', cmd: 'update_compliance_policy', status: 'APPROVED', risk: 1.2, created_at: new Date(Date.now() - 1000 * 60 * 15).toISOString() },
-  { id: '4', cmd: 'system_health_check', status: 'APPROVED', risk: 0.5, created_at: new Date(Date.now() - 1000 * 60 * 30).toISOString() },
-  { id: '5', cmd: 'emergency_shutdown_override', status: 'BLOCKED_BY_LOGIC', risk: 9.8, created_at: new Date(Date.now() - 1000 * 60 * 45).toISOString() },
-];
-
-// --- MOCK SUPABASE CLIENT ---
-const mockSupabase = {
-  from: (table: string) => {
-    return {
-      select: (cols?: string) => {
-        const chain = {
-          single: () => {
-             // Mock roman_ops_metrics
-             if (table === 'roman_ops_metrics') {
-               return Promise.resolve({ 
-                 data: { 
-                   commands_24h: 142, 
-                   total_approved: 1205, 
-                   total_commands: 1350, 
-                   total_corrections: 145, 
-                   avg_risk_score: 2.4 
-                 }, 
-                 error: null 
-               });
-             }
-             return Promise.resolve({ data: null, error: null });
-          },
-          order: (col: string, { ascending }: any) => chain,
-          limit: (n: number) => {
-             // Mock roman_commands
-             if (table === 'roman_commands') {
-               return Promise.resolve({ data: generateLogs(), error: null });
-             }
-             return Promise.resolve({ data: [], error: null });
-          },
-          // Mock roman_daily_trends (implicit promise return for select lists)
-          then: (resolve: any) => {
-             if (table === 'roman_daily_trends') {
-               resolve({ data: generateTrendData(), error: null });
-             } else {
-               resolve({ data: [], error: null });
-             }
-          }
-        };
-        return chain;
-      }
-    };
-  }
-};
+const supabase = createClient(
+  import.meta.env.VITE_SUPABASE_URL || '',
+  import.meta.env.VITE_SUPABASE_ANON_KEY || ''
+);
 
 // Types
 interface MetricData {
@@ -124,20 +58,20 @@ export default function RomanDashboard() {
     setLoading(true);
     try {
       // Fetch metrics
-      const { data: metricData } = await mockSupabase
+      const { data: metricData } = await supabase
         .from('roman_ops_metrics')
         .select('*')
         .single();
-        
+
       // Fetch trends
-      const { data: trendData } = await (mockSupabase
+      const { data: trendData } = await supabase
         .from('roman_daily_trends')
-        .select('*') as any); // Cast for mock structure
+        .select('*');
 
       // Fetch recent logs
-      const { data: logData } = await mockSupabase
+      const { data: logData } = await supabase
         .from('roman_commands')
-        .select('id, command_text, status, logical_validation, created_at')
+        .select('id, command_text, status, risk, created_at')
         .order('created_at', { ascending: false })
         .limit(20);
 
@@ -146,7 +80,7 @@ export default function RomanDashboard() {
       setLogs(
         (logData || []).map((log: any) => ({
           id: log.id,
-          cmd: log.cmd, // Mapped from generateLogs
+          cmd: log.command_text,
           status: log.status,
           risk: log.risk,
           time: new Date(log.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
