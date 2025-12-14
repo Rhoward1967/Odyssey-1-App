@@ -1,3 +1,4 @@
+
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -5,6 +6,16 @@ import { Label } from '@/components/ui/label';
 import { supabase } from '@/lib/supabase';
 import { Brain, Calculator, TrendingUp, Zap } from 'lucide-react';
 import { useEffect, useState } from 'react';
+
+// --- Customer/Contact Interface ---
+interface Contact {
+  id: string;
+  organization: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone: string;
+}
 
 interface AIPrediction {
   optimal_margin: number;
@@ -30,6 +41,42 @@ export default function BiddingCalculator() {
   // AI prediction state
   const [aiPrediction, setAiPrediction] = useState<AIPrediction | null>(null);
   const [aiLoading, setAiLoading] = useState(false);
+
+  // --- Customer/Contact State ---
+  const [contacts, setContacts] = useState<Contact[]>([]);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  // --- 1. Supabase Contact Fetching ---
+  const fetchContacts = async () => {
+    const { data, error } = await supabase.from('contacts')
+      .select('id, organization, first_name, last_name, email, phone')
+      .order('organization', { ascending: true });
+    if (error) {
+      console.error('Error fetching customer contacts:', error);
+      return;
+    }
+    setContacts(data || []);
+  };
+
+  useEffect(() => {
+    fetchContacts();
+  }, []);
+
+  // --- 2. Contact Selection Logic ---
+  const handleSelectContact = (contact: Contact) => {
+    // Example: setProjectType(contact.organization || `${contact.first_name} ${contact.last_name}`);
+    setProjectType(contact.organization || `${contact.first_name} ${contact.last_name}`);
+    // You can add more setters for email/phone if needed
+    setIsDropdownOpen(false);
+    setSearchQuery('');
+  };
+
+  const filteredContacts = contacts.filter(contact =>
+    contact.organization?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    contact.first_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    contact.last_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    contact.email?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   // Trigger AI analysis when key parameters change
   useEffect(() => {
@@ -99,6 +146,41 @@ export default function BiddingCalculator() {
 
   return (
     <Card className="w-full max-w-4xl mx-auto">
+      {/* --- 3. UI Element (The "Add Customer" Button and Dropdown) --- */}
+      <div style={{ position: 'relative', marginBottom: '20px' }}>
+        <button
+          onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+          className="bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700"
+        >
+          Add/Select Customer
+        </button>
+
+        {isDropdownOpen && (
+          <div className="absolute z-10 w-full bg-white border border-gray-300 rounded-md shadow-lg mt-1 max-h-60 overflow-y-auto">
+            <input
+              type="text"
+              placeholder="Search by name or organization..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full p-2 border-b border-gray-200"
+            />
+            {filteredContacts.length > 0 ? (
+              filteredContacts.map(contact => (
+                <div
+                  key={contact.id}
+                  onClick={() => handleSelectContact(contact)}
+                  className="p-2 cursor-pointer hover:bg-gray-100 border-b last:border-b-0"
+                >
+                  <strong>{contact.organization || `${contact.first_name} ${contact.last_name}`}</strong>
+                  <span className="text-gray-500 text-sm block">{contact.email || contact.phone}</span>
+                </div>
+              ))
+            ) : (
+              <div className="p-2 text-gray-500">No matching contacts found.</div>
+            )}
+          </div>
+        )}
+      </div>
       {/* HJS Subcontract/High-Mileage Toggle and Inputs */}
       <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded">
         <label className="flex items-center gap-2 font-semibold">
