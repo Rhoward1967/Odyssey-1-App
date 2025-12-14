@@ -434,12 +434,17 @@ client.on('messageCreate', async (message: Message) => {
   });
 
   // Respond to DMs OR mentions in servers
-  if (message.channel.type === 1 || message.mentions.has(client.user!)) {
-    console.log('✅ Processing message...');
-    await handleDirectMessage(message);
-  } else {
-    console.log('⏭️  Ignoring message (not DM or mention)');
-  }
+    // Respond to DMs, mentions, or any message containing "R.O.M.A.N"
+    if (
+      message.channel.type === 1 ||
+      message.mentions.has(client.user!) ||
+      message.content.toLowerCase().includes('r.o.m.a.n')
+    ) {
+      console.log('✅ Processing message...');
+      await handleDirectMessage(message);
+    } else {
+      console.log('⏭️  Ignoring message (does not contain R.O.M.A.N)');
+    }
 });
 
 client.on('error', (error) => {

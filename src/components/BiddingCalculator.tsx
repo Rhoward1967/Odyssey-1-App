@@ -21,7 +21,12 @@ export default function BiddingCalculator() {
   const [profitMargin, setProfitMargin] = useState<number>(20);
   const [projectType, setProjectType] = useState<string>('');
   const [complexity, setComplexity] = useState<string>('medium');
-  
+  // HJS Subcontract/High-Mileage override state
+  const [isHighMileageSubcontract, setIsHighMileageSubcontract] = useState<boolean>(false);
+  const [logisticsCostMonthly, setLogisticsCostMonthly] = useState<number>(2537.43);
+  const [requiredOwnerProfit, setRequiredOwnerProfit] = useState<number>(9102.00);
+  const [materialCost, setMaterialCost] = useState<number>(0);
+  const [laborHours, setLaborHours] = useState<number>(0);
   // AI prediction state
   const [aiPrediction, setAiPrediction] = useState<AIPrediction | null>(null);
   const [aiLoading, setAiLoading] = useState(false);
@@ -61,13 +66,90 @@ export default function BiddingCalculator() {
     return () => clearTimeout(timeoutId);
   }, [estimatedHours, projectType, complexity]);
 
-  // Calculate totals
+  // --- START: HJS Subcontract / High-Mileage Calculation Override ---
+  let bidResult: any = null;
+  if (isHighMileageSubcontract) {
+    // 1. Calculate Base Operating Cost (Labor + Materials + Logistics)
+    const baseLaborCost = laborHours * hourlyRate;
+    const totalOperatingCost = materialCost + baseLaborCost + logisticsCostMonthly;
+    // 2. Enforce Target Profit Mandate
+    const requiredTotalRevenue = totalOperatingCost + requiredOwnerProfit;
+    // 3. Apply Inflation Buffer (2% used for HJS bid)
+    const finalBidPreTerms = requiredTotalRevenue * 1.02;
+    // 4. Structure Final Output (Including Protective Terms)
+    bidResult = {
+      totalBid: finalBidPreTerms.toFixed(2),
+      mandatoryTerms: {
+        payment: 'NET 10 DAYS',
+        lateFee: '5.0% Per Month',
+        escalation: '3.0% Annual',
+        supplyClause: 'Back-Charge/Suspend Required'
+      },
+      breakdown: {
+        logisticsCost: logisticsCostMonthly.toFixed(2),
+        requiredProfit: requiredOwnerProfit.toFixed(2),
+      }
+    };
+  }
+  // --- END: HJS Subcontract / High-Mileage Calculation Override ---
+  // Default Cost-Plus logic if not HJS
   const baseCost = estimatedHours * hourlyRate;
   const profitAmount = baseCost * (profitMargin / 100);
   const totalBid = baseCost + profitAmount;
 
   return (
     <Card className="w-full max-w-4xl mx-auto">
+      {/* HJS Subcontract/High-Mileage Toggle and Inputs */}
+      <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded">
+        <label className="flex items-center gap-2 font-semibold">
+          <input
+            type="checkbox"
+            checked={isHighMileageSubcontract}
+            onChange={e => setIsHighMileageSubcontract(e.target.checked)}
+          />
+          Enable HJS Subcontract / High-Mileage Override
+        </label>
+        {isHighMileageSubcontract && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+            <div>
+              <Label htmlFor="material-cost">Material Cost ($)</Label>
+              <Input
+                id="material-cost"
+                type="number"
+                value={materialCost}
+                onChange={e => setMaterialCost(Number(e.target.value))}
+              />
+            </div>
+            <div>
+              <Label htmlFor="labor-hours">Labor Hours</Label>
+              <Input
+                id="labor-hours"
+                type="number"
+                value={laborHours}
+                onChange={e => setLaborHours(Number(e.target.value))}
+              />
+            </div>
+            <div>
+              <Label htmlFor="logistics-cost">Logistics Cost (Monthly, $)</Label>
+              <Input
+                id="logistics-cost"
+                type="number"
+                value={logisticsCostMonthly}
+                onChange={e => setLogisticsCostMonthly(Number(e.target.value))}
+              />
+            </div>
+            <div>
+              <Label htmlFor="required-profit">Required Owner Profit ($)</Label>
+              <Input
+                id="required-profit"
+                type="number"
+                value={requiredOwnerProfit}
+                onChange={e => setRequiredOwnerProfit(Number(e.target.value))}
+              />
+            </div>
+          </div>
+        )}
+      </div>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Calculator className="h-6 w-6" />
@@ -133,84 +215,112 @@ export default function BiddingCalculator() {
         )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Input Section */}
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="project-type">Project Type</Label>
-              <Input
-                id="project-type"
-                type="text"
-                value={projectType}
-                onChange={(e) => setProjectType(e.target.value)}
-                placeholder="e.g., Web Development, Mobile App"
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="estimated-hours">Estimated Hours</Label>
-              <Input
-                id="estimated-hours"
-                type="number"
-                value={estimatedHours}
-                onChange={(e) => setEstimatedHours(Number(e.target.value))}
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="hourly-rate">Hourly Rate ($)</Label>
-              <Input
-                id="hourly-rate"
-                type="number"
-                value={hourlyRate}
-                onChange={(e) => setHourlyRate(Number(e.target.value))}
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="profit-margin" className="flex items-center gap-2">
-                Profit Margin (%)
-                {aiPrediction && (
-                  <span className="text-xs text-purple-600">
-                    (AI suggests: {aiPrediction.optimal_margin.toFixed(1)}%)
-                  </span>
+          {/* Input Section (hidden if HJS override is active) */}
+          {!isHighMileageSubcontract && (
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="project-type">Project Type</Label>
+                <Input
+                  id="project-type"
+                  type="text"
+                  value={projectType}
+                  onChange={(e) => setProjectType(e.target.value)}
+                  placeholder="e.g., Web Development, Mobile App"
+                />
+              </div>
+              <div>
+                <Label htmlFor="estimated-hours">Estimated Hours</Label>
+                <Input
+                  id="estimated-hours"
+                  type="number"
+                  value={estimatedHours}
+                  onChange={(e) => setEstimatedHours(Number(e.target.value))}
+                />
+              </div>
+              <div>
+                <Label htmlFor="hourly-rate">Hourly Rate ($)</Label>
+                <Input
+                  id="hourly-rate"
+                  type="number"
+                  value={hourlyRate}
+                  onChange={(e) => setHourlyRate(Number(e.target.value))}
+                />
+              </div>
+              <div>
+                <Label htmlFor="profit-margin" className="flex items-center gap-2">
+                  Profit Margin (%)
+                  {aiPrediction && (
+                    <span className="text-xs text-purple-600">
+                      (AI suggests: {aiPrediction.optimal_margin.toFixed(1)}%)
+                    </span>
+                  )}
+                </Label>
+                <Input
+                  id="profit-margin"
+                  type="number"
+                  value={profitMargin}
+                  onChange={(e) => setProfitMargin(Number(e.target.value))}
+                  className={aiPrediction && Math.abs(profitMargin - aiPrediction.optimal_margin) > 5 
+                    ? 'border-orange-300 bg-orange-50' 
+                    : ''
+                  }
+                />
+                {aiPrediction && Math.abs(profitMargin - aiPrediction.optimal_margin) > 5 && (
+                  <p className="text-xs text-orange-600 mt-1">
+                    Margin differs significantly from AI recommendation
+                  </p>
                 )}
-              </Label>
-              <Input
-                id="profit-margin"
-                type="number"
-                value={profitMargin}
-                onChange={(e) => setProfitMargin(Number(e.target.value))}
-                className={aiPrediction && Math.abs(profitMargin - aiPrediction.optimal_margin) > 5 
-                  ? 'border-orange-300 bg-orange-50' 
-                  : ''
-                }
-              />
-              {aiPrediction && Math.abs(profitMargin - aiPrediction.optimal_margin) > 5 && (
-                <p className="text-xs text-orange-600 mt-1">
-                  Margin differs significantly from AI recommendation
-                </p>
-              )}
+              </div>
             </div>
-          </div>
-
+          )}
           {/* Results Section */}
           <div className="space-y-4">
             <div className="bg-gray-50 p-4 rounded-lg">
               <h3 className="font-semibold mb-3">Bid Breakdown</h3>
-              <div className="space-y-2">
-                <div className="flex justify-between">
-                  <span>Base Cost:</span>
-                  <span>${baseCost.toFixed(2)}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Profit ({profitMargin}%):</span>
-                  <span>${profitAmount.toFixed(2)}</span>
-                </div>
-                <div className="flex justify-between font-bold border-t pt-2">
-                  <span>Total Bid:</span>
-                  <span>${totalBid.toFixed(2)}</span>
-                </div>
-              </div>
+              {isHighMileageSubcontract && bidResult ? (
+                <>
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <span>Total Bid (HJS):</span>
+                      <span>${bidResult.totalBid}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Logistics Cost:</span>
+                      <span>${bidResult.breakdown.logisticsCost}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Required Profit:</span>
+                      <span>${bidResult.breakdown.requiredProfit}</span>
+                    </div>
+                  </div>
+                  <div className="mt-4">
+                    <h4 className="font-semibold">Mandatory Contract Terms</h4>
+                    <ul className="list-disc ml-6 text-sm">
+                      <li>Payment: {bidResult.mandatoryTerms.payment}</li>
+                      <li>Late Fee: {bidResult.mandatoryTerms.lateFee}</li>
+                      <li>Escalation: {bidResult.mandatoryTerms.escalation}</li>
+                      <li>Supply Clause: {bidResult.mandatoryTerms.supplyClause}</li>
+                    </ul>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <span>Base Cost:</span>
+                      <span>${baseCost.toFixed(2)}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Profit ({profitMargin}%):</span>
+                      <span>${profitAmount.toFixed(2)}</span>
+                    </div>
+                    <div className="flex justify-between font-bold border-t pt-2">
+                      <span>Total Bid:</span>
+                      <span>${totalBid.toFixed(2)}</span>
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>

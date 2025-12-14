@@ -113,6 +113,29 @@ export default function HandbookContent({ activeSection = 'cover' }: HandbookCon
             </p>
           </div>
 
+            {/* Management & Governance Policies (2025 Update) */}
+            <div className="space-y-3">
+              <h3 className="text-xl font-semibold text-blue-600">2. Management & Governance Policies</h3>
+              <ul className="list-disc pl-6 space-y-2 text-gray-700">
+                <li>
+                  <strong>Operating Agent Appointment:</strong> ODYSSEY-1 AI LLC is the exclusive Operating Agent for HJS SERVICES LLC, responsible for management and operations under a notarized agreement (Dec 10, 2025).
+                </li>
+                <li>
+                  <strong>CEO & Member/Manager:</strong> Christla L. Howard is confirmed as CEO and sole Member/Manager of HJS SERVICES LLC, per the Operating Agreement (Jan 1, 2009).
+                </li>
+                <li>
+                  <strong>Insurance & Compliance:</strong> Commercial General Liability and Auto policies are maintained. All incidents must be reported within 30 days and cooperate with data requests (EDR, GPS).
+                </li>
+                <li>
+                  <strong>Administrative Address:</strong> All official correspondence should be sent to P.O. BOX 80054, Athens GA 30608.
+                </li>
+                <li>
+                  <strong>Limited Liability Safeguard:</strong> Operating Agreement audit confirms the LLC's limited liability status is protected.
+                </li>
+              </ul>
+              {/* Confidential details (succession, UCC filings, legal countermeasures, proprietary IP, trust structures) are excluded from the handbook and kept internal. */}
+            </div>
+
           {/* Anti-Harassment & Anti-Discrimination */}
           <div className="space-y-3">
             <h3 className="text-xl font-semibold text-blue-600">2. Anti-Harassment & Anti-Discrimination Policy</h3>
