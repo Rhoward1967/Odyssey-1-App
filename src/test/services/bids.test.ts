@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { supabase } from '@/lib/supabase';
-import { mockUser, mockBid, mockCustomer } from '../utils';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { mockBid, mockCustomer, mockUser } from '../utils';
 
 vi.mock('@/lib/supabase');
 

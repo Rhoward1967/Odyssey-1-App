@@ -1,6 +1,6 @@
 import { render, RenderOptions } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
 import { ReactElement, ReactNode } from 'react';
+import { BrowserRouter } from 'react-router-dom';
 
 // Mock user for testing
 export const mockUser = {
@@ -98,3 +98,4 @@ export const renderWithRouter = (
 // Re-export everything from testing library
 export * from '@testing-library/react';
 export { default as userEvent } from '@testing-library/user-event';
+

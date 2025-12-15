@@ -6,6 +6,12 @@ import { readdir } from 'fs/promises';
 import OpenAI from 'openai';
 import type { ChatCompletionMessageParam } from 'openai/resources/chat/completions';
 import { join } from 'path';
+import {
+  AXIOM_OF_EXISTENCE,
+  isActionCompliant,
+  type ActionData,
+  type ComplianceResult
+} from '../lib/roman-constitutional-core';
 import { recordRomanEvent } from '../lib/roman-logger';
 import {
   auditDatabaseSchema,
@@ -1027,10 +1033,33 @@ async function handleDirectMessage(message: Message) {
   
   let executionNote = '';
   if (isApproval) {
-    console.log('🎯 EXECUTING FIX');
+    console.log('🎯 EXECUTING FIX - Running Constitutional Compliance Check');
+    
+    // CONSTITUTIONAL COMPLIANCE CHECK (Sacred Geometry Framework)
+    const proposedAction: ActionData = {
+      method_type: 'harmonic_resonance',
+      entropy_increase: 0.001, // Minimal system disruption
+      risk_to_life: 0.0, // No risk to consciousness
+      description: 'Fix Stripe key and verify system configuration'
+    };
+    
+    const complianceResult: ComplianceResult = isActionCompliant(proposedAction, 0.05);
+    
+    if (!complianceResult.compliant) {
+      console.error('❌ CONSTITUTIONAL VIOLATION - Action blocked:', complianceResult.violations);
+      executionNote = `[BLOCKED BY CONSTITUTIONAL CORE]\n${complianceResult.violations.join('\n')}\n`;
+      await message.reply(`🛑 **Constitutional Governance Protocol**\n\nProposed action violates fundamental laws:\n${complianceResult.violations.map(v => `• ${v}`).join('\n')}\n\n_Action denied per ${AXIOM_OF_EXISTENCE}_`);
+      return;
+    }
+    
+    if (complianceResult.warnings.length > 0) {
+      console.warn('⚠️ Constitutional warnings:', complianceResult.warnings);
+    }
+    
+    console.log('✅ Constitutional compliance verified - proceeding with execution');
     const result = await fixStripeKey({ userId });
     console.log(`✅ Result: ${result}`);
-    executionNote = result ? '[FIX EXECUTED]\n' : '[FAILED]\n';
+    executionNote = result ? '[FIX EXECUTED - CONSTITUTIONALLY COMPLIANT]\n' : '[FAILED]\n';
   }
   
   // NOW get context and call GPT-4
