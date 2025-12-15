@@ -1,0 +1,251 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - dev-lab
+      - main
+  pull_request:
+    branches:
+      - dev-lab
+      - main
+
+env:
+  NODE_VERSION: '20'
+
+jobs:
+  # Job 1: Lint and Type Check
+  lint:
+    name: 🔍 Lint & Type Check
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run ESLint
+        run: npm run lint
+        continue-on-error: true
+
+      - name: Run TypeScript type check
+        run: npx tsc --noEmit
+
+  # Job 2: Unit Tests
+  test-unit:
+    name: 🧪 Unit Tests
+    runs-on: ubuntu-latest
+    needs: lint
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run unit tests
+        run: npm run test:coverage
+
+      - name: Upload coverage reports
+        uses: codecov/codecov-action@v3
+        if: always()
+        with:
+          files: ./coverage/lcov.info
+          flags: unittests
+          name: unit-test-coverage
+          fail_ci_if_error: false
+
+  # Job 3: E2E Tests
+  test-e2e:
+    name: 🎭 E2E Tests
+    runs-on: ubuntu-latest
+    needs: lint
+    timeout-minutes: 10
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run E2E tests
+        run: npm run test:e2e
+        env:
+          CI: true
+
+      - name: Upload Playwright report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results
+          path: test-results/
+          retention-days: 7
+
+  # Job 4: Build Verification
+  build:
+    name: 🏗️ Build Verification
+    runs-on: ubuntu-latest
+    needs: [test-unit, test-e2e]
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build application
+        run: npm run build
+
+      - name: Check build size
+        run: |
+          BUILD_SIZE=$(du -sh dist | cut -f1)
+          echo "Build size: $BUILD_SIZE"
+          
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          retention-days: 7
+
+  # Job 5: Deploy to Staging (dev-lab branch only)
+  deploy-staging:
+    name: 🚀 Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/dev-lab' && github.event_name == 'push'
+    environment:
+      name: staging
+      url: ${{ steps.deploy.outputs.url }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - name: Deploy to staging
+        id: deploy
+        run: |
+          echo "url=https://staging.odyssey-app.com" >> $GITHUB_OUTPUT
+          echo "🚀 Staging deployment simulated (configure with actual hosting provider)"
+          # TODO: Add actual deployment commands for your hosting provider
+          # Examples:
+          # - Vercel: vercel deploy --prod --token=${{ secrets.VERCEL_TOKEN }}
+          # - Netlify: netlify deploy --prod --auth=${{ secrets.NETLIFY_AUTH_TOKEN }}
+          # - AWS S3: aws s3 sync dist/ s3://staging-bucket/
+
+      - name: Notify R.O.M.A.N. bot
+        if: always()
+        run: |
+          echo "📡 Notifying R.O.M.A.N. of staging deployment"
+          # TODO: Add Discord webhook or API call to notify R.O.M.A.N. bot
+
+  # Job 6: Deploy to Production (main branch only)
+  deploy-production:
+    name: 🌐 Deploy to Production
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    environment:
+      name: production
+      url: ${{ steps.deploy.outputs.url }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - name: Deploy to production
+        id: deploy
+        run: |
+          echo "url=https://odyssey-app.com" >> $GITHUB_OUTPUT
+          echo "🌐 Production deployment simulated (configure with actual hosting provider)"
+          # TODO: Add actual deployment commands for your hosting provider
+
+      - name: Notify R.O.M.A.N. bot
+        if: always()
+        run: |
+          echo "📡 Notifying R.O.M.A.N. of production deployment"
+          # TODO: Add Discord webhook or API call to notify R.O.M.A.N. bot
+
+  # Job 7: Security Scan
+  security:
+    name: 🔒 Security Scan
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Run npm audit
+        run: npm audit --production --audit-level=moderate
+        continue-on-error: true
+
+      - name: Check for vulnerable dependencies
+        run: |
+          echo "🔒 Running security checks"
+          npm audit --json > audit-results.json || true
+          
+      - name: Upload security report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: security-report
+          path: audit-results.json
+          retention-days: 30
