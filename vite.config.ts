@@ -29,7 +29,26 @@ export default defineConfig(({ mode }) => ({
     exclude: ['node_modules', 'dist'],
     mockReset: true,
     clearMocks: true,
-    restoreMocks: true
+    restoreMocks: true,
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'json', 'html', 'lcov'],
+      include: ['src/**/*.{ts,tsx}'],
+      exclude: [
+        'src/**/*.test.{ts,tsx}',
+        'src/**/*.spec.{ts,tsx}',
+        'src/test/**',
+        'src/**/__tests__/**',
+        'src/main.tsx',
+        'src/vite-env.d.ts'
+      ],
+      thresholds: {
+        lines: 60,
+        functions: 60,
+        branches: 60,
+        statements: 60
+      }
+    }
   },
   optimizeDeps: {
     exclude: ['discord.js', 'zlib-sync', 'bufferutil', 'utf-8-validate']
