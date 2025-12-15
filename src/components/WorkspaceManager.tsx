@@ -1430,24 +1430,32 @@ export const WorkforceManagementSystem: React.FC<WorkforceManagementProps> = ({ 
                       <h3 className="text-lg font-semibold text-white">
                         Clients ({customers.length})
                       </h3>
-                      {customers.length > 0 && (
+                      <div className="flex gap-2">
                         <Button 
-                          onClick={async () => {
-                            if (!confirm(`Delete all ${customers.length} clients? This cannot be undone.`)) return;
-                            
-                            const { data: { user } } = await supabase.auth.getUser();
-                            if (!user) return;
-                            
-                            const { error } = await supabase
-                              .from('customers')
-                              .delete()
-                              .eq('user_id', user.id);
-                            
-                            if (error) {
-                              alert(`Error: ${error.message}`);
-                            } else {
-                              alert('All clients deleted');
-                              reloadCustomers();
+                          onClick={reloadCustomers}
+                          variant="outline"
+                          size="sm"
+                        >
+                          🔄 Refresh
+                        </Button>
+                        {customers.length > 0 && (
+                          <Button 
+                            onClick={async () => {
+                              if (!confirm(`Delete all ${customers.length} clients? This cannot be undone.`)) return;
+                              
+                              const { data: { user } } = await supabase.auth.getUser();
+                              if (!user) return;
+                              
+                              const { error } = await supabase
+                                .from('customers')
+                                .delete()
+                                .eq('user_id', user.id);
+                              
+                              if (error) {
+                                alert(`Error: ${error.message}`);
+                              } else {
+                                alert('All clients deleted');
+                                reloadCustomers();
                             }
                           }}
                           variant="destructive"
@@ -1455,7 +1463,8 @@ export const WorkforceManagementSystem: React.FC<WorkforceManagementProps> = ({ 
                         >
                           Clear All
                         </Button>
-                      )}
+                        )}
+                      </div>
                     </div>
                     {customers.length === 0 ? (
                       <p className="text-gray-400 text-sm">No clients yet. Add your first client above.</p>
