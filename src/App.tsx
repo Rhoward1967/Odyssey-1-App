@@ -18,6 +18,7 @@ import Handbook from '@/pages/Handbook';
 import Index from '@/pages/Index';
 import Invoicing from '@/pages/Invoicing';
 import LoginPage from '@/pages/LoginPage';
+import NotFound from '@/pages/NotFound';
 import Profile from '@/pages/Profile';
 import Subscription from '@/pages/Subscription';
 import Trading from '@/pages/Trading';
@@ -30,6 +31,7 @@ import PublicHomePage from './components/PublicHomePage';
 import { APIProvider } from './contexts/APIContext';
 import { FundingProvider } from './contexts/FundingContext';
 import { PositionLotsProvider } from './contexts/PositionLotsProvider';
+import { ErrorBoundary } from './lib/ErrorBoundary';
 import { supabase } from './lib/supabaseClient';
 import MediaCenter from './pages/MediaCenter';
 import Onboard from './pages/Onboard';
@@ -158,53 +160,117 @@ function App() {
   }
 
   return (
-    <AuthProvider>
-      <APIProvider>
-        <FundingProvider>
-          <PositionLotsProvider>
-            <BrowserRouter>
-              <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">
-                <Routes>
-                  {/* Public Routes */}
-                  <Route path="/" element={<PublicHomePage />} />
-                  <Route path="/subscribe" element={<Subscribe />} />
-                  <Route path="/onboard" element={<Onboard />} />
-                  <Route path="/login" element={<LoginPage />} />
+    <ErrorBoundary componentName="App">
+      <AuthProvider>
+        <APIProvider>
+          <FundingProvider>
+            <PositionLotsProvider>
+              <BrowserRouter>
+                <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">
+                  <Routes>
+                    {/* Public Routes */}
+                    <Route path="/" element={<PublicHomePage />} />
+                    <Route path="/subscribe" element={<Subscribe />} />
+                    <Route path="/onboard" element={<Onboard />} />
+                    <Route path="/login" element={<LoginPage />} />
 
-                  {/* Protected Routes */}
-                  <Route element={<ProtectedRoute />}>
-                    <Route path="/app" element={<AppLayout />}>
-                      <Route index element={<Index />} />
-                      <Route path="profile" element={<Profile />} />
-                      <Route path="subscription" element={<Subscription />} />
-                      <Route path="admin" element={<Admin />} />
-                      
-                      {/* R.O.M.A.N. Observability Dashboards */}
-                      <Route path="admin/observability" element={<SystemObservabilityDashboard />} />
-                      <Route path="admin/ai-intelligence" element={<AIIntelligenceLiveFeed />} />
-                      <Route path="admin/evolution" element={<SystemEvolutionTracker />} />
-                      
-                      <Route path="trading" element={<Trading />} />
-                      <Route path="calculator" element={<Calculator />} />
-                      <Route path="workforce" element={<WorkforceDashboard />} />
-                      <Route path="invoicing" element={<Invoicing />} />
-                      <Route path="bids" element={<BidsList />} />
-                      <Route path="catalog" element={<CatalogManager />} />
-                      <Route path="handbook" element={<Handbook />} />
-                      <Route path="user-manual" element={<UserManual />} />
-                      <Route path="media-center" element={<MediaCenter />} />
-                      <Route path="test-checkout" element={<TestCheckout />} />
+                    {/* Protected Routes */}
+                    <Route element={<ProtectedRoute />}>
+                      <Route path="/app" element={<AppLayout />}>
+                        <Route index element={<Index />} />
+                        <Route path="profile" element={<Profile />} />
+                        <Route path="subscription" element={<Subscription />} />
+                        <Route 
+                          path="admin" 
+                          element={
+                            <ErrorBoundary componentName="AdminDashboard">
+                              <Admin />
+                            </ErrorBoundary>
+                          } 
+                        />
+                        
+                        {/* R.O.M.A.N. Observability Dashboards */}
+                        <Route 
+                          path="admin/observability" 
+                          element={
+                            <ErrorBoundary componentName="SystemObservability">
+                              <SystemObservabilityDashboard />
+                            </ErrorBoundary>
+                          } 
+                        />
+                        <Route 
+                          path="admin/ai-intelligence" 
+                          element={
+                            <ErrorBoundary componentName="AIIntelligence">
+                              <AIIntelligenceLiveFeed />
+                            </ErrorBoundary>
+                          } 
+                        />
+                        <Route 
+                          path="admin/evolution" 
+                          element={
+                            <ErrorBoundary componentName="SystemEvolution">
+                              <SystemEvolutionTracker />
+                            </ErrorBoundary>
+                          } 
+                        />
+                        
+                        <Route 
+                          path="trading" 
+                          element={
+                            <ErrorBoundary componentName="Trading">
+                              <Trading />
+                            </ErrorBoundary>
+                          } 
+                        />
+                        <Route path="calculator" element={<Calculator />} />
+                        <Route 
+                          path="workforce" 
+                          element={
+                            <ErrorBoundary componentName="Workforce">
+                              <WorkforceDashboard />
+                            </ErrorBoundary>
+                          } 
+                        />
+                        <Route 
+                          path="invoicing" 
+                          element={
+                            <ErrorBoundary componentName="Invoicing">
+                              <Invoicing />
+                            </ErrorBoundary>
+                          } 
+                        />
+                        <Route 
+                          path="bids" 
+                          element={
+                            <ErrorBoundary componentName="Bids">
+                              <BidsList />
+                            </ErrorBoundary>
+                          } 
+                        />
+                        <Route path="catalog" element={<CatalogManager />} />
+                        <Route path="handbook" element={<Handbook />} />
+                        <Route path="user-manual" element={<UserManual />} />
+                        <Route path="media-center" element={<MediaCenter />} />
+                        <Route path="test-checkout" element={<TestCheckout />} />
+                        
+                        {/* Catch-all for invalid /app/* routes */}
+                        <Route path="*" element={<NotFound />} />
+                      </Route>
                     </Route>
-                  </Route>
-                </Routes>
-              </div>
-            </BrowserRouter>
-          </PositionLotsProvider>
-        </FundingProvider>
-      </APIProvider>
-      <Analytics />
-      <SpeedInsights />
-    </AuthProvider>
+                    
+                    {/* Catch-all route for other 404 pages */}
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </div>
+              </BrowserRouter>
+            </PositionLotsProvider>
+          </FundingProvider>
+        </APIProvider>
+        <Analytics />
+        <SpeedInsights />
+      </AuthProvider>
+    </ErrorBoundary>
   );
 }
 
