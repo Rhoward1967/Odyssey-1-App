@@ -24,7 +24,7 @@ type RomanEvent = {
 
 export async function recordRomanEvent(e: RomanEvent) {
   const client = getAdminClient();
-  const { error } = await client.from('ops.roman_events').insert({
+  const { error } = await client.from('ops_roman_events').insert({
     actor: e.actor ?? 'roman',
     action_type: e.action_type,
     context: e.context ?? {},
@@ -35,7 +35,7 @@ export async function recordRomanEvent(e: RomanEvent) {
     // Optional: lightweight retry once for transient issues
     try {
       await new Promise((r) => setTimeout(r, 150));
-      const retry = await client.from('ops.roman_events').insert({
+      const retry = await client.from('ops_roman_events').insert({
         actor: e.actor ?? 'roman',
         action_type: e.action_type,
         context: e.context ?? {},
