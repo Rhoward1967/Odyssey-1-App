@@ -1,5 +1,9 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { supabase } from '@/lib/supabase';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useAuth } from './AuthProvider';
+import CustomerProfile, {
+  CustomerProfileData,
+} from './customers/CustomerProfile';
 // Service type for cleaning/janitorial services/products
 type Service = {
   id: string;
@@ -7,10 +11,6 @@ type Service = {
   sku?: string;
   default_rate?: number;
 };
-import CustomerProfile, {
-  CustomerProfileData,
-} from './customers/CustomerProfile';
-import { supabase } from '@/lib/supabase';
 
 // Use shared supabase client
 
@@ -18,10 +18,15 @@ import { supabase } from '@/lib/supabase';
 type CompanyProfile = { company_name: string; address: string };
 type Customer = {
   id: string;
-  customer_name: string;
+  first_name?: string;
+  last_name?: string;
+  company_name?: string;
   email?: string;
   address?: string;
   phone?: string;
+  billing_city?: string;
+  billing_state?: string;
+  billing_zip?: string;
 };
 type LineItem = {
   description: string;
@@ -45,21 +50,39 @@ type Invoice = {
   shipping_amount?: number;
   deposit_amount?: number;
   tax_rate?: number;
-  customers: { customer_name: string };
+  customers: { company_name: string };
+};
+type RecurringInvoice = {
+  id: string;
+  customer_id: string;
+  frequency: 'monthly' | 'quarterly' | 'annual';
+  start_date: string;
+  end_date?: string;
+  next_invoice_date: string;
+  line_items: LineItem[];
+  total_amount: number;
+  is_active: boolean;
+  notes?: string;
+  tax_rate?: number;
+  customers: { company_name: string; first_name?: string; last_name?: string };
 };
 
 // --- Main Dashboard Component ---
 export default function InvoiceDashboard() {
-  const { user, signIn, loading: authLoading } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [view, setView] = useState<
-    'list' | 'invoice_form' | 'customer_manager'
+    'list' | 'invoice_form' | 'customer_manager' | 'recurring_invoices' | 'recurring_form'
   >('list');
   const [invoices, setInvoices] = useState<Invoice[]>([]);
+  const [recurringInvoices, setRecurringInvoices] = useState<RecurringInvoice[]>([]);
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [companyProfile, setCompanyProfile] = useState<CompanyProfile | null>(
     null
   );
   const [editingInvoice, setEditingInvoice] = useState<Partial<Invoice> | null>(
+    null
+  );
+  const [editingRecurring, setEditingRecurring] = useState<Partial<RecurringInvoice> | null>(
     null
   );
   const [loading, setLoading] = useState(true);
@@ -74,27 +97,35 @@ export default function InvoiceDashboard() {
       } = await supabase.auth.getUser();
       if (!user) throw new Error('User not authenticated.');
 
-      const [invoiceRes, customerRes, profileRes] = await Promise.all([
+      const [invoiceRes, customerRes, profileRes, recurringRes] = await Promise.all([
         supabase
           .from('invoices')
-          .select('*, customers(customer_name)')
+          .select('*, customers(company_name, first_name, last_name)')
           .order('created_at', { ascending: false }),
-        supabase.from('customers').select('*').order('customer_name'),
+        supabase.from('customers').select('*').eq('user_id', user.id).order('company_name'),
         supabase
           .from('company_profiles')
           .select('*')
           .eq('user_id', user.id)
           .single(),
+        supabase
+          .from('recurring_invoices')
+          .select('*, customers(company_name, first_name, last_name)')
+          .eq('user_id', user.id)
+          .order('next_invoice_date', { ascending: true }),
       ]);
 
       if (invoiceRes.error) throw invoiceRes.error;
       if (customerRes.error) throw customerRes.error;
       if (profileRes.error && profileRes.error.code !== 'PGRST116')
         throw profileRes.error;
+      if (recurringRes.error && recurringRes.error.code !== 'PGRST116')
+        console.warn('Recurring invoices table may not exist:', recurringRes.error);
 
       setInvoices(invoiceRes.data || []);
       setCustomers(customerRes.data || []);
       setCompanyProfile(profileRes.data);
+      setRecurringInvoices(recurringRes.data || []);
     } catch (err: any) {
       setError(`Failed to load data: ${err.message}`);
     } finally {
@@ -136,9 +167,11 @@ export default function InvoiceDashboard() {
   };
 
   const handleCustomerAdded = (newCustomer: Customer) => {
-    const updatedCustomers = [...customers, newCustomer].sort((a, b) =>
-      a.customer_name.localeCompare(b.customer_name)
-    );
+    const updatedCustomers = [...customers, newCustomer].sort((a, b) => {
+      const aName = a.company_name || `${a.first_name || ''} ${a.last_name || ''}`.trim() || 'Unknown';
+      const bName = b.company_name || `${b.first_name || ''} ${b.last_name || ''}`.trim() || 'Unknown';
+      return aName.localeCompare(bName);
+    });
     setCustomers(updatedCustomers);
   };
 
@@ -218,10 +251,12 @@ export default function InvoiceDashboard() {
         {view === 'list' && !error && (
           <InvoiceListView
             invoices={invoices}
+            recurringInvoices={recurringInvoices}
             onCreateNew={() => showForm()}
             onEdit={showForm}
             onDelete={handleDeleteInvoice}
             onManageCustomers={() => setView('customer_manager')}
+            onManageRecurring={() => setView('recurring_invoices')}
           />
         )}
         {view === 'invoice_form' && !error && (
@@ -232,6 +267,38 @@ export default function InvoiceDashboard() {
             onSaveSuccess={() => setView('list')}
             onCancel={() => setView('list')}
             onCustomerAdded={handleCustomerAdded}
+          />
+        )}
+        {view === 'recurring_invoices' && !error && (
+          <RecurringInvoicesView
+            recurringInvoices={recurringInvoices}
+            customers={customers}
+            onCreateNew={() => setView('recurring_form')}
+            onEdit={(recurring) => {
+              setEditingRecurring(recurring);
+              setView('recurring_form');
+            }}
+            onGenerateNow={async (recurringId) => {
+              const { data, error } = await supabase.rpc('generate_invoice_from_recurring', { recurring_id: recurringId });
+              if (error) {
+                setError(`Failed to generate invoice: ${error.message}`);
+              } else {
+                alert('Invoice generated successfully!');
+                fetchData();
+              }
+            }}
+            onBack={() => setView('list')}
+          />
+        )}
+        {view === 'recurring_form' && !error && (
+          <RecurringInvoiceForm
+            initialRecurring={editingRecurring}
+            customers={customers}
+            onSaveSuccess={() => {
+              setView('recurring_invoices');
+              fetchData();
+            }}
+            onCancel={() => setView('recurring_invoices')}
           />
         )}
         {view === 'customer_manager' && !error && (
@@ -249,10 +316,12 @@ export default function InvoiceDashboard() {
 // --- Invoice List View ---
 function InvoiceListView({
   invoices,
+  recurringInvoices,
   onCreateNew,
   onEdit,
   onDelete,
   onManageCustomers,
+  onManageRecurring,
 }: any) {
   return (
     <div>
@@ -264,6 +333,12 @@ function InvoiceListView({
             className='px-4 py-2 text-sm font-medium bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 shadow-sm'
           >
             Manage Customers
+          </button>
+          <button
+            onClick={onManageRecurring}
+            className='px-4 py-2 text-sm font-medium bg-purple-600 text-white rounded-lg hover:bg-purple-700 shadow-sm'
+          >
+            Recurring Invoices ({recurringInvoices?.filter((r: any) => r.is_active).length || 0})
           </button>
           <button
             onClick={onCreateNew}
@@ -307,7 +382,7 @@ function InvoiceListView({
                     {invoice.invoice_number}
                   </td>
                   <td className='px-6 py-4 text-gray-600'>
-                    {invoice.customers?.customer_name || 'N/A'}
+                    {invoice.customers?.company_name || 'N/A'}
                   </td>
                   <td className='px-6 py-4 text-gray-600'>
                     {invoice.due_date}
@@ -702,7 +777,7 @@ function InvoiceForm({
                 <option value=''>Select a Customer</option>
                 {customers.map((c: Customer) => (
                   <option key={c.id} value={c.id}>
-                    {c.customer_name}
+                    {c.company_name || `${c.first_name || ''} ${c.last_name || ''}`.trim() || 'Unknown Customer'}
                   </option>
                 ))}
               </select>
@@ -1131,6 +1206,374 @@ function CustomerModal({
           </div>
         </form>
       </div>
+    </div>
+  );
+}
+
+// --- Recurring Invoices View ---
+function RecurringInvoicesView({
+  recurringInvoices,
+  customers,
+  onCreateNew,
+  onEdit,
+  onGenerateNow,
+  onBack,
+}: any) {
+  return (
+    <div>
+      <div className='flex justify-between items-center mb-6'>
+        <div>
+          <button onClick={onBack} className='text-blue-600 hover:underline mb-2'>← Back to Invoices</button>
+          <h1 className='text-3xl font-bold text-gray-900'>Recurring Invoices</h1>
+        </div>
+        <button
+          onClick={onCreateNew}
+          className='px-5 py-2 text-sm font-medium bg-purple-600 text-white rounded-lg hover:bg-purple-700 shadow-sm'
+        >
+          Create Recurring Invoice
+        </button>
+      </div>
+      {recurringInvoices.length === 0 ? (
+        <div className='text-center p-12 bg-white rounded-lg shadow'>
+          <p className='text-gray-600 mb-4'>No recurring invoices yet.</p>
+          <p className='text-sm text-gray-500'>Set up automatic monthly, quarterly, or annual billing for your clients.</p>
+        </div>
+      ) : (
+        <div className='bg-white shadow-md rounded-lg overflow-x-auto'>
+          <table className='min-w-full divide-y divide-gray-200'>
+            <thead className='bg-gray-50'>
+              <tr>
+                <th className='px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase'>Client</th>
+                <th className='px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase'>Frequency</th>
+                <th className='px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase'>Amount</th>
+                <th className='px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase'>Next Invoice</th>
+                <th className='px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase'>Status</th>
+                <th className='px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase'>Actions</th>
+              </tr>
+            </thead>
+            <tbody className='bg-white divide-y divide-gray-200'>
+              {recurringInvoices.map((recurring: any) => {
+                const customer = customers.find((c: any) => c.id === recurring.customer_id);
+                const displayName = customer?.company_name || `${customer?.first_name || ''} ${customer?.last_name || ''}`.trim() || 'Unknown';
+                return (
+                  <tr key={recurring.id}>
+                    <td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900'>
+                      {displayName}
+                    </td>
+                    <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-600 capitalize'>
+                      {recurring.frequency}
+                    </td>
+                    <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-900'>
+                      ${recurring.total_amount?.toFixed(2) || '0.00'}
+                    </td>
+                    <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-600'>
+                      {new Date(recurring.next_invoice_date).toLocaleDateString()}
+                    </td>
+                    <td className='px-6 py-4 whitespace-nowrap'>
+                      <span className={`px-2 py-1 text-xs font-semibold rounded-full ${recurring.is_active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
+                        {recurring.is_active ? 'Active' : 'Inactive'}
+                      </span>
+                    </td>
+                    <td className='px-6 py-4 whitespace-nowrap text-sm space-x-2'>
+                      <button
+                        onClick={() => onGenerateNow(recurring.id)}
+                        className='text-purple-600 hover:text-purple-900'
+                        disabled={!recurring.is_active}
+                      >
+                        Generate Now
+                      </button>
+                      <button
+                        onClick={() => onEdit(recurring)}
+                        className='text-blue-600 hover:text-blue-900'
+                      >
+                        Edit
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// --- Recurring Invoice Form ---
+function RecurringInvoiceForm({
+  initialRecurring,
+  customers,
+  onSaveSuccess,
+  onCancel,
+}: any) {
+  const [form, setForm] = useState({
+    customer_id: initialRecurring?.customer_id || '',
+    frequency: initialRecurring?.frequency || 'monthly',
+    start_date: initialRecurring?.start_date || new Date().toISOString().split('T')[0],
+    end_date: initialRecurring?.end_date || '',
+    line_items: initialRecurring?.line_items || [],
+    tax_rate: initialRecurring?.tax_rate || 0,
+    notes: initialRecurring?.notes || '',
+    is_active: initialRecurring?.is_active ?? true,
+  });
+  const [lineItems, setLineItems] = useState<LineItem[]>(initialRecurring?.line_items || [{ description: '', quantity: 1, rate: 0, amount: 0, is_taxable: false }]);
+  const [error, setError] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
+
+  const updateLineItem = (index: number, field: keyof LineItem, value: any) => {
+    const updated = [...lineItems];
+    updated[index] = { ...updated[index], [field]: value };
+    if (field === 'quantity' || field === 'rate') {
+      updated[index].amount = updated[index].quantity * updated[index].rate;
+    }
+    setLineItems(updated);
+  };
+
+  const addLineItem = () => {
+    setLineItems([...lineItems, { description: '', quantity: 1, rate: 0, amount: 0, is_taxable: false }]);
+  };
+
+  const removeLineItem = (index: number) => {
+    setLineItems(lineItems.filter((_, i) => i !== index));
+  };
+
+  const subtotal = lineItems.reduce((sum, item) => sum + item.amount, 0);
+  const taxAmount = subtotal * (form.tax_rate / 100);
+  const total = subtotal + taxAmount;
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    setIsSaving(true);
+
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('User not authenticated');
+
+      const recurringData = {
+        ...form,
+        user_id: user.id,
+        line_items: lineItems,
+        total_amount: total,
+        next_invoice_date: form.start_date,
+      };
+
+      if (initialRecurring?.id) {
+        const { error: updateError } = await supabase
+          .from('recurring_invoices')
+          .update(recurringData)
+          .eq('id', initialRecurring.id);
+        if (updateError) throw updateError;
+      } else {
+        const { error: insertError } = await supabase
+          .from('recurring_invoices')
+          .insert([recurringData]);
+        if (insertError) throw insertError;
+      }
+
+      onSaveSuccess();
+    } catch (err: any) {
+      setError(err.message || 'Failed to save recurring invoice');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  return (
+    <div className='max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md'>
+      <div className='flex justify-between items-center mb-6'>
+        <h2 className='text-2xl font-bold text-gray-900'>
+          {initialRecurring ? 'Edit' : 'Create'} Recurring Invoice
+        </h2>
+        <button onClick={onCancel} className='text-gray-600 hover:text-gray-900'>✕</button>
+      </div>
+
+      {error && (
+        <div className='mb-4 p-4 bg-red-100 text-red-700 rounded-lg'>{error}</div>
+      )}
+
+      <form onSubmit={handleSubmit} className='space-y-6'>
+        <div className='grid grid-cols-2 gap-4'>
+          <div>
+            <label className='block text-sm font-medium text-gray-700 mb-1'>Client *</label>
+            <select
+              value={form.customer_id}
+              onChange={(e) => setForm({ ...form, customer_id: e.target.value })}
+              className='w-full p-2 border border-gray-300 rounded-md'
+              required
+            >
+              <option value=''>Select a client...</option>
+              {customers.map((c: any) => {
+                const displayName = c.company_name || `${c.first_name || ''} ${c.last_name || ''}`.trim();
+                return (
+                  <option key={c.id} value={c.id}>{displayName}</option>
+                );
+              })}
+            </select>
+          </div>
+
+          <div>
+            <label className='block text-sm font-medium text-gray-700 mb-1'>Frequency *</label>
+            <select
+              value={form.frequency}
+              onChange={(e) => setForm({ ...form, frequency: e.target.value })}
+              className='w-full p-2 border border-gray-300 rounded-md'
+              required
+            >
+              <option value='monthly'>Monthly</option>
+              <option value='quarterly'>Quarterly (Every 3 months)</option>
+              <option value='annual'>Annual (Yearly)</option>
+            </select>
+          </div>
+
+          <div>
+            <label className='block text-sm font-medium text-gray-700 mb-1'>Start Date *</label>
+            <input
+              type='date'
+              value={form.start_date}
+              onChange={(e) => setForm({ ...form, start_date: e.target.value })}
+              className='w-full p-2 border border-gray-300 rounded-md'
+              required
+            />
+          </div>
+
+          <div>
+            <label className='block text-sm font-medium text-gray-700 mb-1'>End Date (Optional)</label>
+            <input
+              type='date'
+              value={form.end_date}
+              onChange={(e) => setForm({ ...form, end_date: e.target.value })}
+              className='w-full p-2 border border-gray-300 rounded-md'
+            />
+            <p className='text-xs text-gray-500 mt-1'>Leave blank for perpetual billing</p>
+          </div>
+        </div>
+
+        <div>
+          <div className='flex justify-between items-center mb-2'>
+            <label className='block text-sm font-medium text-gray-700'>Line Items *</label>
+            <button
+              type='button'
+              onClick={addLineItem}
+              className='text-sm text-blue-600 hover:text-blue-800'
+            >
+              + Add Line Item
+            </button>
+          </div>
+          {lineItems.map((item, index) => (
+            <div key={index} className='grid grid-cols-12 gap-2 mb-2 items-center'>
+              <input
+                type='text'
+                placeholder='Description'
+                value={item.description}
+                onChange={(e) => updateLineItem(index, 'description', e.target.value)}
+                className='col-span-5 p-2 border border-gray-300 rounded-md text-sm'
+                required
+              />
+              <input
+                type='number'
+                placeholder='Qty'
+                value={item.quantity}
+                onChange={(e) => updateLineItem(index, 'quantity', parseFloat(e.target.value) || 0)}
+                className='col-span-2 p-2 border border-gray-300 rounded-md text-sm'
+                min='0'
+                step='1'
+                required
+              />
+              <input
+                type='number'
+                placeholder='Rate'
+                value={item.rate}
+                onChange={(e) => updateLineItem(index, 'rate', parseFloat(e.target.value) || 0)}
+                className='col-span-2 p-2 border border-gray-300 rounded-md text-sm'
+                min='0'
+                step='0.01'
+                required
+              />
+              <div className='col-span-2 text-sm font-medium text-gray-700'>
+                ${item.amount.toFixed(2)}
+              </div>
+              <button
+                type='button'
+                onClick={() => removeLineItem(index)}
+                className='col-span-1 text-red-600 hover:text-red-800 text-sm'
+              >
+                ✕
+              </button>
+            </div>
+          ))}
+        </div>
+
+        <div className='grid grid-cols-2 gap-4'>
+          <div>
+            <label className='block text-sm font-medium text-gray-700 mb-1'>Tax Rate (%)</label>
+            <input
+              type='number'
+              value={form.tax_rate}
+              onChange={(e) => setForm({ ...form, tax_rate: parseFloat(e.target.value) || 0 })}
+              className='w-full p-2 border border-gray-300 rounded-md'
+              min='0'
+              step='0.01'
+            />
+          </div>
+
+          <div>
+            <label className='block text-sm font-medium text-gray-700 mb-1'>Status</label>
+            <select
+              value={form.is_active ? 'active' : 'inactive'}
+              onChange={(e) => setForm({ ...form, is_active: e.target.value === 'active' })}
+              className='w-full p-2 border border-gray-300 rounded-md'
+            >
+              <option value='active'>Active</option>
+              <option value='inactive'>Inactive</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label className='block text-sm font-medium text-gray-700 mb-1'>Notes</label>
+          <textarea
+            value={form.notes}
+            onChange={(e) => setForm({ ...form, notes: e.target.value })}
+            className='w-full p-2 border border-gray-300 rounded-md'
+            rows={3}
+            placeholder='Internal notes about this recurring invoice...'
+          />
+        </div>
+
+        <div className='bg-gray-50 p-4 rounded-lg'>
+          <div className='flex justify-between text-sm mb-1'>
+            <span>Subtotal:</span>
+            <span>${subtotal.toFixed(2)}</span>
+          </div>
+          <div className='flex justify-between text-sm mb-1'>
+            <span>Tax ({form.tax_rate}%):</span>
+            <span>${taxAmount.toFixed(2)}</span>
+          </div>
+          <div className='flex justify-between text-lg font-bold border-t pt-2'>
+            <span>Total:</span>
+            <span>${total.toFixed(2)}</span>
+          </div>
+        </div>
+
+        <div className='flex justify-end space-x-3 pt-4'>
+          <button
+            type='button'
+            onClick={onCancel}
+            className='px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300'
+          >
+            Cancel
+          </button>
+          <button
+            type='submit'
+            disabled={isSaving}
+            className='px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:bg-purple-300'
+          >
+            {isSaving ? 'Saving...' : initialRecurring ? 'Update' : 'Create'} Recurring Invoice
+          </button>
+        </div>
+      </form>
     </div>
   );
 }

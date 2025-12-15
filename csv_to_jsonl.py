@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+now check status of both #!/usr/bin/env python3
 
 import csv, json, argparse, sys
 from pathlib import Path

@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Activity, Users, AlertTriangle, TrendingUp, Globe, Clock, Cpu, Database } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Activity, Clock, Cpu, Globe, Users } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 interface MetricData {
   label: string;

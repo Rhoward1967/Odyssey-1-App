@@ -28,12 +28,16 @@ export default function Calculator() {
   const [selectedClient, setSelectedClient] = useState<Customer | null>(null);
   const [showAddClient, setShowAddClient] = useState(false);
   const [clientForm, setClientForm] = useState({
-    customer_name: '',
-    customer_type: 'commercial' as const,
-    primary_contact: { name: '', email: '', phone: '', title: '' },
-    address: { street: '', city: '', state: 'GA', zip: '', country: 'USA' },
-    facility_info: { square_footage: 0, building_type: '' },
-    organization_id: 1
+    company_name: '',
+    first_name: '',
+    last_name: '',
+    email: '',
+    phone: '',
+    address: '',
+    billing_city: '',
+    billing_state: 'GA',
+    billing_zip: '',
+    notes: ''
   });
 
   // Load saved bids and clients when component mounts
@@ -57,10 +61,7 @@ export default function Calculator() {
     const client = clients.find(c => c.id === clientId);
     if (client) {
       setSelectedClient(client);
-      // Auto-populate square footage if available
-      if (client.facility_info?.square_footage) {
-        setSqft(client.facility_info.square_footage.toString());
-      }
+      // Square footage will be entered manually in calculator
     }
   };
 
@@ -68,14 +69,7 @@ export default function Calculator() {
     try {
       const result = await createCustomer({
         ...clientForm,
-        status: 'active',
-        service_details: {
-          services: [],
-          frequency: 'monthly',
-          contract_start: new Date().toISOString().split('T')[0],
-          contract_value: 0,
-          payment_terms: 'Net 30'
-        }
+        status: 'active'
       });
 
       if (result.success) {
@@ -156,15 +150,15 @@ export default function Calculator() {
 
       const bidData = {
         project_name: selectedClient 
-          ? `${selectedClient.customer_name} - Janitorial Services`
+          ? `${selectedClient.company_name || selectedClient.first_name + ' ' + selectedClient.last_name} - Janitorial Services`
           : 'Janitorial Services Bid',
         client_id: selectedClient?.id || null,
-        client_name: selectedClient?.customer_name || null,
-        client_contact: selectedClient?.primary_contact?.name || null,
-        client_email: selectedClient?.primary_contact?.email || null,
-        client_phone: selectedClient?.primary_contact?.phone || null,
+        client_name: selectedClient?.company_name || `${selectedClient?.first_name} ${selectedClient?.last_name}` || null,
+        client_contact: `${selectedClient?.first_name || ''} ${selectedClient?.last_name || ''}`.trim() || null,
+        client_email: selectedClient?.email || null,
+        client_phone: selectedClient?.phone || null,
         facility_address: selectedClient 
-          ? `${selectedClient.address.street}, ${selectedClient.address.city}, ${selectedClient.address.state} ${selectedClient.address.zip}`
+          ? `${selectedClient.address || ''}, ${selectedClient.billing_city || ''}, ${selectedClient.billing_state || ''} ${selectedClient.billing_zip || ''}`.trim()
           : null,
         square_footage: calculations.squareFootage,
         price_per_sqft: calculations.pricePerSq,
@@ -334,7 +328,7 @@ export default function Calculator() {
                   <SelectContent>
                     {clients.map((client) => (
                       <SelectItem key={client.id} value={client.id!}>
-                        {client.customer_name} - {client.address.city}
+                        {client.company_name || `${client.first_name} ${client.last_name}`}{client.billing_city ? ` - ${client.billing_city}` : ''}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -356,47 +350,104 @@ export default function Calculator() {
                         <Label htmlFor="client_name">Company Name *</Label>
                         <Input
                           id="client_name"
-                          value={clientForm.customer_name}
-                          onChange={(e) => setClientForm(prev => ({...prev, customer_name: e.target.value}))}
+                          value={clientForm.company_name}
+                          onChange={(e) => setClientForm(prev => ({...prev, company_name: e.target.value}))}
                           placeholder="e.g. Athens Medical Center"
                         />
                       </div>
                       <div className="grid grid-cols-2 gap-4">
                         <div>
-                          <Label htmlFor="contact_name">Contact Name</Label>
+                          <Label htmlFor="first_name">First Name</Label>
                           <Input
-                            id="contact_name"
-                            value={clientForm.primary_contact.name}
+                            id="first_name"
+                            value={clientForm.first_name}
                             onChange={(e) => setClientForm(prev => ({
                               ...prev, 
-                              primary_contact: {...prev.primary_contact, name: e.target.value}
+                              first_name: e.target.value
                             }))}
                           />
                         </div>
                         <div>
-                          <Label htmlFor="contact_email">Email</Label>
+                          <Label htmlFor="last_name">Last Name</Label>
                           <Input
-                            id="contact_email"
-                            type="email"
-                            value={clientForm.primary_contact.email}
+                            id="last_name"
+                            value={clientForm.last_name}
                             onChange={(e) => setClientForm(prev => ({
                               ...prev, 
-                              primary_contact: {...prev.primary_contact, email: e.target.value}
+                              last_name: e.target.value
                             }))}
                           />
                         </div>
                       </div>
                       <div>
-                        <Label htmlFor="facility_sqft">Facility Square Footage</Label>
+                        <Label htmlFor="contact_email">Email</Label>
                         <Input
-                          id="facility_sqft"
-                          type="number"
-                          value={clientForm.facility_info.square_footage}
+                          id="contact_email"
+                          type="email"
+                          value={clientForm.email}
                           onChange={(e) => setClientForm(prev => ({
                             ...prev, 
-                            facility_info: {...prev.facility_info, square_footage: parseInt(e.target.value)}
+                            email: e.target.value
                           }))}
                         />
+                      </div>
+                      <div>
+                        <Label htmlFor="phone">Phone</Label>
+                        <Input
+                          id="phone"
+                          type="tel"
+                          value={clientForm.phone}
+                          onChange={(e) => setClientForm(prev => ({
+                            ...prev, 
+                            phone: e.target.value
+                          }))}
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="address">Address</Label>
+                        <Input
+                          id="address"
+                          value={clientForm.address}
+                          onChange={(e) => setClientForm(prev => ({
+                            ...prev, 
+                            address: e.target.value
+                          }))}
+                        />
+                      </div>
+                      <div className="grid grid-cols-3 gap-4">
+                        <div>
+                          <Label htmlFor="city">City</Label>
+                          <Input
+                            id="city"
+                            value={clientForm.billing_city}
+                            onChange={(e) => setClientForm(prev => ({
+                              ...prev, 
+                              billing_city: e.target.value
+                            }))}
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="state">State</Label>
+                          <Input
+                            id="state"
+                            value={clientForm.billing_state}
+                            onChange={(e) => setClientForm(prev => ({
+                              ...prev, 
+                              billing_state: e.target.value
+                            }))}
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="zip">ZIP</Label>
+                          <Input
+                            id="zip"
+                            value={clientForm.billing_zip}
+                            onChange={(e) => setClientForm(prev => ({
+                              ...prev, 
+                              billing_zip: e.target.value
+                            }))}
+                          />
+                        </div>
                       </div>
                       <div className="flex gap-2">
                         <Button onClick={handleAddClient} className="flex-1">
@@ -415,16 +466,16 @@ export default function Calculator() {
                 <div className="bg-white p-3 rounded border">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
                     <div>
-                      <p className="font-semibold">{selectedClient.customer_name}</p>
-                      <p className="text-gray-600">{selectedClient.customer_type}</p>
+                      <p className="font-semibold">{selectedClient.company_name || `${selectedClient.first_name} ${selectedClient.last_name}`}</p>
+                      <p className="text-gray-600">{selectedClient.email}</p>
                     </div>
                     <div>
-                      <p>{selectedClient.primary_contact.name}</p>
-                      <p className="text-gray-600">{selectedClient.primary_contact.email}</p>
+                      <p>{selectedClient.first_name} {selectedClient.last_name}</p>
+                      <p className="text-gray-600">{selectedClient.phone}</p>
                     </div>
                   </div>
                   <div className="mt-2 text-xs text-gray-500">
-                    {selectedClient.address.street}, {selectedClient.address.city}, {selectedClient.address.state}
+                    {selectedClient.address}, {selectedClient.billing_city}, {selectedClient.billing_state}
                   </div>
                 </div>
               )}
@@ -544,16 +595,16 @@ export default function Calculator() {
                 <h4 className="font-semibold text-blue-900">Client Details</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm mt-2">
                   <div>
-                    <p><strong>Contact:</strong> {selectedClient.primary_contact.name}</p>
-                    <p><strong>Email:</strong> {selectedClient.primary_contact.email}</p>
+                    <p><strong>Contact:</strong> {selectedClient.first_name} {selectedClient.last_name}</p>
+                    <p><strong>Email:</strong> {selectedClient.email}</p>
                   </div>
                   <div>
-                    <p><strong>Phone:</strong> {selectedClient.primary_contact.phone}</p>
-                    <p><strong>Type:</strong> {selectedClient.customer_type}</p>
+                    <p><strong>Phone:</strong> {selectedClient.phone}</p>
+                    <p><strong>Company:</strong> {selectedClient.company_name}</p>
                   </div>
                 </div>
                 <p className="text-xs text-gray-600 mt-1">
-                  <strong>Address:</strong> {selectedClient.address.street}, {selectedClient.address.city}, {selectedClient.address.state} {selectedClient.address.zip}
+                  <strong>Address:</strong> {selectedClient.address}, {selectedClient.billing_city}, {selectedClient.billing_state} {selectedClient.billing_zip}
                 </p>
               </div>
             )}

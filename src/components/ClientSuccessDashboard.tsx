@@ -1,7 +1,6 @@
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { Award, Star, TrendingUp, Users } from 'lucide-react';
 import { Badge } from './ui/badge';
-import { TrendingUp, Users, Star, Award } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 
 export default function ClientSuccessDashboard() {
   const clients = [

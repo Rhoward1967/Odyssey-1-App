@@ -1,12 +1,11 @@
 import {
-  BookOpen,
-  Users
+    BookOpen,
+    Users
 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 // Make sure this path is correct for your project
 import { Edit2, Trash2, UserCheck, UserX } from 'lucide-react'; // ADD THESE ICONS
 import { supabase } from '../lib/supabaseClient';
-import EmployeeScheduling from './EmployeeScheduling';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
@@ -115,6 +114,9 @@ export const WorkforceManagementSystem: React.FC<WorkforceManagementProps> = ({ 
   const [contractorTaxId, setContractorTaxId] = useState('');
   const [contractorRate, setContractorRate] = useState<number | string>('');
 
+  // --- Customer/Client State ---
+  const [customers, setCustomers] = useState<any[]>([]);
+
   // --- DATA LOADING (Tied to organizationId) ---
   useEffect(() => {
     if (!organizationId) {
@@ -149,6 +151,20 @@ export const WorkforceManagementSystem: React.FC<WorkforceManagementProps> = ({ 
         } else {
           setTimeEntries([]); // No employees, so no time entries
         }
+
+        // Fetch customers for current user
+        const { data: customersData, error: customersError, count } = await supabase
+          .from('customers')
+          .select('*', { count: 'exact' })
+          .eq('user_id', userId)
+          .range(0, 9999); // Get up to 10,000 records
+        
+        if (customersError) {
+          console.error('❌ Error loading customers:', customersError);
+        } else {
+          console.log(`✅ Initial load - customers: ${customersData?.length || 0} (total: ${count})`);
+          setCustomers(customersData || []);
+        }
       } catch (error) {
         console.error('Error loading data:', (error as Error).message);
         // Optionally set an error state here to show in the UI
@@ -159,6 +175,30 @@ export const WorkforceManagementSystem: React.FC<WorkforceManagementProps> = ({ 
     
     fetchAllData();
   }, [organizationId]); // Refetch if the org changes
+
+  // Reload customers after CSV upload
+  const reloadCustomers = async () => {
+    console.log('🔍 Reloading customers for userId:', userId);
+    const { data: customersData, error, count } = await supabase
+      .from('customers')
+      .select('*', { count: 'exact', head: false })
+      .eq('user_id', userId)
+      .limit(10000); // Explicitly set limit to 10,000
+    
+    if (error) {
+      console.error('❌ Error loading customers:', error);
+      alert(`Error loading customers: ${error.message}`);
+    } else {
+      console.log(`✅ Loaded ${customersData?.length || 0} customers (total in DB: ${count})`);
+      console.log('🔍 Sample customer record from DB:', customersData?.[0]);
+      console.log('🔍 DATABASE VALUES CHECK:');
+      console.log('   - email:', customersData?.[0]?.email);
+      console.log('   - phone:', customersData?.[0]?.phone);
+      console.log('   - billing_city:', customersData?.[0]?.billing_city);
+      console.log('   - customer_name:', customersData?.[0]?.customer_name);
+      setCustomers(customersData || []);
+    }
+  };
 
   // --- FUNCTIONAL: Add New Employee (MAKE HIRE DATE REQUIRED) ---
   const handleAddNewEmployee = async (e: React.FormEvent) => {
@@ -1290,9 +1330,166 @@ export const WorkforceManagementSystem: React.FC<WorkforceManagementProps> = ({ 
               </Card>
             </TabsContent>
 
-            {/* --- NEW SCHEDULING TAB --- */}
-            <TabsContent value="scheduling" className="space-y-4">
-              <EmployeeScheduling />
+            {/* --- NEW CLIENTS TAB --- */}
+            <TabsContent value="clients" className="space-y-4">
+              <Card className="bg-slate-700/50 border-slate-600">
+                <CardHeader><CardTitle>🏢 Add New Client</CardTitle></CardHeader>
+                <CardContent>
+                  <form onSubmit={async (e) => {
+                    e.preventDefault();
+                    const formData = new FormData(e.currentTarget);
+                    
+                    const newClient = {
+                      first_name: formData.get('first_name') as string,
+                      last_name: formData.get('last_name') as string,
+                      company_name: formData.get('company_name') as string,
+                      address: formData.get('address') as string,
+                      billing_city: formData.get('billing_city') as string,
+                      billing_state: formData.get('billing_state') as string,
+                      billing_zip: formData.get('billing_zip') as string,
+                      phone: formData.get('phone') as string,
+                      email: formData.get('email') as string,
+                      customer_name: `${formData.get('first_name')} ${formData.get('last_name')}`.trim() || formData.get('company_name') as string,
+                      status: 'active',
+                      source: 'manual_entry'
+                    };
+
+                    const { data: { user } } = await supabase.auth.getUser();
+                    if (!user) {
+                      alert('Please log in first');
+                      return;
+                    }
+
+                    const { error } = await supabase
+                      .from('customers')
+                      .insert([{ ...newClient, user_id: user.id }]);
+
+                    if (error) {
+                      alert(`Error: ${error.message}`);
+                    } else {
+                      alert('Client saved successfully!');
+                      e.currentTarget.reset();
+                      reloadCustomers();
+                    }
+                  }} className="space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="first_name" className="text-white">First Name</Label>
+                        <Input id="first_name" name="first_name" required className="bg-slate-600 text-white border-slate-500" />
+                      </div>
+                      <div>
+                        <Label htmlFor="last_name" className="text-white">Last Name</Label>
+                        <Input id="last_name" name="last_name" required className="bg-slate-600 text-white border-slate-500" />
+                      </div>
+                    </div>
+
+                    <div>
+                      <Label htmlFor="company_name" className="text-white">Business Name</Label>
+                      <Input id="company_name" name="company_name" className="bg-slate-600 text-white border-slate-500" />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="address" className="text-white">Address</Label>
+                      <Input id="address" name="address" className="bg-slate-600 text-white border-slate-500" />
+                    </div>
+
+                    <div className="grid grid-cols-3 gap-4">
+                      <div>
+                        <Label htmlFor="billing_city" className="text-white">City</Label>
+                        <Input id="billing_city" name="billing_city" className="bg-slate-600 text-white border-slate-500" />
+                      </div>
+                      <div>
+                        <Label htmlFor="billing_state" className="text-white">State</Label>
+                        <Input id="billing_state" name="billing_state" className="bg-slate-600 text-white border-slate-500" />
+                      </div>
+                      <div>
+                        <Label htmlFor="billing_zip" className="text-white">Zip</Label>
+                        <Input id="billing_zip" name="billing_zip" className="bg-slate-600 text-white border-slate-500" />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="phone" className="text-white">Phone</Label>
+                        <Input id="phone" name="phone" type="tel" className="bg-slate-600 text-white border-slate-500" />
+                      </div>
+                      <div>
+                        <Label htmlFor="email" className="text-white">Email</Label>
+                        <Input id="email" name="email" type="email" className="bg-slate-600 text-white border-slate-500" />
+                      </div>
+                    </div>
+
+                    <Button type="submit" className="w-full bg-green-600 hover:bg-green-700">
+                      Save Client
+                    </Button>
+                  </form>
+                  
+                  {/* Customer List */}
+                  <div className="mt-8 pt-6 border-t border-slate-600">
+                    <div className="flex justify-between items-center mb-3">
+                      <h3 className="text-lg font-semibold text-white">
+                        Clients ({customers.length})
+                      </h3>
+                      {customers.length > 0 && (
+                        <Button 
+                          onClick={async () => {
+                            if (!confirm(`Delete all ${customers.length} clients? This cannot be undone.`)) return;
+                            
+                            const { data: { user } } = await supabase.auth.getUser();
+                            if (!user) return;
+                            
+                            const { error } = await supabase
+                              .from('customers')
+                              .delete()
+                              .eq('user_id', user.id);
+                            
+                            if (error) {
+                              alert(`Error: ${error.message}`);
+                            } else {
+                              alert('All clients deleted');
+                              reloadCustomers();
+                            }
+                          }}
+                          variant="destructive"
+                          size="sm"
+                        >
+                          Clear All
+                        </Button>
+                      )}
+                    </div>
+                    {customers.length === 0 ? (
+                      <p className="text-gray-400 text-sm">No clients yet. Add your first client above.</p>
+                    ) : (
+                      <div className="max-h-96 overflow-y-auto">
+                        <table className="w-full text-sm">
+                          <thead className="bg-slate-800 sticky top-0">
+                            <tr className="text-left text-gray-300">
+                              <th className="p-2">Name</th>
+                              <th className="p-2">Company</th>
+                              <th className="p-2">Email</th>
+                              <th className="p-2">Phone</th>
+                              <th className="p-2">City</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {customers.map((customer) => (
+                              <tr key={customer.id} className="border-b border-slate-600 hover:bg-slate-600/30">
+                                <td className="p-2 text-white">
+                                  {customer.first_name} {customer.last_name}
+                                </td>
+                                <td className="p-2 text-gray-300">{customer.company_name || '-'}</td>
+                                <td className="p-2 text-gray-300">{customer.email || '-'}</td>
+                                <td className="p-2 text-gray-300">{customer.phone || '-'}</td>
+                                <td className="p-2 text-gray-300">{customer.billing_city || '-'}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
             </TabsContent>
 
             {/* --- NEW HANDBOOK TAB --- */}
@@ -1303,18 +1500,6 @@ export const WorkforceManagementSystem: React.FC<WorkforceManagementProps> = ({ 
                   <BookOpen className="h-16 w-16 mx-auto mb-4 text-green-400" />
                   <p className="text-lg mb-2">Employee handbook coming soon</p>
                   <p className="text-sm">Policies, procedures, benefits, and company culture documentation</p>
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            {/* --- NEW CLIENTS TAB --- */}
-            <TabsContent value="clients" className="space-y-4">
-              <Card className="bg-slate-700/50 border-slate-600">
-                <CardHeader><CardTitle>🏢 Client Management</CardTitle></CardHeader>
-                <CardContent className="p-8 text-center text-gray-400">
-                  <Users className="h-16 w-16 mx-auto mb-4 text-purple-400" />
-                  <p className="text-lg mb-2">Client management coming soon</p>
-                  <p className="text-sm">Track client projects, allocate employee time, and manage billing</p>
                 </CardContent>
               </Card>
             </TabsContent>

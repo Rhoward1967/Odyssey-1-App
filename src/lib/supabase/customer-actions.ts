@@ -1,48 +1,36 @@
 import { supabase } from './supabase';
 
+// UNIFIED FLAT SCHEMA - Matches actual database table structure
 export interface Customer {
   id?: string;
-  organization_id: number;
-  customer_name: string;
-  customer_type: 'commercial' | 'residential' | 'government' | 'medical' | 'educational';
-  primary_contact: {
-    name: string;
-    title: string;
-    email: string;
-    phone: string;
-    mobile?: string;
-  };
-  billing_contact?: {
-    name: string;
-    email: string;
-    phone: string;
-  };
-  address: {
-    street: string;
-    city: string;
-    state: string;
-    zip: string;
-    country: string;
-  };
-  service_details: {
-    services: string[];
-    frequency: 'daily' | 'weekly' | 'bi-weekly' | 'monthly' | 'quarterly' | 'as-needed';
-    contract_start: string;
-    contract_end?: string;
-    contract_value: number;
-    payment_terms: string;
-  };
-  facility_info?: {
-    square_footage?: number;
-    floors?: number;
-    building_type?: string;
-    special_requirements?: string[];
-    access_info?: string;
-    security_requirements?: string;
-  };
-  status: 'active' | 'inactive' | 'pending' | 'terminated';
-  relationship_manager?: string;
-  notes?: string;
+  user_id?: string;
+  
+  // Basic Info
+  first_name?: string | null;
+  last_name?: string | null;
+  customer_name?: string | null;
+  company_name?: string | null;
+  
+  // Contact Info (FLAT - not nested)
+  email?: string | null;
+  phone?: string | null;
+  
+  // Address Info (FLAT - not nested)
+  address?: string | null;
+  billing_address_line1?: string | null;
+  billing_address_line2?: string | null;
+  billing_city?: string | null;
+  billing_state?: string | null;
+  billing_zip?: string | null;
+  billing_country?: string | null;
+  
+  // Metadata
+  source?: string | null;
+  notes?: string | null;
+  tags?: string[] | null;
+  status?: string | null;
+  
+  // Timestamps
   created_at?: string;
   updated_at?: string;
 }
@@ -70,21 +58,30 @@ export async function createCustomer(customer: Omit<Customer, 'id' | 'created_at
   }
 }
 
-export async function getCustomers() {
+export async function getCustomers(userId?: string) {
   try {
-    const { data, error } = await supabase
+    let query = supabase
       .from('customers')
-      .select('*')
-      .order('customer_name', { ascending: true });
+      .select('*', { count: 'exact', head: false })
+      .order('customer_name', { ascending: true })
+      .limit(10000);
+    
+    // Filter by user_id if provided
+    if (userId) {
+      query = query.eq('user_id', userId);
+    }
+
+    const { data, error, count } = await query;
 
     if (error) throw error;
 
-    return { success: true, customers: data || [] };
+    return { success: true, customers: data || [], count: count || 0 };
   } catch (error) {
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Failed to fetch customers',
-      customers: []
+      customers: [],
+      count: 0
     };
   }
 }
