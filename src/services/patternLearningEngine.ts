@@ -5,12 +5,12 @@
  * Uses clustering algorithms to identify similar errors and Constitutional AI validation.
  */
 
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { 
-  isActionCompliant, 
-  ActionData,
-  SCHUMANN_RESONANCE_HZ 
+import {
+    ActionData,
+    isActionCompliant,
+    SCHUMANN_RESONANCE_HZ
 } from '@/lib/roman-constitutional-core';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
 // =====================================================
 // TYPES
@@ -454,7 +454,10 @@ export class PatternLearningEngine {
 
       await this.completeLearningSession(sessionId, {
         patterns_analyzed: patterns.length,
-        clusters_created: savedClusters.length
+        output_data: {
+          clusters_created: savedClusters.length,
+          cluster_ids: savedClusters.map(c => c.cluster_id)
+        }
       });
 
       return savedClusters;
