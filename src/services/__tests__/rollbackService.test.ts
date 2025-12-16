@@ -4,9 +4,8 @@
  * Tests for R.O.M.A.N. Auto-Rollback System with Constitutional validation.
  */
 
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import RollbackService from '../rollbackService';
-import type { RollbackResult, HealthCheck } from '../rollbackService';
 
 // Mock Supabase client
 const mockSupabase = {

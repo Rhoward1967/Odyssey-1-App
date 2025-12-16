@@ -5,13 +5,12 @@
  * Ensures all rollback operations comply with the Four Immutable Laws.
  */
 
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { 
-  isActionCompliant, 
-  ActionData, 
-  AXIOM_OF_EXISTENCE,
-  SCHUMANN_RESONANCE_HZ 
+import {
+    ActionData,
+    isActionCompliant,
+    SCHUMANN_RESONANCE_HZ
 } from '@/lib/roman-constitutional-core';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
 // =====================================================
 // TYPES
