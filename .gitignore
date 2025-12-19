@@ -74,3 +74,9 @@ AUDIT_WEEKLY_SUMMARY_*.md
 # Temporary development scripts
 scripts/temp/
 
+
+# Supabase temp files
+supabase/.temp/
+
+# One-time utility SQL scripts
+vacuum-*.sql
