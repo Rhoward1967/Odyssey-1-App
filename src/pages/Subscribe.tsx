@@ -149,55 +149,90 @@ export default function Subscribe() {
     getUser();
   }, []);
 
-  const handleSelectTier = (tierId: string) => {
+  const handleSelectTier = async (tierId: string) => {
     console.log('🎯 Tier button clicked:', tierId);
     setClickedTier(tierId);
     const tier = TIERS.find((t) => t.id === tierId);
-    if (tier) {
-      console.log('✅ Setting selected plan:', tier.name);
-      setSelectedPlan(tier);
-      // Flash the button to show it was clicked
-      setTimeout(() => setClickedTier(null), 300);
-    }
-  };
+    
+    if (!tier) return;
+    
+    console.log('✅ Selected plan:', tier.name, tier.price);
+    setSelectedPlan(tier);
 
-  const handleCompleteSubscription = async () => {
+    // Check if user is logged in
     if (!user) {
+      console.log('❌ No user logged in, redirecting to login');
       navigate('/login');
       return;
     }
 
-    // For free trial, just insert the subscription
-    if (selectedPlan.price === 0) {
+    // For free trial, create subscription directly
+    if (tier.price === 0) {
       try {
+        console.log('🆓 Starting free trial...');
         const { error } = await supabase
           .from('subscriptions')
           .insert({
             user_id: user.id,
-            plan: selectedPlan.id,
-            tier: selectedPlan.id,
+            plan: tier.id,
+            tier: tier.id,
             status: 'trialing',
             current_period_start: new Date().toISOString(),
-            current_period_end: new Date(Date.now() + (selectedPlan.trialDays * 24 * 60 * 60 * 1000)).toISOString(),
+            current_period_end: new Date(Date.now() + (tier.trialDays * 24 * 60 * 60 * 1000)).toISOString(),
             trial_start: new Date().toISOString(),
-            trial_end: new Date(Date.now() + (selectedPlan.trialDays * 24 * 60 * 60 * 1000)).toISOString(),
+            trial_end: new Date(Date.now() + (tier.trialDays * 24 * 60 * 60 * 1000)).toISOString(),
           });
 
         if (error) throw error;
+        console.log('✅ Free trial started!');
         navigate('/app');
       } catch (error) {
-        console.error('Error starting trial:', error);
+        console.error('❌ Error starting trial:', error);
+        alert('Error starting free trial. Please try again.');
+      } finally {
+        setClickedTier(null);
       }
-    } else {
-      // For paid plans, go to profile/checkout
-      navigate('/app/profile', {
-        state: {
-          selectedTier: selectedPlan.name,
-          selectedPrice: `$${selectedPlan.price}`,
-          fromPricing: true
-        }
-      });
+      return;
     }
+
+    // For paid plans, create Stripe checkout session immediately
+    try {
+      console.log('🚀 Creating Stripe checkout for:', tier.name);
+
+      const { data: checkoutData, error: checkoutError } = await supabase.functions.invoke(
+        'create-checkout-session',
+        {
+          body: {
+            tier: tier.name,
+            price: tier.price.toString(),
+            userId: user.id,
+            successUrl: `${window.location.origin}/app?subscription=success`,
+            cancelUrl: `${window.location.origin}/subscribe`
+          }
+        }
+      );
+
+      if (checkoutError) {
+        console.error('❌ Stripe checkout error:', checkoutError);
+        throw checkoutError;
+      }
+
+      if (checkoutData?.url) {
+        console.log('✅ Redirecting to Stripe checkout:', checkoutData.url);
+        window.location.href = checkoutData.url;
+      } else {
+        throw new Error('No checkout URL returned');
+      }
+    } catch (error: any) {
+      console.error('❌ Subscription error:', error);
+      alert(`Error: ${error.message || 'Failed to start checkout. Please try again.'}`);
+      setClickedTier(null);
+    }
+  };
+
+  const handleCompleteSubscription = async () => {
+    // This function is no longer needed, but keeping for compatibility
+    await handleSelectTier(selectedPlan?.id || 'free');
   };
 
   return (
@@ -291,27 +326,29 @@ export default function Subscribe() {
                     onClick={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
-                      alert(`BUTTON CLICKED: ${tier.name}`);
                       console.log('🔥 BUTTON CLICK FIRED for:', tier.id);
                       handleSelectTier(tier.id);
                     }}
-                    onMouseEnter={() => console.log('👆 Mouse entered button:', tier.id)}
+                    disabled={clickedTier === tier.id}
                     className={`w-full mt-6 px-8 py-3 rounded-md text-sm font-medium transition-colors ${
-                      clickedTier === tier.id ? 'ring-4 ring-yellow-400' : ''
+                      clickedTier === tier.id ? 'opacity-50 cursor-wait' : ''
                     } ${
                       tier.popular
-                        ? 'bg-purple-600 hover:bg-purple-700 text-white'
-                        : 'bg-white hover:bg-gray-200 text-gray-900'
+                        ? 'bg-purple-600 hover:bg-purple-700 text-white disabled:bg-purple-400'
+                        : 'bg-white hover:bg-gray-200 text-gray-900 disabled:bg-gray-400'
                     }`}
-                    style={{ 
-                      cursor: 'pointer', 
-                      pointerEvents: 'auto', 
-                      zIndex: 9999, 
-                      position: 'relative',
-                      border: '2px solid yellow'
-                    }}
                   >
-                    {tier.id === 'free' ? 'Start Free Trial' : 'Get Started'}
+                    {clickedTier === tier.id ? (
+                      <div className="flex items-center justify-center">
+                        <svg className="animate-spin h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Processing...
+                      </div>
+                    ) : (
+                      tier.id === 'free' ? 'Start Free Trial' : 'Get Started'
+                    )}
                   </button>
                 </div>
               </CardContent>

@@ -8,10 +8,10 @@
  * Ensures both Creative and Logical Hemispheres read from the same source
  */
 
-import { supabase } from '@/lib/supabaseClient';
 import {
-    RomanCommand
+  RomanCommand
 } from '@/schemas/RomanCommands';
+import { romanSupabase as supabase } from './romanSupabase';
 import { RomanSystemContext } from './RomanSystemContext';
 
 export interface EnhancedPrompt {

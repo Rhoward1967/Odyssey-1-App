@@ -88,14 +88,111 @@ serve(async (req) => {
         break;
       }
 
-      case 'customer.subscription.updated':
-      case 'customer.subscription.deleted': {
-        const subscription = event.data.object as Stripe.Subscription;
-        const status = subscription.status;
+      case 'invoice.payment_succeeded': {
+        // Recurring payment succeeded - extend subscription
+        const invoice = event.data.object as Stripe.Invoice;
+        const subscriptionId = String(invoice.subscription || '');
+        const customerId = String(invoice.customer || '');
 
-        await supabase.from('subscriptions')
-          .update({ status })
-          .eq('stripe_subscription_id', subscription.id);
+        // Get period from invoice lines or invoice itself
+        const line = invoice.lines?.data?.[0];
+        const periodStart = line?.period?.start ?? invoice.period_start;
+        const periodEnd = line?.period?.end ?? invoice.period_end;
+
+        // Update subscription with new period
+        await supabase.from('subscriptions').update({
+          status: 'active',
+          current_period_start: new Date((periodStart ?? invoice.created) * 1000).toISOString(),
+          current_period_end: new Date((periodEnd ?? invoice.created) * 1000).toISOString(),
+        }).or(`stripe_subscription_id.eq.${subscriptionId},stripe_customer_id.eq.${customerId}`);
+
+        // Get user_id for payment record
+        const { data: sub } = await supabase.from('subscriptions')
+          .select('user_id')
+          .or(`stripe_subscription_id.eq.${subscriptionId},stripe_customer_id.eq.${customerId}`)
+          .single();
+
+        if (sub) {
+          // Update profile status
+          await supabase.from('profiles').update({
+            subscription_status: 'active'
+          }).eq('id', sub.user_id);
+
+          // Log payment in payments_v2 table
+          await supabase.from('payments_v2').upsert({
+            user_id: sub.user_id,
+            amount: invoice.amount_paid / 100, // Convert cents to dollars
+            currency_code: invoice.currency.toUpperCase(),
+            stripe_payment_intent_id: invoice.payment_intent as string,
+            stripe_charge_id: invoice.charge as string,
+            status: 'confirmed',
+            description: `Subscription renewal - ${invoice.lines?.data?.[0]?.description || 'Monthly payment'}`,
+            subscription_tier: sub.user_id ? undefined : 'unknown',
+            confirmed_at: new Date().toISOString(),
+            created_at: new Date(invoice.created * 1000).toISOString(),
+            metadata: {
+              invoice_id: invoice.id,
+              subscription_id: subscriptionId,
+              invoice_url: invoice.hosted_invoice_url,
+              billing_reason: invoice.billing_reason
+            }
+          }, { onConflict: 'stripe_payment_intent_id' });
+        }
+        break;
+      }
+
+      case 'invoice.payment_failed': {
+        // Payment failed - mark subscription as past_due
+        const invoice = event.data.object as Stripe.Invoice;
+        const subscriptionId = String(invoice.subscription || '');
+        const customerId = String(invoice.customer || '');
+
+        await supabase.from('subscriptions').update({
+          status: 'past_due'
+        }).or(`stripe_subscription_id.eq.${subscriptionId},stripe_customer_id.eq.${customerId}`);
+
+        // Get user for notification
+        const { data: sub } = await supabase.from('subscriptions')
+          .select('user_id')
+          .or(`stripe_subscription_id.eq.${subscriptionId},stripe_customer_id.eq.${customerId}`)
+          .single();
+
+        if (sub) {
+          // Update profile status
+          await supabase.from('profiles').update({
+            subscription_status: 'past_due'
+          }).eq('id', sub.user_id);
+
+          // Log failed payment
+          await supabase.from('payments_v2').insert({
+            user_id: sub.user_id,
+            amount: invoice.amount_due / 100,
+            currency_code: invoice.currency.toUpperCase(),
+            stripe_payment_intent_id: invoice.payment_intent as string,
+            status: 'failed',
+            description: `Failed payment - ${invoice.lines?.data?.[0]?.description || 'Monthly payment'}`,
+            created_at: new Date(invoice.created * 1000).toISOString(),
+            metadata: {
+              invoice_id: invoice.id,
+              subscription_id: subscriptionId,
+              failure_reason: invoice.last_finalization_error?.message || 'Payment failed',
+              attempt_count: invoice.attempt_count
+            }
+          });
+
+          // TODO: Send email notification to user about failed payment
+        }
+        break;
+      }
+
+      case 'customer.subscription.updated': {
+        const subscription = event.data.object as Stripe.Subscription;
+        
+        await supabase.from('subscriptions').update({
+          status: subscription.status,
+          current_period_start: new Date(subscription.current_period_start * 1000).toISOString(),
+          current_period_end: new Date(subscription.current_period_end * 1000).toISOString(),
+        }).eq('stripe_subscription_id', subscription.id);
 
         // Update profile subscription status
         const { data: sub } = await supabase.from('subscriptions')
@@ -105,8 +202,46 @@ serve(async (req) => {
 
         if (sub) {
           await supabase.from('profiles')
-            .update({ subscription_status: status })
+            .update({ subscription_status: subscription.status })
             .eq('id', sub.user_id);
+        }
+        break;
+      }
+
+      case 'customer.subscription.deleted': {
+        const subscription = event.data.object as Stripe.Subscription;
+        
+        await supabase.from('subscriptions').update({
+          status: 'canceled'
+        }).eq('stripe_subscription_id', subscription.id);
+
+        // Update profile subscription status
+        const { data: sub } = await supabase.from('subscriptions')
+          .select('user_id')
+          .eq('stripe_subscription_id', subscription.id)
+          .single();
+
+        if (sub) {
+          await supabase.from('profiles')
+            .update({ subscription_status: 'canceled' })
+            .eq('id', sub.user_id);
+        }
+        break;
+      }
+
+      case 'invoice.upcoming': {
+        // 3 days before renewal - send reminder email
+        const invoice = event.data.object as Stripe.Invoice;
+        const subscriptionId = String(invoice.subscription || '');
+
+        const { data: sub } = await supabase.from('subscriptions')
+          .select('user_id')
+          .eq('stripe_subscription_id', subscriptionId)
+          .single();
+
+        if (sub) {
+          // TODO: Send renewal reminder email
+          console.log(`Upcoming renewal for user ${sub.user_id}: $${invoice.amount_due / 100} on ${new Date(invoice.period_end * 1000).toLocaleDateString()}`);
         }
         break;
       }

@@ -10,10 +10,11 @@
 
 import { RomanCommand } from '@/schemas/RomanCommands';
 import { LogicalHemisphere, ValidationResult } from './LogicalHemisphere';
+import { PatternLearningEngine } from './patternLearningEngine';
 import { RomanLearningEngine } from './RomanLearningEngine';
-import { SynchronizationLayer } from './SynchronizationLayer';
 import { romanSupabase as supabase } from './romanSupabase';
 import { sfLogger } from './sovereignFrequencyLogger';
+import { SynchronizationLayer } from './SynchronizationLayer';
 
 export interface OrchestrationResult {
   success: boolean;
@@ -28,6 +29,34 @@ export interface OrchestrationResult {
 }
 
 export class SovereignCoreOrchestrator {
+  
+  // Initialize Pattern Learning Engine (lazy initialization to avoid process.env issues in browser)
+  private static patternEngine: PatternLearningEngine | null = null;
+  
+  private static getPatternEngine(): PatternLearningEngine | null {
+    if (!this.patternEngine) {
+      try {
+        const supabaseUrl = typeof process !== 'undefined' && process.env?.SUPABASE_URL
+          ? process.env.SUPABASE_URL
+          : (typeof import.meta !== 'undefined' && import.meta.env?.VITE_SUPABASE_URL);
+        
+        const supabaseKey = typeof process !== 'undefined' && process.env?.SUPABASE_SERVICE_ROLE_KEY
+          ? process.env.SUPABASE_SERVICE_ROLE_KEY
+          : (typeof import.meta !== 'undefined' && import.meta.env?.VITE_SUPABASE_SERVICE_ROLE_KEY);
+        
+        if (!supabaseUrl || !supabaseKey) {
+          console.warn('⚠️ Pattern learning disabled in orchestrator: Missing Supabase credentials');
+          return null;
+        }
+        
+        this.patternEngine = new PatternLearningEngine(supabaseUrl, supabaseKey);
+      } catch (err) {
+        console.error('❌ Failed to initialize pattern learning engine in orchestrator:', err);
+        return null;
+      }
+    }
+    return this.patternEngine;
+  }
   
   /**
    * MAIN ORCHESTRATION FLOW (ENHANCED WITH LEARNING)
@@ -166,6 +195,57 @@ export class SovereignCoreOrchestrator {
 
     } catch (error: any) {
       console.error('❌ Orchestration failed:', error);
+      
+      // Learn from orchestration errors
+      try {
+        const logEntry = await supabase.from('system_logs').insert({
+          log_level: 'error',
+          message: `Orchestration failed: ${error.message}`,
+          error_data: { 
+            stack: error.stack, 
+            user_intent: userIntent,
+            user_id: userId 
+          }
+        }).select().single();
+        
+        if (logEntry.data) {
+          const engine = this.getPatternEngine();
+          if (engine) {
+            await engine.learnFromError(
+              error.message,
+              'sovereign-core-orchestrator',
+              'critical',
+              logEntry.data.id
+            );
+            
+            // Try to auto-fix orchestration errors
+            const fixResult = await engine.findAndApplyPattern(
+              error.message,
+              'sovereign-core-orchestrator',
+              'critical',
+              logEntry.data.id
+            );
+            
+            if (fixResult.applied) {
+              console.log('🔧 Auto-fix applied:', fixResult.pattern?.pattern_signature);
+              // Log the auto-fix to R.O.M.A.N. events
+              await supabase.from('ops.roman_events').insert({
+                event_type: 'auto_fix_applied',
+                severity: 'info',
+                source: 'sovereign_core_orchestrator',
+                description: `Auto-fix applied for orchestration error`,
+                metadata: {
+                  pattern_id: fixResult.pattern?.pattern_id,
+                  success_rate: fixResult.pattern?.success_rate
+                }
+              });
+            }
+          }
+        }
+      } catch (learnErr) {
+        console.log('Pattern learning skipped:', learnErr);
+      }
+      
       return {
         success: false,
         message: `Orchestration error: ${error.message}`,

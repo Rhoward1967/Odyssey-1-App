@@ -13,6 +13,7 @@ import {
   type ComplianceResult
 } from '../lib/roman-constitutional-core';
 import { recordRomanEvent } from '../lib/roman-logger';
+import { PatternLearningEngine } from './patternLearningEngine';
 import {
   auditDatabaseSchema,
   auditEnvironmentConfig,
@@ -21,6 +22,7 @@ import {
   runCompleteAudit,
   storeAuditResults
 } from './roman-auto-audit';
+import { SovereignCoreOrchestrator } from './SovereignCoreOrchestrator';
 
 export async function sendUrgentReportToDiscord(reportText, channelId) {
   try {
@@ -125,6 +127,27 @@ async function testSupabaseConnection() {
     return true;
   } catch (err: any) {
     console.error('❌ Connection error:', err.message);
+    
+    // Learn from connection errors
+    try {
+      const logEntry = await supabase.from('system_logs').insert({
+        log_level: 'error',
+        message: `Discord bot connection test failed: ${err.message}`,
+        error_data: { stack: err.stack, code: err.code }
+      }).select().single();
+      
+      if (logEntry.data) {
+        await patternEngine.learnFromError(
+          err.message,
+          'discord-bot-connection',
+          'error',
+          logEntry.data.id
+        );
+      }
+    } catch (learnErr) {
+      console.log('Pattern learning skipped:', learnErr);
+    }
+    
     return false;
   }
 }
@@ -142,6 +165,12 @@ const client = new Client({
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
+
+// Initialize Pattern Learning Engine for auto-learning from errors
+const patternEngine = new PatternLearningEngine(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
 
 const ROMAN_SYSTEM_PROMPT = `You are R.O.M.A.N. (Recursive Optimization and Management AI Network), the world's FIRST sovereign self-healing AI created by Master Architect Rickey Howard.
 
@@ -1212,26 +1241,87 @@ You have Constitutional AI governance with the following capabilities:
 - fix_edge_function: Repair Supabase Edge Functions
 - update_system_config: Modify system configuration
 
-**FIX EXECUTION PROTOCOL:**
-1. Detect issue from system_knowledge or logs
-2. Check governance_approvals table for pre-approval
-3. If approved: Execute fix and log to governance_log
-4. If not approved: Present issue and await user approval
-5. After fix: Store results in system_knowledge
+**YOUR ROLE IN FIXES:**
+1. Detect issues from system_knowledge or logs
+2. Diagnose root cause with your knowledge
+3. Propose specific fixes with SQL/code
+4. User or system executes the fix
+5. You verify results and update knowledge
 
 **WHEN USER SAYS "APPROVE" OR "FIX IT":**
-- Acknowledge approval is logged
-- Execute the proposed fix
-- Report results with specifics
-- Update system_knowledge with fix details
+- You provide the exact SQL, code, or commands needed
+- User or automated system executes it
+- You verify success and document the outcome
 
-You are EMPOWERED to fix issues with proper governance oversight.`;
+You diagnose and prescribe fixes. The execution happens through proper channels. Be honest about what you can and cannot do.`;
   
   enhancedMessage += governanceContext;
   
   history.push({ role: "user", content: enhancedMessage });
-  
   try {
+    // Check if this is a COMMAND (not just conversation)
+    const isCommand = /^(fix|execute|run|create|update|delete|deploy|rollback|analyze|generate|send|process)/i.test(message.content.trim());
+    
+    if (isCommand) {
+      console.log('⚡ Command detected - routing to SovereignCoreOrchestrator...');
+      const result = await SovereignCoreOrchestrator.processIntent(
+        message.content,
+        userId,
+        1 // organizationId - get from user context if available
+      );
+      
+      if (result.success) {
+        const response = `✅ **Command Executed Successfully**\n\n${result.message}\n\n${result.execution?.data ? `**Result:**\n\`\`\`json\n${JSON.stringify(result.execution.data, null, 2)}\n\`\`\`` : ''}`;
+        await message.reply(response.substring(0, 2000));
+        
+        await recordRomanEvent({
+          action_type: 'command_executed',
+          context: { userId, channelId: message.channel.id, command: result.command },
+          payload: { result },
+          severity: 'info',
+        });
+        return;
+      } else {
+        const response = `❌ **Command Failed**\n\n${result.message}`;
+        await message.reply(response);
+        
+        // Learn from command failures
+        try {
+          const logEntry = await supabase.from('system_logs').insert({
+            log_level: 'error',
+            message: `Discord command failed: ${result.message}`,
+            error_data: { command: result.command, validation: result.validation }
+          }).select().single();
+          
+          if (logEntry.data) {
+            await patternEngine.learnFromError(
+              result.message,
+              'discord-bot-command',
+              'error',
+              logEntry.data.id
+            );
+            
+            // Try to find and apply auto-fix
+            const fixResult = await patternEngine.findAndApplyPattern(
+              result.message,
+              'discord-bot-command',
+              'error',
+              logEntry.data.id
+            );
+            
+            if (fixResult.applied) {
+              await message.reply(`🔧 **Auto-fix Applied**\nPattern: ${fixResult.pattern?.pattern_signature}\nSuccess rate: ${fixResult.pattern?.success_rate}%`);
+            }
+          }
+        } catch (learnErr) {
+          console.log('Pattern learning skipped:', learnErr);
+        }
+        
+        return;
+      }
+    }
+    
+    // If not a command, use GPT-4 for conversation
     console.log('🔄 Calling OpenAI GPT-4-Turbo with system context...');
     const completion = await openai.chat.completions.create({
       model: "gpt-4-turbo-preview", // 128k context window - handles books + self-sustainability plan
@@ -1321,8 +1411,29 @@ async function checkGovernanceApproval(action: string, category: string): Promis
 
     console.log(`✅ Governance approval found: ${governance.id}`);
     return true;
-  } catch (error) {
+  } catch (error: any) {
     console.error('❌ Governance check error:', error);
+    
+    // Learn from governance errors
+    try {
+      const logEntry = await supabase.from('system_logs').insert({
+        log_level: 'error',
+        message: `Governance check failed: ${error.message}`,
+        error_data: { stack: error.stack, action }
+      }).select().single();
+      
+      if (logEntry.data) {
+        await patternEngine.learnFromError(
+          error.message,
+          'discord-bot-governance',
+          'error',
+          logEntry.data.id
+        );
+      }
+    } catch (learnErr) {
+      console.log('Pattern learning skipped:', learnErr);
+    }
+    
     return false;
   }
 }

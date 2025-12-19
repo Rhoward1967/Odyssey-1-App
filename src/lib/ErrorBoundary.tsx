@@ -1,4 +1,5 @@
 import { Component, ErrorInfo, ReactNode } from 'react';
+import { handleError } from './errorHandler';
 import { recordRomanEvent } from './roman-logger';
 
 interface Props {
@@ -18,6 +19,7 @@ interface State {
  * 
  * Catches React component errors and prevents full app crashes.
  * Logs errors to R.O.M.A.N. for autonomous monitoring and healing.
+ * Now with integrated Pattern Learning for auto-fixes.
  * 
  * Usage:
  * <ErrorBoundary componentName="CustomerList">
@@ -42,7 +44,7 @@ export class ErrorBoundary extends Component<Props, State> {
     };
   }
 
-  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+  async componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     const { componentName = 'UnknownComponent' } = this.props;
 
     console.error(`[ErrorBoundary] ${componentName} crashed:`, error, errorInfo);
@@ -62,6 +64,28 @@ export class ErrorBoundary extends Component<Props, State> {
       },
       severity: 'error',
     });
+
+    // Pattern learning with auto-fix attempt
+    try {
+      const result = await handleError(error, {
+        source: `react-component-${componentName}`,
+        severity: 'error',
+        metadata: {
+          component_stack: errorInfo.componentStack,
+          error_name: error.name
+        },
+        attemptAutoFix: true,
+        silent: false
+      });
+
+      if (result.autoFixed) {
+        console.log(`🔧 Auto-fix applied for ${componentName}:`, result.fixPattern);
+        // Optionally, you could attempt to reset the error boundary here
+        // if the fix was successful and the error is non-critical
+      }
+    } catch (learnErr) {
+      console.log('Pattern learning skipped in ErrorBoundary:', learnErr);
+    }
 
     this.setState({
       error,

@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 export default function Subscription() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [selectedPlanId, setSelectedPlanId] = useState<string | null>(null);
 
   const subscription = {
     plan: 'Pro Plan',
@@ -26,6 +27,55 @@ export default function Subscription() {
       window.location.href = data.url;
     } catch (error: any) {
       alert(`Error: ${error.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSelectPlan = async (planName: string, price: string) => {
+    setSelectedPlanId(planName);
+    setLoading(true);
+
+    try {
+      console.log('🚀 Creating Stripe checkout for:', planName, price);
+
+      // Get current user
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        alert('Please log in to subscribe');
+        navigate('/login');
+        return;
+      }
+
+      // Create Stripe checkout session
+      const { data: checkoutData, error: checkoutError } = await supabase.functions.invoke(
+        'create-checkout-session',
+        {
+          body: {
+            tier: planName,
+            price: price.replace('$', '').replace('/month', ''),
+            userId: user.id,
+            successUrl: `${window.location.origin}/app?subscription=success`,
+            cancelUrl: `${window.location.origin}/app/subscription`
+          }
+        }
+      );
+
+      if (checkoutError) {
+        console.error('❌ Stripe checkout error:', checkoutError);
+        throw checkoutError;
+      }
+
+      if (checkoutData?.url) {
+        console.log('✅ Redirecting to Stripe checkout:', checkoutData.url);
+        window.location.href = checkoutData.url;
+      } else {
+        throw new Error('No checkout URL returned');
+      }
+    } catch (error: any) {
+      console.error('❌ Subscription error:', error);
+      alert(`Error: ${error.message || 'Failed to start checkout. Please try again.'}`);
+      setSelectedPlanId(null);
     } finally {
       setLoading(false);
     }
@@ -209,30 +259,13 @@ export default function Subscription() {
                       e.preventDefault();
                       e.stopPropagation();
                       console.log('🔥 BUTTON CLICKED - Plan selected:', plan.id, plan.name, plan.price);
-                      console.log('📱 Device info:', {
-                        isMobile: /iPhone|iPad|iPod|Android/i.test(navigator.userAgent),
-                        userAgent: navigator.userAgent,
-                        screenWidth: window.innerWidth
-                      });
-                      alert(`Selected: ${plan.name}`); // Visual confirmation for mobile
-                      navigate('/app/profile', {
-                        state: {
-                          selectedTier: plan.name,
-                          selectedPrice: plan.price + plan.period,
-                          fromPricing: true
-                        }
-                      });
+                      handleSelectPlan(plan.name, plan.price + plan.period);
                     }}
-                    onTouchStart={(e) => {
-                      console.log('👆 Touch started on button:', plan.name);
-                    }}
-                    onTouchEnd={(e) => {
-                      console.log('✋ Touch ended on button:', plan.name);
-                    }}
+                    disabled={loading && selectedPlanId === plan.name}
                     className={`w-full py-2.5 sm:py-3 text-base sm:text-lg font-semibold rounded-md transition-colors relative z-10 inline-flex items-center justify-center ${
                       plan.popular
-                        ? 'bg-purple-600 hover:bg-purple-700 active:bg-purple-800 text-white'
-                        : 'bg-gray-700 hover:bg-gray-600 active:bg-gray-800 text-white'
+                        ? 'bg-purple-600 hover:bg-purple-700 active:bg-purple-800 text-white disabled:bg-purple-400'
+                        : 'bg-gray-700 hover:bg-gray-600 active:bg-gray-800 text-white disabled:bg-gray-500'
                     }`}
                     style={{ 
                       WebkitTapHighlightColor: 'transparent',
@@ -241,7 +274,17 @@ export default function Subscription() {
                       minHeight: '44px'
                     }}
                   >
-                    Choose {plan.name.split(' ')[1]}
+                    {loading && selectedPlanId === plan.name ? (
+                      <>
+                        <svg className="animate-spin h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Processing...
+                      </>
+                    ) : (
+                      `Choose ${plan.name.split(' ')[1]}`
+                    )}
                   </button>
                 </div>
               </div>

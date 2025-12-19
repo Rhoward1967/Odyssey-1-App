@@ -772,19 +772,19 @@ export default function Trading() {
                     <div className="grid grid-cols-2 gap-4 text-sm">
                       <div>
                         <div className="text-green-400 font-semibold">Open</div>
-                        <div className="font-mono">${chartData[0]?.open || realTimePrice}</div>
+                        <div className="font-mono">${chartData.length > 0 ? chartData[0]?.open || realTimePrice : realTimePrice}</div>
                       </div>
                       <div>
                         <div className="text-red-400 font-semibold">High</div>
-                        <div className="font-mono">${Math.max(...chartData.map(d => d.high || realTimePrice))}</div>
+                        <div className="font-mono">${chartData.length > 0 ? Math.max(...chartData.map(d => d.high || realTimePrice)) : realTimePrice}</div>
                       </div>
                       <div>
                         <div className="text-blue-400 font-semibold">Low</div>
-                        <div className="font-mono">${Math.min(...chartData.map(d => d.low || realTimePrice))}</div>
+                        <div className="font-mono">${chartData.length > 0 ? Math.min(...chartData.map(d => d.low || realTimePrice)) : realTimePrice}</div>
                       </div>
                       <div>
                         <div className="text-purple-400 font-semibold">Close</div>
-                        <div className="font-mono">${chartData[chartData.length - 1]?.close || realTimePrice}</div>
+                        <div className="font-mono">${chartData.length > 0 ? chartData[chartData.length - 1]?.close || realTimePrice : realTimePrice}</div>
                       </div>
                     </div>
                     

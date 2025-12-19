@@ -8,8 +8,8 @@
  * The sovereign arbitrator that validates all commands
  */
 
-import { supabase } from '@/lib/supabaseClient';
 import { RomanCommand, RomanCommandSchema } from '@/schemas/RomanCommands';
+import { romanSupabase as supabase } from './romanSupabase';
 
 export interface ValidationResult {
   approved: boolean;
