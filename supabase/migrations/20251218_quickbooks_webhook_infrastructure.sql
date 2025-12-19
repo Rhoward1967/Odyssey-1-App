@@ -265,12 +265,12 @@ GRANT USAGE, SELECT ON SEQUENCE webhook_log_id_seq TO service_role;
 GRANT SELECT ON webhook_log TO anon, authenticated;
 
 -- =====================================================
--- 7. RLS POLICIES (Optional - for user visibility)
+-- 7. RLS POLICIES (Admin-only access for security)
 -- =====================================================
 
 ALTER TABLE webhook_log ENABLE ROW LEVEL SECURITY;
 
--- Allow service role full access
+-- Allow service role full access (bypasses RLS, for Edge Functions)
 CREATE POLICY "Service role has full access to webhook_log"
   ON webhook_log
   FOR ALL
@@ -278,12 +278,14 @@ CREATE POLICY "Service role has full access to webhook_log"
   USING (true)
   WITH CHECK (true);
 
--- Allow authenticated users to view webhook logs (for debugging)
-CREATE POLICY "Authenticated users can view webhook logs"
+-- Allow only admin users to view webhook logs (for debugging)
+DROP POLICY IF EXISTS "Authenticated users can view webhook logs" ON webhook_log;
+DROP POLICY IF EXISTS "admin_read_webhook_log" ON webhook_log;
+CREATE POLICY "admin_read_webhook_log"
   ON webhook_log
   FOR SELECT
   TO authenticated
-  USING (true);
+  USING ((auth.jwt() ->> 'app_role') = 'admin');
 
 -- =====================================================
 -- MIGRATION COMPLETE

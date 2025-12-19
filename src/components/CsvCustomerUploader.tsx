@@ -1,7 +1,4 @@
-import { useState } from 'react';
 
-import { supabase } from '@/lib/supabaseClient';
-import Papa from 'papaparse';
 
 export type CsvRow = {
   // Google Contacts format
@@ -70,6 +67,27 @@ const transform = (r: CsvRow, userId?: string) => {
 
 
 export function CsvCustomerUploader() {
+  // ☢️ FEATURE PERMANENTLY DISABLED - QuickBooks webhook integration now handles customer sync
+  return (
+    <div style={{ 
+      margin: '2em 0', 
+      padding: '1.5em', 
+      backgroundColor: '#fff3cd', 
+      border: '2px solid #ffc107',
+      borderRadius: '8px'
+    }}>
+      <div style={{ fontWeight: 'bold', fontSize: '1.1em', color: '#856404', marginBottom: '0.5em' }}>
+        ⚠️ CSV Upload Feature Disabled
+      </div>
+      <div style={{ color: '#856404', lineHeight: '1.6' }}>
+        CSV customer uploads have been permanently disabled. Customer data is now automatically synced from QuickBooks via webhook integration.
+        <br /><br />
+        All customer changes in QuickBooks (create, update, delete) are instantly reflected in Odyssey-1.
+      </div>
+    </div>
+  );
+
+  /* LEGACY CODE - PRESERVED FOR REFERENCE
   const [progress, setProgress] = useState({ processed: 0, total: 0 });
   const [errors, setErrors] = useState<string[]>([]);
   const [success, setSuccess] = useState(false);
@@ -152,4 +170,5 @@ export function CsvCustomerUploader() {
       </div>
     </div>
   );
+  */
 }

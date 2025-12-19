@@ -70,3 +70,7 @@ AUDIT_WEEKLY_SUMMARY_*.md
 *.sln
 *.sw?
 .env
+
+# Temporary development scripts
+scripts/temp/
+
