@@ -59,6 +59,34 @@ serve(async (req) => {
       });
 
     switch (event.type) {
+      case 'payment_intent.succeeded': {
+        // Handle invoice payment success
+        const paymentIntent = event.data.object as Stripe.PaymentIntent;
+        const invoiceId = paymentIntent.metadata?.invoice_id;
+
+        if (invoiceId) {
+          // Call record_invoice_payment function
+          const { error: recordError } = await supabase.rpc('record_invoice_payment', {
+            p_invoice_id: invoiceId,
+            p_stripe_payment_intent_id: paymentIntent.id,
+            p_amount: paymentIntent.amount / 100, // Convert cents to dollars
+            p_payment_method: 'credit_card',
+            p_metadata: {
+              payment_intent_status: paymentIntent.status,
+              charge_id: paymentIntent.latest_charge,
+              timestamp: new Date().toISOString()
+            }
+          });
+
+          if (recordError) {
+            console.error('Error recording invoice payment:', recordError);
+          } else {
+            console.log(`Invoice payment recorded: ${invoiceId} - $${paymentIntent.amount / 100}`);
+          }
+        }
+        break;
+      }
+
       case 'checkout.session.completed': {
         const session = event.data.object as Stripe.Checkout.Session;
         const userId = session.metadata?.userId;
