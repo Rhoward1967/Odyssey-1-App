@@ -48,6 +48,37 @@ Issue 1 - RLS Security: ✅ view_rls_security_audit (real-time policy monitoring
 Issue 2 - API Security: ✅ api_key_audit table + view_api_key_status (90-day rotation tracking for QB/Stripe/Supabase - ACTIVE)
 Issue 3 - Scalability: ✅ view_pipeline_performance + view_table_bloat_monitor (dead tuple tracking, vacuum alerts - ACTIVE)
 Issue 4 - Governance: ✅ governance_audit table + log_governance_action() function (ACTIVE)
+
+D. Invoice Payment Infrastructure (✅ DEPLOYED - Dec 19, 2025 Evening)
+Status: PRODUCTION READY - Database schema deployed to Supabase
+Migration: 20251219_invoice_payment_infrastructure.sql (270 lines, Stripe integration)
+Payment Intent Tracking:
+  - payment_intents_log table: Tracks Stripe PaymentIntent creation, status, and metadata
+  - RLS policies: Users view own payment intents, admins view all
+  - Indexes: Fast lookups by invoice_id, stripe_payment_intent_id, status
+Payment Processing:
+  - payments_v2 table: Created with full schema (invoice_id, customer_id, stripe_payment_intent_id, stripe_charge_id)
+  - Supports multiple payment methods: credit_card, ach, check, cash, wire
+  - Amount precision: numeric(20, 8) for crypto/blockchain compatibility
+  - Status tracking: pending, confirmed, failed, refunded
+Core Functions:
+  - record_invoice_payment(): Records payment, updates invoice status to 'paid', logs governance action
+  - Automatic invoice status update on payment success
+  - Governance audit logging for all payment transactions
+Monitoring Views:
+  - view_invoice_payment_status: Comprehensive dashboard showing total_paid, balance_due, payment_status
+  - Visual indicators: ✅ Paid, 🔴 Overdue, 🟡 Awaiting Payment
+Code Components Ready (Not Yet Deployed):
+  - Edge Function: invoice-payment-intent (creates Stripe PaymentIntent)
+  - UI Component: InvoicePayment.tsx (Stripe Elements integration, 235 lines)
+  - Webhook Handler: stripe-webhook updated with payment_intent.succeeded handler
+  - NPM Packages: @stripe/stripe-js, @stripe/react-stripe-js installed
+Next Phase (When Resumed):
+  - Deploy invoice-payment-intent Edge Function to Supabase
+  - Integrate InvoicePayment component into invoice detail view
+  - Add "Pay Now" button for unpaid invoices
+  - Test end-to-end payment flow with Stripe test cards
+  - Enable Truist bank account ACH payments (Phase 2)
 Deployment Status: PRODUCTION - All tables, views, and functions operational in Supabase
 Verification: Direct database query confirmed all 7 components exist and accessible
 Verified Components: app_admins (3 rows), governance_audit (0 rows), api_key_audit (0 rows), 4 monitoring views
