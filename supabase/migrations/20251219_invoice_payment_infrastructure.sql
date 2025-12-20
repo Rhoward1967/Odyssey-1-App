@@ -50,22 +50,46 @@ CREATE POLICY "Admins can view all payment intents"
     );
 
 -- 2. Update payments_v2 to track invoice payments
-ALTER TABLE public.payments_v2 
-    ADD COLUMN IF NOT EXISTS invoice_id uuid REFERENCES public.invoices(id) ON DELETE SET NULL;
+-- Check if invoice_id column exists, add if not
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM information_schema.columns 
+        WHERE table_schema = 'public' 
+        AND table_name = 'payments_v2' 
+        AND column_name = 'invoice_id'
+    ) THEN
+        ALTER TABLE public.payments_v2 
+            ADD COLUMN invoice_id uuid REFERENCES public.invoices(id) ON DELETE SET NULL;
+        
+        COMMENT ON COLUMN public.payments_v2.invoice_id IS 
+            'Links payment to specific invoice';
+    END IF;
+END $$;
 
-ALTER TABLE public.payments_v2
-    ADD COLUMN IF NOT EXISTS stripe_payment_intent_id text;
+-- Check if stripe_payment_intent_id column exists, add if not
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM information_schema.columns 
+        WHERE table_schema = 'public' 
+        AND table_name = 'payments_v2' 
+        AND column_name = 'stripe_payment_intent_id'
+    ) THEN
+        ALTER TABLE public.payments_v2
+            ADD COLUMN stripe_payment_intent_id text;
+        
+        COMMENT ON COLUMN public.payments_v2.stripe_payment_intent_id IS 
+            'Stripe PaymentIntent ID for credit card payments';
+    END IF;
+END $$;
 
+-- Create indexes
 CREATE INDEX IF NOT EXISTS idx_payments_v2_invoice_id 
     ON public.payments_v2(invoice_id);
 
 CREATE INDEX IF NOT EXISTS idx_payments_v2_stripe_payment_intent_id 
     ON public.payments_v2(stripe_payment_intent_id);
-
-COMMENT ON COLUMN public.payments_v2.invoice_id IS 
-    'Links payment to specific invoice';
-COMMENT ON COLUMN public.payments_v2.stripe_payment_intent_id IS 
-    'Stripe PaymentIntent ID for credit card payments';
 
 -- 3. Function to record payment and update invoice status
 CREATE OR REPLACE FUNCTION public.record_invoice_payment(
