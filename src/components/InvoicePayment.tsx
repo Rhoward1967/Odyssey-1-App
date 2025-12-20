@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
-import { loadStripe } from '@stripe/stripe-js';
-import {
-  Elements,
-  PaymentElement,
-  useStripe,
-  useElements,
-} from '@stripe/react-stripe-js';
 import { supabase } from '@/lib/supabase';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import {
+    Elements,
+    PaymentElement,
+    useElements,
+    useStripe,
+} from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
+import { CheckCircle, CreditCard, Loader2 } from 'lucide-react';
+import React, { useState } from 'react';
 import { Button } from './ui/button';
-import { Loader2, CreditCard, CheckCircle } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
