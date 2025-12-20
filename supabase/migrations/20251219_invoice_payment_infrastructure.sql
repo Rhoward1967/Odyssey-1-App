@@ -49,47 +49,76 @@ CREATE POLICY "Admins can view all payment intents"
         )
     );
 
--- 2. Update payments_v2 to track invoice payments
--- Check if invoice_id column exists, add if not
-DO $$
-BEGIN
-    IF NOT EXISTS (
-        SELECT 1 FROM information_schema.columns 
-        WHERE table_schema = 'public' 
-        AND table_name = 'payments_v2' 
-        AND column_name = 'invoice_id'
-    ) THEN
-        ALTER TABLE public.payments_v2 
-            ADD COLUMN invoice_id uuid REFERENCES public.invoices(id) ON DELETE SET NULL;
-        
-        COMMENT ON COLUMN public.payments_v2.invoice_id IS 
-            'Links payment to specific invoice';
-    END IF;
-END $$;
-
--- Check if stripe_payment_intent_id column exists, add if not
-DO $$
-BEGIN
-    IF NOT EXISTS (
-        SELECT 1 FROM information_schema.columns 
-        WHERE table_schema = 'public' 
-        AND table_name = 'payments_v2' 
-        AND column_name = 'stripe_payment_intent_id'
-    ) THEN
-        ALTER TABLE public.payments_v2
-            ADD COLUMN stripe_payment_intent_id text;
-        
-        COMMENT ON COLUMN public.payments_v2.stripe_payment_intent_id IS 
-            'Stripe PaymentIntent ID for credit card payments';
-    END IF;
-END $$;
+-- 2. Create or update payments_v2 table for invoice payments
+CREATE TABLE IF NOT EXISTS public.payments_v2 (
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id uuid REFERENCES auth.users(id) ON DELETE CASCADE,
+    customer_id uuid REFERENCES public.customers(id) ON DELETE SET NULL,
+    invoice_id uuid REFERENCES public.invoices(id) ON DELETE SET NULL,
+    
+    -- Amount
+    amount numeric(20, 8) NOT NULL,
+    currency_code varchar(10) DEFAULT 'USD',
+    
+    -- Payment method
+    payment_method text, -- 'credit_card', 'ach', 'check', 'cash', 'wire'
+    payment_date date DEFAULT NOW()::date,
+    
+    -- Stripe integration
+    stripe_payment_intent_id text,
+    stripe_charge_id text,
+    
+    -- Payment details
+    notes text,
+    status text DEFAULT 'confirmed', -- 'pending', 'confirmed', 'failed', 'refunded'
+    
+    -- Timestamps
+    created_at timestamptz DEFAULT NOW(),
+    confirmed_at timestamptz DEFAULT NOW(),
+    updated_at timestamptz DEFAULT NOW(),
+    
+    -- Metadata
+    metadata jsonb DEFAULT '{}'::jsonb
+);
 
 -- Create indexes
+CREATE INDEX IF NOT EXISTS idx_payments_v2_user_id 
+    ON public.payments_v2(user_id);
+CREATE INDEX IF NOT EXISTS idx_payments_v2_customer_id 
+    ON public.payments_v2(customer_id);
 CREATE INDEX IF NOT EXISTS idx_payments_v2_invoice_id 
     ON public.payments_v2(invoice_id);
-
 CREATE INDEX IF NOT EXISTS idx_payments_v2_stripe_payment_intent_id 
     ON public.payments_v2(stripe_payment_intent_id);
+CREATE INDEX IF NOT EXISTS idx_payments_v2_payment_date 
+    ON public.payments_v2(payment_date DESC);
+
+COMMENT ON TABLE public.payments_v2 IS 
+    'Payment records for invoices and other transactions';
+COMMENT ON COLUMN public.payments_v2.invoice_id IS 
+    'Links payment to specific invoice';
+COMMENT ON COLUMN public.payments_v2.stripe_payment_intent_id IS 
+    'Stripe PaymentIntent ID for credit card payments';
+
+-- Enable RLS
+ALTER TABLE public.payments_v2 ENABLE ROW LEVEL SECURITY;
+
+-- Policy: Users can view their own payments
+CREATE POLICY "Users can view own payments"
+    ON public.payments_v2
+    FOR SELECT
+    USING (auth.uid() = user_id);
+
+-- Policy: Admins can view all payments
+CREATE POLICY "Admins can view all payments"
+    ON public.payments_v2
+    FOR SELECT
+    USING (
+        EXISTS (
+            SELECT 1 FROM public.app_admins
+            WHERE user_id = auth.uid() AND is_active = true
+        )
+    );
 
 -- 3. Function to record payment and update invoice status
 CREATE OR REPLACE FUNCTION public.record_invoice_payment(
