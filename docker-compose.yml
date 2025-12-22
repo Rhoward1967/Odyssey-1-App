@@ -1,0 +1,49 @@
+# 🛰️ ODYSSEY-1: SOVEREIGN NODE ORCHESTRATION
+# Version: v1.0.0 (Pre-Alpha Node Deployment)
+# Purpose: Defines the local environment for Data & Cognitive Autonomy.
+
+version: '3.8'
+
+services:
+  # --- THE FORENSIC MEMORY (PostgreSQL) ---
+  db:
+    image: postgres:15-alpine
+    container_name: odyssey_vault_db
+    restart: always
+    environment:
+      POSTGRES_USER: ${LOCAL_DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${LOCAL_DB_PASSWORD:-sovereign_password}
+      POSTGRES_DB: odyssey_vault
+    ports:
+      - "5432:5432"
+    volumes:
+      # This maps your local data to the container
+      - ./odyssey_data/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # --- THE COGNITIVE CACHE (Redis) ---
+  cache:
+    image: redis:7-alpine
+    container_name: odyssey_cache
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./odyssey_data/redis:/data
+
+  # --- THE LOCAL BRAIN INTERFACE (Ollama Helper) ---
+  # Note: This expects Ollama to be running on the Host machine to access the GPU.
+  # We use this container to proxy requests and manage model state.
+  ai-bridge:
+    image: alpine:latest
+    container_name: odyssey_ai_bridge
+    command: ["tail", "-f", "/dev/null"]
+    network_mode: "host" # Allows container to talk to local Ollama on 11434
+
+networks:
+  default:
+    name: odyssey_sovereign_net
