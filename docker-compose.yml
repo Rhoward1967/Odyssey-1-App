@@ -15,12 +15,12 @@ services:
       POSTGRES_PASSWORD: ${LOCAL_DB_PASSWORD:-sovereign_password}
       POSTGRES_DB: odyssey_vault
     ports:
-      - "5432:5432"
+      - '5432:5432'
     volumes:
       # This maps your local data to the container
       - ./odyssey_data/postgres:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
       interval: 10s
       timeout: 5s
       retries: 5
@@ -31,7 +31,7 @@ services:
     container_name: odyssey_cache
     restart: always
     ports:
-      - "6379:6379"
+      - '6379:6379'
     volumes:
       - ./odyssey_data/redis:/data
 
@@ -41,8 +41,8 @@ services:
   ai-bridge:
     image: alpine:latest
     container_name: odyssey_ai_bridge
-    command: ["tail", "-f", "/dev/null"]
-    network_mode: "host" # Allows container to talk to local Ollama on 11434
+    command: ['tail', '-f', '/dev/null']
+    network_mode: 'host' # Allows container to talk to local Ollama on 11434
 
 networks:
   default:
