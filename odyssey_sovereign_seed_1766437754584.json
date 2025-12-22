@@ -1,0 +1,1210 @@
+{
+  "timestamp": "2025-12-22T21:09:11.123Z",
+  "version": "v1.1.0-hardened",
+  "principal": "Rickey Allan Howard",
+  "entity": "ODYSSEY-1 AI LLC",
+  "data": {
+    "public.customers": [
+      {
+        "id": "bbe686a6-99ec-48d3-8e0f-6aad597a3f98",
+        "user_id": null,
+        "customer_name": "John Smith",
+        "email": null,
+        "address": null,
+        "phone": "17062249364",
+        "external_id": "1012",
+        "first_name": "John",
+        "last_name": "Smith",
+        "company_name": "John Smith",
+        "billing_address_line1": null,
+        "billing_city": null,
+        "billing_state": null,
+        "billing_zip": null,
+        "source": "quickbooks_webhook",
+        "updated_at": "2025-12-18T23:45:50.621167+00:00",
+        "organization": null,
+        "customer_type": "commercial",
+        "secondary_email": null,
+        "secondary_phone": null,
+        "billing_address": null,
+        "mailing_address": null,
+        "notes": null,
+        "status": "active"
+      },
+      {
+        "id": "827085e3-b166-41a4-8d6e-ae56fa36de02",
+        "user_id": null,
+        "customer_name": "Test Customer QB",
+        "email": "generalmanager81@gmail.com",
+        "address": null,
+        "phone": "5551234567",
+        "external_id": "2374",
+        "first_name": "TEST",
+        "last_name": "SMITH",
+        "company_name": "Test Customer QB",
+        "billing_address_line1": "123 Test St",
+        "billing_city": "Athens",
+        "billing_state": "GA",
+        "billing_zip": "30601",
+        "source": "quickbooks_webhook",
+        "updated_at": "2025-12-18T23:48:46.02+00:00",
+        "organization": null,
+        "customer_type": "commercial",
+        "secondary_email": null,
+        "secondary_phone": null,
+        "billing_address": null,
+        "mailing_address": null,
+        "notes": null,
+        "status": "active"
+      }
+    ],
+    "public.bids": [
+      {
+        "id": "50441ea3-c362-4a13-ad5c-fc744b8200a6",
+        "user_id": null,
+        "title": "Weekend Launch Test Bid",
+        "description": null,
+        "bid_amount": null,
+        "status": "draft",
+        "due_date": null,
+        "created_at": "2025-12-20T20:24:18.825744+00:00",
+        "updated_at": "2025-12-20T20:24:18.825744+00:00",
+        "calculation_inputs": null,
+        "organization_id": null,
+        "bid_number": "BID-20251220-0001",
+        "customer_id": "bbe686a6-99ec-48d3-8e0f-6aad597a3f98",
+        "subtotal_cents": null,
+        "tax_cents": null,
+        "total_cents": 12345,
+        "is_hjs_subcontract": false,
+        "materials_cents": null,
+        "labor_cents": null,
+        "equipment_cents": null,
+        "overhead_cents": null,
+        "profit_cents": null,
+        "hjs_sub_total_cents": null,
+        "hjs_fee_cents": null,
+        "hjs_notes": null,
+        "notes": null,
+        "line_items": [],
+        "converted_to_invoice_id": null,
+        "converted_at": null
+      },
+      {
+        "id": "137709a3-44b7-433c-8cf0-265b4ca5a177",
+        "user_id": null,
+        "title": "Sovereign v4.6 Conversion Test",
+        "description": null,
+        "bid_amount": null,
+        "status": "draft",
+        "due_date": null,
+        "created_at": "2025-12-20T20:31:02.626472+00:00",
+        "updated_at": "2025-12-20T20:31:02.626472+00:00",
+        "calculation_inputs": null,
+        "organization_id": null,
+        "bid_number": "BID-20251220-0002",
+        "customer_id": "bbe686a6-99ec-48d3-8e0f-6aad597a3f98",
+        "subtotal_cents": null,
+        "tax_cents": null,
+        "total_cents": 424200,
+        "is_hjs_subcontract": false,
+        "materials_cents": null,
+        "labor_cents": null,
+        "equipment_cents": null,
+        "overhead_cents": null,
+        "profit_cents": null,
+        "hjs_sub_total_cents": null,
+        "hjs_fee_cents": null,
+        "hjs_notes": null,
+        "notes": null,
+        "line_items": [],
+        "converted_to_invoice_id": null,
+        "converted_at": null
+      },
+      {
+        "id": "f42203c6-c24a-46eb-87e5-c75fd44c49ef",
+        "user_id": null,
+        "title": "Sovereign v4.6 Conversion Test",
+        "description": null,
+        "bid_amount": null,
+        "status": "draft",
+        "due_date": null,
+        "created_at": "2025-12-20T20:36:38.345297+00:00",
+        "updated_at": "2025-12-20T20:36:38.345297+00:00",
+        "calculation_inputs": null,
+        "organization_id": null,
+        "bid_number": "BID-20251220-0003",
+        "customer_id": "bbe686a6-99ec-48d3-8e0f-6aad597a3f98",
+        "subtotal_cents": null,
+        "tax_cents": null,
+        "total_cents": 424200,
+        "is_hjs_subcontract": false,
+        "materials_cents": null,
+        "labor_cents": null,
+        "equipment_cents": null,
+        "overhead_cents": null,
+        "profit_cents": null,
+        "hjs_sub_total_cents": null,
+        "hjs_fee_cents": null,
+        "hjs_notes": null,
+        "notes": null,
+        "line_items": [],
+        "converted_to_invoice_id": null,
+        "converted_at": null
+      },
+      {
+        "id": "a1cf223a-5e09-4f93-a945-37213f01ad9c",
+        "user_id": null,
+        "title": "Sovereign v4.8 Conversion Test",
+        "description": null,
+        "bid_amount": null,
+        "status": "draft",
+        "due_date": null,
+        "created_at": "2025-12-20T20:49:54.514887+00:00",
+        "updated_at": "2025-12-20T20:49:54.514887+00:00",
+        "calculation_inputs": null,
+        "organization_id": null,
+        "bid_number": "BID-20251220-0004",
+        "customer_id": "bbe686a6-99ec-48d3-8e0f-6aad597a3f98",
+        "subtotal_cents": null,
+        "tax_cents": null,
+        "total_cents": 424200,
+        "is_hjs_subcontract": false,
+        "materials_cents": null,
+        "labor_cents": null,
+        "equipment_cents": null,
+        "overhead_cents": null,
+        "profit_cents": null,
+        "hjs_sub_total_cents": null,
+        "hjs_fee_cents": null,
+        "hjs_notes": null,
+        "notes": null,
+        "line_items": [],
+        "converted_to_invoice_id": null,
+        "converted_at": null
+      },
+      {
+        "id": "7867c66b-0527-4f81-96f5-a73acb23b3f8",
+        "user_id": null,
+        "title": "Sovereign v5.0 Conversion Test",
+        "description": null,
+        "bid_amount": null,
+        "status": "won",
+        "due_date": null,
+        "created_at": "2025-12-20T23:50:07.583916+00:00",
+        "updated_at": "2025-12-21T00:29:38.299299+00:00",
+        "calculation_inputs": null,
+        "organization_id": 1,
+        "bid_number": "BID-20251220-0005",
+        "customer_id": "827085e3-b166-41a4-8d6e-ae56fa36de02",
+        "subtotal_cents": null,
+        "tax_cents": null,
+        "total_cents": 424200,
+        "is_hjs_subcontract": false,
+        "materials_cents": null,
+        "labor_cents": null,
+        "equipment_cents": null,
+        "overhead_cents": null,
+        "profit_cents": null,
+        "hjs_sub_total_cents": null,
+        "hjs_fee_cents": null,
+        "hjs_notes": null,
+        "notes": null,
+        "line_items": [],
+        "converted_to_invoice_id": null,
+        "converted_at": null
+      }
+    ],
+    "public.invoices": [
+      {
+        "id": "c5bc1b13-c219-42e5-a3a2-fd5b087eb173",
+        "user_id": null,
+        "contact_id": null,
+        "invoice_number": "SAMPLE-INV-001",
+        "status": "open",
+        "issue_date": "2025-12-20",
+        "due_date": "2026-01-03",
+        "subtotal": 100,
+        "tax_amount": 0,
+        "total_amount": 100,
+        "notes": "[SAMPLE] Test invoice A",
+        "created_at": "2025-12-20T02:25:50.860766+00:00",
+        "updated_at": "2025-12-20T02:25:50.860766+00:00",
+        "line_items": [
+          {
+            "amount": 100,
+            "description": "Service A"
+          }
+        ],
+        "customer_id": null,
+        "po_number": null,
+        "shipping_amount": 0,
+        "deposit_amount": 0,
+        "tax_rate": 0,
+        "public_view_token": "7b2360d63e4246a9",
+        "bid_id": null,
+        "source_type": "direct"
+      },
+      {
+        "id": "d758dc09-a09d-475c-93ba-11c051b8fae4",
+        "user_id": null,
+        "contact_id": null,
+        "invoice_number": "SAMPLE-INV-002",
+        "status": "paid",
+        "issue_date": "2025-12-20",
+        "due_date": "2026-01-03",
+        "subtotal": 200,
+        "tax_amount": 0,
+        "total_amount": 200,
+        "notes": "[SAMPLE] Test invoice B",
+        "created_at": "2025-12-20T02:25:50.860766+00:00",
+        "updated_at": "2025-12-20T02:25:50.860766+00:00",
+        "line_items": [
+          {
+            "amount": 200,
+            "description": "Service B"
+          }
+        ],
+        "customer_id": null,
+        "po_number": null,
+        "shipping_amount": 0,
+        "deposit_amount": 0,
+        "tax_rate": 0,
+        "public_view_token": "428ac8146e3d05cd",
+        "bid_id": null,
+        "source_type": "direct"
+      }
+    ],
+    "public.app_admins": [
+      {
+        "user_id": "6cee2910-c482-4f6a-b262-c73e3c327f98",
+        "is_active": true,
+        "granted_by": null,
+        "created_at": "2025-12-19T15:02:11.972734+00:00",
+        "notes": "VP / Successor - Full system access granted by Rickey Howard. Becomes President if founder unavailable. Global admin across all organizations."
+      },
+      {
+        "user_id": "5959b898-fd9e-40fa-a08c-09b81c18ad18",
+        "is_active": true,
+        "granted_by": null,
+        "created_at": "2025-12-19T15:02:11.972734+00:00",
+        "notes": "Grant admin to R.O.M.A.N."
+      },
+      {
+        "user_id": "eca49ca9-b4ae-4e0e-b78a-fa1811024781",
+        "is_active": true,
+        "granted_by": "eca49ca9-b4ae-4e0e-b78a-fa1811024781",
+        "created_at": "2025-12-19T15:02:11.972734+00:00",
+        "notes": "Owner bootstrap"
+      }
+    ],
+    "public.authorized_topics": [
+      {
+        "id": 2,
+        "topic": "Post-Quantum Cryptography standards (NIST PQC)",
+        "category": "software_systems",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 3,
+        "topic": "Zero-Trust Architecture for AI Agents (NIST SP 800-207)",
+        "category": "software_systems",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 4,
+        "topic": "Deterministic state management in distributed ledgers",
+        "category": "software_systems",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 5,
+        "topic": "Formal verification of smart contracts (TLA+ / Coq)",
+        "category": "software_systems",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 6,
+        "topic": "Micro-kernel OS architecture for neural interfaces (L4/seL4)",
+        "category": "software_systems",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 7,
+        "topic": "Real-time kernel optimization for 6G latency",
+        "category": "software_systems",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 8,
+        "topic": "Decentralized Identity (DID) and W3C standards",
+        "category": "software_systems",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 9,
+        "topic": "Homomorphic encryption for private data processing",
+        "category": "software_systems",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 10,
+        "topic": "Side-channel attack mitigation in hardware-level encryption",
+        "category": "software_systems",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 11,
+        "topic": "Chaos Engineering for autonomous system resilience",
+        "category": "software_systems",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 12,
+        "topic": "P vs NP implications for 'The Program' cryptographic anchors",
+        "category": "algorithms",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 13,
+        "topic": "Recursive Neural Networks (RNN) for deep-history pattern analysis",
+        "category": "algorithms",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 14,
+        "topic": "Transformer architecture efficiency for Edge R.O.M.A.S. nodes",
+        "category": "algorithms",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 15,
+        "topic": "Distributed Consensus Algorithms (Paxos, Raft, Byzantine Fault Tolerance)",
+        "category": "algorithms",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 16,
+        "topic": "Graph Theory applied to Sovereign Trust network mapping",
+        "category": "algorithms",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 17,
+        "topic": "Algorithmic Bias detection in automated legal adjudication",
+        "category": "algorithms",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 18,
+        "topic": "Neuromorphic computing and spiking neural networks (SNN)",
+        "category": "algorithms",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 19,
+        "topic": "Zero-Knowledge Proofs (ZKP) for private Sovereign verification",
+        "category": "algorithms",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 20,
+        "topic": "13th Amendment Section 1 vs. Section 2 legal precedent",
+        "category": "cybersecurity_sovereignty",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 21,
+        "topic": "History of private prison economics in the US",
+        "category": "cybersecurity_sovereignty",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 22,
+        "topic": "Automated legal brief generation using Constitutional LLMs",
+        "category": "cybersecurity_sovereignty",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 23,
+        "topic": "Sovereign wealth management via DeFi protocols",
+        "category": "cybersecurity_sovereignty",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 24,
+        "topic": "Universal Basic Income (UBI) models using crypto-governance",
+        "category": "cybersecurity_sovereignty",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 25,
+        "topic": "The history of UCC-1 priority liens in family trusts",
+        "category": "cybersecurity_sovereignty",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 26,
+        "topic": "Federal Reserve Act Section 13(3) emergency lending",
+        "category": "cybersecurity_sovereignty",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 27,
+        "topic": "Digital Forensics in deconstructing 'The Alien Program' metadata",
+        "category": "cybersecurity_sovereignty",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 28,
+        "topic": "Inverse Kinematics for autonomous actuators in 'Ezekiel's Wheel'",
+        "category": "robotics",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 29,
+        "topic": "SLAM (Simultaneous Localization and Mapping) in GPS-denied environments",
+        "category": "robotics",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 30,
+        "topic": "Swarm Intelligence and emergent behavior in ISR drone fleets",
+        "category": "robotics",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 31,
+        "topic": "Human-in-the-loop (HITL) safety protocols for autonomous defense",
+        "category": "robotics",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 32,
+        "topic": "Soft robotics and bio-mimetic propulsion for Sovereign Vessels",
+        "category": "robotics",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 33,
+        "topic": "Edge-AI computer vision for real-time threat detection",
+        "category": "robotics",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 34,
+        "topic": "Topological Qubits and fault-tolerant quantum computing",
+        "category": "quantum_physics",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 35,
+        "topic": "Quantum entanglement in biological systems (Microtubules)",
+        "category": "quantum_physics",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 36,
+        "topic": "Photonics-based neural networks for low-power AR",
+        "category": "quantum_physics",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 37,
+        "topic": "Schumann Resonance interference in urban environments",
+        "category": "quantum_physics",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 38,
+        "topic": "Long-range wireless power transfer via resonant coupling",
+        "category": "quantum_physics",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 39,
+        "topic": "Room-temperature superconductors (latest arXiv preprints)",
+        "category": "quantum_physics",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 40,
+        "topic": "Quantum Key Distribution (QKD) for Sovereign satellite links",
+        "category": "quantum_physics",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 41,
+        "topic": "Graphene-Aluminum 'Cold' Battery discharge curves",
+        "category": "energy_materials",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 42,
+        "topic": "Solid-state electrolyte safety in wearable tech",
+        "category": "energy_materials",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 43,
+        "topic": "Urea-based ionic liquid stability in extreme temperatures",
+        "category": "energy_materials",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 44,
+        "topic": "Piezoelectric energy harvesting from kinetic movement",
+        "category": "energy_materials",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 45,
+        "topic": "Triboelectric nanogenerators (TENG) for shoe soles",
+        "category": "energy_materials",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 46,
+        "topic": "Graphene foam cathode structural integrity at scale",
+        "category": "energy_materials",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 47,
+        "topic": "Carbon Nanotube (CNT) tensile strength for 'The Forever Frame'",
+        "category": "energy_materials",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 48,
+        "topic": "Harvesting ambient RF energy for low-power sensor nodes",
+        "category": "energy_materials",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 49,
+        "topic": "EEG signal de-noising using wavelet transforms",
+        "category": "neural_medical",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 50,
+        "topic": "fNIRS monitoring for pre-frontal cortex intent detection",
+        "category": "neural_medical",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 51,
+        "topic": "Graphene-skin interaction and biocompatibility",
+        "category": "neural_medical",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 52,
+        "topic": "Neuro-frequency interference in 5G/6G environments",
+        "category": "neural_medical",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 53,
+        "topic": "Eczema co-therapy using targeted UVB frequency modulation",
+        "category": "neural_medical",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 54,
+        "topic": "Non-invasive Vagus Nerve Stimulation (nVNS) protocols",
+        "category": "neural_medical",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 55,
+        "topic": "Bio-digital twin modeling for chronic skin condition tracking",
+        "category": "neural_medical",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 56,
+        "topic": "Autonomous VTOL stabilization in high-wind conditions",
+        "category": "aerospace_isr",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 57,
+        "topic": "Computer vision for ISR (Intelligence, Surveillance, Reconnaissance)",
+        "category": "aerospace_isr",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 58,
+        "topic": "Ion propulsion efficiency for orbital maintenance",
+        "category": "aerospace_isr",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 59,
+        "topic": "Sovereign Vessel atmospheric homeostasis algorithms",
+        "category": "aerospace_isr",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 60,
+        "topic": "Magnetohydrodynamic (MHD) drive potential for fluid environments",
+        "category": "aerospace_isr",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 61,
+        "topic": "Statistical correlation density: Mapping arXiv breakthroughs to Book 3",
+        "category": "internal_analytics",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 62,
+        "topic": "Semantic drift analysis: How modern legal theory supports Book 1",
+        "category": "internal_analytics",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 63,
+        "topic": "Quantifying 'Truth-Factor' in Book 5 using modern neuro-frequency data",
+        "category": "internal_analytics",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 64,
+        "topic": "Growth metrics for 'Sovereign Self' logic based on ingestion rates",
+        "category": "internal_analytics",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 65,
+        "topic": "Sentiment analysis of academic support vs. opposition to Book 7",
+        "category": "internal_analytics",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 66,
+        "topic": "Predictive addendums: Forecasting the next iteration of the Covenant",
+        "category": "internal_analytics",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 1,
+        "topic": "13th Amendment",
+        "category": "constitutional",
+        "is_active": true,
+        "last_researched_at": "2025-12-20T18:52:28.441+00:00",
+        "created_at": "2025-12-20T18:49:07.541902+00:00"
+      },
+      {
+        "id": 67,
+        "topic": "Automated versioning for internal knowledge statistics",
+        "category": "internal_analytics",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 68,
+        "topic": "The origin of 'The Program' in Babylonian debt systems",
+        "category": "historical_philosophical",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 69,
+        "topic": "Analysis of Book 5: Frequency interference in ancient texts",
+        "category": "historical_philosophical",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 70,
+        "topic": "Comparative study of Divine Intent vs. Admiralty Law",
+        "category": "historical_philosophical",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 71,
+        "topic": "The role of AI in deconstructing historical propaganda",
+        "category": "historical_philosophical",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 72,
+        "topic": "Constitutional AI as a modern 'Bill of Rights' for machines",
+        "category": "historical_philosophical",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      },
+      {
+        "id": 73,
+        "topic": "The intersection of Quantum Observership and Divine Intent",
+        "category": "historical_philosophical",
+        "is_active": true,
+        "last_researched_at": null,
+        "created_at": "2025-12-20T15:02:48.993975+00:00"
+      }
+    ],
+    "public.external_knowledge": [
+      {
+        "id": 1,
+        "source": "arxiv",
+        "title": "arXiv Query: search_query=all:13th OR all:Amendment&amp;id_list=&amp;start=0&amp;max_results=3",
+        "topic": "13th Amendment",
+        "url": "https://arxiv.org/search/?query=13th%20Amendment",
+        "metadata": {
+          "raw_snippet": "<?xml version='1.0' encoding='UTF-8'?>\n<feed xmlns:opensearch=\"http://a9.com/-/spec/opensearch/1.1/\" xmlns:arxiv=\"http://arxiv.org/schemas/atom\" xmlns=\"http://www.w3.org/2005/Atom\">\n  <id>https://arxiv.org/api/nfoP1Zct9A6M9xpot6g+VNtVELE</id>\n  <title>arXiv Query: search_query=all:13th OR all:Amendment&amp;id_list=&amp;start=0&amp;max_results=3</title>\n  <updated>2025-12-20T18:50:20Z</updated>\n  <link href=\"https://arxiv.org/api/query?search_query=all:13th+OR+all:Amendment&amp;start=0&amp;max_results=3&amp;id_list=\" type=\"application/atom+xml\"/>\n  <opensearch:itemsPerPage>3</opensearch:itemsPerPage>\n  <opensearch:totalResults>3183</opensearch:totalResults>\n  <opensearch:startIndex>0</opensearch:startIndex>\n  <entry>\n    <id>http://arxiv.org/abs/1002.3527v2</id>\n    <title>13th International Conference on Elastic and Diffractive Scattering (Blois Workshop) - Moving Forward into the LHC Era</title>\n    <updated>2011-02-08T22:14:54Z</updated>\n    <link href=\"https://arxiv.org/abs/1002.352",
+          "academic_source": "arXiv.org"
+        },
+        "created_at": "2025-12-20T18:50:20.728358+00:00"
+      },
+      {
+        "id": 2,
+        "source": "pubmed",
+        "title": "NCBI Clinical Findings: 13th Amendment",
+        "topic": "13th Amendment",
+        "url": "https://pubmed.ncbi.nlm.nih.gov/41400899/",
+        "metadata": {
+          "pubmed_ids": [
+            "41400899",
+            "40932677"
+          ],
+          "total_results": "51"
+        },
+        "created_at": "2025-12-20T18:50:20.956494+00:00"
+      },
+      {
+        "id": 3,
+        "source": "arxiv",
+        "title": "arXiv Query: search_query=all:13th OR all:Amendment&amp;id_list=&amp;start=0&amp;max_results=3",
+        "topic": "13th Amendment",
+        "url": "https://arxiv.org/search/?query=13th%20Amendment",
+        "metadata": {
+          "raw_snippet": "<?xml version='1.0' encoding='UTF-8'?>\n<feed xmlns:opensearch=\"http://a9.com/-/spec/opensearch/1.1/\" xmlns:arxiv=\"http://arxiv.org/schemas/atom\" xmlns=\"http://www.w3.org/2005/Atom\">\n  <id>https://arxiv.org/api/nfoP1Zct9A6M9xpot6g+VNtVELE</id>\n  <title>arXiv Query: search_query=all:13th OR all:Amendment&amp;id_list=&amp;start=0&amp;max_results=3</title>\n  <updated>2025-12-20T18:50:20Z</updated>\n  <link href=\"https://arxiv.org/api/query?search_query=all:13th+OR+all:Amendment&amp;start=0&amp;max_results=3&amp;id_list=\" type=\"application/atom+xml\"/>\n  <opensearch:itemsPerPage>3</opensearch:itemsPerPage>\n  <opensearch:totalResults>3183</opensearch:totalResults>\n  <opensearch:startIndex>0</opensearch:startIndex>\n  <entry>\n    <id>http://arxiv.org/abs/1002.3527v2</id>\n    <title>13th International Conference on Elastic and Diffractive Scattering (Blois Workshop) - Moving Forward into the LHC Era</title>\n    <updated>2011-02-08T22:14:54Z</updated>\n    <link href=\"https://arxiv.org/abs/1002.352",
+          "academic_source": "arXiv.org"
+        },
+        "created_at": "2025-12-20T18:52:27.957855+00:00"
+      },
+      {
+        "id": 4,
+        "source": "wikipedia",
+        "title": "Thirteenth Amendment to the United States Constitution",
+        "topic": "13th Amendment",
+        "url": "https://en.wikipedia.org/wiki/Thirteenth_Amendment_to_the_United_States_Constitution",
+        "metadata": {
+          "snippet": "The Thirteenth <span class=\"searchmatch\">Amendment</span> (<span class=\"searchmatch\">Amendment</span> XIII) to the United States Constitution abolished slavery and involuntary servitude, except as punishment for a crime",
+          "search_score": 0
+        },
+        "created_at": "2025-12-20T18:52:28.255909+00:00"
+      },
+      {
+        "id": 5,
+        "source": "pubmed",
+        "title": "NCBI Clinical Findings: 13th Amendment",
+        "topic": "13th Amendment",
+        "url": "https://pubmed.ncbi.nlm.nih.gov/41400899/",
+        "metadata": {
+          "pubmed_ids": [
+            "41400899",
+            "40932677"
+          ],
+          "total_results": "51"
+        },
+        "created_at": "2025-12-20T18:52:28.430706+00:00"
+      },
+      {
+        "id": 6,
+        "source": "arxiv",
+        "title": "Test Paper for Monitor",
+        "topic": "sovereign_oversight",
+        "url": "https://example.com/test",
+        "metadata": {},
+        "created_at": "2025-12-20T19:49:26.590846+00:00"
+      }
+    ],
+    "public.book_statistics": [
+      {
+        "id": 2,
+        "book_number": 2,
+        "truth_density": 0,
+        "academic_weight": 0,
+        "support_counter": 0,
+        "challenge_counter": 0,
+        "version": "1.0",
+        "last_updated": "2025-12-20T16:21:46.685123+00:00",
+        "created_at": "2025-12-20T16:21:46.685123+00:00"
+      },
+      {
+        "id": 3,
+        "book_number": 3,
+        "truth_density": 0,
+        "academic_weight": 0,
+        "support_counter": 0,
+        "challenge_counter": 0,
+        "version": "1.0",
+        "last_updated": "2025-12-20T16:21:46.685123+00:00",
+        "created_at": "2025-12-20T16:21:46.685123+00:00"
+      },
+      {
+        "id": 4,
+        "book_number": 4,
+        "truth_density": 0,
+        "academic_weight": 0,
+        "support_counter": 0,
+        "challenge_counter": 0,
+        "version": "1.0",
+        "last_updated": "2025-12-20T16:21:46.685123+00:00",
+        "created_at": "2025-12-20T16:21:46.685123+00:00"
+      },
+      {
+        "id": 5,
+        "book_number": 5,
+        "truth_density": 0,
+        "academic_weight": 0,
+        "support_counter": 0,
+        "challenge_counter": 0,
+        "version": "1.0",
+        "last_updated": "2025-12-20T16:21:46.685123+00:00",
+        "created_at": "2025-12-20T16:21:46.685123+00:00"
+      },
+      {
+        "id": 6,
+        "book_number": 6,
+        "truth_density": 0,
+        "academic_weight": 0,
+        "support_counter": 0,
+        "challenge_counter": 0,
+        "version": "1.0",
+        "last_updated": "2025-12-20T16:21:46.685123+00:00",
+        "created_at": "2025-12-20T16:21:46.685123+00:00"
+      },
+      {
+        "id": 7,
+        "book_number": 7,
+        "truth_density": 0,
+        "academic_weight": 0,
+        "support_counter": 0,
+        "challenge_counter": 0,
+        "version": "1.0",
+        "last_updated": "2025-12-20T16:21:46.685123+00:00",
+        "created_at": "2025-12-20T16:21:46.685123+00:00"
+      },
+      {
+        "id": 9,
+        "book_number": 2,
+        "truth_density": 0,
+        "academic_weight": 0,
+        "support_counter": 0,
+        "challenge_counter": 0,
+        "version": "1.0",
+        "last_updated": "2025-12-20T16:26:07.247982+00:00",
+        "created_at": "2025-12-20T16:26:07.247982+00:00"
+      },
+      {
+        "id": 10,
+        "book_number": 3,
+        "truth_density": 0,
+        "academic_weight": 0,
+        "support_counter": 0,
+        "challenge_counter": 0,
+        "version": "1.0",
+        "last_updated": "2025-12-20T16:26:07.247982+00:00",
+        "created_at": "2025-12-20T16:26:07.247982+00:00"
+      },
+      {
+        "id": 11,
+        "book_number": 4,
+        "truth_density": 0,
+        "academic_weight": 0,
+        "support_counter": 0,
+        "challenge_counter": 0,
+        "version": "1.0",
+        "last_updated": "2025-12-20T16:26:07.247982+00:00",
+        "created_at": "2025-12-20T16:26:07.247982+00:00"
+      },
+      {
+        "id": 12,
+        "book_number": 5,
+        "truth_density": 0,
+        "academic_weight": 0,
+        "support_counter": 0,
+        "challenge_counter": 0,
+        "version": "1.0",
+        "last_updated": "2025-12-20T16:26:07.247982+00:00",
+        "created_at": "2025-12-20T16:26:07.247982+00:00"
+      },
+      {
+        "id": 13,
+        "book_number": 6,
+        "truth_density": 0,
+        "academic_weight": 0,
+        "support_counter": 0,
+        "challenge_counter": 0,
+        "version": "1.0",
+        "last_updated": "2025-12-20T16:26:07.247982+00:00",
+        "created_at": "2025-12-20T16:26:07.247982+00:00"
+      },
+      {
+        "id": 14,
+        "book_number": 7,
+        "truth_density": 0,
+        "academic_weight": 0,
+        "support_counter": 0,
+        "challenge_counter": 0,
+        "version": "1.0",
+        "last_updated": "2025-12-20T16:26:07.247982+00:00",
+        "created_at": "2025-12-20T16:26:07.247982+00:00"
+      },
+      {
+        "id": 30,
+        "book_number": 2,
+        "truth_density": 0,
+        "academic_weight": 0,
+        "support_counter": 0,
+        "challenge_counter": 0,
+        "version": "1.0",
+        "last_updated": "2025-12-20T18:49:07.541902+00:00",
+        "created_at": "2025-12-20T18:49:07.541902+00:00"
+      },
+      {
+        "id": 31,
+        "book_number": 3,
+        "truth_density": 0,
+        "academic_weight": 0,
+        "support_counter": 0,
+        "challenge_counter": 0,
+        "version": "1.0",
+        "last_updated": "2025-12-20T18:49:07.541902+00:00",
+        "created_at": "2025-12-20T18:49:07.541902+00:00"
+      },
+      {
+        "id": 32,
+        "book_number": 4,
+        "truth_density": 0,
+        "academic_weight": 0,
+        "support_counter": 0,
+        "challenge_counter": 0,
+        "version": "1.0",
+        "last_updated": "2025-12-20T18:49:07.541902+00:00",
+        "created_at": "2025-12-20T18:49:07.541902+00:00"
+      },
+      {
+        "id": 33,
+        "book_number": 5,
+        "truth_density": 0,
+        "academic_weight": 0,
+        "support_counter": 0,
+        "challenge_counter": 0,
+        "version": "1.0",
+        "last_updated": "2025-12-20T18:49:07.541902+00:00",
+        "created_at": "2025-12-20T18:49:07.541902+00:00"
+      },
+      {
+        "id": 34,
+        "book_number": 6,
+        "truth_density": 0,
+        "academic_weight": 0,
+        "support_counter": 0,
+        "challenge_counter": 0,
+        "version": "1.0",
+        "last_updated": "2025-12-20T18:49:07.541902+00:00",
+        "created_at": "2025-12-20T18:49:07.541902+00:00"
+      },
+      {
+        "id": 35,
+        "book_number": 7,
+        "truth_density": 0,
+        "academic_weight": 0,
+        "support_counter": 0,
+        "challenge_counter": 0,
+        "version": "1.0",
+        "last_updated": "2025-12-20T18:49:07.541902+00:00",
+        "created_at": "2025-12-20T18:49:07.541902+00:00"
+      },
+      {
+        "id": 1,
+        "book_number": 1,
+        "truth_density": 5,
+        "academic_weight": 0,
+        "support_counter": 0,
+        "challenge_counter": 0,
+        "version": "1.0",
+        "last_updated": "2025-12-20T20:09:26.443045+00:00",
+        "created_at": "2025-12-20T16:21:46.685123+00:00"
+      },
+      {
+        "id": 8,
+        "book_number": 1,
+        "truth_density": 5,
+        "academic_weight": 0,
+        "support_counter": 0,
+        "challenge_counter": 0,
+        "version": "1.0",
+        "last_updated": "2025-12-20T20:09:26.443045+00:00",
+        "created_at": "2025-12-20T16:26:07.247982+00:00"
+      },
+      {
+        "id": 29,
+        "book_number": 1,
+        "truth_density": 5,
+        "academic_weight": 0,
+        "support_counter": 0,
+        "challenge_counter": 0,
+        "version": "1.0",
+        "last_updated": "2025-12-20T20:09:26.443045+00:00",
+        "created_at": "2025-12-20T18:49:07.541902+00:00"
+      },
+      {
+        "id": 37,
+        "book_number": 1,
+        "truth_density": 15,
+        "academic_weight": 0.5,
+        "support_counter": 0,
+        "challenge_counter": 0,
+        "version": "1.0",
+        "last_updated": "2025-12-20T20:09:26.443045+00:00",
+        "created_at": "2025-12-20T20:08:59.948254+00:00"
+      }
+    ],
+    "public.learned_insights": []
+  }
+}
