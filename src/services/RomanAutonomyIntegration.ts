@@ -198,10 +198,10 @@ export class RomanAutonomyIntegration {
   private static async logForensicVictory(issueType: string, fixApplied: string, details: any, result: string, riskLevel: number) {
     try {
       await supabase.from('governance_changes').insert({
-        changed_by: 'R.O.M.A.N. Autonomy Engine v2.1',
-        change_type: 'AUTONOMOUS_HEALING',
-        description: `Autonomously resolved ${issueType}: ${fixApplied}`,
-        metadata: {
+        actor: 'R.O.M.A.N. Autonomy Engine v2.1',
+        action: 'AUTONOMOUS_HEALING',
+        reason: `Autonomously resolved ${issueType}: ${fixApplied}`,
+        after_row: {
           issue_type: issueType,
           fix_applied: fixApplied,
           fix_engine_version: 'v2.1',
@@ -290,10 +290,10 @@ export class RomanAutonomyIntegration {
     
     // Log the constitutional change
     await supabase.from('governance_changes').insert({
-      changed_by: authorizedBy,
-      change_type: 'CONSTITUTIONAL_AMENDMENT',
-      description: `Updated autonomy latitude from ${oldLatitude} to ${newLatitude}`,
-      metadata: {
+      actor: authorizedBy,
+      action: 'CONSTITUTIONAL_AMENDMENT',
+      reason: `Updated autonomy latitude from ${oldLatitude} to ${newLatitude}`,
+      after_row: {
         old_latitude: oldLatitude,
         new_latitude: newLatitude,
         timestamp: new Date().toISOString()
