@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import BulkUploadServices from './BulkUploadServices';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabaseClient';
 
 type Service = {
   id: string;

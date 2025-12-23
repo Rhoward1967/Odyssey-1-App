@@ -1,5 +1,5 @@
+import { supabase } from '@/lib/supabaseClient';
 import { useEffect, useRef } from 'react';
-import { supabase } from '@/lib/supabase';
 
 export function useBehaviorTracking() {
   const sessionIdRef = useRef<string | null>(null);

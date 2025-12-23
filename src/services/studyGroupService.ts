@@ -9,7 +9,7 @@
  * - "We Are Together" - Community building operations
  */
 
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabaseClient';
 
 // Types
 export interface StudyGroup {

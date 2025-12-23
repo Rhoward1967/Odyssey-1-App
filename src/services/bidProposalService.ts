@@ -3,7 +3,7 @@
  * Uses Claude/GPT to generate professional federal contract proposals
  */
 
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabaseClient';
 
 export interface BidProposalInput {
   rfpTitle: string;

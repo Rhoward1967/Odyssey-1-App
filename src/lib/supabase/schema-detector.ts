@@ -1,4 +1,4 @@
-import { supabase } from '../supabase';
+import { supabase } from '@/lib/supabaseClient';
 
 export interface TableStatus {
   table_name: string;

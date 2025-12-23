@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabaseClient';
 
 /**
  * Logs a system activity event to the activity_logs table in Supabase.

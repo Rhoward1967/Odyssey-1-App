@@ -1,11 +1,6 @@
-import React, { useState } from 'react';
-import { createClient } from '@supabase/supabase-js';
+import { useState } from 'react';
 
 // This should be initialized from your central Supabase client instance
-const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL!,
-  import.meta.env.VITE_SUPABASE_ANON_KEY!
-);
 
 // Type definition for a single appointment object
 type Appointment = {

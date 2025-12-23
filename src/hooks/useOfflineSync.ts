@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabaseClient';
+import { useCallback, useEffect, useState } from 'react';
 
 interface OfflineData {
   id: string;

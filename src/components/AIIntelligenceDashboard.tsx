@@ -7,23 +7,23 @@
  * ============================================================================
  */
 
+import { supabase } from '@/lib/supabaseClient';
 import {
-    Activity,
-    AlertCircle,
-    BookOpen,
-    Brain,
-    CheckCircle2,
-    Clock,
-    Rocket,
-    Search,
-    Sparkles,
-    Target,
-    TrendingUp,
-    Zap
+  Activity,
+  AlertCircle,
+  BookOpen,
+  Brain,
+  CheckCircle2,
+  Clock,
+  Rocket,
+  Search,
+  Sparkles,
+  Target,
+  TrendingUp,
+  Zap
 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { romanAIIntelligence } from '../services/romanAIIntelligence';
-import { supabase } from '../services/supabase';
 
 // ============================================================================
 // TYPES

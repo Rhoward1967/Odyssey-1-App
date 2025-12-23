@@ -1,22 +1,22 @@
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { Badge } from '@/components/ui/badge';
+import { CoinbaseService } from '@/services/CoinbaseService';
+import { MelFinancialGovernor } from '@/services/MelFinancialGovernor';
 import {
-  ArrowDownRight,
-  ArrowUpRight,
-  Briefcase,
-  ChevronRight,
-  PieChart,
-  Target,
-  TrendingUp,
-  Wallet,
-  Zap,
-  DollarSign,
+    ArrowDownRight,
+    ArrowUpRight,
+    Briefcase,
+    ChevronRight,
+    DollarSign,
+    PieChart,
+    Target,
+    TrendingUp,
+    Wallet,
+    Zap,
 } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
-import { MelFinancialGovernor } from '@/services/MelFinancialGovernor';
-import { CoinbaseService } from '@/services/CoinbaseService';
 
 interface CashFlowAnalysis {
   netProfit: number;
@@ -81,6 +81,10 @@ export default function MelDashboard() {
 
       // Get crypto portfolio (Coinbase)
       try {
+        // First, sync accounts from Coinbase API (auto-updates user_portfolio table)
+        await CoinbaseService.getAccounts();
+        
+        // Then, get the cached portfolio summary
         const portfolio = await CoinbaseService.getPortfolioSummary();
         setCryptoPortfolio(portfolio);
       } catch (error) {

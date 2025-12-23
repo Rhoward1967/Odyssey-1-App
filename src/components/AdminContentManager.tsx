@@ -7,7 +7,7 @@ import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useRealtimeAdmin, PricingPlan, FeatureToggle, Announcement } from '@/hooks/useRealtimeAdmin';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabaseClient';
 import { Edit, Save, Plus, Trash2 } from 'lucide-react';
 
 export const AdminContentManager: React.FC = () => {

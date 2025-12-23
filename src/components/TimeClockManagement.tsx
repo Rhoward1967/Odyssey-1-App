@@ -12,7 +12,7 @@ import {
   Settings,
   Users,
 } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabaseClient';
 import ActiveTimeClock from './ActiveTimeClock';
 
 interface TimeEntry {

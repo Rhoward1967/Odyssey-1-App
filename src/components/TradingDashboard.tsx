@@ -11,7 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useFunding } from '@/contexts/FundingContext';
 import { AggregatedPosition, usePositionLots } from '@/contexts/PositionLotsProvider';
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabaseClient';
 import {
   AlertTriangle,
   Bot,

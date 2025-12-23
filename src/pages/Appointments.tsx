@@ -17,7 +17,7 @@ import { Link } from 'react-router-dom';
 import { AppointmentScheduler } from '@/components/AppointmentScheduler';
 import { GoogleCalendarSync } from '@/components/GoogleCalendarSync';
 import { CalendarSelector } from '@/components/CalendarSelector';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabaseClient';
 
 interface Appointment {
   id: string;

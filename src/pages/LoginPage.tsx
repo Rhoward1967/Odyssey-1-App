@@ -1,8 +1,8 @@
-import { useState } from 'react';
-import { supabase } from '@/lib/supabase';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { supabase } from '@/lib/supabaseClient';
+import { useState } from 'react';
 
 export default function LoginPage() {
   const [loading, setLoading] = useState(false);
@@ -45,14 +45,19 @@ export default function LoginPage() {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleLogin} className="space-y-4">
-            <Input
-              type="email"
-              placeholder="you@example.com"
-              value={email}
-              required
-              onChange={(e) => setEmail(e.target.value)}
-              disabled={loading}
-            />
+            <div>
+              <label htmlFor="email" className="sr-only">Email address</label>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                placeholder="you@example.com"
+                value={email}
+                required
+                onChange={(e) => setEmail(e.target.value)}
+                disabled={loading}
+              />
+            </div>
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? 'Sending...' : 'Send Magic Link'}
             </Button>

@@ -4,7 +4,7 @@ import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { Textarea } from './ui/textarea';
 import { Brain, TrendingUp, AlertTriangle, Lightbulb, MessageSquare } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabaseClient';
 
 interface MarketInsight {
   type: 'bullish' | 'bearish' | 'neutral';

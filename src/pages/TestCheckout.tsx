@@ -1,5 +1,5 @@
+import { supabase } from '@/lib/supabaseClient';
 import { useState } from 'react';
-import { supabase } from '../services/supabase';
 
 export default function TestCheckout() {
   const [result, setResult] = useState<any>(null);

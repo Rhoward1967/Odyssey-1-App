@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { MapPin, Shield, AlertTriangle, CheckCircle } from 'lucide-react';
 import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabaseClient';
 
 interface GeofenceViolation {
   id: string;

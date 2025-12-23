@@ -1,5 +1,5 @@
 import { createEmployee, type Employee } from './hr-actions';
-import { supabase } from './supabase';
+import { supabase } from '@/lib/supabaseClient';
 
 export interface OnboardingData extends Omit<Employee, 'id' | 'created_at'> {
   // Core employee info (flows to all systems)

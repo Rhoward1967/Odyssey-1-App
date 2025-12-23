@@ -1,18 +1,17 @@
-import React, { useState } from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from './ui/card';
-import { Button } from './ui/button';
-import { Badge } from './ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
+import { supabase } from '@/lib/supabaseClient';
 import {
-  Shield,
-  Users,
-  Database,
   Activity,
-  Settings,
   AlertTriangle,
   CheckCircle,
+  Database,
+  Settings,
+  Users
 } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
+import { useState } from 'react';
+import { Badge } from './ui/badge';
+import { Button } from './ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import UserRoleManager from './UserRoleManager';
 
 interface SystemStatus {

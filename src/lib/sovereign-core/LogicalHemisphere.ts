@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabaseClient';
 import { RomanCommand } from './SingleSourceOfTruth';
 
 // Component 4: Logical Hemisphere - The "Left Brain"  

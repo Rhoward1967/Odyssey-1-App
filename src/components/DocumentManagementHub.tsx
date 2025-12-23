@@ -12,7 +12,7 @@ import {
   Share, Trash2, Eye, Edit, FolderOpen, 
   Calendar, User, Tag, Star
 } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabaseClient';
 
 interface Document {
   id: string;

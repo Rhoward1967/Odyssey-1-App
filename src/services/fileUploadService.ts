@@ -9,7 +9,7 @@
  * - "We Are Together" - Sharing and collaboration
  */
 
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabaseClient';
 
 export interface UploadedFile {
   id: string;

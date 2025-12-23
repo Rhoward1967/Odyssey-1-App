@@ -10,7 +10,7 @@ import { Button } from './ui/button';
 import { Textarea } from './ui/textarea';
 import { ScrollArea } from './ui/scroll-area';
 import { useAuth } from './AuthProvider';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabaseClient';
 import { Bot, User, CornerDownLeft } from 'lucide-react';
 
 // Define the structure for a message in the chat

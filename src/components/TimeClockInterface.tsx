@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabaseClient';
 import React, { useState } from 'react';
 interface TimeEntry {
   id: string;

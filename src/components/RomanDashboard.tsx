@@ -26,10 +26,7 @@ import {
   YAxis
 } from 'recharts';
 
-const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL || '',
-  import.meta.env.VITE_SUPABASE_ANON_KEY || ''
-);
+import { supabase } from '@/lib/supabaseClient';
 
 // Types
 interface MetricData {

@@ -2,7 +2,7 @@
 // Believing Self Creations © 2024
 
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabaseClient';
 import {
     checkExpiringTraining,
     createSchedule,

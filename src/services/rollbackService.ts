@@ -6,11 +6,11 @@
  */
 
 import {
-    ActionData,
-    isActionCompliant,
-    SCHUMANN_RESONANCE_HZ
+  ActionData,
+  isActionCompliant,
+  SCHUMANN_RESONANCE_HZ
 } from '@/lib/roman-constitutional-core';
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { SupabaseClient } from '@supabase/supabase-js';
 
 // =====================================================
 // TYPES
@@ -101,6 +101,8 @@ export interface HealthCheck {
   timestamp: string;
 }
 
+import { romanSupabase } from './romanSupabase';
+
 // =====================================================
 // ROLLBACK SERVICE
 // =====================================================
@@ -108,8 +110,8 @@ export interface HealthCheck {
 export class RollbackService {
   private supabase: SupabaseClient;
 
-  constructor(supabaseUrl: string, supabaseKey: string) {
-    this.supabase = createClient(supabaseUrl, supabaseKey);
+  constructor() {
+    this.supabase = romanSupabase;
   }
 
   /**

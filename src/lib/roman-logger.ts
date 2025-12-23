@@ -1,18 +1,4 @@
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
-
-let supabase: SupabaseClient | null = null;
-
-function getAdminClient(): SupabaseClient {
-  if (supabase) return supabase;
-  const url = process.env.SUPABASE_URL;
-  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url || !serviceKey) throw new Error('Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY');
-  supabase = createClient(url, serviceKey, {
-    auth: { autoRefreshToken: false, persistSession: false },
-    global: { headers: { 'X-Client-Info': 'roman-backend-logger' } },
-  });
-  return supabase;
-}
+import { romanSupabase } from '@/services/romanSupabase';
 
 type RomanEvent = {
   actor?: string;
@@ -23,8 +9,7 @@ type RomanEvent = {
 };
 
 export async function recordRomanEvent(e: RomanEvent) {
-  const client = getAdminClient();
-  const { error } = await client.from('ops_roman_events').insert({
+  const { error } = await romanSupabase.from('ops_roman_events').insert({
     actor: e.actor ?? 'roman',
     action_type: e.action_type,
     context: e.context ?? {},
@@ -35,7 +20,7 @@ export async function recordRomanEvent(e: RomanEvent) {
     // Optional: lightweight retry once for transient issues
     try {
       await new Promise((r) => setTimeout(r, 150));
-      const retry = await client.from('ops_roman_events').insert({
+      const retry = await romanSupabase.from('ops_roman_events').insert({
         actor: e.actor ?? 'roman',
         action_type: e.action_type,
         context: e.context ?? {},

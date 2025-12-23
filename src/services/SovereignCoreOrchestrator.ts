@@ -44,12 +44,7 @@ export class SovereignCoreOrchestrator {
           ? process.env.SUPABASE_SERVICE_ROLE_KEY
           : (typeof import.meta !== 'undefined' && import.meta.env?.VITE_SUPABASE_SERVICE_ROLE_KEY);
         
-        if (!supabaseUrl || !supabaseKey) {
-          console.warn('⚠️ Pattern learning disabled in orchestrator: Missing Supabase credentials');
-          return null;
-        }
-        
-        this.patternEngine = new PatternLearningEngine(supabaseUrl, supabaseKey);
+        this.patternEngine = new PatternLearningEngine();
       } catch (err) {
         console.error('❌ Failed to initialize pattern learning engine in orchestrator:', err);
         return null;
@@ -169,21 +164,26 @@ export class SovereignCoreOrchestrator {
 
       // Log orchestration result to audit via Edge Function
       try {
-        await fetch(`${process.env.SUPABASE_URL}/functions/v1/roman-processor`, {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            userIntent: userIntent,
-            userId: userId,
-            organizationId: organizationId,
-            correlation_id: `intent-${Date.now()}`
-          })
-        });
-      } catch (err) {
-        console.log('Audit log failed:', err?.message || String(err));
+        const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+        const supabaseKey = import.meta.env.VITE_SUPABASE_SERVICE_ROLE_KEY;
+        
+        if (supabaseUrl && supabaseKey) {
+          await fetch(`${supabaseUrl}/functions/v1/roman-processor`, {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${supabaseKey}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              userIntent: userIntent,
+              userId: userId,
+              organizationId: organizationId,
+              correlation_id: `intent-${Date.now()}`
+            })
+          });
+        }
+      } catch (err: any) {
+        // Silently fail - audit logging is not critical for trade execution
       }
       return {
         success: execution.success,

@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { supabase } from '@/lib/supabaseClient';
+import { AlertTriangle, Brain, CheckCircle, TrendingUp } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Progress } from './ui/progress';
-import { Brain, TrendingUp, AlertTriangle, CheckCircle } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
 
 interface AIInsight {
   id: string;

@@ -4,7 +4,7 @@
  * Logic: Prioritizes Sovereign Assets (5090) over Operational Bloat.
  */
 
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabaseClient';
 
 export class MelFinancialGovernor {
   private static ALPHA_NODE_MONTHLY = 1030.0;

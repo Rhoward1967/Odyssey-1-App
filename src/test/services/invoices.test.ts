@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabaseClient';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { mockBid, mockCustomer, mockInvoice, mockUser } from '../utils';
 

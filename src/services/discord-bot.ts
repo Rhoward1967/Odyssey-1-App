@@ -1,5 +1,4 @@
 // Send urgent report notification to a Discord channel
-import { createClient } from '@supabase/supabase-js';
 import { Client, GatewayIntentBits, Message, Partials } from 'discord.js';
 import dotenv from 'dotenv';
 import { readdir } from 'fs/promises';
@@ -7,20 +6,20 @@ import OpenAI from 'openai';
 import type { ChatCompletionMessageParam } from 'openai/resources/chat/completions';
 import { join } from 'path';
 import {
-  AXIOM_OF_EXISTENCE,
-  isActionCompliant,
-  type ActionData,
-  type ComplianceResult
+    AXIOM_OF_EXISTENCE,
+    isActionCompliant,
+    type ActionData,
+    type ComplianceResult
 } from '../lib/roman-constitutional-core';
 import { recordRomanEvent } from '../lib/roman-logger';
 import { PatternLearningEngine } from './patternLearningEngine';
 import {
-  auditDatabaseSchema,
-  auditEnvironmentConfig,
-  auditFileStructure,
-  performAutoAudit,
-  runCompleteAudit,
-  storeAuditResults
+    auditDatabaseSchema,
+    auditEnvironmentConfig,
+    auditFileStructure,
+    performAutoAudit,
+    runCompleteAudit,
+    storeAuditResults
 } from './roman-auto-audit';
 import { SovereignCoreOrchestrator } from './SovereignCoreOrchestrator';
 
@@ -74,26 +73,8 @@ if (!SUPABASE_URL || !SUPABASE_KEY || SUPABASE_KEY.length < 100) {
   process.exit(1);
 }
 
-// Create Supabase client with explicit service role configuration
-const supabase = createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY,
-  {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false,
-      detectSessionInUrl: false
-    },
-    global: {
-      headers: {
-        'Authorization': `Bearer ${SUPABASE_KEY}`
-      }
-    },
-    db: {
-      schema: 'public'
-    }
-  }
-);
+// Use R.O.M.A.N.'s shared service role client
+import { romanSupabase as supabase } from './romanSupabase';
 
 console.log('✅ Supabase client initialized with service role');
 
@@ -167,10 +148,7 @@ const openai = new OpenAI({
 });
 
 // Initialize Pattern Learning Engine for auto-learning from errors
-const patternEngine = new PatternLearningEngine(
-  SUPABASE_URL,
-  SUPABASE_KEY
-);
+const patternEngine = new PatternLearningEngine();
 
 const ROMAN_SYSTEM_PROMPT = `You are R.O.M.A.N. (Recursive Optimization and Management AI Network), the world's FIRST sovereign self-healing AI created by Master Architect Rickey Howard.
 

@@ -16,7 +16,7 @@
  * - "Truth Unveiled" - Transparency in regulatory adherence
  */
 
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabaseClient';
 
 // ============================================================================
 // TYPES

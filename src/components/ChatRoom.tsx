@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabaseClient';
 import { useCallback, useEffect, useState } from 'react';
 
 export function ChatRoom({ organizationId }: { organizationId: number }) {

@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { X, User, Building } from 'lucide-react';
+import { Building, User, X } from 'lucide-react';
+import { useState } from 'react';
 import { Button } from './ui/button';
-import { Input } from './ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { Input } from './ui/input';
 
 interface AddEmployeePopupProps {
   isOpen: boolean;
@@ -54,8 +54,10 @@ export default function AddEmployeePopup({ isOpen, onClose, onSave }: AddEmploye
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
-            <label className="text-white text-sm mb-1 block">Name</label>
+            <label htmlFor="employee-name" className="text-white text-sm mb-1 block">Name</label>
             <Input
+              id="employee-name"
+              name="name"
               value={formData.name}
               onChange={(e) => setFormData({...formData, name: e.target.value})}
               placeholder="Employee name..."
@@ -64,8 +66,10 @@ export default function AddEmployeePopup({ isOpen, onClose, onSave }: AddEmploye
           </div>
 
           <div>
-            <label className="text-white text-sm mb-1 block">Position</label>
+            <label htmlFor="employee-position" className="text-white text-sm mb-1 block">Position</label>
             <Input
+              id="employee-position"
+              name="position"
               value={formData.position}
               onChange={(e) => setFormData({...formData, position: e.target.value})}
               placeholder="Job position..."
@@ -74,11 +78,13 @@ export default function AddEmployeePopup({ isOpen, onClose, onSave }: AddEmploye
           </div>
 
           <div>
-            <label className="text-white text-sm mb-1 block flex items-center gap-2">
+            <label htmlFor="employee-department" className="text-white text-sm mb-1 flex items-center gap-2">
               <Building className="h-4 w-4" />
               Department
             </label>
             <Input
+              id="employee-department"
+              name="department"
               value={formData.department}
               onChange={(e) => setFormData({...formData, department: e.target.value})}
               placeholder="Department..."

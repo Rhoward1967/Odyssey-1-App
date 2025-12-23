@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabaseClient';
 import { AlertTriangle, CheckCircle, Search, Shield } from 'lucide-react';
 import { useEffect, useState } from 'react';
 

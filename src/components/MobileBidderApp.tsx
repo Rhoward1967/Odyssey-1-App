@@ -9,7 +9,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Calculator, Camera, Mail, MapPin, Wifi, WifiOff, Upload, Sync } from 'lucide-react';
 import { useGeolocation } from '@/hooks/useGeolocation';
 import { useOfflineStorage } from '@/hooks/useOfflineStorage';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabaseClient';
 
 export default function MobileBidderApp() {
   // Existing state

@@ -1,4 +1,4 @@
-import { supabase } from './supabase';
+import { supabase } from '@/lib/supabaseClient';
 
 // UNIFIED FLAT SCHEMA - Matches actual database table structure
 export interface Customer {

@@ -1,11 +1,10 @@
-import { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/components/AuthProvider'; // Needed to get user for RLS
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Switch } from '@/components/ui/switch';
-import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Switch } from '@/components/ui/switch';
+import { supabase } from '@/lib/supabaseClient';
 import { Flag } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 // Define the structure of a feature flag from the database
 interface FeatureFlag {

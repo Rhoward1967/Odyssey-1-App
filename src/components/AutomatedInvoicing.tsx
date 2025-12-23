@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabaseClient';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useAuth } from './AuthProvider';
 import CustomerProfile, {
@@ -102,7 +102,8 @@ export default function InvoiceDashboard() {
           .from('invoices')
           .select('*, customers(company_name, first_name, last_name)')
           .order('created_at', { ascending: false }),
-        supabase.from('customers').select('*').eq('user_id', user.id).order('company_name'),
+        // Remove user_id filter to get all customers (QuickBooks synced customers may not have user_id)
+        supabase.from('customers').select('*').order('company_name'),
         supabase
           .from('company_profiles')
           .select('*')
@@ -117,14 +118,16 @@ export default function InvoiceDashboard() {
 
       if (invoiceRes.error) throw invoiceRes.error;
       if (customerRes.error) throw customerRes.error;
-      if (profileRes.error && profileRes.error.code !== 'PGRST116')
-        throw profileRes.error;
+      // Gracefully handle missing company_profiles table or permission denied
+      if (profileRes.error && profileRes.error.code !== 'PGRST116' && !profileRes.error.message?.includes('permission denied')) {
+        console.warn('Company profile error (non-fatal):', profileRes.error);
+      }
       if (recurringRes.error && recurringRes.error.code !== 'PGRST116')
         console.warn('Recurring invoices table may not exist:', recurringRes.error);
 
       setInvoices(invoiceRes.data || []);
       setCustomers(customerRes.data || []);
-      setCompanyProfile(profileRes.data);
+      setCompanyProfile(profileRes.data || null);
       setRecurringInvoices(recurringRes.data || []);
     } catch (err: any) {
       setError(`Failed to load data: ${err.message}`);

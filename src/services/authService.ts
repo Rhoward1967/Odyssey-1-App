@@ -1,5 +1,5 @@
 import { sfLogger } from './sovereignFrequencyLogger';
-import { supabase } from './supabase';
+import { supabase } from '@/lib/supabaseClient';
 
 // Approved emails for HJS Services LLC
 const APPROVED_HJS_EMAILS = [

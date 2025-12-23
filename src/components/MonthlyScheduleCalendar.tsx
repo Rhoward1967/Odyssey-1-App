@@ -19,7 +19,7 @@ import {
 } from 'lucide-react';
 import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabaseClient';
 import SchedulePopup from './SchedulePopup';
 import AddEmployeePopup from './AddEmployeePopup';
 

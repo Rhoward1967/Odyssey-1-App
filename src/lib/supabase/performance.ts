@@ -1,4 +1,4 @@
-import { supabase } from '../supabase';
+import { supabase } from '@/lib/supabaseClient';
 
 const cache = new Map();
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes

@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabaseClient';
 
 // Component 5: Execution Engine - The "Hands"
 // Secure execution of approved commands

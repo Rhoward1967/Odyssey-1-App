@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import { CalendarViews } from './CalendarViews';
 import { YearlyCalendar } from './YearlyCalendar';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabaseClient';
 interface Appointment {
   id: string;
   title: string;

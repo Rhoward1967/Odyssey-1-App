@@ -1,11 +1,7 @@
 import React, { useState } from "react";
-import { createClient } from "@supabase/supabase-js";
 
 // Initialize Supabase client (ensure your .env.local file has these)
-const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL!,
-  import.meta.env.VITE_SUPABASE_ANON_KEY!
-);
+import { supabase } from '@/lib/supabaseClient';
 
 const AICalculator: React.FC = () => {
   const [input, setInput] = useState("");

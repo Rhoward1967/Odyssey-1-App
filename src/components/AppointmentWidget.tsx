@@ -1,14 +1,9 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
-import { createClient } from '@supabase/supabase-js';
 import AppointmentForm from './AppointmentForm';
 import AppointmentList from './AppointmentList';
 
 // This should be initialized from your central Supabase client instance
-const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL!,
-  import.meta.env.VITE_SUPABASE_ANON_KEY!
-);
+import { supabase } from '@/lib/supabaseClient';
 
 // Type definitions
 type Appointment = {

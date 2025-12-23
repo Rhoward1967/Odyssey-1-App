@@ -1,13 +1,6 @@
-
-
-import React, { useState, useEffect } from 'react';
-import { createClient } from '@supabase/supabase-js';
+import React, { useEffect, useState } from 'react';
 
 // This should be initialized from your central Supabase client instance
-const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL!,
-  import.meta.env.VITE_SUPABASE_ANON_KEY!
-);
 
 // Expanded Type definitions to include ID for updates
 type Appointment = {

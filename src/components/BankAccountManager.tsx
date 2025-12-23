@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-// import { supabase } from '@/lib/supabase'; // REMOVED: External dependency causing build error
+// import { supabase } from '@/lib/supabaseClient'; // REMOVED: External dependency causing build error
 import { AlertCircle, Building2, CheckCircle, CreditCard, Eye, EyeOff, Plus, Trash2 } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 

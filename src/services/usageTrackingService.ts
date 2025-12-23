@@ -9,7 +9,7 @@
  * - "Help Me Find My Way Home" - Budget warnings and limits
  */
 
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabaseClient';
 
 export interface SubscriptionTier {
   id: string;

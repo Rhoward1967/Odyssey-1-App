@@ -4,7 +4,7 @@
  * Believing Self Creations © 2024 - Sovereign Frequency Enhanced
  */
 
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabaseClient';
 import { sfLogger } from './sovereignFrequencyLogger';
 
 const SAM_GOV_API_BASE = 'https://api.sam.gov/opportunities/v2/search';

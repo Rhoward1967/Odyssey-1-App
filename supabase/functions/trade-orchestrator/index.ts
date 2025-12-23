@@ -169,8 +169,18 @@ Deno.serve(async (req: Request) => {
             console.log('News fetch failed, continuing with AI analysis');
           }
           
-          // Generate AI analysis
-          const prompt = `Provide a brief technical analysis for ${symbol} stock. Include current market sentiment, key support/resistance levels, and educational trading insights. Recent news context: ${headlines.join('; ')}. Keep response under 200 words and focus on educational value for paper trading.`;
+          // Generate AI analysis with actionable recommendations
+          const prompt = `You are R.O.M.A.N., an AI trading advisor helping users learn paper trading. Analyze ${symbol} and provide:
+
+1. **Current Market Outlook** (1-2 sentences on overall sentiment)
+2. **My Recommendation** - Should the user BUY, HOLD, or avoid ${symbol} right now? Be specific.
+3. **Why?** - Give 2-3 concrete reasons supporting your recommendation
+4. **Entry/Exit Strategy** - Suggest specific price levels if buying/selling
+5. **Risk Warning** - What could go wrong with this trade?
+
+Context: ${headlines.length > 0 ? headlines.join('; ') : 'General market conditions'}
+
+Be conversational, actionable, and educational. Speak directly to the trader ("I recommend you..." or "You should consider..."). Keep under 250 words.`;
           
           const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${geminiKey}`;
           
@@ -206,25 +216,29 @@ Deno.serve(async (req: Request) => {
         } catch (error) {
           console.error(`❌ AI Analysis error for ${symbol}:`, error);
           
-          // Professional fallback
-          const fallbackAnalysis = `📊 **Technical Analysis: ${symbol}**
+          // R.O.M.A.N. educational fallback with recommendations
+          const fallbackAnalysis = `🤖 **R.O.M.A.N. Analysis: ${symbol}**
 
-**Market Sentiment**: Neutral to moderately bullish based on recent price action and volume patterns.
+**Current Market Outlook**
+Based on recent price action, ${symbol} is showing moderate consolidation. This presents a learning opportunity for paper traders.
 
-**Key Technical Levels**:
-• **Support**: Recent consolidation zone providing foundation
-• **Resistance**: Previous highs creating overhead pressure
-• **Volume**: Monitor for breakout confirmation signals
+**My Recommendation: PRACTICE ENTRY**
+I suggest using this as a practice trade opportunity. Here's why:
+• Stable price action allows studying order execution
+• Good for testing stop-loss placement strategies
+• Lower volatility reduces emotional decision-making
 
-**Educational Insights**:
-• Paper trading allows risk-free strategy development
-• Practice proper position sizing (1-2% of portfolio)
-• Use stop-loss levels for risk management education
-• Test different order types in safe environment
+**Entry/Exit Strategy**
+• **Practice Entry**: Current market price for educational purposes
+• **Stop-Loss**: Set 5-7% below entry to practice risk management
+• **Target**: 8-12% gain to learn profit-taking discipline
 
-**Risk Assessment**: Medium volatility expected. Ideal for educational trading practice.
+**Risk Warning**
+Market conditions can change rapidly. Use this as education - practice your trading plan before risking real capital.
 
-⚠️ **Educational Disclaimer**: For paper trading education only.
+💡 **Learning Focus**: Master the mechanics of trading before worrying about profits. Paper trading is your risk-free training ground.
+
+⚠️ Paper trading only - perfect mistakes here, not in live markets.
 
 *Generated: ${new Date().toLocaleString()}*`;
 

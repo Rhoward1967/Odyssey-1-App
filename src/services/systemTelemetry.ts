@@ -10,7 +10,7 @@
  * - Feature usage analytics
  */
 
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabaseClient';
 
 // ============================================================================
 // METRIC TYPES

@@ -6,7 +6,7 @@ import { TrendingUp, TrendingDown, RefreshCw } from 'lucide-react';
 import { useRealtimeData } from '@/hooks/useRealtimeData';
 import { useOfflineSync } from '@/hooks/useOfflineSync';
 import { RealtimeConnectionStatus } from './RealtimeConnectionStatus';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabaseClient';
 
 interface TradingDataItem {
   id: string;

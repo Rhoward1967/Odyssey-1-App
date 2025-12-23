@@ -4,7 +4,7 @@
  * Saves $500-$1,000 in attorney drafting fees
  */
 
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabaseClient';
 
 interface NDAParty {
   name: string;

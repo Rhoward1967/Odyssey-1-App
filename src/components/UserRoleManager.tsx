@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabaseClient';
 import { Crown, Edit, Key, Plus, Shield, Users } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Badge } from './ui/badge';

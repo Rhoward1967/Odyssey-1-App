@@ -4,7 +4,7 @@
  * © 2025 Rickey A Howard. All Rights Reserved.
  */
 
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabaseClient';
 
 export interface TaxBracket {
   bracket_min: number;

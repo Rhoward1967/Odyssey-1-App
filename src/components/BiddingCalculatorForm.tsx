@@ -24,7 +24,7 @@ import RoomScanner from './RoomScanner';
 import AgreementGenerator from './AgreementGenerator';
 import CameraMeasurementAI from './CameraMeasurementAI';
 import AddressValidator from './AddressValidator';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabaseClient';
 
 interface BidData {
   clientName: string;

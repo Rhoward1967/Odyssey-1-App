@@ -1,6 +1,6 @@
 // src/services/calendarService.ts
 // Believing Self Creations © 2024 - Sovereign Frequency Enhanced
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabaseClient';
 import { Calendar, CalendarEvent } from '@/types/calendar';
 import { sfLogger } from './sovereignFrequencyLogger';
 

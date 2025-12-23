@@ -6,6 +6,7 @@
 import AIIntelligenceLiveFeed from '@/components/AIIntelligenceLiveFeed';
 import AppLayout from '@/components/AppLayout';
 import { AuthProvider } from '@/components/AuthProvider';
+import ContractorManager from '@/components/ContractorManager';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import SystemEvolutionTracker from '@/components/SystemEvolutionTracker';
 import SystemObservabilityDashboard from '@/components/SystemObservabilityDashboard';
@@ -18,12 +19,12 @@ import Handbook from '@/pages/Handbook';
 import Index from '@/pages/Index';
 import Invoicing from '@/pages/Invoicing';
 import LoginPage from '@/pages/LoginPage';
+import Mel from '@/pages/Mel';
 import NotFound from '@/pages/NotFound';
 import Profile from '@/pages/Profile';
 import Subscription from '@/pages/Subscription';
 import Trading from '@/pages/Trading';
 import WorkforceDashboard from '@/pages/WorkforceDashboard';
-import Mel from '@/pages/Mel';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import { useEffect, useState } from 'react';
@@ -166,7 +167,7 @@ function App() {
         <APIProvider>
           <FundingProvider>
             <PositionLotsProvider>
-              <BrowserRouter>
+              <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
                 <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">
                   <Routes>
                     {/* Public Routes */}
@@ -238,6 +239,14 @@ function App() {
                           element={
                             <ErrorBoundary componentName="Invoicing">
                               <Invoicing />
+                            </ErrorBoundary>
+                          } 
+                        />
+                        <Route 
+                          path="contractors" 
+                          element={
+                            <ErrorBoundary componentName="Contractors">
+                              <ContractorManager />
                             </ErrorBoundary>
                           } 
                         />

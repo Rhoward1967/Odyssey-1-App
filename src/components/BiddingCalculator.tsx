@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabaseClient';
 import { Brain, Calculator, TrendingUp, Users, Zap } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import CustomerProfileModal from './CustomerProfileModal';

@@ -18,7 +18,6 @@ console.log('[DEBUG] CWD:', process.cwd());
  */
 
 
-import { createClient } from '@supabase/supabase-js';
 import { readdir, readFile } from 'fs/promises';
 import { join } from 'path';
 import { sfLogger } from './sovereignFrequencyLogger';
@@ -28,19 +27,7 @@ console.log('[DEBUG] STRIPE_SECRET_KEY present?', !!process.env.STRIPE_SECRET_KE
 console.log('[DEBUG] STRIPE_SECRET_KEY value:', process.env.STRIPE_SECRET_KEY);
 console.log('[DEBUG] CWD:', process.cwd());
 
-const SUPABASE_URL = process.env.SUPABASE_URL!;
-const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-const k = SUPABASE_SERVICE_ROLE_KEY || '';
-console.log('SRK looks like JWT:', k.startsWith('eyJ'), 'len:', k.length);
-console.log('URL ok:', (SUPABASE_URL || '').includes('tvsxloejfsrdganemsmg'));
-
-const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
-  auth: {
-    autoRefreshToken: false,
-    persistSession: false,
-    detectSessionInUrl: false
-  }
-});
+import { romanSupabase as supabase } from './romanSupabase';
 
 interface AuditResult {
   category: string;

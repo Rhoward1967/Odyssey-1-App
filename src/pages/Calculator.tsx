@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { createCustomer, getCustomers, type Customer } from '@/lib/supabase/customer-actions';
-import { supabase } from '@/lib/supabase/supabase';
+import { supabase } from '@/lib/supabaseClient';
 import { Building, Calculator as CalculatorIcon, DollarSign, Download, Edit3, FileText, History, Trash2, UserPlus } from 'lucide-react';
 import React, { useState } from 'react';
 

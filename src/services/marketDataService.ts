@@ -21,10 +21,21 @@ export class MarketDataService {
       );
       const data = await response.json();
       
+      // Check for Alpha Vantage errors (rate limits, invalid API key, etc.)
+      if (data.Note || data['Error Message'] || data.Information) {
+        sfLogger.helpMeFindMyWayHome('MARKET_DATA_API_ERROR', 'Alpha Vantage error', {
+          symbol,
+          error: data.Note || data['Error Message'] || data.Information,
+          fallback: 'mock-data'
+        });
+        return this.getMockPrice(symbol);
+      }
+      
       if (data['Global Quote']) {
         const quote = data['Global Quote'];
+        const price = parseFloat(quote['05. price']);
         const priceData = {
-          price: parseFloat(quote['05. price']),
+          price: parseFloat(price.toFixed(2)), // Round to 2 decimals
           change: parseFloat(quote['09. change']),
           changePercent: quote['10. change percent'].replace('%', ''),
           open: parseFloat(quote['02. open']),
@@ -115,20 +126,26 @@ export class MarketDataService {
     const batchData = await this.getCryptoPricesBatch([coinId]);
     
     if (batchData && batchData[coinId]) {
-      const cryptoData = {
-        price: batchData[coinId].usd,
-        change: batchData[coinId].usd_24h_change || 0,
-        changePercent: (batchData[coinId].usd_24h_change || 0).toFixed(2),
-        volume: batchData[coinId].usd_24h_vol || 0
-      };
+      const price = batchData[coinId].usd;
+      // Check if price exists before formatting
+      if (price !== undefined && price !== null) {
+        // Format based on price: <$1 gets 6 decimals, $1-$100 gets 4, >$100 gets 2
+        const decimals = price < 1 ? 6 : price < 100 ? 4 : 2;
+        const cryptoData = {
+          price: parseFloat(price.toFixed(decimals)),
+          change: batchData[coinId].usd_24h_change || 0,
+          changePercent: (batchData[coinId].usd_24h_change || 0).toFixed(2),
+          volume: batchData[coinId].usd_24h_vol || 0
+        };
 
-      sfLogger.thanksForGivingBackMyLove('CRYPTO_PRICE_FETCHED', 'Cryptocurrency price retrieved', {
-        coinId,
-        price: cryptoData.price,
-        change: cryptoData.changePercent
-      });
+        sfLogger.thanksForGivingBackMyLove('CRYPTO_PRICE_FETCHED', 'Cryptocurrency price retrieved', {
+          coinId,
+          price: cryptoData.price,
+          change: cryptoData.changePercent
+        });
 
-      return cryptoData;
+        return cryptoData;
+      }
     }
     
     return null;
@@ -178,12 +195,17 @@ export class MarketDataService {
       const cryptoBatchData = await this.getCryptoPricesBatch(cryptoIds);
       const cryptoData = cryptoIds.map(id => {
         if (cryptoBatchData && cryptoBatchData[id]) {
-          return {
-            price: cryptoBatchData[id].usd,
-            change: cryptoBatchData[id].usd_24h_change || 0,
-            changePercent: (cryptoBatchData[id].usd_24h_change || 0).toFixed(2),
-            volume: cryptoBatchData[id].usd_24h_vol || 0
-          };
+          const price = cryptoBatchData[id].usd;
+          // Check if price exists before formatting
+          if (price !== undefined && price !== null) {
+            const decimals = price < 1 ? 6 : price < 100 ? 4 : 2;
+            return {
+              price: parseFloat(price.toFixed(decimals)),
+              change: cryptoBatchData[id].usd_24h_change || 0,
+              changePercent: (cryptoBatchData[id].usd_24h_change || 0).toFixed(2),
+              volume: cryptoBatchData[id].usd_24h_vol || 0
+            };
+          }
         }
         return null;
       });
@@ -196,8 +218,6 @@ export class MarketDataService {
         stocks: stockData,
         crypto: cryptoData,
         etfs: etfData
-      };
-        etfs: allData.slice(12, 18)
       };
     } catch (error) {
       console.error('Failed to fetch market data:', error);

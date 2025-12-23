@@ -22,12 +22,7 @@ function getPatternEngine(): PatternLearningEngine | null {
         ? process.env.SUPABASE_SERVICE_ROLE_KEY
         : (typeof import.meta !== 'undefined' && import.meta.env?.VITE_SUPABASE_SERVICE_ROLE_KEY);
       
-      if (!supabaseUrl || !supabaseKey) {
-        console.warn('⚠️ Pattern learning disabled: Missing Supabase credentials');
-        return null;
-      }
-      
-      patternEngine = new PatternLearningEngine(supabaseUrl, supabaseKey);
+      patternEngine = new PatternLearningEngine();
     } catch (err) {
       console.error('❌ Failed to initialize pattern learning engine:', err);
       return null;
@@ -112,23 +107,26 @@ export async function handleError(
   }
 
   try {
-    // Log error to system_logs
+    // Log error to system_logs (using only existing columns)
     const { data: logEntry, error: logError } = await supabase
       .from('system_logs')
       .insert({
         log_level: severity,
         message: `[${source}] ${errorMessage}`,
-        error_data: {
+        metadata: {
           stack: errorStack,
           source,
-          metadata
+          ...metadata
         }
       })
       .select()
       .single();
 
     if (logError || !logEntry) {
-      console.error('Failed to log error to system_logs:', logError);
+      // Silently fail logging to avoid cascading errors
+      if (!silent) {
+        console.warn('⚠️ Error logging skipped:', logError?.message);
+      }
       return result;
     }
 

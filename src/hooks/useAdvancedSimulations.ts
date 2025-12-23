@@ -1,5 +1,5 @@
-import { useState, useCallback } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabaseClient';
+import { useCallback, useState } from 'react';
 
 interface SimulationRequest {
   simulationType: 'monte_carlo' | 'market_dynamics' | 'digital_twin_sync' | 'ai_forecast' | 'scenario_planning';

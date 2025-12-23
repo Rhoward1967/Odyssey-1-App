@@ -1,5 +1,5 @@
 // R.O.M.A.N. admin check helper
-import { supabase } from './supabase';
+import { supabase } from '@/lib/supabaseClient';
 
 export async function isAdmin(email: string): Promise<boolean> {
   const { data, error } = await supabase

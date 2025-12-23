@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabaseClient';
 import { useRealtimeContent, SiteContent, Service, Testimonial } from '@/hooks/useRealtimeContent';
 import { Plus, Edit, Trash2, Save, X } from 'lucide-react';
 

@@ -27,7 +27,7 @@ async function notifyTradeStatus(trade, status) {
 
 // No express import: use standard request/response signature for edge/serverless
 import { ethers } from 'ethers';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabaseClient';
 
 // Example: Use env for private key, risk controls, and simulation toggle
 const AI_PRIVATE_KEY = process.env.AI_TRADER_PRIVATE_KEY;

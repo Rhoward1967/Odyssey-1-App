@@ -3,26 +3,26 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabaseClient';
 import {
-    getActiveAlerts,
-    getPerformanceSnapshot,
-    getSystemHealth,
-    type PerformanceSnapshot,
-    type SystemAlert
+  getActiveAlerts,
+  getPerformanceSnapshot,
+  getSystemHealth,
+  type PerformanceSnapshot,
+  type SystemAlert
 } from '@/services/systemTelemetry';
 import {
-    Activity, AlertTriangle,
-    Brain,
-    CheckCircle2,
-    Database,
-    DollarSign,
-    Server,
-    Shield,
-    TrendingDown,
-    TrendingUp,
-    Users,
-    Zap
+  Activity, AlertTriangle,
+  Brain,
+  CheckCircle2,
+  Database,
+  DollarSign,
+  Server,
+  Shield,
+  TrendingDown,
+  TrendingUp,
+  Users,
+  Zap
 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 

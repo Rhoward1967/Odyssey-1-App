@@ -4,7 +4,7 @@
  * Includes: specification, claims, drawings, declarations, transmittal
  */
 
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabaseClient';
 import { PatentDrawingGenerator } from './patentDrawingGenerator';
 import { PatentApplicationGenerator } from './patentGenerator';
 import { PriorArtSearchEngine } from './priorArtSearch';

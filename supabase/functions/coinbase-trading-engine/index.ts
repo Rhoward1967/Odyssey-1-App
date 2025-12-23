@@ -1,5 +1,5 @@
-import { createClient } from "npm:@supabase/supabase-js@2.45.4";
 import { createHmac } from "node:crypto";
+import { createClient } from "npm:@supabase/supabase-js@2.45.4";
 
 // CORS headers
 const corsHeaders = {
@@ -106,11 +106,26 @@ Deno.serve(async (req: Request) => {
         // Get all Coinbase accounts (balances)
         const data = await coinbaseRequest('GET', '/api/v3/brokerage/accounts', null, credentials);
         
-        // Update user_portfolio table
+        // Update user_portfolio table with real prices
         if (data.accounts) {
           for (const account of data.accounts) {
             const balance = parseFloat(account.available_balance?.value || '0');
-            const value = balance * parseFloat(account.available_balance?.value || '0'); // Simplified, should multiply by price
+            let value = 0;
+            
+            // Get current price for non-USD currencies
+            if (account.currency !== 'USD' && balance > 0) {
+              try {
+                const productId = `${account.currency}-USD`;
+                const priceData = await coinbaseRequest('GET', `/api/v3/brokerage/products/${productId}`, null, credentials);
+                const currentPrice = parseFloat(priceData.price || '0');
+                value = balance * currentPrice;
+              } catch (error) {
+                console.error(`Failed to get price for ${account.currency}:`, error);
+                value = 0;
+              }
+            } else if (account.currency === 'USD') {
+              value = balance; // USD value is the balance itself
+            }
             
             await supabase
               .from('user_portfolio')

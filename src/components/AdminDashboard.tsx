@@ -1,13 +1,14 @@
+import { supabase } from '@/lib/supabaseClient';
 import {
-  AlertTriangle,
-  Brain,
-  CheckCircle,
-  DollarSign,
-  FileText,
-  Flag,
-  Settings,
-  Users,
-  Zap
+    AlertTriangle,
+    Brain,
+    CheckCircle,
+    DollarSign,
+    FileText,
+    Flag,
+    Settings,
+    Users,
+    Zap
 } from 'lucide-react';
 import { useState } from 'react';
 import AdminControlPanel from './AdminControlPanel';
@@ -16,7 +17,7 @@ import AutonomousOdysseyCore from './AutonomousOdysseyCore';
 import AutonomousSystemActivator from './AutonomousSystemActivator';
 import BudgetDashboard from './BudgetDashboard';
 import CompanyHandbook from './CompanyHandbook';
-import { ContractorManager } from './ContractorManager';
+import ContractorManager from './ContractorManager';
 import EmployeeManagement from './EmployeeManagement';
 import FeatureFlagsManager from './FeatureFlagsManager';
 import WorkforceManagementSystem from './PayrollDashboard';
@@ -24,13 +25,6 @@ import { PayrollReconciliation } from './PayrollReconciliation';
 import { SelfEvolutionEngine } from './SelfEvolutionEngine';
 import { Badge } from './ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
-
-import { createClient } from '@supabase/supabase-js';
-
-const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL || '',
-  import.meta.env.VITE_SUPABASE_ANON_KEY || ''
-);
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('autonomous');
@@ -134,7 +128,7 @@ export default function AdminDashboard() {
         <TabsContent value='handbook'><div className='w-full max-w-full overflow-x-auto'><CompanyHandbook /></div></TabsContent>
         <TabsContent value='budget'><div className='w-full max-w-full overflow-x-auto'>{/* System-level Budget Dashboard for admins only */}<BudgetDashboard /></div></TabsContent>
         <TabsContent value='payroll'><div className='w-full max-w-full overflow-x-auto'><WorkforceManagementSystem organizationId={organizationId} userId={userId} /></div></TabsContent>
-        <TabsContent value='contractors'><div className='w-full max-w-full overflow-x-auto'><ContractorManager organizationId={organizationId} /></div></TabsContent>
+        <TabsContent value='contractors'><div className='w-full max-w-full overflow-x-auto'><ContractorManager /></div></TabsContent>
         <TabsContent value='reconciliation'><div className='w-full max-w-full overflow-x-auto'><PayrollReconciliation organizationId={organizationId} /></div></TabsContent>
       </Tabs>
     </div>

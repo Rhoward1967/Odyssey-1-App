@@ -4,7 +4,7 @@
  * Email/SMS alerts at 180, 90, 60, 30, 7 days remaining
  */
 
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabaseClient';
 
 interface PatentDeadline {
   patent_id: string;

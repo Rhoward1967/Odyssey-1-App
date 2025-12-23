@@ -14,16 +14,10 @@
  * © 2025 Rickey A Howard. All Rights Reserved.
  */
 
-import { createClient } from '@supabase/supabase-js';
 import { readdir, readFile, stat } from 'fs/promises';
 import { join, relative } from 'path';
 
-const SUPABASE_URL = process.env.SUPABASE_URL!;
-const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY, {
-  auth: { autoRefreshToken: false, persistSession: false }
-});
+import { romanSupabase as supabase } from './romanSupabase';
 
 interface FileKnowledge {
   path: string;

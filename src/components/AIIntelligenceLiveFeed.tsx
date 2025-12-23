@@ -12,17 +12,17 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabaseClient';
 import {
-    Activity,
-    AlertTriangle,
-    ArrowRight,
-    Brain,
-    CheckCircle2,
-    Clock,
-    Eye, GitBranch, Lightbulb,
-    Target,
-    Zap
+  Activity,
+  AlertTriangle,
+  ArrowRight,
+  Brain,
+  CheckCircle2,
+  Clock,
+  Eye, GitBranch, Lightbulb,
+  Target,
+  Zap
 } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 

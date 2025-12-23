@@ -4,7 +4,7 @@
  * Saves $1,000-$3,000 in professional prior art search fees
  */
 
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabaseClient';
 
 interface PriorArtResult {
   id: string;

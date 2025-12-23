@@ -10,7 +10,7 @@ import {
     isActionCompliant,
     SCHUMANN_RESONANCE_HZ
 } from '@/lib/roman-constitutional-core';
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { SupabaseClient } from '@supabase/supabase-js';
 
 // =====================================================
 // TYPES
@@ -118,6 +118,8 @@ export interface PatternMatchResult {
   confidence_score: number;
 }
 
+import { romanSupabase } from './romanSupabase';
+
 // =====================================================
 // PATTERN LEARNING ENGINE
 // =====================================================
@@ -125,8 +127,8 @@ export interface PatternMatchResult {
 export class PatternLearningEngine {
   private supabase: SupabaseClient;
 
-  constructor(supabaseUrl: string, supabaseKey: string) {
-    this.supabase = createClient(supabaseUrl, supabaseKey);
+  constructor() {
+    this.supabase = romanSupabase;
   }
 
   /**

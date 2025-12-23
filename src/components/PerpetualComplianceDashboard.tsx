@@ -13,20 +13,20 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { supabase } from '@/lib/supabaseClient';
 import { perpetualComplianceEngine } from '@/services/perpetualComplianceEngine';
-import { supabase } from '@/services/supabase';
 import {
-    AlertTriangle,
-    Brain,
-    Calendar,
-    CheckCircle2,
-    DollarSign,
-    FileCheck,
-    Globe,
-    MapPin,
-    Target,
-    TrendingUp,
-    Zap
+  AlertTriangle,
+  Brain,
+  Calendar,
+  CheckCircle2,
+  DollarSign,
+  FileCheck,
+  Globe,
+  MapPin,
+  Target,
+  TrendingUp,
+  Zap
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 

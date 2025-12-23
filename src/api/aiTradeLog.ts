@@ -1,7 +1,7 @@
 // Simple persistent trade log using Supabase (or any DB)
 // Place in: /src/api/aiTradeLog.ts
 
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabaseClient';
 
 // POST: log a trade, GET: fetch all logs
 export default async function aiTradeLogHandler(req, res) {

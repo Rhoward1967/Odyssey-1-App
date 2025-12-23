@@ -1,28 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/components/AuthProvider';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { 
-  BookOpen, 
-  Search, 
-  Users, 
-  Shield, 
-  Clock, 
-  Heart, 
-  Building2, 
-  DollarSign, 
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { supabase } from '@/lib/supabaseClient';
+import {
+  AlertTriangle,
+  BookOpen,
+  Building2,
   CheckCircle,
-  FileText,
-  Edit,
+  Clock,
+  DollarSign,
   Eye,
-  Download,
-  AlertTriangle
+  FileText,
+  Heart,
+  Search,
+  Shield,
+  Users
 } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
 
 // Company Handbook interfaces based on our backend schema
 interface HandbookCategory {

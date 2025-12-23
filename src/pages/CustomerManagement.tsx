@@ -5,7 +5,7 @@
 
 import CustomerProfileModal from '@/components/CustomerProfileModal';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabaseClient';
 import { Users } from 'lucide-react';
 import { useState } from 'react';
 

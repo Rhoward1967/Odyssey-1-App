@@ -4,7 +4,7 @@
  * Saves $2,000-$5,000 in professional illustrator fees
  */
 
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabaseClient';
 
 interface DrawingFigure {
   figureNumber: number;

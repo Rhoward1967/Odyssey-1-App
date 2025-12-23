@@ -9,7 +9,7 @@
  */
 
 import {
-  RomanCommand
+    RomanCommand
 } from '@/schemas/RomanCommands';
 import { romanSupabase as supabase } from './romanSupabase';
 import { RomanSystemContext } from './RomanSystemContext';
@@ -231,7 +231,12 @@ Return ONLY valid JSON (no explanation):
       return {
         action: 'EXECUTE',
         target: 'TRADE',
-        payload: { symbol, quantity, side: 'buy' },
+        payload: { 
+          symbol, 
+          quantity, 
+          side: 'buy',
+          price: 0 // Edge function will fetch current market price
+        },
         metadata: {
           requestedBy: userId,
           organizationId: orgId,
@@ -250,7 +255,12 @@ Return ONLY valid JSON (no explanation):
       return {
         action: 'EXECUTE',
         target: 'TRADE',
-        payload: { symbol, quantity, side: 'sell' },
+        payload: { 
+          symbol, 
+          quantity, 
+          side: 'sell',
+          price: 0 // Edge function will fetch current market price
+        },
         metadata: {
           requestedBy: userId,
           organizationId: orgId,

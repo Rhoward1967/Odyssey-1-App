@@ -44,6 +44,7 @@ if (!supabaseServiceKey) {
 /**
  * R.O.M.A.N.'s Supabase Client with SERVICE ROLE access
  * Bypasses RLS for autonomous operations
+ * Uses separate storage key to avoid conflicts with user-facing client
  */
 export const romanSupabase = createClient(
   supabaseUrl!,
@@ -52,7 +53,8 @@ export const romanSupabase = createClient(
     auth: {
       autoRefreshToken: false,
       persistSession: false,
-      detectSessionInUrl: false
+      detectSessionInUrl: false,
+      storageKey: 'sb-roman-backend-auth-token' // Separate storage key for R.O.M.A.N. backend
     }
   }
 );

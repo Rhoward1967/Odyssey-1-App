@@ -6,7 +6,7 @@ import { Progress } from '@/components/ui/progress';
 import { Brain, TrendingUp, AlertTriangle, CheckCircle } from 'lucide-react';
 import { useRealtimeData } from '@/hooks/useRealtimeData';
 import { useOfflineSync } from '@/hooks/useOfflineSync';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabaseClient';
 
 interface AIAnalysisItem {
   id: string;
