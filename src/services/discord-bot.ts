@@ -22,6 +22,7 @@ import {
     storeAuditResults
 } from './roman-auto-audit';
 import { SovereignCoreOrchestrator } from './SovereignCoreOrchestrator';
+import { RomanAutonomyIntegration } from './RomanAutonomyIntegration';
 
 export async function sendUrgentReportToDiscord(reportText, channelId) {
   try {
@@ -109,7 +110,7 @@ async function testSupabaseConnection() {
   } catch (err: any) {
     console.error('❌ Connection error:', err.message);
     
-    // Learn from connection errors
+    // Learn from connection errors and try autonomous fix
     try {
       const logEntry = await supabase.from('system_logs').insert({
         log_level: 'error',
@@ -124,6 +125,20 @@ async function testSupabaseConnection() {
           'error',
           logEntry.data.id
         );
+        
+        // 🚀 NEW: Try autonomous fix
+        console.log('🛡️ R.O.M.A.N. AUTONOMY: Analyzing connection error...');
+        const autonomousResult = await RomanAutonomyIntegration.handleDetectedIssue('FUNCTION_FAIL', {
+          component: 'supabase_connection',
+          error: err.message,
+          log_id: logEntry.data.id,
+          timestamp: new Date().toISOString()
+        });
+        
+        if (autonomousResult.status === 'HEALED') {
+          console.log(`✅ ${autonomousResult.message} - retrying connection...`);
+          // Could retry connection here
+        }
       }
     } catch (learnErr) {
       console.log('Pattern learning skipped:', learnErr);
@@ -1279,7 +1294,37 @@ You diagnose and prescribe fixes. The execution happens through proper channels.
               logEntry.data.id
             );
             
-            // Try to find and apply auto-fix
+            // 🚀 NEW: Autonomous error handling
+            console.log('🛡️ R.O.M.A.N. AUTONOMY: Analyzing error for auto-fix...');
+            
+            // Determine error type from message
+            let errorType = 'UNKNOWN';
+            if (result.message.includes('cache') || result.message.includes('stale')) {
+              errorType = 'STALE_CACHE';
+            } else if (result.message.includes('function') || result.message.includes('edge function')) {
+              errorType = 'FUNCTION_FAIL';
+            } else if (result.message.includes('403') || result.message.includes('permission')) {
+              errorType = 'RLS_DRIFT';
+            } else if (result.message.includes('orphaned') || result.message.includes('dangling')) {
+              errorType = 'ORPHANED_DATA';
+            }
+            
+            // Try autonomous fix if error type identified
+            if (errorType !== 'UNKNOWN') {
+              const autonomousResult = await RomanAutonomyIntegration.handleDetectedIssue(errorType, {
+                command: result.command,
+                error_message: result.message,
+                log_id: logEntry.data.id,
+                timestamp: new Date().toISOString()
+              });
+              
+              if (autonomousResult.status === 'HEALED') {
+                await message.reply(`🔧 **Auto-Healing Applied**\n${autonomousResult.message}\n\nRetry your command - issue has been resolved.`);
+                return;
+              }
+            }
+            
+            // Fallback to pattern learning
             const fixResult = await patternEngine.findAndApplyPattern(
               result.message,
               'discord-bot-command',
@@ -1416,41 +1461,27 @@ async function checkGovernanceApproval(action: string, category: string): Promis
   }
 }
 
-// Update Stripe fix to log properly
+// ✅ NEW AUTONOMOUS FIX PATTERN (Replaces legacy "log and wait" approach)
 async function fixStripeKey(details: any): Promise<boolean> {
-  console.log('🔧 Analyzing Stripe key configuration...');
+  console.log('🛡️ R.O.M.A.N. AUTONOMY: Detected Stripe configuration issue');
   
-  await logSystemEvent('stripe_fix', 'Stripe key verification initiated', 'info', details);
+  // Use new autonomous integration bridge
+  const result = await RomanAutonomyIntegration.handleDetectedIssue('STRIPE_401', {
+    component: 'stripe_credentials',
+    error: details,
+    timestamp: new Date().toISOString()
+  });
   
-  // Log to governance_changes
-  await logGovernanceAction(
-    'R.O.M.A.N.',
-    'UPDATE',  // Change from 'system_config' to 'UPDATE'
-    'Verified and updated Stripe credentials - fixing 401 errors',
-    {
-      component: 'secrets',
-      resource: 'STRIPE_SECRET_KEY',
-      status: 'verification_initiated',
-      time: new Date().toISOString()
-    }
-  );
-  
-  // Update system_knowledge to reflect verification started
-  await storeKnowledge(
-    'environment',
-    'api_keys_and_secrets',
-    {
-      STRIPE_SECRET_KEY: {
-        status: 'verification_in_progress',
-        last_checked: new Date().toISOString(),
-        action: 'Master Architect needs to verify key in Supabase dashboard',
-        note: 'R.O.M.A.N. detected issue and initiated verification process'
-      }
-    },
-    'governance_system'
-  );
-  
-  return true;
+  if (result.status === 'HEALED') {
+    console.log(`✅ ${result.message}`);
+    return true;
+  } else if (result.status === 'FAILED') {
+    console.log(`⚠️ ${result.message}`);
+    return false;
+  } else {
+    console.log(`📋 ${result.message}`);
+    return true; // High-risk, logged for manual review
+  }
 }
 
 export function startDiscordBot() {
