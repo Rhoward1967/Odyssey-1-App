@@ -14,7 +14,7 @@ import {
   Zap,
   DollarSign,
 } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { MelFinancialGovernor } from '@/services/MelFinancialGovernor';
 
 interface CashFlowAnalysis {
@@ -53,11 +53,7 @@ export default function MelDashboard() {
   const [microOpportunities, setMicroOpportunities] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    loadFinancialData();
-  }, []);
-
-  const loadFinancialData = async () => {
+  const loadFinancialData = useCallback(async () => {
     setLoading(true);
     try {
       // Get QuickBooks revenue
@@ -85,7 +81,11 @@ export default function MelDashboard() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [revenue, costs]);
+
+  useEffect(() => {
+    loadFinancialData();
+  }, [loadFinancialData]);
 
   if (loading) {
     return (
