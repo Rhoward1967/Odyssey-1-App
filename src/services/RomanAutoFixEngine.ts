@@ -98,18 +98,18 @@ export class RomanAutoFixEngine {
     }
     
     // Log the fix attempt
-    await logGovernanceAction(
-      'R.O.M.A.N. AUTO-FIX',
-      'EXECUTE',
-      `Autonomous fix: ${capability.name}`,
-      {
+    await supabase.from('governance_changes').insert({
+      actor: 'R.O.M.A.N. AUTO-FIX',
+      action: 'EXECUTE',
+      reason: `Autonomous fix: ${capability.name}`,
+      after_row: {
         fix_type: fixType,
         risk_level: capability.riskLevel,
         requires_approval: capability.requiresApproval,
         details,
         timestamp: new Date().toISOString()
       }
-    );
+    });
     
     // Execute the fix based on type
     switch (fixType) {
@@ -265,16 +265,16 @@ export class RomanAutoFixEngine {
       // In production, trigger git rollback + redeploy
       // For now, log the action
       
-      await logGovernanceAction(
-        'R.O.M.A.N. AUTO-FIX',
-        'ROLLBACK',
-        'Autonomous deployment rollback triggered',
-        { 
+      await supabase.from('governance_changes').insert({
+        actor: 'R.O.M.A.N. AUTO-FIX',
+        action: 'ROLLBACK',
+        reason: 'Autonomous deployment rollback triggered',
+        after_row: { 
           reason: 'Error rate exceeded threshold',
           error_rate: details.errorRate,
           timestamp: new Date().toISOString()
         }
-      );
+      });
       
       return {
         success: true,
