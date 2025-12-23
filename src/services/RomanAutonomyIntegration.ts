@@ -11,7 +11,7 @@
  * Authorization: Master Architect Rickey Howard (Dec 23, 2025)
  */
 
-import { romanAutoFix, AUTO_FIX_CAPABILITIES } from './RomanAutoFixEngine';
+import { AUTO_FIX_CAPABILITIES, romanAutoFix } from './RomanAutoFixEngine';
 import { romanSupabase as supabase } from './romanSupabase';
 
 export interface AutonomyVerdict {
