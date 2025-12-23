@@ -23,6 +23,7 @@ import Profile from '@/pages/Profile';
 import Subscription from '@/pages/Subscription';
 import Trading from '@/pages/Trading';
 import WorkforceDashboard from '@/pages/WorkforceDashboard';
+import Mel from '@/pages/Mel';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import { useEffect, useState } from 'react';
@@ -247,8 +248,14 @@ function App() {
                               <BidsList />
                             </ErrorBoundary>
                           } 
-                        />
-                        <Route path="catalog" element={<CatalogManager />} />
+                        />                        <Route 
+                          path="mel" 
+                          element={
+                            <ErrorBoundary componentName="MEL">
+                              <Mel />
+                            </ErrorBoundary>
+                          } 
+                        />                        <Route path="catalog" element={<CatalogManager />} />
                         <Route path="handbook" element={<Handbook />} />
                         <Route path="user-manual" element={<UserManual />} />
                         <Route path="media-center" element={<MediaCenter />} />
