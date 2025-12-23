@@ -33,6 +33,7 @@ CREATE TABLE IF NOT EXISTS user_portfolio (
 );
 
 CREATE INDEX IF NOT EXISTS idx_user_portfolio_user ON user_portfolio(user_id);
+CREATE INDEX IF NOT EXISTS idx_user_portfolio_user_platform ON user_portfolio(user_id, platform);
 CREATE INDEX IF NOT EXISTS idx_user_portfolio_platform ON user_portfolio(platform);
 
 COMMENT ON TABLE user_portfolio IS 'User portfolio holdings across all platforms';
@@ -68,7 +69,7 @@ CREATE TABLE IF NOT EXISTS trade_history (
   platform VARCHAR(50) NOT NULL, -- 'coinbase', 'metamask', 'uphold'
   
   -- External references
-  trade_id UUID REFERENCES trades(id) ON DELETE SET NULL,
+  trade_id BIGINT REFERENCES trades(id) ON DELETE SET NULL, -- Fixed: trades.id is bigint, not uuid
   external_order_id TEXT, -- Platform-specific order ID
   
   -- Blockchain data (for DEX trades)
@@ -84,6 +85,7 @@ CREATE TABLE IF NOT EXISTS trade_history (
 );
 
 CREATE INDEX IF NOT EXISTS idx_trade_history_user ON trade_history(user_id, timestamp DESC);
+CREATE INDEX IF NOT EXISTS idx_trade_history_user_platform ON trade_history(user_id, platform);
 CREATE INDEX IF NOT EXISTS idx_trade_history_platform ON trade_history(platform);
 CREATE INDEX IF NOT EXISTS idx_trade_history_symbol ON trade_history(symbol);
 CREATE INDEX IF NOT EXISTS idx_trade_history_tx_hash ON trade_history(tx_hash) WHERE tx_hash IS NOT NULL;
@@ -101,9 +103,13 @@ CREATE POLICY trade_history_insert ON trade_history
   FOR INSERT
   WITH CHECK (auth.uid() = user_id);
 
+CREATE POLICY trade_history_update ON trade_history
+  FOR UPDATE
+  USING (auth.uid() = user_id);
+
 -- Grant permissions
 GRANT SELECT, INSERT, UPDATE ON user_portfolio TO authenticated;
-GRANT SELECT, INSERT ON trade_history TO authenticated;
+GRANT SELECT, INSERT, UPDATE ON trade_history TO authenticated;
 GRANT ALL ON user_portfolio, trade_history TO service_role;
 
 -- Success message
