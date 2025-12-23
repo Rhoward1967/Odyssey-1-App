@@ -6,7 +6,6 @@
  */
 
 import { romanSupabase as supabase } from './romanSupabase';
-import { logGovernanceAction } from './discord-bot';
 
 interface AutoFixCapability {
   name: string;
