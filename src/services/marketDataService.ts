@@ -58,48 +58,80 @@ export class MarketDataService {
     }
   }
 
-  // Get REAL crypto prices from CoinGecko
-  static async getCryptoPrice(coinId: string) {
-    sfLogger.pickUpTheSpecialPhone('CRYPTO_PRICE_FETCH', 'Fetching cryptocurrency price', {
-      coinId,
+  // Batch crypto price fetching to avoid rate limits
+  private static cryptoCache = new Map<string, { data: any; timestamp: number }>();
+  private static CACHE_DURATION = 60000; // 1 minute cache
+
+  static async getCryptoPricesBatch(coinIds: string[]) {
+    // Check cache first
+    const now = Date.now();
+    const cached = this.cryptoCache.get(coinIds.join(','));
+    if (cached && (now - cached.timestamp) < this.CACHE_DURATION) {
+      return cached.data;
+    }
+
+    sfLogger.pickUpTheSpecialPhone('CRYPTO_BATCH_FETCH', 'Fetching cryptocurrency prices in batch', {
+      coins: coinIds.length,
       provider: 'CoinGecko'
     });
 
     try {
+      // Batch request to CoinGecko (reduces API calls dramatically)
+      const idsParam = coinIds.join(',');
       const response = await fetch(
-        `https://api.coingecko.com/api/v3/simple/price?ids=${coinId}&vs_currencies=usd&include_24hr_change=true&include_24hr_vol=true`
+        `https://api.coingecko.com/api/v3/simple/price?ids=${idsParam}&vs_currencies=usd&include_24hr_change=true&include_24hr_vol=true`
       );
+      
+      if (!response.ok) {
+        if (response.status === 429) {
+          console.warn('CoinGecko rate limit hit, using cached data');
+          return null;
+        }
+        throw new Error(`HTTP ${response.status}`);
+      }
+
       const data = await response.json();
       
-      if (data[coinId]) {
-        const cryptoData = {
-          price: data[coinId].usd,
-          change: data[coinId].usd_24h_change || 0,
-          changePercent: (data[coinId].usd_24h_change || 0).toFixed(2),
-          volume: data[coinId].usd_24h_vol || 0
-        };
+      // Cache the result
+      this.cryptoCache.set(coinIds.join(','), { data, timestamp: now });
 
-        sfLogger.thanksForGivingBackMyLove('CRYPTO_PRICE_FETCHED', 'Cryptocurrency price retrieved', {
-          coinId,
-          price: cryptoData.price,
-          change: cryptoData.changePercent
-        });
-
-        return cryptoData;
-      }
-      
-      sfLogger.helpMeFindMyWayHome('CRYPTO_PRICE_NOT_FOUND', 'Cryptocurrency data not found', {
-        coinId
+      sfLogger.thanksForGivingBackMyLove('CRYPTO_BATCH_FETCHED', 'Batch cryptocurrency prices retrieved', {
+        coins: Object.keys(data).length
       });
-      return null;
+
+      return data;
     } catch (error) {
-      sfLogger.helpMeFindMyWayHome('CRYPTO_PRICE_FETCH_FAILED', 'Failed to fetch cryptocurrency price', {
-        error: error instanceof Error ? error.message : 'Unknown error',
-        coinId
+      sfLogger.helpMeFindMyWayHome('CRYPTO_BATCH_FETCH_FAILED', 'Failed to fetch batch cryptocurrency prices', {
+        error: error instanceof Error ? error.message : 'Unknown error'
       });
-      console.error('Failed to fetch crypto price:', error);
+      console.error('Failed to fetch crypto prices:', error);
       return null;
     }
+  }
+
+  // Get REAL crypto prices from CoinGecko (single coin - use batch instead)
+  static async getCryptoPrice(coinId: string) {
+    // Use batch API for single requests too
+    const batchData = await this.getCryptoPricesBatch([coinId]);
+    
+    if (batchData && batchData[coinId]) {
+      const cryptoData = {
+        price: batchData[coinId].usd,
+        change: batchData[coinId].usd_24h_change || 0,
+        changePercent: (batchData[coinId].usd_24h_change || 0).toFixed(2),
+        volume: batchData[coinId].usd_24h_vol || 0
+      };
+
+      sfLogger.thanksForGivingBackMyLove('CRYPTO_PRICE_FETCHED', 'Cryptocurrency price retrieved', {
+        coinId,
+        price: cryptoData.price,
+        change: cryptoData.changePercent
+      });
+
+      return cryptoData;
+    }
+    
+    return null;
   }
 
   // Add the missing getHistoricalData method
@@ -142,15 +174,29 @@ export class MarketDataService {
     const etfSymbols = ['SPY', 'QQQ', 'VTI', 'ARKK', 'TQQQ', 'SQQQ', 'VOO', 'IVV', 'VUG', 'VTV', 'DIA', 'IWM', 'EEM', 'GLD', 'SLV', 'XLK'];
 
     try {
-      const allData = await Promise.all([
-        ...stockSymbols.map(symbol => this.getRealStockPrice(symbol)),
-        ...cryptoIds.map(id => this.getCryptoPrice(id)),
-        ...etfSymbols.map(symbol => this.getRealStockPrice(symbol))
-      ]);
+      // Fetch crypto prices in ONE batch request instead of 16 individual requests
+      const cryptoBatchData = await this.getCryptoPricesBatch(cryptoIds);
+      const cryptoData = cryptoIds.map(id => {
+        if (cryptoBatchData && cryptoBatchData[id]) {
+          return {
+            price: cryptoBatchData[id].usd,
+            change: cryptoBatchData[id].usd_24h_change || 0,
+            changePercent: (cryptoBatchData[id].usd_24h_change || 0).toFixed(2),
+            volume: cryptoBatchData[id].usd_24h_vol || 0
+          };
+        }
+        return null;
+      });
+
+      // Fetch stock data (these already have rate limiting)
+      const stockData = await Promise.all(stockSymbols.map(symbol => this.getRealStockPrice(symbol)));
+      const etfData = await Promise.all(etfSymbols.map(symbol => this.getRealStockPrice(symbol)));
 
       return {
-        stocks: allData.slice(0, 6),
-        crypto: allData.slice(6, 12),
+        stocks: stockData,
+        crypto: cryptoData,
+        etfs: etfData
+      };
         etfs: allData.slice(12, 18)
       };
     } catch (error) {
