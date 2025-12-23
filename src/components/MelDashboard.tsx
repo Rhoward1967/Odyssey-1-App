@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { MelFinancialGovernor } from '@/services/MelFinancialGovernor';
+import { CoinbaseService } from '@/services/CoinbaseService';
 
 interface CashFlowAnalysis {
   netProfit: number;
@@ -52,6 +53,7 @@ export default function MelDashboard() {
   const [prioritizedBids, setPrioritizedBids] = useState<PrioritizedBid[]>([]);
   const [microOpportunities, setMicroOpportunities] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [cryptoPortfolio, setCryptoPortfolio] = useState<{ totalValue: number; holdings: any[] }>({ totalValue: 0, holdings: [] });
 
   const loadFinancialData = useCallback(async () => {
     setLoading(true);
@@ -76,6 +78,15 @@ export default function MelDashboard() {
       // Get micro-extraction opportunities
       const microOps = await MelFinancialGovernor.identifyMicroExtractions();
       setMicroOpportunities(microOps.slice(0, 3));
+
+      // Get crypto portfolio (Coinbase)
+      try {
+        const portfolio = await CoinbaseService.getPortfolioSummary();
+        setCryptoPortfolio(portfolio);
+      } catch (error) {
+        console.error('Failed to load crypto portfolio:', error);
+        // Silently fail - crypto is optional
+      }
     } catch (error) {
       console.error('Failed to load financial data:', error);
     } finally {
@@ -345,6 +356,55 @@ export default function MelDashboard() {
                   <ChevronRight className="w-3 h-3 mr-1" />
                   Re-Route to Howard Family Trust
                 </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Crypto Portfolio (Node 2.5: Hedge Strategy) */}
+        {cryptoPortfolio.totalValue > 0 && (
+          <Card className="bg-gradient-to-br from-orange-950/30 to-zinc-900 border-orange-800/50 mt-6">
+            <CardHeader>
+              <CardTitle className="text-sm font-bold uppercase text-orange-400 flex items-center gap-2">
+                <Wallet className="w-4 h-4" />
+                Crypto Trading Portfolio (Coinbase)
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                <div className="flex justify-between items-center pb-2 border-b border-zinc-800">
+                  <span className="text-xs text-zinc-500">Total Value</span>
+                  <span className="text-xl font-black text-white">
+                    ${cryptoPortfolio.totalValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  </span>
+                </div>
+                {cryptoPortfolio.holdings.slice(0, 5).map((holding, idx) => (
+                  <div key={idx} className="flex justify-between items-center">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-medium text-white">{holding.symbol}</span>
+                      <span className="text-[10px] text-zinc-500">
+                        {holding.balance.toFixed(8)}
+                      </span>
+                    </div>
+                    <span className="text-xs font-bold text-orange-500">
+                      ${holding.value.toFixed(2)}
+                    </span>
+                  </div>
+                ))}
+                <div className="pt-2 mt-2 border-t border-zinc-800">
+                  <p className="text-[10px] text-zinc-500 mb-2">
+                    🎯 Strategy: Conservative 5-10% gains, controlled capital allocation
+                  </p>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="w-full text-xs border-orange-800/50 hover:bg-orange-950/50"
+                    onClick={() => window.location.href = '/app/trading'}
+                  >
+                    <TrendingUp className="w-3 h-3 mr-1" />
+                    View Trading Dashboard
+                  </Button>
+                </div>
               </div>
             </CardContent>
           </Card>
