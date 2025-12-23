@@ -193,7 +193,7 @@ export class RomanAutoFixEngine {
       const migrationFile = '20251223_optimize_rls_performance.sql';
       
       // Log the autonomous action
-      await this.supabase.from('governance_changes').insert({
+      await supabase.from('governance_changes').insert({
         actor: 'R.O.M.A.N. Auto-Fix Engine v2.1',
         action: 'RLS_OPTIMIZATION',
         reason: `Applied performance-optimized RLS policies for ${table}`,

@@ -22,7 +22,6 @@ import {
     storeAuditResults
 } from './roman-auto-audit';
 import { SovereignCoreOrchestrator } from './SovereignCoreOrchestrator';
-import { RomanAutonomyIntegration } from './RomanAutonomyIntegration';
 
 export async function sendUrgentReportToDiscord(reportText, channelId) {
   try {
