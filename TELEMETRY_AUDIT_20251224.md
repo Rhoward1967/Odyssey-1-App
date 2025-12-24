@@ -3,6 +3,7 @@
 ## 🔴 CRITICAL FINDINGS: 13 OUT OF 19 MONITORING TABLES EMPTY
 
 ### ✅ ACTIVE (6 tables collecting data):
+
 - **system_alerts**: 2,765 rows ✅
 - **user_sessions**: 1 row ✅
 - **system_logs**: 3,086 rows (R.O.M.A.N. activity) ✅
@@ -13,58 +14,55 @@
 ### 🔴 EMPTY (13 tables NOT collecting data):
 
 #### 📡 Telemetry & Monitoring (5 tables):
+
 1. **system_metrics** - 0 rows 🔴
    - **Impact**: No performance/usage data being tracked
    - **Missing**: Response times, CPU, memory, database query metrics
-   
 2. **performance_snapshots** - 0 rows 🔴
    - **Impact**: No pre-calculated 5-minute aggregates
    - **Missing**: P95/P99 response times, RPS, error rates
-   
 3. **feature_usage** - 0 rows 🔴
    - **Impact**: Can't track which features users are using
    - **Missing**: Feature adoption, usage duration, success rates
-   
 4. **ai_intelligence_metrics** - 0 rows 🔴
    - **Impact**: R.O.M.A.N.'s decision tracking not recorded
    - **Missing**: AI confidence scores, prediction accuracy
-   
 5. **compliance_checks** - 0 rows 🔴
    - **Impact**: No compliance violation tracking
    - **Missing**: Regulatory check results, remediation status
 
 #### 👥 User Activity (1 table):
+
 6. **user_usage** - 0 rows 🔴
    - **Impact**: No billing period usage tracking
    - **Missing**: Document reviews, storage used, searches per user
 
 #### 🚀 Deployment & Operations (3 tables):
+
 7. **deployments** - 0 rows 🔴
    - **Impact**: No deployment history
    - **Missing**: Version tracking, deployment metadata
-   
 8. **deployment_metrics** - 0 rows 🔴
    - **Impact**: Can't measure deployment health
    - **Missing**: Error rates, rollback triggers
-   
 9. **rollback_events** - 0 rows 🔴
    - **Impact**: No rollback history (good if no rollbacks needed)
    - **Missing**: Rollback reasons, success status
 
 #### 💰 Business & Revenue (3 tables):
+
 10. **subscriptions** - 0 rows 🔴
     - **Impact**: No active subscriptions tracked
     - **Missing**: User subscription status, tiers, renewal dates
-    
 11. **subscription_tiers** - 0 rows 🔴
     - **Impact**: Tier definitions not configured
     - **Missing**: Pricing, feature limits for Free/$99/$299/$999
-    
 12. **payments** - 0 rows 🔴
     - **Impact**: No payment history
     - **Missing**: Stripe charges, refunds, payment methods
 
 #### 🔍 Audit (1 table):
+
 13. **audit_trail** - 0 rows 🔴
     - **Impact**: No general audit log
     - **Missing**: User actions, admin changes, security events
@@ -74,14 +72,18 @@
 ## 🛠️ ROOT CAUSES
 
 ### 1. **No Automated Data Collection**
+
 Missing components:
+
 - ❌ No cron jobs for periodic snapshots
 - ❌ No application code writing to telemetry tables
 - ❌ No triggers on user actions
 - ❌ No background workers
 
 ### 2. **pg_cron Not Configured**
+
 Expected but missing:
+
 ```sql
 -- Should exist but doesn't:
 SELECT * FROM cron.job; -- Likely returns error or 0 rows
@@ -90,13 +92,16 @@ SELECT * FROM cron.job; -- Likely returns error or 0 rows
 The migration `20251122_system_telemetry_enhanced.sql` created the tables but nobody is inserting data.
 
 ### 3. **Application Layer Not Instrumented**
+
 Frontend/backend code not calling:
+
 - `system_metrics` inserts
 - `feature_usage` tracking
 - `user_usage` updates
 - `performance_snapshots` generation
 
 ### 4. **Subscription System Not Initialized**
+
 - `subscription_tiers` table empty → No pricing configured in database
 - `subscriptions` table empty → Users can't subscribe (checkout might fail)
 
@@ -105,6 +110,7 @@ Frontend/backend code not calling:
 ## 🚨 IMMEDIATE ACTIONS REQUIRED
 
 ### Priority 1: Enable pg_cron (CRITICAL)
+
 ```sql
 -- In Supabase SQL Editor:
 CREATE EXTENSION IF NOT EXISTS pg_cron;
@@ -125,6 +131,7 @@ SELECT cron.schedule(
 ```
 
 ### Priority 2: Initialize Subscription Tiers
+
 ```sql
 -- Insert the 4 pricing tiers:
 INSERT INTO subscription_tiers (tier_name, tier_level, monthly_price_usd, document_reviews_per_month, storage_gb, academic_searches_per_month, max_study_groups, video_minutes_per_month)
@@ -136,7 +143,9 @@ VALUES
 ```
 
 ### Priority 3: Add Application Instrumentation
+
 In `src/lib/analytics.ts` (create if missing):
+
 ```typescript
 import { supabase } from './supabase';
 
@@ -146,14 +155,16 @@ export async function trackFeatureUsage(
   success: boolean = true,
   metadata?: Record<string, any>
 ) {
-  const { data: { user } } = await supabase.auth.getUser();
-  
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
   await supabase.from('feature_usage').insert({
     user_id: user?.id,
     feature_name: featureName,
     duration_seconds: durationSeconds,
     success,
-    metadata
+    metadata,
   });
 }
 
@@ -162,6 +173,7 @@ export async function trackFeatureUsage(
 ```
 
 ### Priority 4: Create Deployment Tracking Trigger
+
 ```sql
 -- Auto-log deployments when system_knowledge changes:
 CREATE OR REPLACE FUNCTION log_deployment()
@@ -191,6 +203,7 @@ FOR EACH ROW EXECUTE FUNCTION log_deployment();
 ## 📊 EXPECTED IMPROVEMENTS
 
 After fixes applied:
+
 - **system_metrics**: 288 rows/day (12/hour × 24)
 - **performance_snapshots**: 288 rows/day (every 5 min)
 - **feature_usage**: 100-1000 rows/day (depends on user activity)
