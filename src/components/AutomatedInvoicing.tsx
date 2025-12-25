@@ -100,8 +100,7 @@ export default function InvoiceDashboard() {
       const [invoiceRes, customerRes, profileRes, recurringRes] = await Promise.all([
         supabase
           .from('invoices')
-          .select('*, customers!invoices_customer_id_fkey(company_name, first_name, last_name)')
-          .eq('user_id', user.id)
+          .select('*, customers!invoices_customer_id_fkey(company_name, first_name, last_name, user_id)')
           .order('created_at', { ascending: false }),
         // Filter customers by user_id
         supabase.from('customers').select('*').eq('user_id', user.id).order('company_name'),
@@ -112,8 +111,7 @@ export default function InvoiceDashboard() {
           .single(),
         supabase
           .from('recurring_invoices')
-          .select('*, customers!recurring_invoices_customer_id_fkey(company_name, first_name, last_name)')
-          .eq('user_id', user.id)
+          .select('*, customers!recurring_invoices_customer_id_fkey(company_name, first_name, last_name, user_id)')
           .order('next_invoice_date', { ascending: true }),
       ]);
 
@@ -126,10 +124,19 @@ export default function InvoiceDashboard() {
       if (recurringRes.error && recurringRes.error.code !== 'PGRST116')
         console.warn('Recurring invoices table may not exist:', recurringRes.error);
 
-      setInvoices(invoiceRes.data || []);
+      // Filter invoices by user's customers
+      const userCustomerIds = (customerRes.data || []).map(c => c.id);
+      const userInvoices = (invoiceRes.data || []).filter(inv => 
+        inv.customers && userCustomerIds.includes(inv.customer_id)
+      );
+      const userRecurring = (recurringRes.data || []).filter(rec => 
+        rec.customers && userCustomerIds.includes(rec.customer_id)
+      );
+
+      setInvoices(userInvoices);
       setCustomers(customerRes.data || []);
       setCompanyProfile(profileRes.data || null);
-      setRecurringInvoices(recurringRes.data || []);
+      setRecurringInvoices(userRecurring);
     } catch (err: any) {
       setError(`Failed to load data: ${err.message}`);
     } finally {
