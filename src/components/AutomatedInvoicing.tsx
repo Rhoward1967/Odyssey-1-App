@@ -100,10 +100,11 @@ export default function InvoiceDashboard() {
       const [invoiceRes, customerRes, profileRes, recurringRes] = await Promise.all([
         supabase
           .from('invoices')
-          .select('*, customers(company_name, first_name, last_name)')
+          .select('*, customers!invoices_customer_id_fkey(company_name, first_name, last_name)')
+          .eq('user_id', user.id)
           .order('created_at', { ascending: false }),
-        // Remove user_id filter to get all customers (QuickBooks synced customers may not have user_id)
-        supabase.from('customers').select('*').order('company_name'),
+        // Filter customers by user_id
+        supabase.from('customers').select('*').eq('user_id', user.id).order('company_name'),
         supabase
           .from('company_profiles')
           .select('*')
@@ -111,13 +112,13 @@ export default function InvoiceDashboard() {
           .single(),
         supabase
           .from('recurring_invoices')
-          .select('*, customers(company_name, first_name, last_name)')
+          .select('*, customers!recurring_invoices_customer_id_fkey(company_name, first_name, last_name)')
           .eq('user_id', user.id)
           .order('next_invoice_date', { ascending: true }),
       ]);
 
-      if (invoiceRes.error) throw invoiceRes.error;
-      if (customerRes.error) throw customerRes.error;
+      if (invoiceRes.error && invoiceRes.error.code !== 'PGRST116') throw invoiceRes.error;
+      if (customerRes.error && customerRes.error.code !== 'PGRST116') throw customerRes.error;
       // Gracefully handle missing company_profiles table or permission denied
       if (profileRes.error && profileRes.error.code !== 'PGRST116' && !profileRes.error.message?.includes('permission denied')) {
         console.warn('Company profile error (non-fatal):', profileRes.error);
