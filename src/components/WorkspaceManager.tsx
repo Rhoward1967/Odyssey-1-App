@@ -578,7 +578,7 @@ export const WorkforceManagementSystem: React.FC<WorkforceManagementProps> = ({ 
         </CardHeader>
         <CardContent>
           <Tabs value={activeWorkforceTab} onValueChange={setActiveWorkforceTab}>
-            <TabsList className="grid w-full grid-cols-8 mb-6 bg-slate-900/70">
+            <TabsList className="w-full mb-6 bg-slate-900/70 flex flex-wrap gap-2 md:grid md:grid-cols-8">
               <TabsTrigger value="overview">Overview</TabsTrigger>
               <TabsTrigger value="employees">Employees ({employees.length})</TabsTrigger>
               <TabsTrigger value="timekeeping">Time Tracking</TabsTrigger>
@@ -591,7 +591,7 @@ export const WorkforceManagementSystem: React.FC<WorkforceManagementProps> = ({ 
 
             {/* --- Overview Tab --- */}
             <TabsContent value="overview" className="space-y-4">
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                  <Card className="bg-blue-900/50 p-4 rounded-lg">
                    <CardTitle className="text-2xl font-bold text-blue-300">{employees.length}</CardTitle>
                    <CardContent className="p-0 text-sm text-blue-400">Total Employees</CardContent>
@@ -613,7 +613,7 @@ export const WorkforceManagementSystem: React.FC<WorkforceManagementProps> = ({ 
               ) : (
                 employees.map(emp => (
                   <Card key={emp.id} className="p-4 bg-slate-700/50 border-slate-600">
-                    <div className="grid grid-cols-1 md:grid-cols-5 gap-4 items-center">
+                    <div className="flex flex-col lg:grid lg:grid-cols-5 gap-4 lg:items-center">
                       <div>
                         <h4 className="font-medium">
                           {emp.first_name && emp.last_name 
@@ -625,10 +625,10 @@ export const WorkforceManagementSystem: React.FC<WorkforceManagementProps> = ({ 
                       </div>
                       <p className="text-sm"><span className="text-gray-400">Dept:</span> {emp.department || 'N/A'}</p>
                       <p className="text-sm"><span className="text-gray-400">Rate:</span> ${emp.hourly_rate?.toFixed(2) || emp.salary ? `$${(emp.salary / 2080).toFixed(2)}` : 'N/A'}/hr</p>
-                      <Badge variant={emp.status === 'Active' ? 'default' : 'secondary'}>{emp.status}</Badge>
+                      <Badge variant={emp.status === 'Active' ? 'default' : 'secondary'} className="w-fit">{emp.status}</Badge>
                       
                       {/* ADD ACTION BUTTONS */}
-                      <div className="flex gap-2 justify-end">
+                      <div className="flex gap-2 lg:justify-end">
                         {/* Edit Button */}
                         <Button
                           size="sm"
@@ -1469,32 +1469,72 @@ export const WorkforceManagementSystem: React.FC<WorkforceManagementProps> = ({ 
                     {customers.length === 0 ? (
                       <p className="text-gray-400 text-sm">No clients yet. Add your first client above.</p>
                     ) : (
-                      <div className="max-h-96 overflow-y-auto">
-                        <table className="w-full text-sm">
-                          <thead className="bg-slate-800 sticky top-0">
-                            <tr className="text-left text-gray-300">
-                              <th className="p-2">Name</th>
-                              <th className="p-2">Company</th>
-                              <th className="p-2">Email</th>
-                              <th className="p-2">Phone</th>
-                              <th className="p-2">City</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {customers.map((customer) => (
-                              <tr key={customer.id} className="border-b border-slate-600 hover:bg-slate-600/30">
-                                <td className="p-2 text-white">
-                                  {customer.first_name} {customer.last_name}
-                                </td>
-                                <td className="p-2 text-gray-300">{customer.company_name || '-'}</td>
-                                <td className="p-2 text-gray-300">{customer.email || '-'}</td>
-                                <td className="p-2 text-gray-300">{customer.phone || '-'}</td>
-                                <td className="p-2 text-gray-300">{customer.billing_city || '-'}</td>
+                      <>
+                        {/* Desktop Table */}
+                        <div className="hidden md:block max-h-96 overflow-y-auto">
+                          <table className="w-full text-sm">
+                            <thead className="bg-slate-800 sticky top-0">
+                              <tr className="text-left text-gray-300">
+                                <th className="p-2">Name</th>
+                                <th className="p-2">Company</th>
+                                <th className="p-2">Email</th>
+                                <th className="p-2">Phone</th>
+                                <th className="p-2">City</th>
                               </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
+                            </thead>
+                            <tbody>
+                              {customers.map((customer) => (
+                                <tr key={customer.id} className="border-b border-slate-600 hover:bg-slate-600/30">
+                                  <td className="p-2 text-white">
+                                    {customer.first_name} {customer.last_name}
+                                  </td>
+                                  <td className="p-2 text-gray-300">{customer.company_name || '-'}</td>
+                                  <td className="p-2 text-gray-300">{customer.email || '-'}</td>
+                                  <td className="p-2 text-gray-300">{customer.phone || '-'}</td>
+                                  <td className="p-2 text-gray-300">{customer.billing_city || '-'}</td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                        
+                        {/* Mobile Cards */}
+                        <div className="md:hidden space-y-3 max-h-96 overflow-y-auto">
+                          {customers.map((customer) => (
+                            <Card key={customer.id} className="bg-slate-800/50 border-slate-600 p-4">
+                              <div className="space-y-2">
+                                <div className="font-semibold text-white text-lg">
+                                  {customer.first_name} {customer.last_name}
+                                </div>
+                                {customer.company_name && (
+                                  <div className="text-sm">
+                                    <span className="text-gray-400">Company: </span>
+                                    <span className="text-gray-300">{customer.company_name}</span>
+                                  </div>
+                                )}
+                                {customer.email && (
+                                  <div className="text-sm">
+                                    <span className="text-gray-400">Email: </span>
+                                    <span className="text-gray-300">{customer.email}</span>
+                                  </div>
+                                )}
+                                {customer.phone && (
+                                  <div className="text-sm">
+                                    <span className="text-gray-400">Phone: </span>
+                                    <span className="text-gray-300">{customer.phone}</span>
+                                  </div>
+                                )}
+                                {customer.billing_city && (
+                                  <div className="text-sm">
+                                    <span className="text-gray-400">City: </span>
+                                    <span className="text-gray-300">{customer.billing_city}</span>
+                                  </div>
+                                )}
+                              </div>
+                            </Card>
+                          ))}
+                        </div>
+                      </>
                     )}
                   </div>
                 </CardContent>

@@ -356,48 +356,50 @@ function InvoiceListView({
           No invoices found. Create one to get started.
         </p>
       ) : (
-        <div className='bg-white shadow-md rounded-lg overflow-x-auto'>
-          <table className='min-w-full divide-y divide-gray-200'>
-            <thead className='bg-gray-50'>
-              <tr>
-                <th className='px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider'>
-                  Invoice #
-                </th>
-                <th className='px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider'>
-                  Customer
-                </th>
-                <th className='px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider'>
-                  Due Date
-                </th>
-                <th className='px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider'>
-                  Amount
-                </th>
-                <th className='px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider'>
-                  Status
-                </th>
-                <th className='px-6 py-3 relative'></th>
-              </tr>
-            </thead>
-            <tbody className='bg-white divide-y divide-gray-200'>
-              {invoices.map((invoice: Invoice) => (
-                <tr key={invoice.id} className='hover:bg-gray-50'>
-                  <td className='px-6 py-4 font-medium text-gray-900'>
-                    {invoice.invoice_number}
-                  </td>
-                  <td className='px-6 py-4 text-gray-600'>
-                    {invoice.customers?.company_name || 'N/A'}
-                  </td>
-                  <td className='px-6 py-4 text-gray-600'>
-                    {invoice.due_date}
-                  </td>
-                  <td className='px-6 py-4 text-right font-semibold text-gray-900'>
-                    ${invoice.total_amount.toFixed(2)}
-                  </td>
-                  <td className='px-6 py-4'>
-                    <span
-                      className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${invoice.status === 'paid' ? 'bg-green-100 text-green-800' : invoice.status === 'sent' ? 'bg-blue-100 text-blue-800' : 'bg-yellow-100 text-yellow-800'}`}
-                    >
-                      {invoice.status}
+        <>
+          {/* Desktop Table - Hidden on mobile/tablet */}
+          <div className='hidden md:block bg-white shadow-md rounded-lg overflow-x-auto'>
+            <table className='min-w-full divide-y divide-gray-200'>
+              <thead className='bg-gray-50'>
+                <tr>
+                  <th className='px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider'>
+                    Invoice #
+                  </th>
+                  <th className='px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider'>
+                    Customer
+                  </th>
+                  <th className='px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider'>
+                    Due Date
+                  </th>
+                  <th className='px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider'>
+                    Amount
+                  </th>
+                  <th className='px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider'>
+                    Status
+                  </th>
+                  <th className='px-6 py-3 relative'></th>
+                </tr>
+              </thead>
+              <tbody className='bg-white divide-y divide-gray-200'>
+                {invoices.map((invoice: Invoice) => (
+                  <tr key={invoice.id} className='hover:bg-gray-50'>
+                    <td className='px-6 py-4 font-medium text-gray-900'>
+                      {invoice.invoice_number}
+                    </td>
+                    <td className='px-6 py-4 text-gray-600'>
+                      {invoice.customers?.company_name || 'N/A'}
+                    </td>
+                    <td className='px-6 py-4 text-gray-600'>
+                      {invoice.due_date}
+                    </td>
+                    <td className='px-6 py-4 text-right font-semibold text-gray-900'>
+                      ${invoice.total_amount.toFixed(2)}
+                    </td>
+                    <td className='px-6 py-4'>
+                      <span
+                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${invoice.status === 'paid' ? 'bg-green-100 text-green-800' : invoice.status === 'sent' ? 'bg-blue-100 text-blue-800' : 'bg-yellow-100 text-yellow-800'}`}
+                      >
+                        {invoice.status}
                     </span>
                   </td>
                   <td className='px-6 py-4 text-right text-sm font-medium'>
@@ -418,7 +420,49 @@ function InvoiceListView({
               ))}
             </tbody>
           </table>
-        </div>
+          </div>
+
+          {/* Mobile/Tablet Card View - Shown only on small screens */}
+          <div className='md:hidden space-y-4'>
+            {invoices.map((invoice: Invoice) => (
+              <div key={invoice.id} className='bg-white shadow-md rounded-lg p-4 border border-gray-200'>
+                <div className='flex justify-between items-start mb-3'>
+                  <div>
+                    <div className='font-bold text-gray-900 text-lg'>{invoice.invoice_number}</div>
+                    <div className='text-sm text-gray-600 mt-1'>{invoice.customers?.company_name || 'N/A'}</div>
+                  </div>
+                  <span
+                    className={`px-3 py-1 text-xs font-semibold rounded-full ${invoice.status === 'paid' ? 'bg-green-100 text-green-800' : invoice.status === 'sent' ? 'bg-blue-100 text-blue-800' : 'bg-yellow-100 text-yellow-800'}`}
+                  >
+                    {invoice.status}
+                  </span>
+                </div>
+                <div className='flex justify-between text-sm mb-3'>
+                  <span className='text-gray-500'>Due Date:</span>
+                  <span className='text-gray-900 font-medium'>{invoice.due_date}</span>
+                </div>
+                <div className='flex justify-between text-sm mb-4'>
+                  <span className='text-gray-500'>Amount:</span>
+                  <span className='text-gray-900 font-bold text-lg'>${invoice.total_amount.toFixed(2)}</span>
+                </div>
+                <div className='flex gap-2 pt-3 border-t border-gray-200'>
+                  <button
+                    onClick={() => onEdit(invoice)}
+                    className='flex-1 px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700'
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => onDelete(invoice.id)}
+                    className='flex-1 px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700'
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
       )}
     </div>
   );
@@ -764,7 +808,7 @@ function InvoiceForm({
           </div>
         )}
 
-        <div className='grid grid-cols-2 gap-8 mb-8 border-b pb-8'>
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 mb-8 border-b pb-8'>
           <div>
             <label className='block text-sm font-medium text-gray-500 mb-1'>
               Bill To
@@ -833,19 +877,21 @@ function InvoiceForm({
           </div>
         </div>
 
-        <table className='w-full mb-4'>
-          <thead className='border-b-2 border-gray-300'>
-            <tr className='text-left text-xs font-semibold text-gray-500 uppercase'>
-              <th className='p-2'>Product/Service</th>
-              <th className='p-2 w-40'>SKU</th>
-              <th className='p-2 w-24 text-right'>Qty</th>
-              <th className='p-2 w-32 text-right'>Rate</th>
-              <th className='p-2 w-32 text-right'>Amount</th>
-              <th className='p-2 w-20 text-center'>Taxable</th>
-              <th className='w-10'></th>
-            </tr>
-          </thead>
-          <tbody>
+        {/* Desktop Line Items Table - Hidden on mobile */}
+        <div className='hidden md:block overflow-x-auto'>
+          <table className='w-full mb-4'>
+            <thead className='border-b-2 border-gray-300'>
+              <tr className='text-left text-xs font-semibold text-gray-500 uppercase'>
+                <th className='p-2'>Product/Service</th>
+                <th className='p-2 w-40'>SKU</th>
+                <th className='p-2 w-24 text-right'>Qty</th>
+                <th className='p-2 w-32 text-right'>Rate</th>
+                <th className='p-2 w-32 text-right'>Amount</th>
+                <th className='p-2 w-20 text-center'>Taxable</th>
+                <th className='w-10'></th>
+              </tr>
+            </thead>
+            <tbody>
             {formData.line_items.map((item: LineItem, index: number) => (
               <tr key={index}>
                 <td>
@@ -947,6 +993,66 @@ function InvoiceForm({
             ))}
           </tbody>
         </table>
+        </div>
+
+        {/* Mobile Line Items - Card-based layout */}
+        <div className='md:hidden space-y-4 mb-4'>
+          {formData.line_items.map((item: LineItem, index: number) => (
+            <div key={index} className='bg-gray-50 p-4 rounded-lg border border-gray-200 relative'>
+              <button
+                onClick={() => removeLineItem(index)}
+                className='absolute top-2 right-2 text-red-500 text-xl'
+              >
+                ✕
+              </button>
+              <div className='space-y-3'>
+                <div>
+                  <label className='block text-xs font-medium text-gray-500 mb-1'>Service/Product</label>
+                  <div className='flex gap-2'>
+                    <select
+                      value={services.find(s => s.name === item.description)?.id || ''}
+                      onChange={e => handleLineItemChange(index, 'description', e.target.value)}
+                      className='p-2 flex-1 border rounded-md bg-white text-sm'
+                    >
+                      <option value=''>Select Service</option>
+                      {services.map(s => (<option key={s.id} value={s.id}>{s.name}</option>))}
+                    </select>
+                    <button type='button' onClick={() => setIsServiceModalOpen(true)} className='px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs'>+</button>
+                  </div>
+                  <input
+                    type='text'
+                    value={item.description}
+                    onChange={e => handleLineItemChange(index, 'description', e.target.value)}
+                    className='p-2 w-full border rounded-md mt-2 text-sm'
+                    placeholder='Description'
+                  />
+                </div>
+                <input
+                  type='text'
+                  value={item.sku || ''}
+                  onChange={e => handleLineItemChange(index, 'sku', e.target.value)}
+                  placeholder='SKU (optional)'
+                  className='p-2 w-full border rounded-md text-sm'
+                />
+                <div className='grid grid-cols-2 gap-2'>
+                  <div>
+                    <label className='block text-xs font-medium text-gray-500 mb-1'>Quantity</label>
+                    <input type='number' value={item.quantity} onChange={e => handleLineItemChange(index, 'quantity', e.target.value)} className='p-2 w-full border rounded-md text-sm'/>
+                  </div>
+                  <div>
+                    <label className='block text-xs font-medium text-gray-500 mb-1'>Rate</label>
+                    <input type='number' value={item.rate} onChange={e => handleLineItemChange(index, 'rate', e.target.value)} className='p-2 w-full border rounded-md text-sm'/>
+                  </div>
+                </div>
+                <div className='flex justify-between items-center pt-2 border-t'>
+                  <label className='flex items-center text-sm'><input type='checkbox' checked={item.is_taxable} onChange={e => handleLineItemChange(index, 'is_taxable', e.target.checked)} className='mr-2'/> Taxable</label>
+                  <span className='text-lg font-bold'>${item.amount.toFixed(2)}</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
         <button
           onClick={addLineItem}
           className='text-sm text-blue-600 hover:underline mb-8'
@@ -954,8 +1060,8 @@ function InvoiceForm({
           + Add Line Item
         </button>
 
-        <div className='flex justify-between mt-8'>
-          <div className='w-1/2'>
+        <div className='flex flex-col md:flex-row md:justify-between mt-8 gap-6'>
+          <div className='w-full md:w-1/2'>
             <label className='block text-sm font-medium text-gray-500 mb-1'>
               Note to customer
             </label>
@@ -968,7 +1074,7 @@ function InvoiceForm({
               className='p-2 w-full border rounded-md'
             ></textarea>
           </div>
-          <div className='w-1/3 space-y-2'>
+          <div className='w-full md:w-1/3 space-y-2'>
             <div className='flex justify-between'>
               <span>Subtotal</span>
               <span>${subtotal.toFixed(2)}</span>
