@@ -102,8 +102,8 @@ export default function InvoiceDashboard() {
           .from('invoices')
           .select('*, customers!invoices_customer_id_fkey(company_name, first_name, last_name, user_id)')
           .order('created_at', { ascending: false }),
-        // Filter customers by user_id
-        supabase.from('customers').select('*').eq('user_id', user.id).order('company_name'),
+        // Get customers: owned by user OR synced from QuickBooks (no user_id)
+        supabase.from('customers').select('*').or(`user_id.eq.${user.id},user_id.is.null`).order('company_name'),
         supabase
           .from('company_profiles')
           .select('*')
