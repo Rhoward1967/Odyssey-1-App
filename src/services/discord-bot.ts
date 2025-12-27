@@ -23,6 +23,7 @@ import {
 } from './roman-auto-audit';
 import { RomanAutonomyIntegration } from './RomanAutonomyIntegration';
 import { SovereignCoreOrchestrator } from './SovereignCoreOrchestrator';
+import { generateIPAwareSystemPrompt } from './romanIPAwarePrompt';
 
 export async function sendUrgentReportToDiscord(reportText, channelId) {
   try {
@@ -1085,9 +1086,19 @@ async function handleDirectMessage(message: Message) {
   }
   
   // NOW get context and call GPT-4
+  // Generate IP-aware system prompt with real patent data from database
+  let systemPrompt: string;
+  try {
+    systemPrompt = await generateIPAwareSystemPrompt();
+    console.log('✅ IP-aware system prompt generated from database');
+  } catch (err) {
+    console.error('⚠️ Failed to generate IP-aware prompt, using legacy:', err);
+    systemPrompt = ROMAN_SYSTEM_PROMPT; // Fallback to static prompt
+  }
+  
   if (!conversationHistory.has(userId)) {
     conversationHistory.set(userId, [
-      { role: "system", content: ROMAN_SYSTEM_PROMPT }
+      { role: "system", content: systemPrompt }
     ]);
   }
   
