@@ -6,7 +6,7 @@ import {
   ClipboardList,
   CreditCard,
   FileText,
-  Home,
+  Gauge,
   ListChecks,
   LogOut,
   Receipt,
@@ -19,7 +19,7 @@ import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 const menuItems = [
-  { icon: Home, label: 'Dashboard', href: '/app' },
+  { icon: Gauge, label: 'Apex Dashboard', href: '/app/apex' },
   { icon: TrendingUp, label: 'Trading', href: '/app/trading' },
   { icon: Tv, label: 'Media Center', href: '/app/media-center' },
   { icon: Calculator, label: 'Calculator', href: '/app/calculator' },

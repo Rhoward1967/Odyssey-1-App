@@ -13,26 +13,44 @@ export interface AuditInput {
 export async function writeAudit(entry: AuditInput) {
   const url = Deno.env.get('SUPABASE_URL')!
   const key = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+  
+  // v3.0 Schema: Map to both legacy columns AND handshake-optimized structure
+  const auditRecord = {
+    // Legacy columns (for Discord bot compatibility)
+    table_schema: entry.table_schema,
+    table_name: entry.table_name,
+    action: entry.action,
+    
+    // Handshake-optimized columns (v2.0)
+    event_type: `${entry.action}_${entry.table_name}`.toUpperCase(),
+    correlation_id: entry.correlation_id ?? null,
+    user_id: entry.user_role ?? 'service_role',
+    organization_id: null,
+    action_data: {
+      table_schema: entry.table_schema,
+      table_name: entry.table_name,
+      action: entry.action,
+      before_row: entry.before_row,
+      after_row: entry.after_row,
+      details: entry.details
+    },
+    validation_result: null,
+    compliance_score: 100,
+    violated_principle: null
+  };
+  
   const res = await fetch(`${url}/rest/v1/roman_audit_log`, {
     method: 'POST',
     headers: {
       apikey: key,
       Authorization: `Bearer ${key}`,
       'Content-Type': 'application/json',
-      Prefer: 'resolution=merge-duplicates',
+      Prefer: 'return=minimal',
     },
-    body: JSON.stringify([
-      {
-        table_schema: entry.table_schema,
-        table_name: entry.table_name,
-        action: entry.action,
-        user_role: entry.user_role ?? 'service_role',
-        before_row: entry.before_row ?? null,
-        after_row: entry.after_row ?? null,
-        correlation_id: entry.correlation_id ?? null,
-        // details can be merged into after_row.details if needed
-      },
-    ]),
+    body: JSON.stringify(auditRecord),
   })
-  if (!res.ok) console.error('audit write failed', await res.text())
+  if (!res.ok) {
+    const errorText = await res.text();
+    console.error('audit write failed:', errorText);
+  }
 }

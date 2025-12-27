@@ -12,6 +12,7 @@ import SystemEvolutionTracker from '@/components/SystemEvolutionTracker';
 import SystemObservabilityDashboard from '@/components/SystemObservabilityDashboard';
 import UserManual from '@/components/UserManual';
 import Admin from '@/pages/Admin';
+import ApexDashboard from '@/pages/ApexDashboard';
 import BidsList from '@/pages/BidsList';
 import Calculator from '@/pages/Calculator';
 import CatalogManager from '@/pages/CatalogManager';
@@ -187,6 +188,16 @@ function App() {
                           element={
                             <ErrorBoundary componentName="AdminDashboard">
                               <Admin />
+                            </ErrorBoundary>
+                          } 
+                        />
+                        
+                        {/* Apex Management Dashboard */}
+                        <Route 
+                          path="apex" 
+                          element={
+                            <ErrorBoundary componentName="ApexDashboard">
+                              <ApexDashboard />
                             </ErrorBoundary>
                           } 
                         />

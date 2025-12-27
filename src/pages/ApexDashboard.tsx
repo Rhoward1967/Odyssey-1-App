@@ -1,35 +1,26 @@
-import React, { useState, useMemo, useEffect, useRef } from 'react';
-import { 
-  Activity, 
-  Zap, 
-  Cpu, 
-  BarChart3, 
-  ShieldCheck, 
-  Clock, 
-  Database, 
-  TrendingUp,
-  LineChart,
-  LayoutDashboard,
-  Settings,
-  History,
-  Terminal,
-  Server,
-  Network,
-  AlertTriangle,
-  ChevronRight,
-  Maximize2,
-  RefreshCw,
-  Waves,
-  Link2,
-  Lock,
-  Unlock,
-  Power,
-  Orbit,
-  FileBadge,
-  Building2,
-  Sparkles,
-  ShieldAlert
+import {
+    Activity,
+    AlertTriangle,
+    BarChart3,
+    Building2,
+    Clock,
+    Cpu,
+    Database,
+    FileBadge,
+    History,
+    LayoutDashboard,
+    LineChart,
+    Lock,
+    Orbit,
+    Power,
+    RefreshCw,
+    ShieldAlert,
+    ShieldCheck,
+    Sparkles,
+    Unlock,
+    Zap
 } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 const ApexDashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
@@ -172,7 +163,7 @@ const ApexDashboard = () => {
             </div>
             <span className="hidden md:block font-black text-white tracking-tighter text-xl italic">APEX Hub</span>
           </div>
-          <div className="hidden md:flex flex-col gap-1 mt-4 w-full">
+          <div className="flex flex-col gap-1 mt-4 w-full">
             <button 
               onClick={() => setActiveEntity('ODYSSEY')}
               className={`text-[9px] font-black p-2 rounded border transition-all uppercase tracking-widest ${activeEntity === 'ODYSSEY' ? 'bg-emerald-500/20 border-emerald-500 text-emerald-400' : 'border-slate-800 text-slate-600 hover:border-slate-600'}`}
@@ -277,9 +268,15 @@ const ApexDashboard = () => {
                   <Unlock size={14} /> Authorize Wing
                 </button>
               ) : (
-                <div className="flex items-center gap-2 px-6 py-2 bg-orange-500/20 border border-orange-500/40 rounded-xl text-[10px] text-orange-400 font-black uppercase tracking-widest shadow-[0_0_15px_rgba(249,115,22,0.1)]">
+                <button 
+                  onClick={() => {
+                    setIsAuthorized(false);
+                    setLogs(prev => [{ id: Date.now(), text: "WING LOCKED. EXTRACTION SEQUENCE PAUSED.", type: "info" }, ...prev]);
+                  }}
+                  className="bg-orange-500/20 hover:bg-orange-500 border border-orange-500/40 text-orange-400 hover:text-slate-950 px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-[0_0_15px_rgba(249,115,22,0.1)] hover:shadow-orange-500/40 flex items-center gap-2"
+                >
                   <Lock size={12} /> Master Locked
-                </div>
+                </button>
               )}
               <div className="relative group">
                 <div className="absolute -inset-0.5 bg-gradient-to-r from-amber-500/20 to-emerald-500/20 rounded-2xl blur opacity-30 group-hover:opacity-100 transition duration-1000"></div>
