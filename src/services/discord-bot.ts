@@ -1096,10 +1096,17 @@ async function handleDirectMessage(message: Message) {
     systemPrompt = ROMAN_SYSTEM_PROMPT; // Fallback to static prompt
   }
   
+  // Always update system prompt with fresh database data
   if (!conversationHistory.has(userId)) {
     conversationHistory.set(userId, [
       { role: "system", content: systemPrompt }
     ]);
+  } else {
+    // Update existing conversation's system prompt
+    const history = conversationHistory.get(userId)!;
+    if (history.length > 0 && history[0].role === "system") {
+      history[0].content = systemPrompt; // Refresh with latest IP data
+    }
   }
   
   const history: ChatCompletionMessageParam[] = conversationHistory.get(userId)!;
