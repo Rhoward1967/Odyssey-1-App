@@ -833,10 +833,27 @@ async function handleDirectMessage(message: Message) {
     { userId, channelType: message.channel.type }
   );
   
-  // SOVEREIGN MODE: Use sovereign processor for rhoward1236526
+  // EXECUTIVE IDENTITY CHECK - Multiple IDs/usernames for Rickey Howard
+  const EXECUTIVE_IDS = [
+    "rhoward1236526",
+    "266680472869928960",
+    "rickey",
+    "rickey.howard",
+    "rickeyhoward",
+    "rhoward",
+    "master_architect",
+  ];
+  
+  const username = message.author.username.toLowerCase();
+  const isExecutive = EXECUTIVE_IDS.includes(userId) || 
+                      EXECUTIVE_IDS.includes(username) ||
+                      EXECUTIVE_IDS.some(id => username.includes(id));
+  
+  // SOVEREIGN MODE: Use sovereign processor for executive
   // This bypasses all other logic and uses constitutional-level command processing
-  if (userId === "rhoward1236526" || message.author.username === "rhoward1236526") {
-    console.log('👑 EXECUTIVE OVERRIDE: Routing to Sovereign Processor');
+  if (isExecutive) {
+    console.log(`👑 EXECUTIVE OVERRIDE: ${message.author.username} (${userId})`);
+    console.log('   Routing to Sovereign Processor with FULL DISCLOSURE mode');
     try {
       const sovereignResponse = await processSovereignCommand(message);
       

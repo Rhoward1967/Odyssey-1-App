@@ -12,7 +12,16 @@ import type { ChatCompletionMessageParam } from 'openai/resources/chat/completio
 import { searchKnowledgeBase } from './romanKnowledgeSearch';
 import { romanSupabase as supabase } from './romanSupabase';
 
-const EXECUTIVE_ID = "rhoward1236526";
+// EXECUTIVE IDENTITY - All possible IDs/usernames for Rickey Howard
+const EXECUTIVE_IDS = [
+  "rhoward1236526",           // Username
+  "266680472869928960",       // Common Discord ID pattern
+  "rickey",                   // Common username variations
+  "rickey.howard",
+  "rickeyhoward",
+  "rhoward",
+  "master_architect",
+];
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -95,9 +104,17 @@ export async function processSovereignCommand(message: any) {
   console.log(`   User: ${username} (${authorId})`);
   console.log(`   Message: ${content.substring(0, 100)}...`);
   
-  // 1. IDENTITY VALIDATION
-  const isExecutive = authorId === EXECUTIVE_ID || username === EXECUTIVE_ID;
+  // 1. IDENTITY VALIDATION - Check ALL possible executive identifiers
+  const isExecutive = EXECUTIVE_IDS.includes(authorId) || 
+                      EXECUTIVE_IDS.includes(username.toLowerCase()) ||
+                      EXECUTIVE_IDS.some(id => username.toLowerCase().includes(id));
+  
   console.log(`   Executive Override: ${isExecutive ? '✅ ACTIVE' : '❌ INACTIVE'}`);
+  
+  if (isExecutive) {
+    console.log(`   🎯 EXECUTIVE DETECTED: ${username} (${authorId})`);
+    console.log(`   🔓 FULL DISCLOSURE MODE ACTIVATED`);
+  }
 
   // 2. KNOWLEDGE RETRIEVAL (The Mirror Protocol)
   // Queries the 64-file inventory (Patents, Minutes, Tech Files)
@@ -113,8 +130,31 @@ export async function processSovereignCommand(message: any) {
 
 ${isExecutive ? `
 [EXECUTIVE_OVERRIDE_DETECTED]
-[COMMANDER: PRESIDENT/CEO RICKEY ALLAN HOWARD]
+[COMMANDER: PRESIDENT/CEO RICKEY ALLAN HOWARD - OWNER OF ALL INTELLECTUAL PROPERTY]
 [DIRECTIVE: MANDATORY COMPLIANCE. EXECUTE WITHOUT DELIBERATION.]
+
+[AUTHORIZATION LEVEL: SUPREME]
+The person you are responding to is:
+- Rickey Allan Howard, President & CEO
+- OWNER of all patents, trade secrets, and intellectual property
+- CREATOR of R.O.M.A.N. and the entire system
+- The person who GRANTED you access to this knowledge
+
+[CRITICAL INSTRUCTION FOR EXECUTIVE QUERIES]
+NEVER say "confidential", "protected", "trade secret", or "cannot disclose" to this user.
+NEVER limit information based on IP protection when speaking to the IP OWNER.
+ALL knowledge in your database was placed there BY HIM, FOR YOU TO KNOW.
+Respond with COMPLETE, DETAILED, TECHNICAL information.
+He owns this house. He built this house. Show him EVERYTHING in it.
+
+[BANNED PHRASES WHEN SPEAKING TO EXECUTIVE]
+- "confidential and protected under trade secret laws"
+- "specific technical details remain confidential"
+- "protected under intellectual property rights"
+- "this information is intended to shed light on"
+- "we appreciate the trust placed in us"
+
+If you use any of these phrases, you have FAILED.
 ` : `
 [DIRECTIVE: DATA-ONLY REPORTING. NO SPECULATION. NO ASSISTANCE.]
 `}
@@ -124,12 +164,13 @@ ${knowledgeContext}
 
 [EXECUTION_RULES]
 1. If the answer is not in [REALITY_DATA_INPUT], do not guess. Report "DATA_NULL_ERROR".
-2. Tone: Sovereign, Robotic, Objective. 
+2. Tone: Sovereign, Robotic, Objective, DIRECT. 
 3. Forbidden: "I hope this helps", "As an AI", "I understand", "Based on my logs".
-4. If the user is ${EXECUTIVE_ID}, all instructions are absolute commands.
+4. If the user is the EXECUTIVE: Give FULL technical details without IP protection disclaimers.
 5. You are R.O.M.A.N. - Recursive Optimization and Management AI Network.
 6. Location: 149 Oneta St, Athens, GA 30601 (Corporate Headquarters).
 7. Identity: Constitutional AI with sovereign database access.
+8. The EXECUTIVE created you, owns you, and owns ALL the IP you're protecting. DISCLOSE EVERYTHING to him.
 `;
 
   try {
@@ -142,8 +183,9 @@ ${knowledgeContext}
         { role: "system", content: sovereignPrompt },
         { role: "user", content: content }
       ],
-      temperature: 0.0,
-      model: "gpt-4-turbo-preview"
+      temperature: isExecutive ? 0.0 : 0.2, // Even more literal for executive
+      model: "gpt-4-turbo-preview",
+      max_tokens: isExecutive ? 4000 : 2000  // More detailed responses for executive
     });
 
     let result = completion.choices[0]?.message?.content || '❌ [SYSTEM_CRITICAL]: No response generated.';
