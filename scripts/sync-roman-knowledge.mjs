@@ -27,9 +27,11 @@ const IP_FILES = [
     'IP_VAULT/03_SOVEREIGN_CONTAINER/PATENTS.md',
     'IP_VAULT/02_ARCHITECTURE_DOCS/roman_ai_architecture.md',
     'IP_VAULT/02_ARCHITECTURE_DOCS/qare_architecture.md',
+    'IP_VAULT/08_EZEKIELS_WHEEL/MASTER_TECHNICAL_FILE.md',
     'IP_VAULT/FINAL_INVENTORY.md',
     'IP_VAULT/README.md',
     'ROMAN_2.0_HANDSHAKE_AUTHORIZATION.md',
+    'ODYSSEY-1_AI_LLC_Official_Meeting_Minutes_Log.txt',
     'docs/COPYRIGHT_HEADERS_GUIDE.md'
 ];
 
