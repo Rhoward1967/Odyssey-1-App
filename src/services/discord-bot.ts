@@ -24,6 +24,7 @@ import {
 import { RomanAutonomyIntegration } from './RomanAutonomyIntegration';
 import { generateIPAwareSystemPrompt } from './romanIPAwarePrompt';
 import { searchKnowledgeBase } from './romanKnowledgeSearch';
+import { processSovereignCommand } from './romanSovereignProcessor';
 import { SovereignCoreOrchestrator } from './SovereignCoreOrchestrator';
 
 export async function sendUrgentReportToDiscord(reportText, channelId) {
@@ -831,6 +832,35 @@ async function handleDirectMessage(message: Message) {
     'info',
     { userId, channelType: message.channel.type }
   );
+  
+  // SOVEREIGN MODE: Use sovereign processor for rhoward1236526
+  // This bypasses all other logic and uses constitutional-level command processing
+  if (userId === "rhoward1236526" || message.author.username === "rhoward1236526") {
+    console.log('👑 EXECUTIVE OVERRIDE: Routing to Sovereign Processor');
+    try {
+      const sovereignResponse = await processSovereignCommand(message);
+      
+      // Discord 2000 char limit - split if needed
+      if (sovereignResponse.length <= 2000) {
+        await message.reply(sovereignResponse);
+      } else {
+        const chunks = sovereignResponse.match(/.{1,1900}/gs) || [];
+        await message.reply(chunks[0]);
+        for (let i = 1; i < chunks.length; i++) {
+          if ('send' in message.channel) {
+            await message.channel.send(chunks[i]);
+          }
+        }
+      }
+      
+      console.log('✅ Sovereign command processed successfully');
+      return;
+    } catch (error: any) {
+      console.error('❌ Sovereign processor error:', error);
+      await message.reply('❌ [SYSTEM_CRITICAL]: Sovereign processor failed. Falling back to standard mode.');
+      // Fall through to standard processing
+    }
+  }
   
   // Check for audit commands FIRST
   const content = message.content.toLowerCase().trim();
