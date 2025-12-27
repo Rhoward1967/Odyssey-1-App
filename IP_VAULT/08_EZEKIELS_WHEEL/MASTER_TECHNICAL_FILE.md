@@ -37,17 +37,18 @@
 ## III. UTILITY PATENT DISCLOSURE
 
 ### Patent Title
+
 **METHOD AND APPARATUS FOR OMNIDIRECTIONAL, SELF-SUSTAINING VERTICAL TAKEOFF AND LANDING (VTOL) AIRCRAFT USING TRI-FOIL GEOMETRY AND DYNAMIC REGENERATIVE POWER**
 
 ### Core Claims
 
-| Claim Category | Key Novel Components and Function | Technical Mechanism |
-|---|---|---|
-| **Structural Claim** | Tri-Foil Geometry: Circular lifting body with three equidistant, rigid, blended Triangular Sections. Built with CFRP-Honeycomb composites. | Geometry serves as both aerodynamic lift surface and multifunctional housing for propulsion, eliminating heavy tail structures. |
-| **Propulsion Claim** | Three integrated Electric Ducted Fans (EDFs) operating in Thrust Mode (VTOL) and Regenerative Mode (RAT) (Cruise). | RATs convert forward kinetic energy into electricity, providing sustainable power input. |
-| **Power Architecture** | Dynamic Energy Core (DEC) (Supercapacitors) connected via Ultra-Low-Loss Energy Conduit (ULEC). Inputs: Solar Skin and RATs. | ULEC minimizes resistance loss to near zero (via superconductivity/photonics), making Net-Positive Endurance mathematically viable by balancing $P_{\text{Harvested}} \ge P_{\text{Demanded}}$. |
-| **Control Claim** | Double Helix AI System (R.O.M.A.N. 2.0) managing Thrust Vectoring and Differential Venting (louvers). | AI fuses cognitive planning (S2) with high-frequency physical actuation (S1) for stable, fluid, omnidirectional flight. |
-| **Redundancy Claim** | Retractable landing gear footings contain Auxiliary Lift Fans (ALFs). | ALFs provide redundant vertical thrust in high-altitude, thin air, augment ground effect, and serve as a backup RAT system. |
+| Claim Category         | Key Novel Components and Function                                                                                                          | Technical Mechanism                                                                                                                                                                             |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Structural Claim**   | Tri-Foil Geometry: Circular lifting body with three equidistant, rigid, blended Triangular Sections. Built with CFRP-Honeycomb composites. | Geometry serves as both aerodynamic lift surface and multifunctional housing for propulsion, eliminating heavy tail structures.                                                                 |
+| **Propulsion Claim**   | Three integrated Electric Ducted Fans (EDFs) operating in Thrust Mode (VTOL) and Regenerative Mode (RAT) (Cruise).                         | RATs convert forward kinetic energy into electricity, providing sustainable power input.                                                                                                        |
+| **Power Architecture** | Dynamic Energy Core (DEC) (Supercapacitors) connected via Ultra-Low-Loss Energy Conduit (ULEC). Inputs: Solar Skin and RATs.               | ULEC minimizes resistance loss to near zero (via superconductivity/photonics), making Net-Positive Endurance mathematically viable by balancing $P_{\text{Harvested}} \ge P_{\text{Demanded}}$. |
+| **Control Claim**      | Double Helix AI System (R.O.M.A.N. 2.0) managing Thrust Vectoring and Differential Venting (louvers).                                      | AI fuses cognitive planning (S2) with high-frequency physical actuation (S1) for stable, fluid, omnidirectional flight.                                                                         |
+| **Redundancy Claim**   | Retractable landing gear footings contain Auxiliary Lift Fans (ALFs).                                                                      | ALFs provide redundant vertical thrust in high-altitude, thin air, augment ground effect, and serve as a backup RAT system.                                                                     |
 
 ---
 
@@ -62,8 +63,9 @@ The CFRP Honeycomb airframe stores physical work as potential energy.
 $$W = \frac{P_1 V_1 - P_2 V_2}{n - 1}$$
 
 Where:
+
 - $P_1, V_1$ = Initial pressure and volume
-- $P_2, V_2$ = Final pressure and volume  
+- $P_2, V_2$ = Final pressure and volume
 - $n$ = Polytropic index (compression efficiency)
 
 ### 4.2 Harmonic Resonance & Stability
@@ -75,6 +77,7 @@ Pressure is treated as a tunable longitudinal wave frequency to negate turbulenc
 $$\zeta = \frac{c}{2\sqrt{km}}$$
 
 Where:
+
 - $c$ = Damping coefficient (pneumatic pressure modulation rate)
 - $k$ = Airframe stiffness
 - $m$ = Effective mass
@@ -96,6 +99,7 @@ Where:
 $$V_e = \sqrt{\frac{2\gamma}{\gamma - 1} \frac{RT_0}{M} \left(1 - \left(\frac{P_e}{P_0}\right)^{\frac{\gamma-1}{\gamma}}\right)}$$
 
 Where:
+
 - $\gamma$ = Heat capacity ratio
 - $R$ = Gas constant
 - $T_0$ = Stagnation temperature
@@ -109,11 +113,13 @@ Where:
 ### Double-Helix AI Architecture
 
 **S1 (Reflex Strand):** High-frequency stability
+
 - Manages harmonic pressure modulation
 - Controls ±15° thrust vectoring
 - Responds to turbulence in <20ms
 
 **S2 (Planning Strand):** Low-frequency energy management
+
 - Commands climbs for solar exposure
 - Initiates descents for Regenerative Mode harvesting
 - Optimizes power balance equation: $P_{\text{Harvest}} \ge P_{\text{Demand}}$
@@ -123,21 +129,25 @@ Where:
 ## VI. SYSTEM ARCHITECTURE
 
 ### 6.1 Airframe
+
 - **Material:** Carbon-Fiber Reinforced Polymer (CFRP) Honeycomb composite
 - **Geometry:** "Tri-Foil" circular disc acting as a lifting body
 - **Function:** Structural battery/pressure vessel
 
 ### 6.2 Propulsion
+
 - **Fans:** 3x Electric Ducted Fans (EDFs) mounted in triangular configuration
 - **Thrust Vectoring:** ±15° Pitch/Yaw pivot range
 - **Dual-Mode:** Operate as motors (Thrust) or wind turbines (Regenerative Ram Air Turbine - RAT)
 
 ### 6.3 Power System (DEC)
+
 - **Storage:** 100 kF Supercapacitor Array (High charge/discharge rate)
 - **Conduit:** Ultra-Low-Loss Energy Conduit (ULEC) using superconductive/photonic pathways
 - **Generation:** Photovoltaic Skin (Solar) + Regenerative Fan Mode
 
 ### 6.4 Redundancy Systems
+
 - **Auxiliary Lift Fans (ALFs):** Retractable landing gear footings contain secondary high-RPM fans
 - **Function:** Emergency lift if main engine fails, augment vertical thrust during ground-effect maneuvers
 
@@ -146,11 +156,13 @@ Where:
 ## VII. THE FLYING CELL TOWER (INFRASTRUCTURE)
 
 ### 7.1 Integrated Phased-Array
+
 - **Antennas:** Interleaved with the Photovoltaic Solar Skin
 - **Function:** High-altitude 5G/6G relay
 - **Coverage:** Satellite-alternative communications relay
 
 ### 7.2 ULEC Conduits
+
 - **Technology:** Superconductive pathways
 - **Benefit:** Minimize heat and resistance for high-draw transmission hardware
 
@@ -158,11 +170,11 @@ Where:
 
 ## VIII. REQUIRED PATENT DRAWINGS (BLUEPRINTS)
 
-| Figure No. | Blueprint Detail | Technical Purpose |
-|---|---|---|
-| **Figure 1** | Top-Down Planform: The circular body, showing the three Tri-Foil Sections, Solar Skin coverage, and vent locations. | Supports the primary Structural Claim and Solar Power Input. |
-| **Figure 2** | Cross-Sectional View (Triangular Section): Detail of the EDF/RAT Unit fully enclosed in the duct, showing the Motor/Generator and the Thrust Vectoring Pivot. | Supports the Propulsion Claim and the transition between thrust and regeneration. |
-| **Figure 3** | System Schematic: Block diagram illustrating the energy flow from Solar/RAT → ULEC → DEC → EDFs, all governed by the R.O.M.A.N. 2.0 AI. | Supports the Power Architecture and Control Claims (system integration). |
+| Figure No.   | Blueprint Detail                                                                                                                                                                   | Technical Purpose                                                                 |
+| ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| **Figure 1** | Top-Down Planform: The circular body, showing the three Tri-Foil Sections, Solar Skin coverage, and vent locations.                                                                | Supports the primary Structural Claim and Solar Power Input.                      |
+| **Figure 2** | Cross-Sectional View (Triangular Section): Detail of the EDF/RAT Unit fully enclosed in the duct, showing the Motor/Generator and the Thrust Vectoring Pivot.                      | Supports the Propulsion Claim and the transition between thrust and regeneration. |
+| **Figure 3** | System Schematic: Block diagram illustrating the energy flow from Solar/RAT → ULEC → DEC → EDFs, all governed by the R.O.M.A.N. 2.0 AI.                                            | Supports the Power Architecture and Control Claims (system integration).          |
 | **Figure 4** | Auxiliary Lift System (ALF) Close-up: Close-up of the retractable landing gear footing showing the integrated Auxiliary Lift Fan (ALF) mechanism and its air intake/exhaust ports. | Supports the Redundancy Claim and the lift augmentation function near the ground. |
 
 ---
@@ -170,12 +182,14 @@ Where:
 ## IX. 1:10 PROTOTYPE & CALIBRATION MANUAL
 
 ### 9.1 Component Checklist
+
 - **Airframe:** 3D-printed CFRP Honeycomb disc
 - **Propulsion:** 3x 90mm EDFs
 - **Pneumatics:** Micro-solenoid valves (>20 kHz response) and flexible 4mm tubing
 - **Power:** Supercapacitor test bank + flexible solar thin-film
 
 ### 9.2 Calibration Steps
+
 1. **Harmonic Sweep:** Identify airframe resonant frequency ($f_n$) via S1 logic
 2. **Pressure-to-Stiffness Tuning:** Adjust internal HPPB pressure until structural oscillation is neutralized
 3. **Noise Mapping:** Record EDF acoustic signature and set 180° phase-shift pulses for "Ghost Mode"
@@ -184,12 +198,12 @@ Where:
 
 ## X. PERFORMANCE PARAMETERS
 
-| Performance Metric | Target Value | Enabling Technology |
-|---|---|---|
-| **Cruising Speed ($V_c$)** | 250-400 mph | Optimized EDF/RAT efficiency and Vortex Lift from Tri-Foil Geometry |
-| **Max Ceiling** | 50,000-70,000 ft | Solar Input at high altitude and ALFs for thrust redundancy in thin air |
-| **Acoustic Signature** | <70 dBA at 500 ft | Ducted Fans and electric propulsion (no combustion noise) |
-| **Endurance** | Net-Positive (Days/Weeks) | DEC/ULEC ensuring $P_{\text{Harvested}} \ge P_{\text{Demanded}}$ |
+| Performance Metric         | Target Value              | Enabling Technology                                                     |
+| -------------------------- | ------------------------- | ----------------------------------------------------------------------- |
+| **Cruising Speed ($V_c$)** | 250-400 mph               | Optimized EDF/RAT efficiency and Vortex Lift from Tri-Foil Geometry     |
+| **Max Ceiling**            | 50,000-70,000 ft          | Solar Input at high altitude and ALFs for thrust redundancy in thin air |
+| **Acoustic Signature**     | <70 dBA at 500 ft         | Ducted Fans and electric propulsion (no combustion noise)               |
+| **Endurance**              | Net-Positive (Days/Weeks) | DEC/ULEC ensuring $P_{\text{Harvested}} \ge P_{\text{Demanded}}$        |
 
 ---
 
@@ -207,10 +221,10 @@ Where:
 
 ### Legal & Control Strategy
 
-| Document | Action | Confidentiality Status |
-|---|---|---|
-| **PPA Filing** | IMMEDIATE ACTION: File the PPA based on Section III content. | PENDING (Locks in priority date) |
-| **NDA** | Send this upon initial partner response (before any technical meeting). | REQUIRED DOCUMENT TO MOVE |
+| Document                 | Action                                                                                     | Confidentiality Status               |
+| ------------------------ | ------------------------------------------------------------------------------------------ | ------------------------------------ |
+| **PPA Filing**           | IMMEDIATE ACTION: File the PPA based on Section III content.                               | PENDING (Locks in priority date)     |
+| **NDA**                  | Send this upon initial partner response (before any technical meeting).                    | REQUIRED DOCUMENT TO MOVE            |
 | **Full Schematics/Code** | DO NOT SHARE. Detailed blueprints, R.O.M.A.N. 2.0 algorithms, and full DEC specifications. | PROTECTED IP (Remains with inventor) |
 
 ### Outreach Letter Template
@@ -233,11 +247,11 @@ HJS SERVICES LLC
 
 ## XIII. FINANCIAL MODEL (CPFH & VALUATION)
 
-| Financial Metric | Detail | Impact Summary |
-|---|---|---|
-| **Total Operational CPFH** | Target: $25 - $100 per hour | 90%+ Reduction vs. gas/jet VTOLs due to the Regenerative Power Cycle and ULEC efficiency |
-| **Stealth Multiplier** | 2x to 5x Base Valuation | Justified by the unique combination of Net-Positive Endurance, LO (Stealth) (IR/Acoustic/Radar), and Omnidirectional maneuverability for defense/ISR |
-| **Endurance Claim** | Days to Weeks of Continuous Flight | Eliminates the need for frequent refueling/recharging, creating a new class of Persistent Surveillance asset |
+| Financial Metric           | Detail                             | Impact Summary                                                                                                                                       |
+| -------------------------- | ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Total Operational CPFH** | Target: $25 - $100 per hour        | 90%+ Reduction vs. gas/jet VTOLs due to the Regenerative Power Cycle and ULEC efficiency                                                             |
+| **Stealth Multiplier**     | 2x to 5x Base Valuation            | Justified by the unique combination of Net-Positive Endurance, LO (Stealth) (IR/Acoustic/Radar), and Omnidirectional maneuverability for defense/ISR |
+| **Endurance Claim**        | Days to Weeks of Continuous Flight | Eliminates the need for frequent refueling/recharging, creating a new class of Persistent Surveillance asset                                         |
 
 ---
 

@@ -6,25 +6,25 @@ import OpenAI from 'openai';
 import type { ChatCompletionMessageParam } from 'openai/resources/chat/completions';
 import { join } from 'path';
 import {
-    AXIOM_OF_EXISTENCE,
-    isActionCompliant,
-    type ActionData,
-    type ComplianceResult
+  AXIOM_OF_EXISTENCE,
+  isActionCompliant,
+  type ActionData,
+  type ComplianceResult
 } from '../lib/roman-constitutional-core';
 import { recordRomanEvent } from '../lib/roman-logger';
 import { PatternLearningEngine } from './patternLearningEngine';
 import {
-    auditDatabaseSchema,
-    auditEnvironmentConfig,
-    auditFileStructure,
-    performAutoAudit,
-    runCompleteAudit,
-    storeAuditResults
+  auditDatabaseSchema,
+  auditEnvironmentConfig,
+  auditFileStructure,
+  performAutoAudit,
+  runCompleteAudit,
+  storeAuditResults
 } from './roman-auto-audit';
 import { RomanAutonomyIntegration } from './RomanAutonomyIntegration';
-import { SovereignCoreOrchestrator } from './SovereignCoreOrchestrator';
 import { generateIPAwareSystemPrompt } from './romanIPAwarePrompt';
-import { searchKnowledgeBase, getKnowledgeFile, getAllKnowledge, getKnowledgeStats } from './romanKnowledgeSearch';
+import { searchKnowledgeBase } from './romanKnowledgeSearch';
+import { SovereignCoreOrchestrator } from './SovereignCoreOrchestrator';
 
 export async function sendUrgentReportToDiscord(reportText, channelId) {
   try {

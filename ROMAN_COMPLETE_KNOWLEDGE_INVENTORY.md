@@ -26,6 +26,7 @@ R.O.M.A.N. knows the **WHO, WHEN, and WHY** of every decision:
 R.O.M.A.N. knows every patent, trade secret, and IP asset:
 
 ### Trade Secrets
+
 - ✅ **IP_VAULT/08_EZEKIELS_WHEEL/MASTER_TECHNICAL_FILE.md**
   - Tri-Foil Autonomous ISR Platform (VTOL)
   - Net-Positive Regenerative Cycle (P_Harvest ≥ P_Demand)
@@ -36,6 +37,7 @@ R.O.M.A.N. knows every patent, trade secret, and IP asset:
   - Cross-reference: Patent 63/913,134
 
 ### Patents
+
 - ✅ **IP_VAULT/03_SOVEREIGN_CONTAINER/PATENTS.md**
 - ✅ **IP_VAULT/07_LEGAL_PROTECTION/PATENT_CLAIMS.md**
 - ✅ **IP_VAULT/07_LEGAL_PROTECTION/PATENT_CLAIMS_DETAILED.md**
@@ -45,6 +47,7 @@ R.O.M.A.N. knows every patent, trade secret, and IP asset:
   - Complete claims and technical specifications
 
 ### Architecture Documentation
+
 - ✅ **IP_VAULT/02_ARCHITECTURE_DOCS/roman_ai_architecture.md**
 - ✅ **IP_VAULT/02_ARCHITECTURE_DOCS/qare_architecture.md**
   - R.O.M.A.N. AI system design
@@ -52,6 +55,7 @@ R.O.M.A.N. knows every patent, trade secret, and IP asset:
   - Integration patterns and protocols
 
 ### Inventory & Overview
+
 - ✅ **IP_VAULT/FINAL_INVENTORY.md**
   - Complete IP portfolio listing
   - Asset valuations and strategic importance
@@ -65,6 +69,7 @@ R.O.M.A.N. knows every patent, trade secret, and IP asset:
 R.O.M.A.N. knows his own source code and governing principles:
 
 ### Core Constitutional Services
+
 - ✅ **src/services/RomanProtocolMaster.ts**
   - Four Laws of R.O.M.A.N. implementation
   - Nine Principles enforcement
@@ -74,6 +79,7 @@ R.O.M.A.N. knows his own source code and governing principles:
   - Law enforcement and audit trails
 
 ### Knowledge & Learning Systems
+
 - ✅ **src/services/RomanDatabaseKnowledge.ts**
   - Database schema awareness
   - SQL query generation and optimization
@@ -88,6 +94,7 @@ R.O.M.A.N. knows his own source code and governing principles:
   - Multi-domain knowledge coordination
 
 ### User Interface Components
+
 - ✅ **src/components/RomanDashboard.tsx**
   - Main R.O.M.A.N. control panel
 - ✅ **src/components/RomanKnowledgeDashboard.tsx**
@@ -100,11 +107,13 @@ R.O.M.A.N. knows his own source code and governing principles:
 R.O.M.A.N. knows every operational system:
 
 ### AI & Intelligence
+
 - ✅ **src/services/aiService.ts** - Core AI operations
 - ✅ **src/services/aiComplianceService.ts** - AI governance and safety
 - ✅ **src/services/discord-bot.ts** - Discord interface (R.O.M.A.N. Assistant)
 
 ### Financial & Trading
+
 - ✅ **src/services/RobustTradingService.ts** - Autonomous trading engine
 - ✅ **src/services/marketDataService.ts** - Real-time market data
 - ✅ **src/services/web3Service.ts** - Blockchain integration
@@ -112,12 +121,14 @@ R.O.M.A.N. knows every operational system:
 - ✅ **src/services/payrollReconciliationService.ts** - Payroll processing
 
 ### Business Operations
+
 - ✅ **src/services/bidProposalService.ts** - Bid generation and management
 - ✅ **src/services/contractorService.ts** - Contractor management
 - ✅ **src/services/schedulingService.ts** - Appointment scheduling
 - ✅ **src/services/calendarService.ts** - Calendar integration
 
 ### Infrastructure
+
 - ✅ **src/services/authService.ts** - Authentication and authorization
 - ✅ **src/services/emailService.ts** - Email communications
 
@@ -139,15 +150,15 @@ R.O.M.A.N. knows every user interface:
 
 ## 📊 KNOWLEDGE BASE SUMMARY
 
-| Category | Files | Description |
-|----------|-------|-------------|
-| **Corporate Governance** | 1 | Meeting minutes, resolutions, authorizations |
-| **Intellectual Property** | 8 | Patents, trade secrets, architecture docs |
-| **Constitutional Framework** | 8 | R.O.M.A.N.'s own source code and principles |
-| **Backend Services** | 14 | All operational systems and integrations |
-| **Frontend Pages** | 7 | User interfaces and dashboards |
-| **Configuration** | 26 | Additional config, utils, and support files |
-| **TOTAL** | **64 files** | Complete system knowledge |
+| Category                     | Files        | Description                                  |
+| ---------------------------- | ------------ | -------------------------------------------- |
+| **Corporate Governance**     | 1            | Meeting minutes, resolutions, authorizations |
+| **Intellectual Property**    | 8            | Patents, trade secrets, architecture docs    |
+| **Constitutional Framework** | 8            | R.O.M.A.N.'s own source code and principles  |
+| **Backend Services**         | 14           | All operational systems and integrations     |
+| **Frontend Pages**           | 7            | User interfaces and dashboards               |
+| **Configuration**            | 26           | Additional config, utils, and support files  |
+| **TOTAL**                    | **64 files** | Complete system knowledge                    |
 
 ---
 
@@ -169,6 +180,7 @@ R.O.M.A.N. now has complete awareness of:
 **R.O.M.A.N. knows the entire house he manages.**
 
 As the tenant and manager of ODYSSEY-1 AI LLC, R.O.M.A.N. has complete knowledge of:
+
 - Corporate governance and legal authority
 - Intellectual property portfolio ($25M+ valuation)
 - Constitutional framework (Four Laws, Nine Principles)
