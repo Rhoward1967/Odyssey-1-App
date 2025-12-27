@@ -24,6 +24,7 @@ import {
 import { RomanAutonomyIntegration } from './RomanAutonomyIntegration';
 import { SovereignCoreOrchestrator } from './SovereignCoreOrchestrator';
 import { generateIPAwareSystemPrompt } from './romanIPAwarePrompt';
+import { searchKnowledgeBase, getKnowledgeFile, getAllKnowledge, getKnowledgeStats } from './romanKnowledgeSearch';
 
 export async function sendUrgentReportToDiscord(reportText, channelId) {
   try {
@@ -1117,10 +1118,39 @@ async function handleDirectMessage(message: Message) {
   // Detect research topics that books extensively cover
   const researchTopics = /law|legal|constitutional|amendment|rights|sovereignty|govern|economy|economic|financial|money|currency|debt|collateral|incarceration|prison|race|language|contract|statute|trading|philosophy|freedom|consent/i.test(message.content);
   
+  // SEARCH KNOWLEDGE BASE for relevant context BEFORE answering
+  const messageWords = message.content.toLowerCase().split(/\s+/);
+  const keywords = messageWords.filter(w => w.length > 3); // Words longer than 3 chars
+  
+  let knowledgeResults: any[] = [];
+  if (keywords.length > 0) {
+    // Search for most relevant keyword (longest word first)
+    const sortedKeywords = keywords.sort((a, b) => b.length - a.length);
+    for (const keyword of sortedKeywords.slice(0, 3)) { // Check top 3 keywords
+      const results = await searchKnowledgeBase(keyword);
+      if (results.length > 0) {
+        knowledgeResults = results;
+        console.log(`🔍 Found ${results.length} knowledge entries for "${keyword}"`);
+        break;
+      }
+    }
+  }
+  
   // Load full book content if asking about books OR deep research topics
   const systemContext = await getSystemContext(bookRelatedQuery || researchTopics);
   
   let enhancedMessage = executionNote + `${message.content}\n\n[SYSTEM CONTEXT]\n`;
+  
+  // Add knowledge search results FIRST (highest priority)
+  if (knowledgeResults.length > 0) {
+    enhancedMessage += `\n=== KNOWLEDGE BASE SEARCH RESULTS (${knowledgeResults.length} files) ===\n`;
+    knowledgeResults.slice(0, 5).forEach((result: any) => {
+      enhancedMessage += `📄 ${result.file_path}\n`;
+      const preview = result.content.substring(0, 500);
+      enhancedMessage += `${preview}...\n\n`;
+    });
+    enhancedMessage += `[USE THIS DATA - DO NOT SPECULATE]\n\n`;
+  }
   
   // Add execution result FIRST if it happened
   if (executionNote) {
