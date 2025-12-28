@@ -8,7 +8,6 @@
  */
 
 import OpenAI from 'openai';
-import type { ChatCompletionMessageParam } from 'openai/resources/chat/completions';
 import { searchKnowledgeBase } from './romanKnowledgeSearch';
 import { romanSupabase as supabase } from './romanSupabase';
 
