@@ -32,7 +32,9 @@ const IP_FILES = [
     'IP_VAULT/README.md',
     'ROMAN_2.0_HANDSHAKE_AUTHORIZATION.md',
     'ODYSSEY-1_AI_LLC_Official_Meeting_Minutes_Log.txt',
-    'docs/COPYRIGHT_HEADERS_GUIDE.md'
+    'docs/COPYRIGHT_HEADERS_GUIDE.md',
+    'legal/Rickey-A-Howard-Family-Trust-DRAFT.md',
+    'legal/IP-Assignment-to-Trust-DRAFT.md'
 ];
 
 async function syncFile(relativePath) {
