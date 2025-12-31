@@ -43,23 +43,6 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
   const [redirecting, setRedirecting] = useState(false);
-  const [mounted, setMounted] = useState(false);
-
-  // Lazy-load analytics after hydration to prevent blocking
-  useEffect(() => {
-    setMounted(true);
-    
-    if (typeof window !== 'undefined') {
-      import('@vercel/analytics/react').then(({ Analytics }) => {
-        const AnalyticsComponent = Analytics;
-        // Analytics injected post-hydration
-      });
-      import('@vercel/speed-insights/react').then(({ SpeedInsights }) => {
-        const InsightsComponent = SpeedInsights;
-        // SpeedInsights injected post-hydration
-      });
-    }
-  }, []);
 
   useEffect(() => {
     // Enhanced magic link handling with security improvements
