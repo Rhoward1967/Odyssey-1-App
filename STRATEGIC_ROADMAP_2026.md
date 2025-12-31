@@ -76,6 +76,16 @@ The R.O.M.A.N. Protocol has successfully achieved **Operational AI Governance**.
 
 **Target Completion:** Jan 26, 2026
 
+### ⚠️ Alpha Node Deployment - UPDATED TIMELINE
+
+- **Original Date:** January 18, 2026
+- **New Target:** April 1, 2026
+- **Decision Date:** December 30, 2025 (Board Meeting - Minutes v2.5)
+- **Reason:** Driver stability concerns and firmware development requirements
+- **Budget Impact:** +$2,500 firmware development, +$1,000 extended testing
+- **Status:** Infrastructure ready, extended development window approved
+- **Hardware:** RTX 5090 GPU workstation with local inference capabilities
+
 ### Edge Function Audit
 
 - Categorize and prune the 41 edge functions

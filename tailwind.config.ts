@@ -123,4 +123,11 @@ export default {
     animate,
     typography,
   ],
+  // Optimize for production builds
+  future: {
+    hoverOnlyWhenSupported: true,
+  },
+  experimental: {
+    optimizeUniversalDefaults: true,
+  },
 } satisfies Config;

@@ -17,6 +17,7 @@ import BidsList from '@/pages/BidsList';
 import Calculator from '@/pages/Calculator';
 import CatalogManager from '@/pages/CatalogManager';
 import Handbook from '@/pages/Handbook';
+import HowardJanitorial from '@/pages/HowardJanitorial';
 import Index from '@/pages/Index';
 import Invoicing from '@/pages/Invoicing';
 import LoginPage from '@/pages/LoginPage';
@@ -45,6 +46,12 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
   const [redirecting, setRedirecting] = useState(false);
+
+  // Check if visitor is on Howard Janitorial domain
+  const isHowardJanitorialDomain = window.location.hostname === 'howardjanitorial.net' || 
+                                    window.location.hostname === 'www.howardjanitorial.net';
+  
+  // odyssey-1.ai is the main application domain
 
   useEffect(() => {
     // Enhanced magic link handling with security improvements
@@ -164,13 +171,18 @@ function App() {
 
   return (
     <ErrorBoundary componentName="App">
-      <AuthProvider>
-        <APIProvider>
-          <FundingProvider>
-            <PositionLotsProvider>
-              <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-                <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">
-                  <Routes>
+      {/* Howard Janitorial public website */}
+      {isHowardJanitorialDomain ? (
+        <HowardJanitorial />
+      ) : (
+        /* Odyssey-1 AI application */
+        <AuthProvider>
+          <APIProvider>
+            <FundingProvider>
+              <PositionLotsProvider>
+                <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+                  <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">
+                    <Routes>
                     {/* Public Routes */}
                     <Route path="/" element={<PublicHomePage />} />
                     <Route path="/subscribe" element={<Subscribe />} />
@@ -297,6 +309,7 @@ function App() {
         <Analytics />
         <SpeedInsights />
       </AuthProvider>
+      )}
     </ErrorBoundary>
   );
 }

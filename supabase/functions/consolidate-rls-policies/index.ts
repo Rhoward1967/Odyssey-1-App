@@ -145,7 +145,7 @@ Deno.serve(async (req) => {
           dropped++;
         }
       } catch (err) {
-        results.push({ table, policy, status: 'error', error: err.message });
+        results.push({ table, policy, status: 'error', error: (err as Error).message });
         failed++;
       }
     }
@@ -164,7 +164,7 @@ Deno.serve(async (req) => {
     );
   } catch (error) {
     return new Response(
-      JSON.stringify({ success: false, error: error.message }),
+      JSON.stringify({ success: false, error: (error as Error).message }),
       { status: 500, headers: { 'Content-Type': 'application/json' } }
     );
   }

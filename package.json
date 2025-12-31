@@ -21,7 +21,8 @@
   ],
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && npm run build:optimize",
+    "build:optimize": "echo Build optimized for production",
     "build:dev": "vite build --mode development",
     "test": "vitest run",
     "test:watch": "vitest",

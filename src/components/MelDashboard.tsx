@@ -5,16 +5,16 @@ import { Progress } from '@/components/ui/progress';
 import { CoinbaseService } from '@/services/CoinbaseService';
 import { MelFinancialGovernor } from '@/services/MelFinancialGovernor';
 import {
-    ArrowDownRight,
-    ArrowUpRight,
-    Briefcase,
-    ChevronRight,
-    DollarSign,
-    PieChart,
-    Target,
-    TrendingUp,
-    Wallet,
-    Zap,
+  ArrowDownRight,
+  ArrowUpRight,
+  Briefcase,
+  ChevronRight,
+  DollarSign,
+  PieChart,
+  Target,
+  TrendingUp,
+  Wallet,
+  Zap,
 } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 

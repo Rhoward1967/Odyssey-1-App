@@ -57,21 +57,54 @@ export default defineConfig(({ mode }) => ({
     rollupOptions: {
       external: ['discord.js'],
       output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom'],
-          ui: ['lucide-react', 'recharts'],
+        manualChunks: (id) => {
+          // Aggressive code splitting for optimal caching
+          if (id.includes('node_modules')) {
+            if (id.includes('react') || id.includes('react-dom')) {
+              return 'react-vendor';
+            }
+            if (id.includes('lucide-react')) {
+              return 'icons';
+            }
+            if (id.includes('recharts') || id.includes('d3')) {
+              return 'charts';
+            }
+            if (id.includes('@supabase')) {
+              return 'supabase';
+            }
+            if (id.includes('@radix-ui') || id.includes('shadcn')) {
+              return 'ui-components';
+            }
+            return 'vendor';
+          }
+          // Split pages for route-based lazy loading
+          if (id.includes('/pages/')) {
+            const pageName = id.split('/pages/')[1].split('.')[0];
+            return `page-${pageName.toLowerCase()}`;
+          }
         },
+        // Optimize asset file names
+        chunkFileNames: 'assets/js/[name]-[hash].js',
+        entryFileNames: 'assets/js/[name]-[hash].js',
+        assetFileNames: 'assets/[ext]/[name]-[hash].[ext]',
       },
     },
-    chunkSizeWarningLimit: 1200, // Increased limit for Phase 4 optimizations
-    // Fix preload warnings by disabling modulePreload for unused chunks
+    chunkSizeWarningLimit: 500, // Stricter chunk size enforcement
     modulePreload: {
       polyfill: false,
-      resolveDependencies: () => [] // ✅ Already configured!
+      resolveDependencies: () => []
     },
-    // Fix hydration errors by ensuring consistent builds
     target: 'esnext',
     minify: mode === 'production' ? 'esbuild' : false,
+    // Enable CSS code splitting
+    cssCodeSplit: true,
+    // Optimize dependencies
+    commonjsOptions: {
+      include: [/node_modules/],
+      transformMixedEsModules: true,
+    },
+    // Source map only for errors
+    sourcemap: mode === 'production' ? false : true,
   },
   // Add SSR configuration to prevent hydration mismatches
   ssr: {
