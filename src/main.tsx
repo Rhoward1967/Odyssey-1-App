@@ -3,18 +3,19 @@ import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
 
-// Register service worker for performance
+// Register service worker for performance - but wait for React to mount
 if ('serviceWorker' in navigator && import.meta.env.PROD) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js').catch(() => {
-      // Silent fail - not critical
-    });
+    // Delay to ensure React has mounted first
+    setTimeout(() => {
+      navigator.serviceWorker.register('/sw.js').catch(() => {
+        // Silent fail - not critical
+      });
+    }, 1000);
   });
 }
 
-// Add loading indicator while app initializes
 const root = document.getElementById('root')!;
-root.innerHTML = '<div class="app-loading"><div class="spinner"></div></div>';
 
 ReactDOM.createRoot(root).render(
   <React.StrictMode>

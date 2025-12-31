@@ -46,10 +46,16 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
   const [redirecting, setRedirecting] = useState(false);
+  const [isHowardJanitorialDomain, setIsHowardJanitorialDomain] = useState(false);
 
-  // Check if visitor is on Howard Janitorial domain
-  const isHowardJanitorialDomain = window.location.hostname === 'howardjanitorial.net' || 
-                                    window.location.hostname === 'www.howardjanitorial.net';
+  useEffect(() => {
+    // Check if visitor is on Howard Janitorial domain (client-side only to avoid hydration issues)
+    if (typeof window !== 'undefined') {
+      const isHJDomain = window.location.hostname === 'howardjanitorial.net' || 
+                         window.location.hostname === 'www.howardjanitorial.net';
+      setIsHowardJanitorialDomain(isHJDomain);
+    }
+  }, []);
   
   // odyssey-1.ai is the main application domain
 
