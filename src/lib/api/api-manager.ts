@@ -60,8 +60,8 @@ apiManager.registerAPI({
 
 apiManager.registerAPI({
   name: 'stripe',
-  key: process.env.STRIPE_SECRET_KEY || '',
-  enabled: !!process.env.STRIPE_SECRET_KEY,
+  key: process.env.VITE_STRIPE_PUBLISHABLE_KEY || '',
+  enabled: !!process.env.VITE_STRIPE_PUBLISHABLE_KEY,
   features: ['payments', 'payroll', 'subscriptions'],
   components: ['PayrollProcessing', 'Subscription']
 });
