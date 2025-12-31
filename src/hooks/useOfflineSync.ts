@@ -21,12 +21,15 @@ export function useOfflineSync(): OfflineSyncHook {
   const [pendingSync, setPendingSync] = useState(0);
 
   const getOfflineData = (): OfflineData[] => {
+    if (typeof window === 'undefined') return [];
     const stored = localStorage.getItem('odyssey_offline_data');
     return stored ? JSON.parse(stored) : [];
   };
 
   const setOfflineData = (data: OfflineData[]) => {
-    localStorage.setItem('odyssey_offline_data', JSON.stringify(data));
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('odyssey_offline_data', JSON.stringify(data));
+    }
     setPendingSync(data.length);
   };
 

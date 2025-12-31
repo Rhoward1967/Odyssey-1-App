@@ -14,9 +14,11 @@ export const useUserAccess = (): UserAccess => {
   useEffect(() => {
     // For now, default to 'user' role
     // In production, this would check authentication/database
-    const storedRole = localStorage.getItem('userRole') as UserRole;
-    if (storedRole) {
-      setRole(storedRole);
+    if (typeof window !== 'undefined') {
+      const storedRole = localStorage.getItem('userRole') as UserRole;
+      if (storedRole) {
+        setRole(storedRole);
+      }
     }
   }, []);
 

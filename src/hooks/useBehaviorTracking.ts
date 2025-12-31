@@ -18,11 +18,11 @@ export function useBehaviorTracking() {
   }, []);
 
   const getSessionId = () => {
-    if (!sessionIdRef.current) {
+    if (!sessionIdRef.current && typeof window !== 'undefined') {
       sessionIdRef.current = localStorage.getItem('session_id') || crypto.randomUUID();
       localStorage.setItem('session_id', sessionIdRef.current);
     }
-    return sessionIdRef.current;
+    return sessionIdRef.current || '';
   };
 
   const initializeSession = async () => {

@@ -25,6 +25,8 @@ export const useOfflineStorage = () => {
   }, []);
 
   const saveOfflineData = async (key: string, data: any) => {
+    if (typeof window === 'undefined') return false;
+    
     try {
       const timestamp = Date.now();
       const offlineItem = { ...data, timestamp, synced: false };
@@ -50,6 +52,8 @@ export const useOfflineStorage = () => {
   };
 
   const getOfflineData = (key: string) => {
+    if (typeof window === 'undefined') return [];
+    
     try {
       const data = localStorage.getItem(`offline_${key}`);
       return data ? JSON.parse(data) : [];

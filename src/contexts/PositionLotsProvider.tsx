@@ -38,17 +38,31 @@ export const usePositionLots = () => {
 
 // --- PROVIDER ---
 export const PositionLotsProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [positionLots, setPositionLots] = useState<PositionLot[]>(() => {
-    try {
-      // ✅ THIS IS THE PERSISTENCE YOU NEED
-      const saved = localStorage.getItem('odyssey-position-lots-v1');
-      return saved ? JSON.parse(saved) : [];
-    } catch (error) { return []; }
-  });
+  // Initialize empty to match SSR, then hydrate from localStorage
+  const [positionLots, setPositionLots] = useState<PositionLot[]>([]);
+  const [hydrated, setHydrated] = useState(false);
 
+  // Hydrate from localStorage on client mount only
   useEffect(() => {
-    localStorage.setItem('odyssey-position-lots-v1', JSON.stringify(positionLots));
-  }, [positionLots]);
+    if (typeof window !== 'undefined') {
+      try {
+        const saved = localStorage.getItem('odyssey-position-lots-v1');
+        if (saved) {
+          setPositionLots(JSON.parse(saved));
+        }
+      } catch (error) {
+        console.error('Failed to hydrate position lots:', error);
+      }
+      setHydrated(true);
+    }
+  }, []);
+
+  // Persist to localStorage after hydration
+  useEffect(() => {
+    if (hydrated && typeof window !== 'undefined') {
+      localStorage.setItem('odyssey-position-lots-v1', JSON.stringify(positionLots));
+    }
+  }, [positionLots, hydrated]);
 
   const addPositionLot = (symbol: string, shares: number, price: number, description?: string) => {
     const newLot: PositionLot = {

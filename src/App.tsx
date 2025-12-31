@@ -26,8 +26,6 @@ import Profile from '@/pages/Profile';
 import Subscription from '@/pages/Subscription';
 import Trading from '@/pages/Trading';
 import WorkforceDashboard from '@/pages/WorkforceDashboard';
-import { Analytics } from '@vercel/analytics/react';
-import { SpeedInsights } from '@vercel/speed-insights/react';
 import { useEffect, useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import PublicHomePage from './components/PublicHomePage';
@@ -45,6 +43,23 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
   const [redirecting, setRedirecting] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  // Lazy-load analytics after hydration to prevent blocking
+  useEffect(() => {
+    setMounted(true);
+    
+    if (typeof window !== 'undefined') {
+      import('@vercel/analytics/react').then(({ Analytics }) => {
+        const AnalyticsComponent = Analytics;
+        // Analytics injected post-hydration
+      });
+      import('@vercel/speed-insights/react').then(({ SpeedInsights }) => {
+        const InsightsComponent = SpeedInsights;
+        // SpeedInsights injected post-hydration
+      });
+    }
+  }, []);
 
   useEffect(() => {
     // Enhanced magic link handling with security improvements
@@ -294,8 +309,6 @@ function App() {
             </PositionLotsProvider>
           </FundingProvider>
         </APIProvider>
-        <Analytics />
-        <SpeedInsights />
       </AuthProvider>
     </ErrorBoundary>
   );
