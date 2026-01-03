@@ -1,9 +1,6 @@
 
 
 import 'dotenv/config';
-console.log('[DEBUG] STRIPE_SECRET_KEY present?', !!process.env.STRIPE_SECRET_KEY);
-console.log('[DEBUG] STRIPE_SECRET_KEY value:', process.env.STRIPE_SECRET_KEY);
-console.log('[DEBUG] CWD:', process.cwd());
 
 /**
  * R.O.M.A.N. Auto-Audit and Learning System
@@ -21,11 +18,6 @@ console.log('[DEBUG] CWD:', process.cwd());
 import { readdir, readFile } from 'fs/promises';
 import { join } from 'path';
 import { sfLogger } from './sovereignFrequencyLogger';
-
-// DEBUG: Print STRIPE_SECRET_KEY and CWD for troubleshooting
-console.log('[DEBUG] STRIPE_SECRET_KEY present?', !!process.env.STRIPE_SECRET_KEY);
-console.log('[DEBUG] STRIPE_SECRET_KEY value:', process.env.STRIPE_SECRET_KEY);
-console.log('[DEBUG] CWD:', process.cwd());
 
 import { romanSupabase as supabase } from './romanSupabase';
 

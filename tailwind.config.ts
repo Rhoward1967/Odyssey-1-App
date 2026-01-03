@@ -5,10 +5,11 @@ import typography from "@tailwindcss/typography";
 export default {
   darkMode: ["class"],
   content: [
-    "./pages/**/*.{ts,tsx}",
-    "./components/**/*.{ts,tsx}",
-    "./app/**/*.{ts,tsx}",
-    "./src/**/*.{ts,tsx}",
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+    "!./src/**/*.spec.{js,ts,jsx,tsx}", // Exclude test files
+    "!./src/**/*.test.{js,ts,jsx,tsx}",
+    "!**/node_modules/**", // Explicit node_modules exclusion
   ],
   prefix: "",
   theme: {
