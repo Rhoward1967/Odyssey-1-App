@@ -1,5 +1,4 @@
 import { execSync } from 'child_process';
-import fs from 'fs';
 
 /**
  * ODYSSEY-1 SECURITY REMEDIATION SCRIPT
@@ -59,7 +58,13 @@ try {
 
   // 4. Final security audit
   console.log('🔍 Running final security audit...');
-  const auditResult = execSync('npm audit --json', { encoding: 'utf-8' });
+  let auditResult;
+  try {
+    auditResult = execSync('npm audit --json', { encoding: 'utf-8' });
+  } catch (e) {
+    // npm audit returns non-zero exit code when vulnerabilities exist
+    auditResult = e.stdout;
+  }
   const auditData = JSON.parse(auditResult);
 
   const { info, low, moderate, high, critical, total } = auditData.metadata.vulnerabilities;

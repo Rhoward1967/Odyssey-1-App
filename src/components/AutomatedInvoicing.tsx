@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabaseClient';
+import { calculateLineItemsTax } from '@/lib/tax/sovereignTaxEngine';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useAuth } from './AuthProvider';
 import CustomerProfile, {
@@ -713,14 +714,24 @@ function InvoiceForm({
       line_items: formData.line_items.filter((_, i) => i !== index),
     });
 
+  // ============================================================================
+  // SOVEREIGN TAX ENGINE INTEGRATION (Resolution 2026-06)
+  // Replaces manual percentage calculation with normalization-aware engine
+  // ============================================================================
+  const lineItemsForTax = formData.line_items
+    .filter(i => i.is_taxable)
+    .map(item => ({
+      amountCents: Math.round(item.amount * 100),
+      taxRate: formData.tax_rate, // Engine handles both 8.75 and 0.0875
+    }));
+
+  const taxBreakdown = calculateLineItemsTax(lineItemsForTax);
+  
   const subtotal = formData.line_items.reduce(
     (sum: number, item: LineItem) => sum + item.amount,
     0
   );
-  const taxableSubtotal = formData.line_items
-    .filter(i => i.is_taxable)
-    .reduce((sum: number, item: LineItem) => sum + item.amount, 0);
-  const taxAmount = taxableSubtotal * (formData.tax_rate / 100);
+  const taxAmount = taxBreakdown.taxCents / 100; // Convert back to dollars
   const totalAmount = subtotal + taxAmount + formData.shipping_amount;
   const balanceDue = totalAmount - formData.deposit_amount;
 

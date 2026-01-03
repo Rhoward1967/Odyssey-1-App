@@ -1,5 +1,5 @@
 import { supabase } from '@/lib/supabaseClient';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 interface ABTest {
   id: string;
@@ -19,26 +19,6 @@ export function useABTesting() {
   const [activeTests, setActiveTests] = useState<ABTest[]>([]);
   const [assignments, setAssignments] = useState<Record<string, string>>({});
 
-  useEffect(() => {
-    fetchActiveTests();
-    getSessionId();
-  }, []);
-
-  const fetchActiveTests = async () => {
-    const { data: tests } = await supabase
-      .from('ab_tests')
-      .select(`
-        *,
-        variants:ab_test_variants(*)
-      `)
-      .eq('status', 'active');
-
-    if (tests) {
-      setActiveTests(tests);
-      assignUserToTests(tests);
-    }
-  };
-
   const getSessionId = () => {
     if (typeof window === 'undefined') return '';
     
@@ -50,7 +30,7 @@ export function useABTesting() {
     return sessionId;
   };
 
-  const assignUserToTests = async (tests: ABTest[]) => {
+  const assignUserToTests = useCallback(async (tests: ABTest[]) => {
     const sessionId = getSessionId();
     const newAssignments: Record<string, string> = {};
 
@@ -81,7 +61,26 @@ export function useABTesting() {
     }
 
     setAssignments(newAssignments);
-  };
+  }, []);
+
+  const fetchActiveTests = useCallback(async () => {
+    const { data: tests } = await supabase
+      .from('ab_tests')
+      .select(`
+        *,
+        variants:ab_test_variants(*)
+      `)
+      .eq('status', 'active');
+
+    if (tests) {
+      setActiveTests(tests);
+      assignUserToTests(tests);
+    }
+  }, [assignUserToTests]);
+
+  useEffect(() => {
+    fetchActiveTests();
+  }, [fetchActiveTests]);
 
   const getVariantContent = (testName: string) => {
     const test = activeTests.find(t => t.name === testName);
