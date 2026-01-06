@@ -80,3 +80,5 @@ supabase/.temp/
 
 # One-time utility SQL scripts
 vacuum-*.sql
+.vercel
+.env*.local
