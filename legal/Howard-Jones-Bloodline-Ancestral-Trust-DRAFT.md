@@ -218,11 +218,23 @@ Corporate Knowledge Base: "Sovereign Self Reclaiming Divine Intent" series
 - **US Gold Bureau Portfolio**: Vault Storage (Home & Secure) totaling approximately $1,149.02
 - **Uphold Portfolio**: Account ID: 482e3875-7678-4612-bd86-3d54470ee796
   - Holdings: XRP, DOGE, USBC (cryptocurrency assets)
+- **Ledger Nano X Cold Storage Wallet**:
+  - Hardware wallet containing multiple cryptocurrency assets
+  - Actively accumulating portfolio
+  - Access credentials maintained in confidential letter of instruction
 - **CyberMetals Portfolio**:
   - Gold: 0.011 oz
   - Silver: 2.428 oz
   - Cash Balance on account
 - **Fundrise Investment**: Real estate and private credit portfolio totaling approximately $1,918.94
+
+### D-1. Physical Assets and Storage
+
+- **Storage Units (2 locations)**:
+  - Valuable equipment, tools, and supplies
+  - Estimated total value: $35,000+
+  - Contents include business equipment, inventory, and materials
+  - Access information maintained in confidential records
 
 ### E. Life Insurance Policies
 
@@ -444,29 +456,33 @@ Date: _______________
 
 4. **Financial Portfolios**:
    - Uphold Portfolio (ID: 482e3875-7678-4612-bd86-3d54470ee796)
+   - Ledger Nano X Cold Storage Wallet (multiple cryptocurrency assets)
    - US Gold Bureau Portfolio (~$1,149.02)
    - Fundrise Investment (~$1,918.94)
    - CyberMetals Portfolio (Gold 0.011 oz, Silver 2.428 oz)
 
-5. **Real Property**:
+5. **Physical Assets**:
+   - Storage Units (2 locations) - $35,000+ in equipment, tools, and supplies
+
+6. **Real Property**:
    - LOT 25, CAMELOT SUBDIVISION (Parcel 062D3 E025)
    - Quitclaim Deed: Book 5782, Page 262
 
-6. **Business Entities**:
+7. **Business Entities**:
    - ODYSSEY-1 AI LLC (Business License BT-0101233)
    - HJS SERVICES LLC (Business License BT-089217)
 
-7. **Trademark Rights**:
+8. **Trademark Rights**:
    - "ODYSSEY-1", "R.O.M.A.N.", "THE HIVE", "EradiSkin™", "QARE"
 
-8. **Life Insurance Policies**:
+9. **Life Insurance Policies**:
    - United of Omaha Whole Life (Policy UR4748088) - $15,000 death benefit
    - Brighthouse Financial (Policy GIW1390708) - $10,000 death benefit, $1,280 cash value
    - Mutual of Omaha Accidental Death (Coverage 394106-38M)
    - Colonial Penn Life Insurance - $10,000 death benefit
    - Trust designated as primary beneficiary on all policies
 
-8. **All Future Revenue**:
+10. **All Future Revenue**:
    - Licensing fees, royalties, milestone payments, and commercialization proceeds
 
 **Assignment Documents attached as Exhibit A**
