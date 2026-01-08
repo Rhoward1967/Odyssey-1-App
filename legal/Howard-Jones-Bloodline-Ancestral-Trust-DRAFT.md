@@ -1,4 +1,4 @@
-# THE RICKEY A HOWARD FAMILY TRUST
+# THE HOWARD & JONES BLOODLINE ANCESTRAL TRUST
 ## REVOCABLE LIVING TRUST AGREEMENT
 
 **DRAFT FOR LEGAL REVIEW - NOT YET BINDING**
@@ -7,21 +7,28 @@
 
 ## ARTICLE I: DECLARATION OF TRUST
 
-This Revocable Living Trust Agreement ("Trust") is created on [DATE], by **Rickey Allan Howard** ("Grantor" or "Trustor"), who is also the initial Trustee.
+This Revocable Living Trust Agreement ("Trust") is created on [DATE], by **Rickey Allan Howard** and **Christla Howard** ("Grantors" or "Trustors"), who are also the initial Co-Trustees.
 
-**Purpose:** To hold, manage, and protect intellectual property and business assets for the benefit of the Grantor's family.
+**Trust Name:** The Howard & Jones Bloodline Ancestral Trust
+
+**Purpose:** To hold, manage, and protect intellectual property, business assets, and real property for the benefit of the Howard and Jones ancestral bloodline.
 
 ---
 
-## ARTICLE II: TRUSTEE
+## ARTICLE II: TRUSTEES
 
-**Initial Trustee:** Rickey Allan Howard
+**Initial Co-Trustees:** 
+- Rickey Allan Howard
+- Christla Howard
 
-**Successor Trustee:** [Your Wife's Full Name]
+**Trust Mailing Address:** P.O. BOX 80054, Athens, GA 30608
 
-**Powers of Trustee:**
+**Successor Trustee:** [Designated Family Member]
+
+**Powers of Trustees:**
 - Full authority to manage trust assets
 - Buy, sell, license, or transfer intellectual property
+- Acquire, hold, and convey real property
 - Enter into contracts on behalf of the trust
 - Distribute income and principal to beneficiaries
 - Hire employees, consultants, and legal counsel
@@ -30,15 +37,14 @@ This Revocable Living Trust Agreement ("Trust") is created on [DATE], by **Ricke
 
 ## ARTICLE III: BENEFICIARIES
 
-**Primary Beneficiary during Grantor's life:**
-- Rickey Allan Howard (Grantor)
+**Primary Beneficiaries during Grantors' lives:**
+- Rickey Allan Howard (Co-Grantor)
+- Christla Howard (Co-Grantor)
 
-**Successor Beneficiaries upon Grantor's death:**
-1. [Your Wife's Full Name] - 50% share
-2. [Child 1 Name] - 25% share (if applicable)
-3. [Child 2 Name] - 25% share (if applicable)
+**Successor Beneficiaries upon Grantors' deaths:**
+- All descendants of the Howard and Jones ancestral bloodline, per stirpes
 
-**Alternate Beneficiaries:** [Other family members if primary beneficiaries predecease]
+**Alternate Beneficiaries:** [Designated family members if primary beneficiaries predecease]
 
 ---
 
@@ -46,7 +52,17 @@ This Revocable Living Trust Agreement ("Trust") is created on [DATE], by **Ricke
 
 The following assets are transferred to this Trust:
 
-### A. Intellectual Property
+### A. Real Property
+1. **Clarke County Real Estate**
+   - Legal Description: All that tract or parcel of land lying and being in the 6th District, Clarke County, Georgia
+   - Lot Designation: LOT 25 of the CAMELOT SUBDIVISION
+   - Plat Reference: Plat Book 22, Page 219
+   - Parcel ID: 062D3 E025
+   - Deed Reference: Quitclaim Deed recorded Book 5782, Page 262 (January 7, 2026)
+   - Prior Title References: Tax Deed (Book 4820, Page 269), Affidavit (Book 4988, Page 494)
+   - Grantor: Christla Howard (conveyed to Trust via Quitclaim Deed)
+
+### B. Intellectual Property
 1. **ODYSSEY-1 Software Platform**
    - Copyright Registration: [To be filed]
    - All source code, documentation, and related materials
