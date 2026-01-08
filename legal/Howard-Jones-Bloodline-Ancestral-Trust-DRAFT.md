@@ -34,6 +34,46 @@ This Revocable Living Trust Agreement ("Trust") is created on **January 8, 2026*
 - Enter into contracts on behalf of the trust
 - Distribute income and principal to beneficiaries
 - Hire employees, consultants, and legal counsel
+- Invest in stocks, bonds, real estate, cryptocurrencies, and other alternative assets
+- Continue existing investments including digital assets and speculative holdings
+- Negotiate and execute IP licensing agreements (subject to Article II-A limitations)
+
+**Trustee Compensation:**
+- Initial Co-Trustees (Rickey Allan Howard and Christla Howard) shall serve without compensation
+- Successor Trustees are entitled to reasonable compensation as determined by Georgia law
+- Trustees may be reimbursed for reasonable expenses incurred in trust administration
+
+**Trustee Removal and Resignation:**
+- Any trustee may resign by providing 30 days written notice to co-trustees and beneficiaries
+- A trustee may be removed for cause by unanimous vote of adult beneficiaries
+- Cause includes: breach of fiduciary duty, incapacity, conviction of felony, or gross negligence
+
+**Incapacity Definition:**
+- "Incapacity" means inability to manage financial affairs as certified in writing by two (2) licensed physicians
+- Upon incapacity of a Co-Trustee, the other Co-Trustee shall act alone
+- Upon incapacity of both Co-Trustees, Successor Trustees assume control immediately
+
+**Disability Trustee (Temporary):**
+- If both Co-Trustees are temporarily incapacitated, Teara Howard shall serve as Disability Trustee
+- Disability Trustee has full powers but serves only until Co-Trustee regains capacity
+
+**Bond Requirement:**
+- No bond shall be required of any trustee named in this document
+- Court-appointed trustees may be required to post bond at court's discretion
+
+### A. INTELLECTUAL PROPERTY LICENSING AUTHORITY
+
+**IP Licensing Standards:**
+- Trustees may license patents, copyrights, and trademarks on commercially reasonable terms
+- Minimum royalty rates: 3% for software licenses, 5% for patent licenses, industry-standard for trademark licenses
+- Exclusive licenses exceeding 5 years require written consent of both Co-Trustees (if living)
+- No perpetual exclusive licenses may be granted without beneficiary approval
+- All licenses must include audit rights and termination for non-payment
+
+**Major Transaction Thresholds:**
+- Licensing deals valued over $100,000 require documentation in trust records
+- Sale of IP assets valued over $500,000 requires unanimous Co-Trustee approval
+- Any transaction that could materially diminish trust principal requires written justification
 
 ---
 
@@ -46,7 +86,10 @@ This Revocable Living Trust Agreement ("Trust") is created on **January 8, 2026*
 **Successor Beneficiaries upon Grantors' deaths:**
 - All descendants of the Howard and Jones ancestral bloodline, per stirpes
 
-**Alternate Beneficiaries:** [Designated family members if primary beneficiaries predecease]
+**Alternate Beneficiaries (if no descendants survive):**
+- Teara Howard
+- Kenneth Howard
+- Any other living descendants of the Howard and Jones bloodline at the time of distribution
 
 ---
 
@@ -210,16 +253,37 @@ Corporate Knowledge Base: "Sovereign Self Reclaiming Divine Intent" series
 
 ## ARTICLE V: TRUST ADMINISTRATION
 
-**During Grantor's Life:**
-- Grantor retains full control as Trustee
-- All income and principal available to Grantor
-- Trust is fully revocable and amendable
+**During Grantors' Lives:**
+- Co-Trustees retain full control as Co-Trustees
+- All income and principal available to Grantors
+- Trust is fully revocable and amendable by either Grantor
 
-**Upon Grantor's Death or Incapacity:**
-- Successor Trustee takes control immediately
-- No probate required
-- Assets distributed per Article III
+**Upon Death of First Grantor:**
+- Surviving Grantor continues as sole Trustee with full powers
+- Trust remains revocable by surviving Grantor
+- No distribution required; all assets available to surviving Grantor
+
+**Upon Death of Both Grantors:**
+- Successor Trustees (Teara Howard and Kenneth Howard) assume control immediately
+- No probate required for trust assets
 - Trust becomes irrevocable
+
+**Distribution Schedule:**
+- Successor Trustees shall distribute trust assets to beneficiaries within 12 months of both Grantors' deaths
+- Distribution method: Per stirpes to all descendants of Howard and Jones bloodline
+- If no descendants survive, distribute to Alternate Beneficiaries in equal shares
+- Trustees may retain reasonable reserve for taxes, debts, and administrative expenses
+
+**Tax Identification:**
+- During Grantors' lives, trust uses Grantors' Social Security Numbers (Grantor Trust status)
+- Upon death of both Grantors, Successor Trustees shall obtain separate Federal EIN
+- Trust shall file all required tax returns (Form 1041) as irrevocable trust
+
+**Digital Asset Access:**
+- Trustees shall have full authority to access digital wallets, cryptocurrency accounts, and online portfolios
+- Grantors shall maintain confidential letter of instruction with passwords and access credentials
+- Letter shall be kept with original trust document and updated as needed
+- Trustees authorized to hire digital asset recovery specialists if needed
 
 ---
 
@@ -268,7 +332,26 @@ This Trust shall be governed by the laws of the State of Georgia.
 
 ---
 
-## ARTICLE IX: EXECUTION
+## ARTICLE IX: DISPUTE RESOLUTION
+
+**Mediation Requirement:**
+- Any dispute between trustees and beneficiaries shall first be submitted to mediation
+- Mediation shall occur in Clarke County, Georgia with a qualified mediator
+- Costs of mediation split equally among disputing parties
+
+**Binding Arbitration:**
+- If mediation fails, disputes shall be resolved by binding arbitration under Georgia Arbitration Code
+- Arbitration shall occur in Athens, Georgia before single arbitrator
+- Arbitrator's decision is final and binding on all parties
+- Each party bears own attorney fees unless arbitrator orders otherwise
+
+**Exceptions:**
+- Court action permitted for: (1) emergency relief, (2) trustee removal for cause, (3) interpretation of trust terms affecting third parties
+- Exclusive venue: Superior Court of Clarke County, Georgia
+
+---
+
+## ARTICLE X: EXECUTION
 
 **IN WITNESS WHEREOF**, the Grantors have executed this Trust Agreement on **January 8, 2026**.
 
@@ -346,17 +429,26 @@ Date: _______________
 
 ## NOTES FOR LAWYER REVIEW:
 
-- [ ] Verify creditor protection provisions for [YOUR STATE]
-- [ ] Add notary requirements per state law
-- [ ] Review IP assignment language
-- [ ] Confirm successor beneficiary provisions
-- [ ] Add tax optimization clauses if needed
-- [ ] Review spendthrift protections
-- [ ] Confirm revocability provisions
+- [x] Governing law: State of Georgia (Article VIII)
+- [x] Successor beneficiary provisions specified (Article III)
+- [x] Tax identification and EIN provisions added (Article V)
+- [x] Spendthrift protections confirmed (Article VI)
+- [x] Revocability provisions confirmed (Article V, Article VII)
+- [x] Incapacity definition added (Article II)
+- [x] Trustee compensation specified (Article II)
+- [x] Dispute resolution provisions added (Article IX)
+- [x] Digital asset access provisions added (Article V)
+- [x] IP licensing authority and limits defined (Article II-A)
+- [ ] Add notary requirements per Georgia law
+- [ ] Review IP assignment language for USPTO compliance
+- [ ] Verify creditor protection provisions under Georgia law
+- [ ] Confirm bond waiver is enforceable
 
 **Questions for attorney:**
-1. Should we create separate IP holding LLC first?
-2. Do we need EIN for the trust?
-3. Any state-specific filing requirements?
-4. Estate tax implications?
-5. How to handle future investor equity?
+1. Does trust need to be recorded with Clarke County Clerk (in addition to Quitclaim Deed)?
+2. Should ODYSSEY-1 AI LLC and HJS SERVICES LLC be transferred via separate assignment documents?
+3. Estate tax implications with current $13.61M federal exemption (2024)?
+4. How to handle future investor equity without diluting trust ownership?
+5. Should we add charging order protection language for LLC interests?
+6. Any additional Georgia-specific provisions for cryptocurrency holdings?
+7. Verify arbitration clause enforceability for trust disputes in Georgia
