@@ -18,7 +18,7 @@ This Revocable Living Trust Agreement ("Trust") is created on **January 8, 2026*
 ## ARTICLE II: TRUSTEES
 
 **Initial Co-Trustees:** 
-- Rickey Allan Howard
+- Rickey Howard
 - Christla Howard
 
 **Trust Mailing Address:** P.O. BOX 80054, Athens, GA 30608
@@ -80,7 +80,7 @@ This Revocable Living Trust Agreement ("Trust") is created on **January 8, 2026*
 ## ARTICLE III: BENEFICIARIES
 
 **Primary Beneficiaries during Grantors' lives:**
-- Rickey Allan Howard (Co-Grantor)
+- Rickey Howard (Co-Grantor)
 - Christla Howard (Co-Grantor)
 
 **Successor Beneficiaries upon Grantors' deaths:**
@@ -193,7 +193,7 @@ Corporate Knowledge Base: "Sovereign Self Reclaiming Divine Intent" series
 - **Formation**: Organized under Georgia law on 10/17/2008 (Control No. 08079598)
 - **Business License**: BT-089217 (Active)
 - **CEO**: Christla L Howard
-- **Founder**: Rickey Allan Howard (October 2008)
+- **Founder**: Rickey Howard (October 2008)
 - **Tax Status**: Sales Tax Number 308-3557211
 - **Federal Contractor**: SAM.gov Registration YXEYCV2T1DM5 / 97K10 (Active, renewal due 2026-08-12)
 - **Primary Mailing Address**: P.O. BOX 80054, Athens, GA 30608
@@ -219,8 +219,14 @@ Corporate Knowledge Base: "Sovereign Self Reclaiming Divine Intent" series
 - **Uphold Portfolio**: Account ID: 482e3875-7678-4612-bd86-3d54470ee796
   - Holdings: XRP, DOGE, USBC (cryptocurrency assets)
 - **Ledger Nano X Cold Storage Wallet**:
-  - Hardware wallet containing multiple cryptocurrency assets
-  - Actively accumulating portfolio
+  - XRP (Ripple): 286.4
+  - ETH (Ethereum): 0.119215
+  - DOGE (Dogecoin): 538.054
+  - SOL (Solana): 0.402741
+  - USDC (USD Coin): 19.4157
+  - ADA (Cardano): 24.4937
+  - BTC (Bitcoin): 0.00009152
+  - Hardware wallet - actively accumulating portfolio
   - Access credentials maintained in confidential letter of instruction
 - **CyberMetals Portfolio**:
   - Gold: 0.011 oz
