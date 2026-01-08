@@ -7,7 +7,7 @@
 
 ## ARTICLE I: DECLARATION OF TRUST
 
-This Revocable Living Trust Agreement ("Trust") is created on [DATE], by **Rickey Allan Howard** and **Christla Howard** ("Grantors" or "Trustors"), who are also the initial Co-Trustees.
+This Revocable Living Trust Agreement ("Trust") is created on **January 8, 2026**, by **Rickey Allan Howard** and **Christla Howard** ("Grantors" or "Trustors"), who are also the initial Co-Trustees.
 
 **Trust Name:** The Howard & Jones Bloodline Ancestral Trust
 
@@ -156,11 +156,11 @@ Corporate Knowledge Base: "Sovereign Self Reclaiming Divine Intent" series
 - **Primary Mailing Address**: P.O. BOX 80054, Athens, GA 30608
 - **Operating Agreement**: Dated January 1, 2009 (Christla L. Barnett, sole Member/Manager)
 - **Commercial Insurance**:
-  - CGL Policy No. ACP GLO 2304373650 (Nationwide/Infinity)
+  - CGL Policy No. ACP GLO 2304373650 (Kemper/Infinity)
   - Policy Period: 05/18/2025 to 05/18/2026
   - Total Premium: $13,757.00
   - General Aggregate Limit: $1,000,000
-  - Auto Coverage: 7 vehicles insured
+  - Auto Coverage: 7 vehicles insured (Policy #50008175201)
 - **Commercial Lease**: Studio 37, 159 Oneta Street, Athens, GA
   - Term: 10 Years (July 15, 2017 to July 14, 2027)
   - Monthly Rent: $300 (Lessor pays utilities and wireless internet)
@@ -170,7 +170,18 @@ Corporate Knowledge Base: "Sovereign Self Reclaiming Divine Intent" series
   - Secured Amount: $350,000.00
   - Collateral: All assets, now owned or hereafter acquired
 
-### D. AI Architecture and Core Systems
+### D. Financial Holdings & Portfolios
+
+- **US Gold Bureau Portfolio**: Vault Storage (Home & Secure) totaling approximately $1,149.02
+- **Uphold Portfolio**: Account ID: 482e3875-7678-4612-bd86-3d54470ee796
+  - Holdings: XRP, DOGE, USBC (cryptocurrency assets)
+- **CyberMetals Portfolio**:
+  - Gold: 0.011 oz
+  - Silver: 2.428 oz
+  - Cash Balance on account
+- **Fundrise Investment**: Real estate and private credit portfolio totaling approximately $1,918.94
+
+### E. AI Architecture and Core Systems
 
 #### 1. R.O.M.A.N. 2.0 Physical Requirements
 - **Geometry**: Spherical Joints and Platonic Solid Integration (Icosahedron/Octahedron)
@@ -188,7 +199,7 @@ Corporate Knowledge Base: "Sovereign Self Reclaiming Divine Intent" series
 - **Integration**: R.O.M.A.N. Protocol IP-Aware certification
 - **Authorization**: Constitutional enforcement and autonomous learning operations
 
-### E. Future Developments
+### F. Future Developments
 - All improvements, updates, and derivative works to existing IP
 - Any additional patents, copyrights, or trademarks obtained
 - All AI models, algorithms, and architectures created or evolved
@@ -253,17 +264,17 @@ Corporate Knowledge Base: "Sovereign Self Reclaiming Divine Intent" series
 
 ## ARTICLE VIII: GOVERNING LAW
 
-This Trust shall be governed by the laws of the State of [YOUR STATE].
+This Trust shall be governed by the laws of the State of Georgia.
 
 ---
 
 ## ARTICLE IX: EXECUTION
 
-**IN WITNESS WHEREOF**, the Grantor has executed this Trust Agreement on [DATE].
+**IN WITNESS WHEREOF**, the Grantors have executed this Trust Agreement on **January 8, 2026**.
 
 ---
 
-**GRANTOR & INITIAL TRUSTEE:**
+**GRANTOR & INITIAL CO-TRUSTEE:**
 
 _________________________________
 Rickey Allan Howard
@@ -271,10 +282,10 @@ Date: _______________
 
 ---
 
-**SUCCESSOR TRUSTEE ACKNOWLEDGMENT:**
+**GRANTOR & INITIAL CO-TRUSTEE:**
 
 _________________________________
-[Your Wife's Name]
+Christla Howard
 Date: _______________
 
 ---
@@ -287,15 +298,45 @@ Date: _______________
 
 ## SCHEDULE A: INITIAL TRUST PROPERTY
 
-**Transferred to Trust on [DATE]:**
+**Transferred to Trust on January 8, 2026:**
 
-1. Copyright interest in ODYSSEY-1 Software Platform
-2. All source code and documentation
-3. All improvements and derivative works
-4. Rights to trademark "ODYSSEY-1", "R.O.M.A.N.", "THE HIVE"
-5. All future revenue and licensing rights
+1. **Copyright Interests**:
+   - ODYSSEY-1 Software Platform and all related source code
+   - "Sovereign Self Reclaiming Divine Intent" Literary Series (Registration Case # 1-15033889051)
+   - All documentation, improvements, and derivative works
 
-**Assignment Document attached as Exhibit A**
+2. **Patent Applications**:
+   - Application #63/913,134 (R.O.M.A.N. Protocol)
+   - Application #19/396,082 (Cordless Cube)
+   - Application #63/922,762 (ODYSSEY VISION)
+   - Application #19/403,956 (HRG System)
+   - PPA filed 12/04/2025 (Shoe Sole)
+   - All pending applications and assignments
+
+3. **UCC-1 Security Interest**:
+   - Filing #029-2026-000007 ($350,000.00 Secured Interest in HJS SERVICES LLC)
+
+4. **Financial Portfolios**:
+   - Uphold Portfolio (ID: 482e3875-7678-4612-bd86-3d54470ee796)
+   - US Gold Bureau Portfolio (~$1,149.02)
+   - Fundrise Investment (~$1,918.94)
+   - CyberMetals Portfolio (Gold 0.011 oz, Silver 2.428 oz)
+
+5. **Real Property**:
+   - LOT 25, CAMELOT SUBDIVISION (Parcel 062D3 E025)
+   - Quitclaim Deed: Book 5782, Page 262
+
+6. **Business Entities**:
+   - ODYSSEY-1 AI LLC (Business License BT-0101233)
+   - HJS SERVICES LLC (Business License BT-089217)
+
+7. **Trademark Rights**:
+   - "ODYSSEY-1", "R.O.M.A.N.", "THE HIVE", "EradiSkin™", "QARE"
+
+8. **All Future Revenue**:
+   - Licensing fees, royalties, milestone payments, and commercialization proceeds
+
+**Assignment Documents attached as Exhibit A**
 
 ---
 
