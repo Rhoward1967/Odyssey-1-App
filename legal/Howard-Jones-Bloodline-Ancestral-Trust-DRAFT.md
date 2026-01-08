@@ -275,7 +275,19 @@ Corporate Knowledge Base: "Sovereign Self Reclaiming Divine Intent" series
 - **Face Amount**: $10,000.00
 - **Company**: Colonial Penn Life Insurance Company
 
-**Total Death Benefit Coverage**: $35,000.00 (whole life) + Accidental Death benefit
+#### 5. Globe Life and Accident Insurance Company
+- **Policy Type**: Group Step Rate Term Life Insurance
+- **Policy Number**: 006R00646
+- **Insured**: Mickey Howard (DOB: 09/26/1965)
+- **Owner**: Rickey A Howard
+- **Policy Effective Date**: August 12, 2014
+- **Face Amount**: $30,000.00
+- **Current Beneficiaries**: Rickey Howard, Kenneth Howard
+- **Company**: Globe Life and Accident Insurance Company
+- **Contact**: (972) 540-6542
+- **Note**: This is a Lost Policy Certificate - original policy lost/destroyed
+
+**Total Death Benefit Coverage**: $65,000.00 (whole life on Rickey + term life on Mickey) + Accidental Death benefit
 
 **Beneficiary Designation**: All life insurance policies shall name The Howard & Jones Bloodline Ancestral Trust as primary beneficiary. Grantors shall execute beneficiary change forms with each insurance company to effectuate this designation.
 
@@ -476,10 +488,11 @@ Date: _______________
    - "ODYSSEY-1", "R.O.M.A.N.", "THE HIVE", "EradiSkin™", "QARE"
 
 9. **Life Insurance Policies**:
-   - United of Omaha Whole Life (Policy UR4748088) - $15,000 death benefit
-   - Brighthouse Financial (Policy GIW1390708) - $10,000 death benefit, $1,280 cash value
-   - Mutual of Omaha Accidental Death (Coverage 394106-38M)
-   - Colonial Penn Life Insurance - $10,000 death benefit
+   - United of Omaha Whole Life (Policy UR4748088) - $15,000 death benefit on Rickey
+   - Brighthouse Financial (Policy GIW1390708) - $10,000 death benefit on Rickey, $1,280 cash value
+   - Mutual of Omaha Accidental Death (Coverage 394106-38M) - Rickey
+   - Colonial Penn Life Insurance - $10,000 death benefit on Rickey
+   - Globe Life (Policy 006R00646) - $30,000 term life on Mickey Howard (owned by Rickey)
    - Trust designated as primary beneficiary on all policies
 
 10. **All Future Revenue**:
