@@ -23,7 +23,9 @@ This Revocable Living Trust Agreement ("Trust") is created on [DATE], by **Ricke
 
 **Trust Mailing Address:** P.O. BOX 80054, Athens, GA 30608
 
-**Successor Trustee:** [Designated Family Member]
+**Successor Trustees:** 
+- Teara Howard
+- Kenneth Howard
 
 **Powers of Trustees:**
 - Full authority to manage trust assets
