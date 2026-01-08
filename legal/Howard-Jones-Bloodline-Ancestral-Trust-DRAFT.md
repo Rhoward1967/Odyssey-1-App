@@ -257,7 +257,13 @@ Corporate Knowledge Base: "Sovereign Self Reclaiming Divine Intent" series
 - **Contact**: 1-800-775-1000
 - **Website**: www.mutualofomaha.com/customer-service
 
-**Total Death Benefit Coverage**: $25,000.00 (whole life) + Accidental Death benefit
+#### 4. Colonial Penn Life Insurance
+- **Policy Type**: Life Insurance
+- **Insured**: Rickey A Howard
+- **Face Amount**: $10,000.00
+- **Company**: Colonial Penn Life Insurance Company
+
+**Total Death Benefit Coverage**: $35,000.00 (whole life) + Accidental Death benefit
 
 **Beneficiary Designation**: All life insurance policies shall name The Howard & Jones Bloodline Ancestral Trust as primary beneficiary. Grantors shall execute beneficiary change forms with each insurance company to effectuate this designation.
 
@@ -457,6 +463,7 @@ Date: _______________
    - United of Omaha Whole Life (Policy UR4748088) - $15,000 death benefit
    - Brighthouse Financial (Policy GIW1390708) - $10,000 death benefit, $1,280 cash value
    - Mutual of Omaha Accidental Death (Coverage 394106-38M)
+   - Colonial Penn Life Insurance - $10,000 death benefit
    - Trust designated as primary beneficiary on all policies
 
 8. **All Future Revenue**:
