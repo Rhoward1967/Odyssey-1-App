@@ -27,6 +27,14 @@ This Revocable Living Trust Agreement ("Trust") is created on **January 8, 2026*
 - Teara Howard
 - Kenneth Howard
 
+**Perpetual Succession of Trustees:**
+- Upon death, resignation, or incapacity of any Successor Trustee, the remaining Successor Trustee shall appoint a replacement from among the Howard and Jones bloodline descendants
+- When both Successor Trustees are unable to serve, they (or the last surviving trustee) shall name two new Successor Trustees from the Howard and Jones bloodline
+- Each generation of Successor Trustees has the power to name the next generation of Successor Trustees
+- All appointed Successor Trustees must be blood descendants of the Howard or Jones families
+- Appointments must be made in writing, signed, and delivered to beneficiaries
+- This succession power continues perpetually to keep trust control within the bloodline
+
 **Powers of Trustees:**
 - Full authority to manage trust assets
 - Buy, sell, license, or transfer intellectual property
