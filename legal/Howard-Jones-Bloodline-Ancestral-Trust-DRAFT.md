@@ -24,8 +24,13 @@ This Revocable Living Trust Agreement ("Trust") is created on **January 8, 2026*
 **Trust Mailing Address:** P.O. BOX 80054, Athens, GA 30608
 
 **Successor Trustees:** 
-- Teara Howard
-- Kenneth Howard
+- First Succession: Teara Howard (daughter), Kenneth Howard (brother)
+- Second Succession: Keith Sorrells (first cousin), Ahmad Rashad Barnett (nephew)
+
+**Trustee Succession Order:**
+- Upon death or incapacity of Teara Howard, Keith Sorrells becomes Co-Trustee
+- Upon death or incapacity of Kenneth Howard, Ahmad Rashad Barnett becomes Co-Trustee
+- If both First Succession Trustees are unable to serve, Second Succession Trustees (Keith Sorrells and Ahmad Rashad Barnett) assume full control
 
 **Perpetual Succession of Trustees:**
 - Upon death, resignation, or incapacity of any Successor Trustee, the remaining Successor Trustee shall appoint a replacement from among the Howard and Jones bloodline descendants
