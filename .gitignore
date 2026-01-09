@@ -4,6 +4,10 @@ patent-filing-package/*application*
 patent-filing-package/*.pdf
 patent-filing-package/*.docx
 patent-filing-package/*.txt
+
+# Confidential Trust Documents (NEVER COMMIT - contains passwords and access codes)
+legal/CONFIDENTIAL-LETTER-OF-INSTRUCTION.md
+
 # Logs
 logs
 *.log
