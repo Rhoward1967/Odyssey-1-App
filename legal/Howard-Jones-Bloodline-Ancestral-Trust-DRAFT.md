@@ -59,7 +59,6 @@ This Revocable Living Trust Agreement ("Trust") is created on **January 8, 2026*
 
 **Bond Requirement:**
 - No bond shall be required of any trustee named in this document
-- Court-appointed trustees may be required to post bond at court's discretion
 
 ### A. INTELLECTUAL PROPERTY LICENSING AUTHORITY
 
