@@ -565,6 +565,14 @@ Date: _______________
 
 ## NOTES FOR LAWYER REVIEW:
 
+**Attorney for Review:**
+- **Name:** David C. Rowe
+- **Location:** Watkinsville, Georgia
+- **Address:** [To be added]
+- **Phone:** [To be added]
+- **Email:** [To be added]
+
+**Review Checklist:**
 - [x] Governing law: State of Georgia (Article VIII)
 - [x] Successor beneficiary provisions specified (Article III)
 - [x] Tax identification and EIN provisions added (Article V)
@@ -588,3 +596,4 @@ Date: _______________
 5. Should we add charging order protection language for LLC interests?
 6. Any additional Georgia-specific provisions for cryptocurrency holdings?
 7. Verify arbitration clause enforceability for trust disputes in Georgia
+
