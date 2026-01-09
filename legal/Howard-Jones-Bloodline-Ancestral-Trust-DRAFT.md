@@ -1,5 +1,5 @@
 # THE HOWARD & JONES BLOODLINE ANCESTRAL TRUST
-## REVOCABLE LIVING TRUST AGREEMENT
+## IRREVOCABLE TRUST AGREEMENT
 
 **DRAFT FOR LEGAL REVIEW - NOT YET BINDING**
 
@@ -7,9 +7,11 @@
 
 ## ARTICLE I: DECLARATION OF TRUST
 
-This Revocable Living Trust Agreement ("Trust") is created on **January 8, 2026**, by **Rickey Allan Howard** and **Christla Howard** ("Grantors" or "Trustors"), who are also the initial Co-Trustees.
+This Irrevocable Trust Agreement ("Trust") is created on **January 8, 2026**, by **Rickey Allan Howard** and **Christla Howard** ("Grantors" or "Trustors"), who are also the initial Co-Trustees.
 
 **Trust Name:** The Howard & Jones Bloodline Ancestral Trust
+
+**Irrevocable Status:** This Trust is irrevocable from the date of execution. No Grantor, Trustee, or Beneficiary may revoke, amend, or modify the terms of this Trust. Assets may be added but structure, beneficiaries, and trustee succession cannot be changed.
 
 **Purpose:** To hold, manage, and protect intellectual property, business assets, and real property for the benefit of the Howard and Jones ancestral bloodline.
 
@@ -244,6 +246,10 @@ Corporate Knowledge Base: "Sovereign Self Reclaiming Divine Intent" series
   - Gold: 0.011 oz
   - Silver: 2.428 oz
   - Cash Balance on account
+- **Acorns Investment Account**: Diversified portfolio totaling $779.46
+  - Invest Account: $499.29 (2.70% return)
+  - Later Account: $280.17 (5.14% return)
+  - Early Account: To be set up
 - **Fundrise Investment**: Real estate and private credit portfolio totaling approximately $1,918.94
 
 ### D-1. Physical Assets and Storage
@@ -338,20 +344,23 @@ Corporate Knowledge Base: "Sovereign Self Reclaiming Divine Intent" series
 
 ## ARTICLE V: TRUST ADMINISTRATION
 
-**During Grantors' Lives:**
-- Co-Trustees retain full control as Co-Trustees
-- All income and principal available to Grantors
-- Trust is fully revocable and amendable by either Grantor
+**Current Status:**
+- Trust is irrevocable from date of execution
+- Co-Trustees (Rickey and Christla) manage all assets during their lives
+- All income and principal available to Grantors for Health, Education, Maintenance, and Support
+- No amendments, modifications, or revocations permitted by any party
+- Additional assets may be added by Grantors at any time through written assignment
 
 **Upon Death of First Grantor:**
-- Surviving Grantor continues as sole Trustee with full powers
-- Trust remains revocable by surviving Grantor
-- No distribution required; all assets available to surviving Grantor
+- Surviving Grantor continues as sole Trustee with full management powers
+- Trust remains irrevocable (no changes permitted)
+- No distribution required; all assets available to surviving Grantor for HEMS
+- Surviving Grantor may add assets but cannot modify trust terms
 
 **Upon Death of Both Grantors:**
 - Successor Trustees (Teara Howard and Kenneth Howard) assume control immediately
 - No probate required for trust assets
-- Trust becomes irrevocable
+- Trust continues as irrevocable
 
 **Distribution Schedule:**
 - Successor Trustees shall distribute trust assets to beneficiaries within 12 months of both Grantors' deaths
@@ -406,17 +415,25 @@ Corporate Knowledge Base: "Sovereign Self Reclaiming Divine Intent" series
 
 ---
 
-## ARTICLE VII: AMENDMENT AND REVOCATION
+## ARTICLE VII: IRREVOCABILITY AND ASSET ADDITIONS
 
-**Grantor's Rights:**
-- Full power to amend or revoke during lifetime
-- Must be done in writing and signed
-- Effective immediately upon execution
+**Irrevocable Status:**
+- This Trust is irrevocable from the date of execution by both Grantors
+- Neither Grantor, Trustee, nor Beneficiary may amend, modify, or revoke any provision of this Trust
+- Trust structure, beneficiary designations, trustee succession, and all protective provisions are permanently locked
+- No court order, bankruptcy proceeding, or legal action can modify these terms
 
-**After Grantor's Death:**
-- Trust becomes irrevocable
-- No further amendments allowed
-- Distribution per original terms
+**Asset Addition Rights:**
+- Grantors retain the right to add assets to the Trust at any time during their lives
+- Asset additions require written assignment or transfer document
+- New assets become subject to all existing trust terms
+- Trustees shall accept and manage all properly transferred assets
+- Asset additions do not alter distribution percentages or beneficiary rights
+
+**After Grantors' Deaths:**
+- No assets may be added except as received through trust operations (income, licensing, appreciation)
+- All terms remain permanently fixed
+- Distribution per original trust provisions
 
 ---
 
