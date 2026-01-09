@@ -395,6 +395,15 @@ Corporate Knowledge Base: "Sovereign Self Reclaiming Divine Intent" series
 - Intellectual Property Assignment Recordation filed with USPTO
 - Legal separation between Trust (IP holder) and operating entities (business operators)
 
+**No-Contest Clause (In Terrorem):**
+- Any beneficiary, heir, or potential claimant who challenges this Trust, contests its validity, challenges any trustee appointment, or brings any legal action to overturn or modify trust provisions shall be completely disinherited
+- Challenging party automatically forfeits all rights, interests, and benefits under this Trust
+- This includes challenges to: trust validity, trustee selection, trustee decisions, asset distribution, or any other trust provision
+- Forfeited share shall be redistributed to remaining beneficiaries who did not participate in the challenge
+- Exception: Good faith requests for trust interpretation or clarification do not constitute a contest
+- This clause protects trustees from harassment and ensures family unity
+- Trustees have absolute discretion to determine what constitutes a contest
+
 ---
 
 ## ARTICLE VII: AMENDMENT AND REVOCATION
