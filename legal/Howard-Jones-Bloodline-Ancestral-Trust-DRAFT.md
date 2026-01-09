@@ -28,11 +28,15 @@ This Irrevocable Trust Agreement ("Trust") is created on **January 8, 2026**, by
 **Successor Trustees:** 
 - First Succession: Teara Howard (daughter), Kenneth Howard (brother)
 - Second Succession: Keith Sorrells (first cousin), Ahmad Rashad Barnett (nephew)
+- Third Succession: Derrick Williams (Christla's brother)
 
 **Trustee Succession Order:**
 - Upon death or incapacity of Teara Howard, Keith Sorrells becomes Co-Trustee
 - Upon death or incapacity of Kenneth Howard, Ahmad Rashad Barnett becomes Co-Trustee
 - If both First Succession Trustees are unable to serve, Second Succession Trustees (Keith Sorrells and Ahmad Rashad Barnett) assume full control
+- Upon death or incapacity of Keith Sorrells, Derrick Williams becomes Co-Trustee
+- Upon death or incapacity of Ahmad Rashad Barnett (if Keith still serving), Derrick Williams becomes Co-Trustee
+- If all prior succession trustees are unable to serve, Derrick Williams may serve as sole trustee or appoint a co-trustee from the bloodline
 
 **Perpetual Succession of Trustees:**
 - Upon death, resignation, or incapacity of any Successor Trustee, the remaining Successor Trustee shall appoint a replacement from among the Howard and Jones bloodline descendants
