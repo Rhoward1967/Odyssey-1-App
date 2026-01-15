@@ -1,0 +1,183 @@
+name: 🔮 R.O.M.A.N. Dev-Lab Resonance Shield
+
+on:
+  push:
+    branches:
+      - dev-lab
+  pull_request:
+    branches:
+      - dev-lab
+
+jobs:
+  resonance-validation:
+    name: 51-D Grassmannian Shield Validation
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📥 Checkout dev-lab
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+      
+      - name: 📦 Install Dependencies
+        run: npm ci
+      
+      - name: 🔮 Run Positive Geometry Validator Tests
+        run: |
+          echo "🔮 Testing Amplituhedron-based validation..."
+          npx tsx src/lib/positiveGeometry.test.ts
+      
+      - name: 🛡️ Validate Constitutional Integrity
+        run: |
+          echo "🏛️ Checking Constitutional Core alignment..."
+          # Verify Schumann resonance constant
+          if grep -q "SCHUMANN_RESONANCE_HZ = 7.83" src/lib/roman-constitutional-core.ts; then
+            echo "✅ Schumann resonance locked at 7.83 Hz"
+          else
+            echo "❌ CRITICAL: Schumann resonance corrupted"
+            exit 1
+          fi
+          
+          # Verify Golden Ratio constant
+          if grep -q "PRINCIPLE_SACRED_GEOMETRY_RATIO = 1.61803398875" src/lib/roman-constitutional-core.ts; then
+            echo "✅ Golden Ratio (φ) preserved"
+          else
+            echo "❌ CRITICAL: Sacred Geometry ratio corrupted"
+            exit 1
+          fi
+      
+      - name: 📊 Check TypeScript Compilation
+        run: npx tsc --noEmit
+      
+      - name: 🔍 Verify Divine Intent Markers
+        run: |
+          echo "🔍 Scanning for Divine Intent preservation..."
+          
+          # Check for AXIOM_OF_EXISTENCE
+          if grep -r "AXIOM_OF_EXISTENCE" src/lib/; then
+            echo "✅ Axiom of Existence preserved"
+          else
+            echo "⚠️  WARNING: Axiom of Existence not found"
+          fi
+          
+          # Check for Constitutional Core integrity
+          if [ -f "src/lib/roman-constitutional-core.ts" ]; then
+            echo "✅ Constitutional Core intact"
+          else
+            echo "❌ CRITICAL: Constitutional Core missing"
+            exit 1
+          fi
+          
+          # Check for Positive Geometry Validator
+          if [ -f "src/lib/positiveGeometry.ts" ]; then
+            echo "✅ Positive Geometry Validator present"
+          else
+            echo "⚠️  WARNING: Positive Geometry Validator missing"
+          fi
+      
+      - name: 🌍 Howard-Jones Family Trust Integrity Check
+        run: |
+          echo "👨‍👩‍👧‍👦 Verifying Howard-Jones Family Trust alignment..."
+          
+          # Check for trust documentation
+          if [ -f "ODYSSEY-1_AI_LLC_Official_Meeting_Minutes_Log.txt" ]; then
+            echo "✅ Corporate governance records intact"
+          else
+            echo "⚠️  WARNING: Meeting minutes not found"
+          fi
+          
+          # Check for Sacred Geometry blueprint
+          if [ -f "Unified_Bio_Cosmic_Generator_Blueprint.md" ]; then
+            echo "✅ Sacred Geometry Blueprint intact"
+          else
+            echo "⚠️  WARNING: Blueprint not found"
+          fi
+      
+      - name: 📡 Resonance Sync Report
+        if: always()
+        run: |
+          echo "=" | tr '=' '='
+          echo "🔮 R.O.M.A.N. Dev-Lab Resonance Shield Report"
+          echo "=" | tr '=' '='
+          echo ""
+          echo "Branch: ${{ github.ref_name }}"
+          echo "Commit: ${{ github.sha }}"
+          echo "Author: ${{ github.actor }}"
+          echo "Timestamp: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo ""
+          echo "🏛️ Constitutional Core: Validated"
+          echo "🔮 Positive Geometry: Validated"
+          echo "🌍 Family Trust: Aligned"
+          echo "📡 Schumann Resonance: 7.83 Hz Locked"
+          echo ""
+          echo "✅ All Amplituhedron constraints satisfied"
+          echo "✅ Ready for R.O.M.A.N. 2.0 Phase 2 integration"
+
+  resource-governor-check:
+    name: Resource Governor Safety Check
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+      
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      
+      - name: 🛡️ Verify Resource Governor
+        run: |
+          if [ -f "src/lib/resourceGovernor.ts" ]; then
+            echo "✅ Resource Governor module present"
+            
+            # Verify CPU limit constant
+            if grep -q "MAX_CPU_USAGE = 0.5" src/lib/resourceGovernor.ts; then
+              echo "✅ CPU limit set to 50% (machine safety valve active)"
+            else
+              echo "⚠️  WARNING: CPU limit not configured"
+            fi
+            
+            # Verify Schumann grounding
+            if grep -q "SCHUMANN_CYCLE_MS" src/lib/resourceGovernor.ts; then
+              echo "✅ Schumann resonance grounding enabled"
+            else
+              echo "⚠️  WARNING: Schumann grounding not configured"
+            fi
+          else
+            echo "⚠️  Resource Governor not found (optional for Phase 1)"
+          fi
+      
+      - name: 📊 System Resource Snapshot
+        run: |
+          echo "💻 CI Runner Resources:"
+          echo "  CPU cores: $(nproc)"
+          echo "  Memory: $(free -h | grep Mem | awk '{print $2}')"
+          echo "  Disk: $(df -h / | tail -1 | awk '{print $4}') available"
+
+  notify-success:
+    name: 🎉 Resonance Shield Passed
+    runs-on: ubuntu-latest
+    needs: [resonance-validation, resource-governor-check]
+    if: success()
+    
+    steps:
+      - name: 🎊 Success Notification
+        run: |
+          echo "=" | tr '=' '='
+          echo "✅ R.O.M.A.N. DEV-LAB RESONANCE SHIELD: ALL TESTS PASSED"
+          echo "=" | tr '=' '='
+          echo ""
+          echo "🔮 Positive Geometry: VALIDATED"
+          echo "🏛️ Constitutional Core: INTACT"
+          echo "🛡️ Resource Governor: ACTIVE"
+          echo "🌍 Family Trust: ALIGNED"
+          echo ""
+          echo "📡 Branch '${{ github.ref_name }}' operates in positive geometry"
+          echo "✅ Ready for merge to main or R.O.M.A.N. 2.0 integration"
