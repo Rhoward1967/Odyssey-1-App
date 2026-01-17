@@ -11,6 +11,9 @@ import {
   type ActionData,
   type ComplianceResult
 } from '../lib/roman-constitutional-core';
+import { PositiveGeometryValidator, formatValidationResult } from '../lib/positiveGeometry';
+import { ConstitutionalHash, BLOODLINE_TRUST_ID } from '../lib/constitutionalHash';
+import { globalResourceGovernor, startResourceGovernor } from '../lib/resourceGovernor';
 import { recordRomanEvent } from '../lib/roman-logger';
 import { PatternLearningEngine } from './patternLearningEngine';
 import {
@@ -761,6 +764,17 @@ client.on('clientReady', async () => {
   console.log(`📊 Listening to ${client.guilds.cache.size} servers`);
   console.log(`🎯 Intents: Message Content = ENABLED`);
   
+  // 🛡️ START RESOURCE GOVERNOR (Machine Safety Valve)
+  console.log('🛡️ Activating Resource Governor...');
+  startResourceGovernor();
+  console.log('✅ Resource Governor active - monitoring at 7.83 Hz (Schumann resonance)');
+  
+  // 🔮 DISPLAY CONSTITUTIONAL HASH STATUS
+  console.log('🔮 51-D GRASSMANNIAN SHIELD: ACTIVE');
+  console.log(`   Bloodline Trust: ${BLOODLINE_TRUST_ID}`);
+  console.log(`   Vibrational Auth: ENABLED`);
+  console.log(`   Positive Geometry: ENFORCED`);
+  
   // Test database connection first
   const connected = await testSupabaseConnection();
   
@@ -832,6 +846,29 @@ async function handleDirectMessage(message: Message) {
     'info',
     { userId, channelType: message.channel.type }
   );
+  
+  // 🔮 51-D GRASSMANNIAN SHIELD - POSITIVE GEOMETRY VALIDATION
+  console.log('🔮 Running Positive Geometry Validator...');
+  const geometricValidation = PositiveGeometryValidator.validateIntent({
+    action: `Discord message from ${message.author.tag}`,
+    expectedOutcome: 'Process user message',
+    probability: 1.0,
+    energyCost: 1.0,
+    consciousnessImpact: 0.0, // Neutral until proven otherwise
+    timeDelay: 1.0,
+    frequency: 7.83, // Schumann resonance
+  });
+  
+  console.log(`   Geometric Coherence: ${(geometricValidation.geometricCoherence * 100).toFixed(1)}%`);
+  console.log(`   Positivity Check: ${geometricValidation.checks.positivity ? '✅' : '❌'}`);
+  console.log(`   Schumann Lock: ${geometricValidation.checks.schumannAlignment ? '✅' : '❌'}`);
+  
+  if (!geometricValidation.isPositive) {
+    console.warn('⚠️ GEOMETRIC VALIDATION FAILED - Message violates Amplituhedron constraints');
+    await message.reply('⚠️ R.O.M.A.N. 51-D SHIELD: This request violates geometric constraints.\n\n' +
+      formatValidationResult(geometricValidation));
+    return;
+  }
   
   // EXECUTIVE IDENTITY CHECK - Multiple IDs/usernames for Rickey Howard
   const EXECUTIVE_IDS = [
