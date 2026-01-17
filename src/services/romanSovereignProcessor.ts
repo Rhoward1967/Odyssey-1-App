@@ -37,6 +37,26 @@ async function sovereignSearch(query: string): Promise<string> {
     
     let knowledgeContext = '';
     
+    // 🔮 PRIORITY CHECK: System capabilities query
+    if (query.toLowerCase().includes('capabilit') || query.toLowerCase().includes('latest') || query.toLowerCase().includes('51') || query.toLowerCase().includes('dimension')) {
+      console.log('   🔮 Capabilities query detected - checking system_knowledge...');
+      
+      const { data: capabilitiesData, error: capError } = await supabase
+        .from('system_knowledge')
+        .select('value')
+        .eq('category', 'capabilities')
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .single();
+      
+      if (capabilitiesData && !capError) {
+        knowledgeContext += `\n=== R.O.M.A.N. LATEST CAPABILITIES (January 2026) ===\n`;
+        knowledgeContext += JSON.stringify(capabilitiesData.value, null, 2);
+        knowledgeContext += `\n===\n`;
+        console.log('   ✅ Latest capabilities retrieved from system_knowledge');
+      }
+    }
+    
     if (keywords.length > 0) {
       const sortedKeywords = keywords.sort((a, b) => b.length - a.length);
       
