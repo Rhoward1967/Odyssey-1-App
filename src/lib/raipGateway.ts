@@ -21,8 +21,8 @@
  * Trust: Howard-Jones Dynasty Trust (Irrevocable)
  */
 
-import { ConstitutionalHash, type ConstitutionalHashResult, BLOODLINE_TRUST_ID } from './constitutionalHash';
-import { PositiveGeometryValidator, type GeometricValidationResult } from './positiveGeometry';
+import { ConstitutionalHash } from './constitutionalHash';
+import { type GeometricValidationResult } from './positiveGeometry';
 import { SCHUMANN_RESONANCE_HZ } from './roman-constitutional-core';
 
 // ============================================================================

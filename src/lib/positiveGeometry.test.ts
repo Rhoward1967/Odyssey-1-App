@@ -7,10 +7,10 @@
  */
 
 import {
-  PositiveGeometryValidator,
-  createActionIntent,
-  formatValidationResult,
-  type ActionIntent,
+    PositiveGeometryValidator,
+    createActionIntent,
+    formatValidationResult,
+    type ActionIntent,
 } from './positiveGeometry';
 import { SCHUMANN_RESONANCE_HZ } from './roman-constitutional-core';
 

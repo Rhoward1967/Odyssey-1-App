@@ -7,6 +7,7 @@ import AIIntelligenceLiveFeed from '@/components/AIIntelligenceLiveFeed';
 import AppLayout from '@/components/AppLayout';
 import { AuthProvider } from '@/components/AuthProvider';
 import ContractorManager from '@/components/ContractorManager';
+import LegalDefenseDashboard from '@/components/LegalDefenseDashboard';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import SystemEvolutionTracker from '@/components/SystemEvolutionTracker';
 import SystemObservabilityDashboard from '@/components/SystemObservabilityDashboard';
@@ -294,6 +295,14 @@ function App() {
                             </ErrorBoundary>
                           } 
                         />                        <Route path="catalog" element={<CatalogManager />} />
+                        <Route 
+                          path="legal-defense" 
+                          element={
+                            <ErrorBoundary componentName="LegalDefense">
+                              <LegalDefenseDashboard />
+                            </ErrorBoundary>
+                          } 
+                        />
                         <Route path="handbook" element={<Handbook />} />
                         <Route path="user-manual" element={<UserManual />} />
                         <Route path="media-center" element={<MediaCenter />} />

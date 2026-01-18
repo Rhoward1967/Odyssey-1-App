@@ -17,7 +17,7 @@
  */
 
 import crypto from 'crypto';
-import { PositiveGeometryValidator, createActionIntent, type ActionIntent } from './positiveGeometry';
+import { PositiveGeometryValidator, type ActionIntent } from './positiveGeometry';
 import { PRINCIPLE_SACRED_GEOMETRY_RATIO, SCHUMANN_RESONANCE_HZ } from './roman-constitutional-core';
 
 // ============================================================================

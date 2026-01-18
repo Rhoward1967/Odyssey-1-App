@@ -6,6 +6,7 @@ import {
   CreditCard,
   DollarSign,
   Home,
+  Scale,
   Shield,
   TrendingUp,
   User,
@@ -71,5 +72,6 @@ export const appRoutes: AppRoute[] = [
   { path: '/timeclock', component: () => <DynamicComponent componentPath="TimeClock" fallbackName="Time Clock" />, name: 'Time Clock', icon: Clock, category: 'business' },
   { path: '/schedule', component: () => <DynamicComponent componentPath="Schedule" fallbackName="Schedule" />, name: 'Schedule', icon: Calendar, category: 'business' },
   { path: '/hr', component: () => <DynamicComponent componentPath="HRDashboard" fallbackName="HR Dashboard" />, name: 'HR', icon: Users, category: 'business', requiredRole: 'manager' },
+  { path: '/legal-defense', component: () => <DynamicComponent componentPath="LegalDefenseDashboard" fallbackName="Legal Defense" />, name: 'Legal Defense', icon: Scale, category: 'core' },
   { path: '/admin', component: () => <DynamicComponent componentPath="Admin" fallbackName="Admin" />, name: 'Admin', icon: Shield, category: 'admin', requiredRole: 'admin' },
 ];

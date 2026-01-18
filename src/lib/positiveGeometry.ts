@@ -10,7 +10,7 @@
  * Integration: Constitutional Core + Discord Bot + R.O.M.A.N. 2.0 Bridge
  */
 
-import { SCHUMANN_RESONANCE_HZ, PRINCIPLE_SACRED_GEOMETRY_RATIO } from './roman-constitutional-core';
+import { PRINCIPLE_SACRED_GEOMETRY_RATIO, SCHUMANN_RESONANCE_HZ } from './roman-constitutional-core';
 
 // ============================================================================
 // AMPLITUHEDRON CONSTANTS
