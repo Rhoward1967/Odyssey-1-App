@@ -1,5 +1,6 @@
 import ActiveCreditTracker from '@/components/ActiveCreditTracker';
 import { BusinessDebtTracker } from '@/components/BusinessDebtTracker';
+import { ContractAnalyzer } from '@/components/ContractAnalyzer';
 import CreditInquiryTracker from '@/components/CreditInquiryTracker';
 import EvidenceLog from '@/components/EvidenceLog';
 import { RomanStrategyPanel } from '@/components/RomanStrategyPanel';
@@ -470,6 +471,7 @@ export default function LegalDefenseDashboard() {
           <TabsList className="bg-slate-800 border-slate-700">
             <TabsTrigger value="accounts">Collection Accounts</TabsTrigger>
             <TabsTrigger value="business">Business Debt</TabsTrigger>
+            <TabsTrigger value="contracts">⚖️ Contract Analyzer</TabsTrigger>
             <TabsTrigger value="roman">🤖 R.O.M.A.N. Strategy</TabsTrigger>
             <TabsTrigger value="credit">Active Credit</TabsTrigger>
             <TabsTrigger value="inquiries">Credit Inquiries</TabsTrigger>
@@ -667,6 +669,11 @@ export default function LegalDefenseDashboard() {
           {/* Business Debt Tab */}
           <TabsContent value="business">
             <BusinessDebtTracker />
+          </TabsContent>
+
+          {/* Contract Analyzer Tab */}
+          <TabsContent value="contracts">
+            <ContractAnalyzer />
           </TabsContent>
 
           {/* R.O.M.A.N. Strategy Tab */}
