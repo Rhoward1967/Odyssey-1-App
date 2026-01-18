@@ -3,6 +3,7 @@ import { BusinessDebtTracker } from '@/components/BusinessDebtTracker';
 import { ContractAnalyzer } from '@/components/ContractAnalyzer';
 import CreditInquiryTracker from '@/components/CreditInquiryTracker';
 import EvidenceLog from '@/components/EvidenceLog';
+import { InsuranceGapTracker } from '@/components/InsuranceGapTracker';
 import { RomanStrategyPanel } from '@/components/RomanStrategyPanel';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
@@ -472,6 +473,7 @@ export default function LegalDefenseDashboard() {
             <TabsTrigger value="accounts">Collection Accounts</TabsTrigger>
             <TabsTrigger value="business">Business Debt</TabsTrigger>
             <TabsTrigger value="contracts">⚖️ Contract Analyzer</TabsTrigger>
+            <TabsTrigger value="insurance">🛡️ Coverage Gaps</TabsTrigger>
             <TabsTrigger value="roman">🤖 R.O.M.A.N. Strategy</TabsTrigger>
             <TabsTrigger value="credit">Active Credit</TabsTrigger>
             <TabsTrigger value="inquiries">Credit Inquiries</TabsTrigger>
@@ -674,6 +676,11 @@ export default function LegalDefenseDashboard() {
           {/* Contract Analyzer Tab */}
           <TabsContent value="contracts">
             <ContractAnalyzer />
+          </TabsContent>
+
+          {/* Insurance Gap Tracker Tab */}
+          <TabsContent value="insurance">
+            <InsuranceGapTracker />
           </TabsContent>
 
           {/* R.O.M.A.N. Strategy Tab */}
