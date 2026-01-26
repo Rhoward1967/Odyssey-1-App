@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabaseClient';
 import { BusinessDebtDefenseEngine, BusinessDebtAccount, BusinessLegalAnalysis } from '@/services/businessDebtDefenseEngine';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -36,6 +36,18 @@ export function BusinessDebtTracker() {
   const [analysis, setAnalysis] = useState<BusinessLegalAnalysis | null>(null);
   const [loading, setLoading] = useState(true);
   const [showAddForm, setShowAddForm] = useState(false);
+  const [newDebt, setNewDebt] = useState({
+    creditor: '',
+    creditorType: 'bank',
+    originalAmount: '',
+    currentAmount: '',
+    accountNumber: '',
+    contractType: 'written' as 'written' | 'oral' | 'implied',
+    personalGuarantee: false,
+    corporateVeilIntact: true,
+    lastPaymentDate: '',
+    dateOfDefault: ''
+  });
 
   const engine = new BusinessDebtDefenseEngine();
 
@@ -56,6 +68,49 @@ export function BusinessDebtTracker() {
       console.error('Error loading business debts:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const saveDebt = async () => {
+    try {
+      const { error } = await supabase
+        .from('business_debt_accounts')
+        .insert({
+          creditor: newDebt.creditor,
+          creditor_type: newDebt.creditorType,
+          original_amount: parseFloat(newDebt.originalAmount),
+          current_amount: parseFloat(newDebt.currentAmount),
+          account_number: newDebt.accountNumber,
+          contract_type: newDebt.contractType,
+          personal_guarantee: newDebt.personalGuarantee,
+          corporate_veil_intact: newDebt.corporateVeilIntact,
+          last_payment_date: newDebt.lastPaymentDate,
+          date_of_default: newDebt.dateOfDefault,
+          status: 'active',
+          statute_expired: false,
+          defense_strength: 50,
+          risk_level: 'MEDIUM'
+        });
+
+      if (error) throw error;
+
+      setShowAddForm(false);
+      setNewDebt({
+        creditor: '',
+        creditorType: 'bank',
+        originalAmount: '',
+        currentAmount: '',
+        accountNumber: '',
+        contractType: 'written',
+        personalGuarantee: false,
+        corporateVeilIntact: true,
+        lastPaymentDate: '',
+        dateOfDefault: ''
+      });
+      await loadDebts();
+    } catch (error) {
+      console.error('Error saving debt:', error);
+      alert('Failed to save debt. Please try again.');
     }
   };
 
@@ -347,6 +402,162 @@ export function BusinessDebtTracker() {
             </div>
           </CardContent>
         </Card>
+      )}
+
+      {/* Add Debt Form Modal */}
+      {showAddForm && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <Card className="w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <CardHeader>
+              <CardTitle>Add Business Debt Account</CardTitle>
+              <CardDescription>Commercial debt (NOT protected by FDCPA consumer laws)</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label>Creditor Name *</Label>
+                    <Input
+                      value={newDebt.creditor}
+                      onChange={(e) => setNewDebt({...newDebt, creditor: e.target.value})}
+                      placeholder="ABC Bank"
+                    />
+                  </div>
+                  <div>
+                    <Label>Creditor Type</Label>
+                    <Select value={newDebt.creditorType} onValueChange={(v) => setNewDebt({...newDebt, creditorType: v})}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="bank">Bank</SelectItem>
+                        <SelectItem value="supplier">Supplier/Vendor</SelectItem>
+                        <SelectItem value="mca">Merchant Cash Advance</SelectItem>
+                        <SelectItem value="landlord">Landlord</SelectItem>
+                        <SelectItem value="contractor">Contractor</SelectItem>
+                        <SelectItem value="equipment_lease">Equipment Lease</SelectItem>
+                        <SelectItem value="business_credit_card">Business Credit Card</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label>Original Amount *</Label>
+                    <Input
+                      type="number"
+                      step="0.01"
+                      value={newDebt.originalAmount}
+                      onChange={(e) => setNewDebt({...newDebt, originalAmount: e.target.value})}
+                      placeholder="10000.00"
+                    />
+                  </div>
+                  <div>
+                    <Label>Current Amount Owed *</Label>
+                    <Input
+                      type="number"
+                      step="0.01"
+                      value={newDebt.currentAmount}
+                      onChange={(e) => setNewDebt({...newDebt, currentAmount: e.target.value})}
+                      placeholder="12500.00"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <Label>Account Number</Label>
+                  <Input
+                    value={newDebt.accountNumber}
+                    onChange={(e) => setNewDebt({...newDebt, accountNumber: e.target.value})}
+                    placeholder="Last 4 digits or full account #"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label>Last Payment Date *</Label>
+                    <Input
+                      type="date"
+                      value={newDebt.lastPaymentDate}
+                      onChange={(e) => setNewDebt({...newDebt, lastPaymentDate: e.target.value})}
+                    />
+                  </div>
+                  <div>
+                    <Label>Date of Default *</Label>
+                    <Input
+                      type="date"
+                      value={newDebt.dateOfDefault}
+                      onChange={(e) => setNewDebt({...newDebt, dateOfDefault: e.target.value})}
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <Label>Contract Type</Label>
+                  <Select value={newDebt.contractType} onValueChange={(v: any) => setNewDebt({...newDebt, contractType: v})}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="written">Written Contract (6 year SOL in GA)</SelectItem>
+                      <SelectItem value="oral">Oral Agreement (4 year SOL in GA)</SelectItem>
+                      <SelectItem value="implied">Implied Contract</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      id="personalGuarantee"
+                      checked={newDebt.personalGuarantee}
+                      onChange={(e) => setNewDebt({...newDebt, personalGuarantee: e.target.checked})}
+                      className="h-4 w-4"
+                    />
+                    <Label htmlFor="personalGuarantee" className="cursor-pointer">
+                      Personal Guarantee (CRITICAL: You are personally liable if checked)
+                    </Label>
+                  </div>
+                  
+                  <div className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      id="corporateVeil"
+                      checked={newDebt.corporateVeilIntact}
+                      onChange={(e) => setNewDebt({...newDebt, corporateVeilIntact: e.target.checked})}
+                      className="h-4 w-4"
+                    />
+                    <Label htmlFor="corporateVeil" className="cursor-pointer">
+                      Corporate Veil Intact (LLC protections still valid)
+                    </Label>
+                  </div>
+                </div>
+
+                {newDebt.personalGuarantee && (
+                  <Alert className="border-red-500 bg-red-50">
+                    <AlertTriangle className="h-4 w-4 text-red-600" />
+                    <AlertDescription className="text-red-800">
+                      <strong>WARNING:</strong> Personal guarantee means YOU are personally liable. 
+                      LLC protection does NOT apply. This debt can come after your personal assets.
+                    </AlertDescription>
+                  </Alert>
+                )}
+
+                <div className="flex gap-2 pt-4">
+                  <Button onClick={saveDebt} className="flex-1">
+                    Save Business Debt
+                  </Button>
+                  <Button variant="outline" onClick={() => setShowAddForm(false)}>
+                    Cancel
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       )}
     </div>
   );

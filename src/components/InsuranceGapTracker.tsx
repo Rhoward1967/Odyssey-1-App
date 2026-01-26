@@ -7,15 +7,14 @@
  * Created: January 17, 2026
  */
 
-import { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { Shield, AlertTriangle, CheckCircle2, TrendingUp, DollarSign, FileText } from 'lucide-react';
 import { insuranceGapAnalyzer } from '@/services/insuranceGapAnalyzer';
-import type { InsuranceGapAnalysis } from '@/services/insuranceGapAnalyzer';
+import { AlertTriangle, CheckCircle2, DollarSign, FileText, Shield, TrendingUp } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 export function InsuranceGapTracker() {
   const [analysis, setAnalysis] = useState<any>(null);

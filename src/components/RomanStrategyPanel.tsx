@@ -1,34 +1,30 @@
-import { useState, useEffect } from 'react';
-import { romanAdvancedStrategy, AssetProtectionStrategy } from '@/services/romanAdvancedStrategy';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { 
-  Shield, 
-  Building, 
-  FileText, 
-  TrendingUp, 
-  DollarSign, 
-  Clock,
+import { AssetProtectionStrategy, romanAdvancedStrategy } from '@/services/romanAdvancedStrategy';
+import {
   AlertTriangle,
+  Building,
   CheckCircle2,
-  Scale,
+  Clock,
+  DollarSign,
+  FileText,
   Lock,
+  Scale,
+  Shield,
+  TrendingUp,
   Zap
 } from 'lucide-react';
+import { useCallback, useEffect, useState } from 'react';
 
 export function RomanStrategyPanel({ userId, debtAccountId }: { userId: string; debtAccountId?: string }) {
   const [strategy, setStrategy] = useState<AssetProtectionStrategy | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'overview' | 'layers' | 'actions'>('overview');
 
-  useEffect(() => {
-    loadStrategy();
-  }, [userId, debtAccountId]);
-
-  const loadStrategy = async () => {
+  const loadStrategy = useCallback(async () => {
     try {
       setLoading(true);
       const result = await romanAdvancedStrategy.analyzeAssetProtection(userId, debtAccountId);
@@ -38,7 +34,11 @@ export function RomanStrategyPanel({ userId, debtAccountId }: { userId: string; 
     } finally {
       setLoading(false);
     }
-  };
+  }, [userId, debtAccountId]);
+
+  useEffect(() => {
+    loadStrategy();
+  }, [loadStrategy]);
 
   if (loading) {
     return (

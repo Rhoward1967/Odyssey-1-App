@@ -12,9 +12,7 @@
  * Created: January 17, 2026
  */
 
-import { createClient } from '@/lib/supabaseClient';
-
-const supabase = createClient();
+import { supabase } from '@/lib/supabaseClient';
 
 interface InsurancePolicy {
   id: string;

@@ -9,10 +9,7 @@
  * Created: January 17, 2026
  */
 
-import { createClient } from '@/lib/supabaseClient';
 import Anthropic from '@anthropic-ai/sdk';
-
-const supabase = createClient();
 
 // Constitutional AI: ONLY use legitimate legal strategies, NO pseudolaw
 const FORBIDDEN_CONCEPTS = [

@@ -15,7 +15,7 @@ class RobustLabServer {
     constructor() {
         this.maxRestarts = 10;
         this.restartCount = 0;
-        this.basePort = 5173;
+        this.basePort = 8080;
         this.currentPort = this.basePort;
         this.viteProcess = null;
         this.isShuttingDown = false;

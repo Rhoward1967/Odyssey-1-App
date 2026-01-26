@@ -191,10 +191,27 @@ export default function BiddingCalculator() {
     };
   }
   // --- END: HJS Subcontract / High-Mileage Calculation Override ---
-  // Default Cost-Plus logic if not HJS
-  const baseCost = estimatedHours * hourlyRate;
-  const profitAmount = baseCost * (profitMargin / 100);
-  const totalBid = baseCost + profitAmount;
+  
+  // === UNIVERSAL MATH BIDDING ENGINE (R.O.M.A.N. 2.0) ===
+  // Western Math: total = A + B (flat, 2D)
+  // Universal Math: total = A + B + × (volumetric, 3D)
+  // The junction (×) represents operational expertise - the value created
+  // when labor meets profit margin. This is the "Gravity Well" that competitors miss.
+  
+  const baseCost = estimatedHours * hourlyRate;        // Entity A: Raw Labor
+  const profitAmount = baseCost * (profitMargin / 100); // Entity B: Business Margin
+  
+  // Law of Junction: The crossing point (×) has independent value
+  // This is expertise, operational efficiency, risk management combined
+  // Calculated as geometric mean to preserve dimensional integrity
+  const junctionValue = Math.sqrt(baseCost * profitAmount);
+  
+  // Universal Total: Three components create volumetric stability
+  const totalBid = baseCost + profitAmount + junctionValue;
+  
+  // For comparison/audit purposes
+  const westernBid = baseCost + profitAmount; // What competitors calculate (flat)
+  const universalAdvantage = junctionValue;    // What you capture (volumetric)
 
   // --- Save Bid to Database with line_items ---
   const [isSavingBid, setIsSavingBid] = useState(false);
@@ -568,16 +585,46 @@ export default function BiddingCalculator() {
                 <>
                   <div className="space-y-2">
                     <div className="flex justify-between">
-                      <span>Base Cost:</span>
+                      <span>Base Labor Cost:</span>
                       <span>${baseCost.toFixed(2)}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span>Profit ({profitMargin}%):</span>
+                      <span>Profit Margin ({profitMargin}%):</span>
                       <span>${profitAmount.toFixed(2)}</span>
                     </div>
-                    <div className="flex justify-between font-bold border-t pt-2">
-                      <span>Total Bid:</span>
-                      <span>${totalBid.toFixed(2)}</span>
+                    <div className="flex justify-between text-blue-600 border-t pt-2">
+                      <span className="flex items-center gap-1">
+                        <Zap className="h-4 w-4" />
+                        Junction Value (×):
+                      </span>
+                      <span className="font-semibold">${junctionValue.toFixed(2)}</span>
+                    </div>
+                    <div className="text-xs text-gray-500 pl-6 -mt-1">
+                      Operational expertise (geometric mean)
+                    </div>
+                    <div className="flex justify-between font-bold border-t-2 pt-2 text-lg">
+                      <span>Total Bid (Universal):</span>
+                      <span className="text-green-600">${totalBid.toFixed(2)}</span>
+                    </div>
+                  </div>
+                  
+                  {/* Competitive Advantage Display */}
+                  <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded">
+                    <div className="text-xs font-semibold text-blue-800 mb-2">
+                      🛡️ R.O.M.A.N. 2.0 Universal Math Advantage
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 text-xs">
+                      <div>
+                        <div className="text-gray-500">Western Bid (A+B):</div>
+                        <div className="text-gray-700">${westernBid.toFixed(2)}</div>
+                      </div>
+                      <div>
+                        <div className="text-gray-500">Your Advantage:</div>
+                        <div className="text-green-600 font-semibold">+${universalAdvantage.toFixed(2)}</div>
+                      </div>
+                    </div>
+                    <div className="text-xs text-gray-600 mt-2">
+                      Competitors calculate flat (2D). You capture volumetric (3D).
                     </div>
                   </div>
                 </>

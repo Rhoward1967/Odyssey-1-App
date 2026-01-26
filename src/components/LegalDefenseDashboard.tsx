@@ -4,6 +4,7 @@ import { ContractAnalyzer } from '@/components/ContractAnalyzer';
 import CreditInquiryTracker from '@/components/CreditInquiryTracker';
 import EvidenceLog from '@/components/EvidenceLog';
 import { InsuranceGapTracker } from '@/components/InsuranceGapTracker';
+import { PaymentPlanCalculator } from '@/components/PaymentPlanCalculator';
 import { RomanStrategyPanel } from '@/components/RomanStrategyPanel';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
@@ -69,6 +70,10 @@ export default function LegalDefenseDashboard() {
   const [showAddAccount, setShowAddAccount] = useState(false);
   const [loading, setLoading] = useState(true);
   
+  // Aggregated debt totals from all sources
+  const [totalDebtAllSources, setTotalDebtAllSources] = useState(0);
+  const [totalAccountsAllSources, setTotalAccountsAllSources] = useState(0);
+  
   // Response analyzer state
   const [showResponseAnalyzer, setShowResponseAnalyzer] = useState(false);
   const [analyzerAccount, setAnalyzerAccount] = useState<TrackedAccount | null>(null);
@@ -99,7 +104,53 @@ export default function LegalDefenseDashboard() {
   // Load accounts from Supabase on mount
   useEffect(() => {
     loadAccounts();
+    loadAllDebtSources();
   }, []);
+
+  const loadAllDebtSources = async () => {
+    try {
+      // Load from all debt tables
+      const [legalDefense, businessDebt, activeCredit] = await Promise.all([
+        supabase.from('legal_defense_accounts').select('current_amount'),
+        supabase.from('business_debt_accounts').select('current_amount'),
+        supabase.from('active_credit_accounts').select('reported_balance')
+      ]);
+
+      console.log('Legal Defense:', legalDefense);
+      console.log('Business Debt:', businessDebt);
+      console.log('Active Credit:', activeCredit);
+
+      let total = 0;
+      let count = 0;
+
+      if (legalDefense.data) {
+        const legalTotal = legalDefense.data.reduce((sum, row) => sum + parseFloat(row.current_amount || 0), 0);
+        console.log('Legal Defense Total:', legalTotal);
+        total += legalTotal;
+        count += legalDefense.data.length;
+      }
+
+      if (businessDebt.data) {
+        const businessTotal = businessDebt.data.reduce((sum, row) => sum + parseFloat(row.current_amount || 0), 0);
+        console.log('Business Debt Total:', businessTotal);
+        total += businessTotal;
+        count += businessDebt.data.length;
+      }
+
+      if (activeCredit.data) {
+        const creditTotal = activeCredit.data.reduce((sum, row) => sum + parseFloat(row.reported_balance || 0), 0);
+        console.log('Active Credit Total:', creditTotal, 'Count:', activeCredit.data.length);
+        total += creditTotal;
+        count += activeCredit.data.length;
+      }
+
+      console.log('FINAL TOTAL:', total, 'COUNT:', count);
+      setTotalDebtAllSources(total);
+      setTotalAccountsAllSources(count);
+    } catch (error) {
+      console.error('Error loading all debt sources:', error);
+    }
+  };
 
   const loadAccounts = async () => {
     try {
@@ -193,6 +244,7 @@ export default function LegalDefenseDashboard() {
       if (error) throw error;
 
       await loadAccounts();
+      await loadAllDebtSources();
       setShowAddAccount(false);
       
       // Reset form
@@ -227,6 +279,7 @@ export default function LegalDefenseDashboard() {
       if (error) throw error;
 
       await loadAccounts();
+      await loadAllDebtSources();
     } catch (error) {
       console.error('Error updating account:', error);
     }
@@ -377,7 +430,8 @@ export default function LegalDefenseDashboard() {
     }
   };
 
-  const totalDebt = accounts.reduce((sum, acc) => sum + acc.currentAmount, 0);
+  const totalDebt = totalDebtAllSources; // Use aggregated total from all sources
+  const totalAccountCount = totalAccountsAllSources;
   const expiredAccounts = accounts.filter(acc => acc.analysis?.statuteExpired).length;
   const activeDefenses = accounts.filter(acc => acc.status === 'validation_pending' || acc.status === 'disputed').length;
   const potentialSavings = accounts
@@ -423,7 +477,7 @@ export default function LegalDefenseDashboard() {
               <div className="text-3xl font-bold text-white">
                 ${totalDebt.toLocaleString()}
               </div>
-              <p className="text-xs text-slate-400 mt-1">{accounts.length} accounts tracked</p>
+              <p className="text-xs text-slate-400 mt-1">{totalAccountCount} accounts tracked</p>
             </CardContent>
           </Card>
 
@@ -469,9 +523,10 @@ export default function LegalDefenseDashboard() {
 
         {/* Main Content */}
         <Tabs defaultValue="accounts" className="space-y-4">
-          <TabsList className="bg-slate-800 border-slate-700">
+          <TabsList className="bg-slate-800 border-slate-700 flex-wrap h-auto justify-start">
             <TabsTrigger value="accounts">Collection Accounts</TabsTrigger>
             <TabsTrigger value="business">Business Debt</TabsTrigger>
+            <TabsTrigger value="payment">💰 Payment Plan</TabsTrigger>
             <TabsTrigger value="contracts">⚖️ Contract Analyzer</TabsTrigger>
             <TabsTrigger value="insurance">🛡️ Coverage Gaps</TabsTrigger>
             <TabsTrigger value="roman">🤖 R.O.M.A.N. Strategy</TabsTrigger>
@@ -567,8 +622,28 @@ export default function LegalDefenseDashboard() {
                       </div>
                     </div>
 
+                    {/* Upload Documents Section */}
+                    <div className="space-y-2 pt-2 border-t border-slate-700">
+                      <div className="flex items-center gap-2 mb-2">
+                        <FileText className="w-4 h-4 text-green-400" />
+                        <span className="text-xs text-slate-400 uppercase tracking-wide">Contract Documents</span>
+                      </div>
+                      <Button 
+                        onClick={() => setSelectedAccount(account)}
+                        variant="outline"
+                        className="w-full border-green-600 text-green-300 hover:bg-green-900"
+                        size="sm"
+                      >
+                        <FileText className="w-4 h-4 mr-2" />
+                        Upload Loan/Credit Agreement → Evidence Tab
+                      </Button>
+                      <p className="text-xs text-slate-400">
+                        Upload original agreements for AI contract analysis
+                      </p>
+                    </div>
+
                     {/* Actions */}
-                    <div className="space-y-3 pt-2">
+                    <div className="space-y-3 pt-2 border-t border-slate-700">
                       <div className="flex items-center gap-2 mb-2">
                         <Bot className="w-4 h-4 text-blue-400" />
                         <span className="text-xs text-slate-400 uppercase tracking-wide">R.O.M.A.N. AI-Generated Letters</span>
@@ -673,6 +748,11 @@ export default function LegalDefenseDashboard() {
             <BusinessDebtTracker />
           </TabsContent>
 
+          {/* Payment Plan Calculator Tab */}
+          <TabsContent value="payment">
+            <PaymentPlanCalculator userId={''} />
+          </TabsContent>
+
           {/* Contract Analyzer Tab */}
           <TabsContent value="contracts">
             <ContractAnalyzer />
@@ -771,7 +851,11 @@ export default function LegalDefenseDashboard() {
                       <p className="text-sm text-slate-300 mb-4">
                         Forces collection agency to prove: (1) Original creditor, (2) Amount breakdown, (3) Legal assignment.
                       </p>
-                      <Button className="w-full bg-blue-600 hover:bg-blue-700" disabled={accounts.length === 0}>
+                      <Button 
+                        onClick={() => accounts[0] && generateLetter(accounts[0], 'validation', true)}
+                        className="w-full bg-blue-600 hover:bg-blue-700" 
+                        disabled={accounts.length === 0}
+                      >
                         <Download className="w-4 h-4 mr-2" />
                         Generate Letter
                       </Button>
@@ -787,7 +871,11 @@ export default function LegalDefenseDashboard() {
                       <p className="text-sm text-slate-300 mb-4">
                         Credit bureau must verify within 30 days or remove item. Send to all 3 bureaus.
                       </p>
-                      <Button className="w-full bg-purple-600 hover:bg-purple-700" disabled={accounts.length === 0}>
+                      <Button 
+                        onClick={() => accounts[0] && generateLetter(accounts[0], 'credit_dispute', true)}
+                        className="w-full bg-purple-600 hover:bg-purple-700" 
+                        disabled={accounts.length === 0}
+                      >
                         <Download className="w-4 h-4 mr-2" />
                         Generate Letter
                       </Button>

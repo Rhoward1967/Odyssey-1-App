@@ -7,18 +7,16 @@
  * Created: January 17, 2026
  */
 
-import { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Upload, FileText, AlertTriangle, Shield, Gavel, Target, Download } from 'lucide-react';
+import { supabase } from '@/lib/supabaseClient';
 import { ContractAnalysisEngine } from '@/services/contractAnalysisEngine';
-import { createClient } from '@/lib/supabaseClient';
-
-const supabase = createClient();
+import { AlertTriangle, Download, FileText, Gavel, Shield, Target, Upload } from 'lucide-react';
+import { useState } from 'react';
 
 export function ContractAnalyzer() {
   const [uploading, setUploading] = useState(false);
