@@ -43,7 +43,7 @@ serve(async (req) => {
   try {
     const { to, subject, htmlContent, textContent, templateType, templateData }: EmailRequest = await req.json()
 
-    // Pre-built email templates for Media Center
+    // Pre-built email templates
     const getEmailTemplate = (type: string, data: TemplateData) => {
       switch (type) {
         case 'study-invitation':
@@ -57,7 +57,7 @@ serve(async (req) => {
               <p><strong>Join Link:</strong> <a href="${data.joinLink}">Click to Join</a></p>
               <p>Prepare by reviewing: ${data.materials || 'No specific materials'}</p>
               <hr>
-              <p><em>Powered by ODYSSEY-1 Media Center</em></p>
+              <p><em>Powered by ODYSSEY-1 AI LLC</em></p>
             `
           };
         
@@ -72,7 +72,7 @@ serve(async (req) => {
               <p><a href="${data.documentLink}">View Document</a></p>
               <p><strong>Notes:</strong> ${data.notes || 'No additional notes'}</p>
               <hr>
-              <p><em>Access your documents anytime in ODYSSEY-1 Media Center</em></p>
+              <p><em>ODYSSEY-1 AI LLC</em></p>
             `
           };
         
@@ -86,7 +86,7 @@ serve(async (req) => {
               <p><strong>Join Link:</strong> <a href="${data.joinLink}">Join Now</a></p>
               <p>Make sure you have your materials ready!</p>
               <hr>
-              <p><em>ODYSSEY-1 Media Center Notification</em></p>
+              <p><em>ODYSSEY-1 AI LLC</em></p>
             `
           };
         
@@ -101,7 +101,7 @@ serve(async (req) => {
               <p><strong>Message:</strong> ${data.message}</p>
               <p><a href="${data.acceptLink}">Accept</a> | <a href="${data.declineLink}">Decline</a></p>
               <hr>
-              <p><em>Manage collaborations in ODYSSEY-1 Media Center</em></p>
+              <p><em>ODYSSEY-1 AI LLC</em></p>
             `
           };
         
@@ -123,42 +123,45 @@ serve(async (req) => {
       emailHtml = template.html;
     }
 
-    // Send email via SendGrid
-    const sendGridResponse = await fetch('https://api.sendgrid.com/v3/mail/send', {
+    // Send email via Resend (simpler, more reliable than SMTP in Edge Functions)
+    const resendApiKey = Deno.env.get('RESEND_API_KEY');
+    
+    if (!resendApiKey) {
+      throw new Error('RESEND_API_KEY not configured. Set up at resend.com and add to Supabase secrets.');
+    }
+
+    const recipients = Array.isArray(to) ? to : [to];
+
+    const response = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${Deno.env.get('SENDGRID_API_KEY')}`,
+        'Authorization': `Bearer ${resendApiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        personalizations: [
-          {
-            to: Array.isArray(to) ? to.map(email => ({ email })) : [{ email: to }],
-            subject: emailSubject
-          }
-        ],
-        from: {
-          email: 'noreply@odyssey-platform.com',
-          name: 'ODYSSEY-1 Media Center'
-        },
-        content: [
-          {
-            type: 'text/html',
-            value: emailHtml || `<p>${textContent}</p>`
-          }
-        ]
-      })
+        from: 'ODYSSEY-1 AI LLC <onboarding@resend.dev>',  // Use Resend's test domain first
+        to: recipients,
+        subject: emailSubject,
+        html: emailHtml || `<p>${textContent}</p>`,
+      }),
     });
 
-    if (!sendGridResponse.ok) {
-      throw new Error(`SendGrid API error: ${sendGridResponse.status}`);
+    if (!response.ok) {
+      const error = await response.text();
+      console.error('Resend API Error:', error);
+      throw new Error(`Resend API error: ${response.status} - ${error}`);
     }
+
+    const result = await response.json();
+    console.log(`✅ Email sent via Resend to: ${recipients.join(', ')}`);
 
     return new Response(
       JSON.stringify({ 
         success: true,
         message: 'Email sent successfully',
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
+        recipients: recipients,
+        emailId: result.id
       }),
       { 
         headers: { 
@@ -183,7 +186,8 @@ serve(async (req) => {
         headers: { 
           ...corsHeaders, 
           'Content-Type': 'application/json' 
-        } 
+        },
+        status: 500
       }
     )
   }

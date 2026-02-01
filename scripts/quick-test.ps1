@@ -1,0 +1,2 @@
+$response = Invoke-RestMethod -Method POST -Uri "https://tvsxloejfsrdganemsmg.supabase.co/functions/v1/recurring-invoice-generator" -Headers @{"Authorization" = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR2c3hsb2VqZnNyZGdhbmVtc21nIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NjcxODg0OCwiZXhwIjoyMDcyMjk0ODQ4fQ.Wr3ffDizDf3DXG2uFD7-z4XrmtQUJjX-m9hiLoMvd1M"}
+$response | ConvertTo-Json

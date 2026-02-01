@@ -61,10 +61,112 @@ type RecurringInvoice = {
   next_invoice_date: string;
   line_items: LineItem[];
   total_amount: number;
+  amount_cents?: number;
   is_active: boolean;
   notes?: string;
   tax_rate?: number;
+  location_label?: string;
+  contract_start_date?: string;
+  annual_increase_pct?: number;
+  service_days_per_week?: number;
+  due_date_offset_days?: number;
+  late_fee_pct?: number;
   customers: { company_name: string; first_name?: string; last_name?: string };
+};
+
+// --- R.O.M.A.N. 2.0 Alert Types ---
+type RevenueAlert = {
+  type: 'increase' | 'calendar' | 'late';
+  label: string;
+  severity: 'high' | 'medium' | 'low';
+};
+
+// --- Supply Pricing Constants (Per Case in Cents) ---
+const SUPPLY_PRICES = {
+  "55_GALLON_BAGS": 4500,  // $45.00 per case
+  "20_GALLON_BAGS": 3500,  // $35.00 per case
+  "10_GALLON_BAGS": 2500,  // $25.00 per case
+  "PAPER_TOWELS": 5500,    // $55.00 per case
+  "PAPER_PRODUCTS": 30030, // $300.30 including tax (Sandi Turner standard)
+} as const;
+
+type SupplyType = keyof typeof SUPPLY_PRICES;
+
+// --- R.O.M.A.N. 2.0: Revenue Alert Detection Logic ---
+const checkRevenueAlerts = (invoice: RecurringInvoice): RevenueAlert[] => {
+  const alerts: RevenueAlert[] = [];
+  const today = new Date();
+  
+  // Anniversary Guard: Check if annual price increase is due
+  if (invoice.contract_start_date && invoice.annual_increase_pct && invoice.annual_increase_pct > 0) {
+    const contractDate = new Date(invoice.contract_start_date);
+    const monthsSinceStart = (today.getFullYear() - contractDate.getFullYear()) * 12 + 
+                             (today.getMonth() - contractDate.getMonth());
+    
+    // If we're within 30 days of anniversary and it's been at least 11 months
+    if (monthsSinceStart >= 11 && monthsSinceStart <= 13 &&
+        today.getMonth() === contractDate.getMonth()) {
+      alerts.push({
+        type: 'increase',
+        label: `📈 ${invoice.annual_increase_pct}% Increase Due`,
+        severity: 'high'
+      });
+    }
+  }
+  
+  // 5-Week Month Guard: Check if current month has extra service week
+  if (invoice.service_days_per_week && invoice.service_days_per_week >= 1 && invoice.frequency === 'monthly') {
+    const weekCount = countServiceWeeks(today, invoice.service_days_per_week);
+    if (weekCount >= 5) {
+      alerts.push({
+        type: 'calendar',
+        label: '📅 5-Week Month - Extra Visit',
+        severity: 'medium'
+      });
+    }
+  }
+  
+  // Late Fee Guard: Check if invoice is overdue
+  const nextInvoiceDate = new Date(invoice.next_invoice_date);
+  const dueDate = new Date(nextInvoiceDate);
+  dueDate.setDate(dueDate.getDate() + (invoice.due_date_offset_days || 15));
+  
+  const daysPastDue = Math.floor((today.getTime() - dueDate.getTime()) / (1000 * 60 * 60 * 24));
+  
+  if (daysPastDue > 0) {
+    alerts.push({
+      type: 'late',
+      label: `⚠️ ${daysPastDue} Days Overdue - ${invoice.late_fee_pct || 5}% Fee`,
+      severity: 'high'
+    });
+  }
+  
+  return alerts;
+};
+
+// Helper: Count service weeks in current month
+const countServiceWeeks = (date: Date, serviceDaysPerWeek: number): number => {
+  const year = date.getFullYear();
+  const month = date.getMonth();
+  const firstDay = new Date(year, month, 1);
+  const lastDay = new Date(year, month + 1, 0);
+  const daysInMonth = lastDay.getDate();
+  
+  // If we have weekly service (5-7 days/week), count number of weeks
+  if (serviceDaysPerWeek >= 5) {
+    // Count Mondays (or primary service day) in the month
+    let weekCount = 0;
+    for (let day = 1; day <= daysInMonth; day++) {
+      const currentDate = new Date(year, month, day);
+      if (currentDate.getDay() === 1) { // Monday
+        weekCount++;
+      }
+    }
+    return weekCount;
+  }
+  
+  // For less frequent service, estimate based on days in month
+  return daysInMonth >= 29 ? 5 : 4;
 };
 
 // --- Main Dashboard Component ---
@@ -85,6 +187,7 @@ export default function InvoiceDashboard() {
   const [editingRecurring, setEditingRecurring] = useState<Partial<RecurringInvoice> | null>(
     null
   );
+  const [editingSupply, setEditingSupply] = useState<RecurringInvoice | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -109,9 +212,10 @@ export default function InvoiceDashboard() {
           .select('*')
           .eq('user_id', user.id)
           .single(),
+        // ARCHITECT DIRECTIVE: NAKED FETCH - Only money, no complex fields
         supabase
           .from('recurring_invoices')
-          .select('*, customers!recurring_invoices_customer_id_fkey(company_name, first_name, last_name, user_id)')
+          .select('id, amount_cents, frequency, is_active')
           .order('next_invoice_date', { ascending: true }),
       ]);
 
@@ -184,6 +288,23 @@ export default function InvoiceDashboard() {
       return aName.localeCompare(bName);
     });
     setCustomers(updatedCustomers);
+  };
+
+  // Update supply pricing based on case quantity
+  const updateSupplyTotal = async (invoiceId: string, cases: number, unitPriceCents: number) => {
+    const newTotal = cases * unitPriceCents;
+    
+    const { error } = await supabase
+      .from('recurring_invoices')
+      .update({ amount_cents: newTotal })
+      .eq('id', invoiceId);
+
+    if (error) {
+      setError(`Failed to update supply total: ${error.message}`);
+    } else {
+      console.log(`Supply total updated: ${cases} cases × $${(unitPriceCents / 100).toFixed(2)} = $${(newTotal / 100).toFixed(2)}`);
+      fetchData(); // Refresh the list
+    }
   };
 
   // Loading timeout fallback
@@ -289,6 +410,7 @@ export default function InvoiceDashboard() {
               setEditingRecurring(recurring);
               setView('recurring_form');
             }}
+            onEditSupply={(recurring) => setEditingSupply(recurring)}
             onGenerateNow={async (recurringId) => {
               const { data, error } = await supabase.rpc('generate_invoice_from_recurring', { recurring_id: recurringId });
               if (error) {
@@ -317,6 +439,15 @@ export default function InvoiceDashboard() {
             customers={customers}
             onSaveSuccess={fetchData}
             onBack={() => setView('list')}
+          />
+        )}
+        {editingSupply && (
+          <SupplyEditModal
+            recurring={editingSupply}
+            onSave={(cases, unitPrice) => {
+              updateSupplyTotal(editingSupply.id, cases, unitPrice);
+            }}
+            onClose={() => setEditingSupply(null)}
           />
         )}
       </div>
@@ -798,13 +929,36 @@ function InvoiceForm({
       </button>
       <div className='bg-white p-8 rounded-lg shadow-lg'>
         <div className='flex justify-between items-start mb-8'>
-          <div>
-            <h1 className='text-3xl font-bold text-gray-900'>
-              {companyProfile?.company_name}
-            </h1>
-            <p className='text-gray-600 whitespace-pre-line'>
-              {companyProfile?.address}
-            </p>
+          <div className='flex items-start gap-4'>
+            {/* Odyssey-1 AI LLC Logo - from Stripe or company profile */}
+            {(companyProfile?.logo_url || companyProfile?.stripe_account_id) && (
+              <img 
+                src={companyProfile?.logo_url || `https://files.stripe.com/v1/files/YOUR_FILE_ID/contents`}
+                alt='Odyssey-1 AI LLC - A Sovereign Managed Asset'
+                className='h-20 w-auto object-contain'
+                onError={(e) => {
+                  // Hide image if not found
+                  (e.target as HTMLImageElement).style.display = 'none';
+                }}
+              />
+            )}
+            <div>
+              <h1 className='text-3xl font-bold text-gray-900'>
+                {companyProfile?.company_name || 'ODYSSEY-1 AI LLC'}
+              </h1>
+              <p className='text-gray-600 whitespace-pre-line'>
+                {companyProfile?.mailing_address || 'P.O. Box 80054\nAthens, GA 30608'}
+              </p>
+              <p className='text-gray-600 text-sm'>
+                Phone: {companyProfile?.support_phone || '800-403-8492'}
+              </p>
+              <p className='text-gray-600 text-sm'>
+                Email: {companyProfile?.support_email || 'generalmanager81@gmail.com'}
+              </p>
+              <p className='text-sm text-blue-600 font-semibold mt-1 tracking-wide'>
+                A SOVEREIGN MANAGED ASSET
+              </p>
+            </div>
           </div>
           <h2 className='text-4xl font-light text-gray-400 uppercase tracking-widest'>
             Invoice
@@ -1333,6 +1487,7 @@ function RecurringInvoicesView({
   customers,
   onCreateNew,
   onEdit,
+  onEditSupply,
   onGenerateNow,
   onBack,
 }: any) {
@@ -1361,9 +1516,11 @@ function RecurringInvoicesView({
             <thead className='bg-gray-50'>
               <tr>
                 <th className='px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase'>Client</th>
+                <th className='px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase'>Location/Service</th>
                 <th className='px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase'>Frequency</th>
                 <th className='px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase'>Amount</th>
                 <th className='px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase'>Next Invoice</th>
+                <th className='px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase'>Alerts</th>
                 <th className='px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase'>Status</th>
                 <th className='px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase'>Actions</th>
               </tr>
@@ -1377,14 +1534,38 @@ function RecurringInvoicesView({
                     <td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900'>
                       {displayName}
                     </td>
+                    <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-600'>
+                      {recurring.location_label || 'Main'}
+                    </td>
                     <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-600 capitalize'>
                       {recurring.frequency}
                     </td>
                     <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-900'>
-                      ${recurring.total_amount?.toFixed(2) || '0.00'}
+                      ${recurring.amount_cents ? (recurring.amount_cents / 100).toFixed(2) : recurring.total_amount?.toFixed(2) || '0.00'}
                     </td>
                     <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-600'>
                       {new Date(recurring.next_invoice_date).toLocaleDateString()}
+                    </td>
+                    <td className='px-6 py-4 text-sm'>
+                      <div className='flex flex-wrap gap-1'>
+                        {checkRevenueAlerts(recurring).map((alert, idx) => (
+                          <span
+                            key={idx}
+                            className={`px-2 py-1 text-xs font-semibold rounded-full whitespace-nowrap ${
+                              alert.type === 'increase'
+                                ? 'bg-blue-100 text-blue-800 border border-blue-300'
+                                : alert.type === 'calendar'
+                                ? 'bg-green-100 text-green-800 border border-green-300'
+                                : 'bg-red-100 text-red-800 border border-red-300'
+                            }`}
+                          >
+                            {alert.label}
+                          </span>
+                        ))}
+                        {checkRevenueAlerts(recurring).length === 0 && (
+                          <span className='text-gray-400 text-xs'>—</span>
+                        )}
+                      </div>
                     </td>
                     <td className='px-6 py-4 whitespace-nowrap'>
                       <span className={`px-2 py-1 text-xs font-semibold rounded-full ${recurring.is_active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
@@ -1405,6 +1586,16 @@ function RecurringInvoicesView({
                       >
                         Edit
                       </button>
+                      {(recurring.location_label?.toLowerCase().includes('suppl') || 
+                        recurring.location_label?.toLowerCase().includes('paper') ||
+                        recurring.location_label?.toLowerCase().includes('bag')) && (
+                        <button
+                          onClick={() => onEditSupply(recurring)}
+                          className='text-green-600 hover:text-green-900'
+                        >
+                          📦 Supply
+                        </button>
+                      )}
                     </td>
                   </tr>
                 );
@@ -1691,6 +1882,108 @@ function RecurringInvoiceForm({
           </button>
         </div>
       </form>
+    </div>
+  );
+}
+
+// --- Supply Edit Modal ---
+function SupplyEditModal({
+  recurring,
+  onSave,
+  onClose,
+}: {
+  recurring: RecurringInvoice;
+  onSave: (cases: number, unitPrice: number) => void;
+  onClose: () => void;
+}) {
+  const [supplyType, setSupplyType] = useState<SupplyType>('55_GALLON_BAGS');
+  const [cases, setCases] = useState(1);
+
+  const unitPrice = SUPPLY_PRICES[supplyType];
+  const total = cases * unitPrice;
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSave(cases, unitPrice);
+    onClose();
+  };
+
+  return (
+    <div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50'>
+      <div className='bg-white rounded-lg p-6 max-w-md w-full shadow-xl'>
+        <div className='flex justify-between items-center mb-4'>
+          <h2 className='text-xl font-bold text-gray-900'>Update Supply Order</h2>
+          <button onClick={onClose} className='text-gray-500 hover:text-gray-700 text-2xl'>×</button>
+        </div>
+
+        <div className='mb-4 p-3 bg-blue-50 rounded-lg'>
+          <p className='text-sm text-blue-800'>
+            <strong>Location:</strong> {recurring.location_label || 'Main'}
+          </p>
+          <p className='text-sm text-blue-800'>
+            <strong>Current Amount:</strong> ${recurring.amount_cents ? (recurring.amount_cents / 100).toFixed(2) : '0.00'}
+          </p>
+        </div>
+
+        <form onSubmit={handleSubmit}>
+          <div className='mb-4'>
+            <label className='block text-sm font-medium text-gray-700 mb-2'>Supply Type</label>
+            <select
+              value={supplyType}
+              onChange={(e) => setSupplyType(e.target.value as SupplyType)}
+              className='w-full p-2 border border-gray-300 rounded-md'
+            >
+              <option value="55_GALLON_BAGS">55-Gallon Trash Bags ($45.00/case)</option>
+              <option value="20_GALLON_BAGS">20-Gallon Trash Bags ($35.00/case)</option>
+              <option value="10_GALLON_BAGS">10-Gallon Trash Bags ($25.00/case)</option>
+              <option value="PAPER_TOWELS">Paper Towels ($55.00/case)</option>
+              <option value="PAPER_PRODUCTS">Paper Products Package ($300.30 w/tax)</option>
+            </select>
+          </div>
+
+          <div className='mb-4'>
+            <label className='block text-sm font-medium text-gray-700 mb-2'>Number of Cases</label>
+            <input
+              type='number'
+              value={cases}
+              onChange={(e) => setCases(Math.max(1, parseInt(e.target.value) || 1))}
+              min='1'
+              className='w-full p-2 border border-gray-300 rounded-md'
+            />
+          </div>
+
+          <div className='bg-gray-50 p-4 rounded-lg mb-4'>
+            <div className='flex justify-between text-sm mb-1'>
+              <span>Unit Price:</span>
+              <span>${(unitPrice / 100).toFixed(2)}</span>
+            </div>
+            <div className='flex justify-between text-sm mb-1'>
+              <span>Cases:</span>
+              <span>{cases}</span>
+            </div>
+            <div className='flex justify-between text-lg font-bold border-t pt-2'>
+              <span>Total:</span>
+              <span>${(total / 100).toFixed(2)}</span>
+            </div>
+          </div>
+
+          <div className='flex justify-end space-x-3'>
+            <button
+              type='button'
+              onClick={onClose}
+              className='px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300'
+            >
+              Cancel
+            </button>
+            <button
+              type='submit'
+              className='px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700'
+            >
+              Update Supply Order
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

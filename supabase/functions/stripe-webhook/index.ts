@@ -32,6 +32,21 @@ serve(async (req) => {
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
+  // UCC-1 Compliance Logging Function
+  async function recordUcc1ComplianceLog(paymentId: string, invoiceId: string, amount: number) {
+    const { error } = await supabase.rpc('record_ucc1_log', {
+      p_payment_id: paymentId,
+      p_invoice_id: invoiceId,
+      p_amount: amount,
+    });
+    
+    if (error) {
+      console.error('UCC-1 compliance log failed', { error, paymentId, invoiceId, amount });
+    } else {
+      console.log(`✅ UCC-1 compliance logged: Payment ${paymentId} → Invoice ${invoiceId} → $${amount}`);
+    }
+  }
+
   try {
     const body = await req.text();
     const event = stripe.webhooks.constructEvent(body, signature, STRIPE_WEBHOOK_SECRET);
@@ -63,13 +78,14 @@ serve(async (req) => {
         // Handle invoice payment success
         const paymentIntent = event.data.object as Stripe.PaymentIntent;
         const invoiceId = paymentIntent.metadata?.invoice_id;
+        const amountInDollars = paymentIntent.amount / 100;
 
         if (invoiceId) {
           // Call record_invoice_payment function
           const { error: recordError } = await supabase.rpc('record_invoice_payment', {
             p_invoice_id: invoiceId,
             p_stripe_payment_intent_id: paymentIntent.id,
-            p_amount: paymentIntent.amount / 100, // Convert cents to dollars
+            p_amount: amountInDollars,
             p_payment_method: 'credit_card',
             p_metadata: {
               payment_intent_status: paymentIntent.status,
@@ -81,8 +97,13 @@ serve(async (req) => {
           if (recordError) {
             console.error('Error recording invoice payment:', recordError);
           } else {
-            console.log(`Invoice payment recorded: ${invoiceId} - $${paymentIntent.amount / 100}`);
+            console.log(`Invoice payment recorded: ${invoiceId} - $${amountInDollars}`);
           }
+
+          // UCC-1 COMPLIANCE: Log payment as partial debt satisfaction
+          await recordUcc1ComplianceLog(paymentIntent.id, invoiceId, amountInDollars);
+        } else {
+          console.warn('Missing invoice_id in payment_intent metadata', { paymentIntentId: paymentIntent.id });
         }
         break;
       }
@@ -121,6 +142,9 @@ serve(async (req) => {
         const invoice = event.data.object as Stripe.Invoice;
         const subscriptionId = String(invoice.subscription || '');
         const customerId = String(invoice.customer || '');
+        const paymentIntentId = String(invoice.payment_intent || invoice.id);
+        const invoiceId = invoice.metadata?.invoice_id;
+        const amountInDollars = invoice.amount_paid / 100;
 
         // Get period from invoice lines or invoice itself
         const line = invoice.lines?.data?.[0];
@@ -165,6 +189,11 @@ serve(async (req) => {
               billing_reason: invoice.billing_reason
             }
           }, { onConflict: 'stripe_payment_intent_id' });
+
+          // UCC-1 COMPLIANCE: Log recurring payment if linked to an invoice
+          if (invoiceId) {
+            await recordUcc1ComplianceLog(paymentIntentId, invoiceId, amountInDollars);
+          }
         }
         break;
       }

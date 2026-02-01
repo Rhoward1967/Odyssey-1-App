@@ -1,17 +1,19 @@
 import { supabase } from '@/lib/supabaseClient';
 import {
-    AlertTriangle,
-    Brain,
-    CheckCircle,
-    DollarSign,
-    FileText,
-    Flag,
-    Settings,
-    Users,
-    Zap
+  AlertTriangle,
+  Brain,
+  CheckCircle,
+  DollarSign,
+  FileText,
+  Flag,
+  Settings,
+  TrendingUp,
+  Users,
+  Zap
 } from 'lucide-react';
 import { useState } from 'react';
 import AdminControlPanel from './AdminControlPanel';
+import { AnnualBillingReminder } from './AnnualBillingReminder';
 import AutoFixSystem from './AutoFixSystem';
 import AutonomousOdysseyCore from './AutonomousOdysseyCore';
 import AutonomousSystemActivator from './AutonomousSystemActivator';
@@ -22,14 +24,15 @@ import EmployeeManagement from './EmployeeManagement';
 import FeatureFlagsManager from './FeatureFlagsManager';
 import WorkforceManagementSystem from './PayrollDashboard';
 import { PayrollReconciliation } from './PayrollReconciliation';
+import { RevenueOverview } from './RevenueOverview';
 import { SelfEvolutionEngine } from './SelfEvolutionEngine';
 import { Badge } from './ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 
 export default function AdminDashboard() {
-  const [activeTab, setActiveTab] = useState('autonomous');
+  const [activeTab, setActiveTab] = useState('revenue'); // Start on revenue tab for GO-LIVE
   const organizationId = 1;
-  const userId = 'user-uuid';
+  const userId = 'eca49ca9-b4ae-4e0e-b78a-fa1811024781'; // HJS user ID
   const [activationKey, setActivationKey] = useState('');
   const [activationStatus, setActivationStatus] = useState<string | null>(null);
   const handleActivate = async () => {
@@ -89,6 +92,7 @@ export default function AdminDashboard() {
         {/* Mobile: Vertical Stack - Compact */}
         <div className='block md:hidden'>
           <TabsList className='bg-blue-900/30 flex flex-col gap-1 h-auto p-2 border border-blue-500/30 w-fit items-center'>
+            <TabsTrigger value='revenue' className='justify-start gap-2 py-2 px-3 bg-green-600/20 hover:bg-green-500/30 data-[state=active]:bg-green-600 data-[state=active]:text-white text-blue-100 border border-green-500/20 w-fit'><TrendingUp className='w-4 h-4' /><span className='text-sm'>Revenue</span></TabsTrigger>
             <TabsTrigger value='control' className='justify-start gap-2 py-2 px-3 bg-blue-600/20 hover:bg-blue-500/30 data-[state=active]:bg-blue-600 data-[state=active]:text-white text-blue-100 border border-blue-500/20 w-fit'><Settings className='w-4 h-4' /><span className='text-sm'>Control</span></TabsTrigger>
             <TabsTrigger value='autonomous' className='justify-start gap-2 py-2 px-3 bg-blue-600/20 hover:bg-blue-500/30 data-[state=active]:bg-blue-600 data-[state=active]:text-white text-blue-100 border border-blue-500/20 w-fit'><Brain className='w-4 h-4' /><span className='text-sm'>Autonomous</span></TabsTrigger>
             <TabsTrigger value='core' className='justify-start gap-2 py-2 px-3 bg-blue-600/20 hover:bg-blue-500/30 data-[state=active]:bg-blue-600 data-[state=active]:text-white text-blue-100 border border-blue-500/20 w-fit'><Zap className='w-4 h-4' /><span className='text-sm'>Core</span></TabsTrigger>
@@ -104,6 +108,7 @@ export default function AdminDashboard() {
         {/* Desktop: Compact Horizontal Flow */}
         <div className='hidden md:block'>
           <TabsList className='flex flex-wrap gap-1 p-2 w-full mb-4 items-center'>
+            <TabsTrigger value='revenue' className='flex items-center gap-2 py-2 px-3 bg-green-600/20 hover:bg-green-500/30 data-[state=active]:bg-green-600 data-[state=active]:text-white text-blue-100 border border-green-500/20 text-sm'><TrendingUp className='w-4 h-4' /><span>Revenue</span></TabsTrigger>
             <TabsTrigger value='control' className='flex items-center gap-2 py-2 px-3 bg-blue-600/20 hover:bg-blue-500/30 data-[state=active]:bg-blue-600 data-[state=active]:text-white text-blue-100 border border-blue-500/20 text-sm'><Settings className='w-4 h-4' /><span>Control</span></TabsTrigger>
             <TabsTrigger value='autonomous' className='flex items-center gap-2 py-2 px-3 bg-blue-600/20 hover:bg-blue-500/30 data-[state=active]:bg-blue-600 data-[state=active]:text-white text-blue-100 border border-blue-500/20 text-sm'><Brain className='w-4 h-4' /><span>Autonomous</span></TabsTrigger>
             <TabsTrigger value='core' className='flex items-center gap-2 py-2 px-3 bg-blue-600/20 hover:bg-blue-500/30 data-[state=active]:bg-blue-600 data-[state=active]:text-white text-blue-100 border border-blue-500/20 text-sm'><Zap className='w-4 h-4' /><span>Core</span></TabsTrigger>
@@ -118,6 +123,15 @@ export default function AdminDashboard() {
             <TabsTrigger value='reconciliation' className='flex items-center gap-2 py-2 px-3 bg-blue-600/20 hover:bg-blue-500/30 data-[state=active]:bg-blue-600 data-[state=active]:text-white text-blue-100 border border-blue-500/20 text-sm'><FileText className='w-4 h-4' /><span>Reconciliation</span></TabsTrigger>
           </TabsList>
         </div>
+        <TabsContent value='revenue'>
+          <div className='w-full max-w-full overflow-x-auto space-y-6'>
+            {/* Annual Billing Reminder - Top Priority Alert */}
+            <AnnualBillingReminder userId={userId} />
+            
+            {/* Revenue Overview - Monthly vs Annual Separation */}
+            <RevenueOverview userId={userId} />
+          </div>
+        </TabsContent>
         <TabsContent value='control'><div className='w-full max-w-full overflow-x-auto'><AdminControlPanel /></div></TabsContent>
         <TabsContent value='autonomous'><div className='w-full max-w-full overflow-x-auto'><AutonomousSystemActivator /></div></TabsContent>
         <TabsContent value='core'><div className='w-full max-w-full overflow-x-auto'><AutonomousOdysseyCore /></div></TabsContent>

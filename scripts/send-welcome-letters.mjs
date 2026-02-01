@@ -16,16 +16,12 @@ import { generateWelcomeLetter, generateWelcomeLetterPlainText } from './welcome
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-dotenv.config({ path: path.join(__dirname, '..', '.env') });
-
-const supabase = createClient(
-  process.env.VITE_SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-);
-
+// HARDCODED FOR EXECUTION - BYPASS DOTENV CACHE ISSUE
+const SUPABASE_URL = 'https://tvsxloejfsrdganemsmg.supabase.co';
+const SERVICE_ROLE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR2c3hsb2VqZnNyZGdhbmVtc21nIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NjcxODg0OCwiZXhwIjoyMDcyMjk0ODQ4fQ.Wr3ffDizDf3DXG2uFD7-z4XrmtQUJjX-m9hiLoMvd1M';
 const USER_ID = 'eca49ca9-b4ae-4e0e-b78a-fa1811024781';
-const SUPABASE_URL = process.env.VITE_SUPABASE_URL;
-const SUPABASE_ANON_KEY = process.env.VITE_SUPABASE_ANON_KEY;
+
+const supabase = createClient(SUPABASE_URL, SERVICE_ROLE_KEY);
 
 console.log('📧 WELCOME LETTER - READY TO SEND\n');
 console.log('='.repeat(80));
@@ -80,7 +76,7 @@ async function sendEmails() {
       const response = await fetch(`${SUPABASE_URL}/functions/v1/send-email`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+          'Authorization': `Bearer ${SERVICE_ROLE_KEY}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
@@ -92,6 +88,9 @@ async function sendEmails() {
       });
 
       const result = await response.json();
+
+      console.log('Response status:', response.status);
+      console.log('Response body:', JSON.stringify(result, null, 2));
 
       if (response.ok && result.success) {
         console.log(`✅ ${displayName}`);
