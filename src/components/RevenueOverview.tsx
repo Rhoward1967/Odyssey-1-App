@@ -27,26 +27,27 @@ export const RevenueOverview: React.FC<Props> = ({ userId }) => {
       console.log('🔐 Expected ID: eca49ca9-b4ae-4e0e-b78a-fa1811024781');
       console.log('⚡ Timestamp:', new Date().toISOString());
       
-      // SIMPLIFIED QUERY: No joins, direct fetch
+      // MODIFIED: Show ALL recurring invoices (including disabled ones)
+      // This reflects the current safety control state where all are disabled
       const { data: monthlyData, error: monthlyError } = await supabase
         .from('recurring_invoices')
-        .select('amount_cents, frequency')
+        .select('amount_cents, frequency, is_active')
         .eq('user_id', userId)
-        .eq('is_active', true)
         .neq('frequency', 'annual');
 
       console.log('📊 Monthly Query Result:', {
         rows: monthlyData?.length || 0,
+        active: monthlyData?.filter(r => r.is_active).length || 0,
+        disabled: monthlyData?.filter(r => !r.is_active).length || 0,
         error: monthlyError?.message || 'none',
         details: monthlyError || 'success'
       });
 
-      // SIMPLIFIED QUERY: No joins, direct fetch
+      // MODIFIED: Show ALL recurring invoices (including disabled ones)
       const { data: annualData, error: annualError } = await supabase
         .from('recurring_invoices')
-        .select('amount_cents, frequency')
+        .select('amount_cents, frequency, is_active')
         .eq('user_id', userId)
-        .eq('is_active', true)
         .eq('frequency', 'annual');
 
       console.log('📊 Annual Query Result:', {
@@ -63,10 +64,17 @@ export const RevenueOverview: React.FC<Props> = ({ userId }) => {
       setMonthlyCount(monthlyData?.length || 0);
       setAnnualCount(annualData?.length || 0);
       
-      // ARCHITECT MANDATE: Detect security mismatch
-      if ((monthlyData?.length || 0) === 0 && (annualData?.length || 0) === 0) {
+      // ARCHITECT MANDATE: Detect security mismatch (only if NO data at all)
+      // If we have disabled invoices, that's intentional (safety controls)
+      const totalRecords = (monthlyData?.length || 0) + (annualData?.length || 0);
+      const activeRecords = (monthlyData?.filter(r => r.is_active).length || 0) + (annualData?.filter(r => r.is_active).length || 0);
+      
+      if (totalRecords === 0) {
         console.error('⚠️ SECURITY MISMATCH: No rows returned for user_id');
         setSecurityMismatch(true);
+      } else if (activeRecords === 0) {
+        console.warn('🛡️ SAFETY CONTROLS ACTIVE: All recurring invoices disabled');
+        console.log(`   Total invoices: ${totalRecords}, Active: 0`);
       }
       
       console.log('💰 Calculated Totals:', {
@@ -91,6 +99,26 @@ export const RevenueOverview: React.FC<Props> = ({ userId }) => {
         </p>
         <p className="text-xs text-red-700 mt-2">
           Data may not be stamped with correct user_id. Check console for query details.
+        </p>
+      </div>
+    );
+  }
+  
+  // Show safety control notice if all invoices are disabled
+  const allDisabled = monthlyCount === 0 && annualCount === 0 && monthlyMRR === 0 && annualTotal === 0;
+  
+  if (allDisabled) {
+    return (
+      <div className="p-6 bg-yellow-50 border-2 border-yellow-500 rounded-lg">
+        <h3 className="text-lg font-bold text-yellow-900">🛡️ SAFETY CONTROLS ACTIVE</h3>
+        <p className="text-sm text-yellow-800 mt-2">
+          All recurring invoices are currently <strong>disabled</strong> for manual review.
+        </p>
+        <p className="text-xs text-yellow-700 mt-2">
+          This is intentional - no automated billing until you manually approve each contract.
+        </p>
+        <p className="text-xs text-yellow-700 mt-1">
+          📋 See <code className="bg-yellow-100 px-1">INVOICE_SAFETY_CONTROLS.md</code> for review checklist
         </p>
       </div>
     );

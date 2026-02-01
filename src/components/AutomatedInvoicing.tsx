@@ -212,10 +212,9 @@ export default function InvoiceDashboard() {
           .select('*')
           .eq('user_id', user.id)
           .single(),
-        // ARCHITECT DIRECTIVE: NAKED FETCH - Only money, no complex fields
         supabase
           .from('recurring_invoices')
-          .select('id, amount_cents, frequency, is_active')
+          .select('*, customers!recurring_invoices_customer_id_fkey(company_name, first_name, last_name)')
           .order('next_invoice_date', { ascending: true }),
       ]);
 

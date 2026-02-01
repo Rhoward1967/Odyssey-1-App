@@ -2,6 +2,7 @@ import { supabase } from '@/lib/supabaseClient';
 import {
   AlertTriangle,
   Brain,
+  Calculator,
   CheckCircle,
   DollarSign,
   FileText,
@@ -12,6 +13,7 @@ import {
   Zap
 } from 'lucide-react';
 import { useState } from 'react';
+import AccountantDashboard from './AccountantDashboard';
 import AdminControlPanel from './AdminControlPanel';
 import { AnnualBillingReminder } from './AnnualBillingReminder';
 import AutoFixSystem from './AutoFixSystem';
@@ -103,6 +105,7 @@ export default function AdminDashboard() {
             <TabsTrigger value='handbook' className='justify-start gap-2 py-2 px-3 bg-blue-600/20 hover:bg-blue-500/30 data-[state=active]:bg-blue-600 data-[state=active]:text-white text-blue-100 border border-blue-500/20 w-fit'><FileText className='w-4 h-4' /><span className='text-sm'>Handbook</span></TabsTrigger>
             <TabsTrigger value='budget' className='justify-start gap-2 py-2 px-3 bg-blue-600/20 hover:bg-blue-500/30 data-[state=active]:bg-blue-600 data-[state=active]:text-white text-blue-100 border border-blue-500/20 w-fit'><DollarSign className='w-4 h-4' /><span className='text-sm'>Budget</span></TabsTrigger>
             <TabsTrigger value='payroll' className='justify-start gap-2 py-2 px-3 bg-blue-600/20 hover:bg-blue-500/30 data-[state=active]:bg-blue-600 data-[state=active]:text-white text-blue-100 border border-blue-500/20 w-fit'><DollarSign className='w-4 h-4' /><span className='text-sm'>Payroll</span></TabsTrigger>
+            <TabsTrigger value='accountant' className='justify-start gap-2 py-2 px-3 bg-purple-600/20 hover:bg-purple-500/30 data-[state=active]:bg-purple-600 data-[state=active]:text-white text-blue-100 border border-purple-500/20 w-fit'><Calculator className='w-4 h-4' /><span className='text-sm'>Accountant</span></TabsTrigger>
           </TabsList>
         </div>
         {/* Desktop: Compact Horizontal Flow */}
@@ -121,6 +124,7 @@ export default function AdminDashboard() {
             <TabsTrigger value='payroll' className='flex items-center gap-2 py-2 px-3 bg-blue-600/20 hover:bg-blue-500/30 data-[state=active]:bg-blue-600 data-[state=active]:text-white text-blue-100 border border-blue-500/20 text-sm'><DollarSign className='w-4 h-4' /><span>Payroll</span></TabsTrigger>
             <TabsTrigger value='contractors' className='flex items-center gap-2 py-2 px-3 bg-blue-600/20 hover:bg-blue-500/30 data-[state=active]:bg-blue-600 data-[state=active]:text-white text-blue-100 border border-blue-500/20 text-sm'><Users className='w-4 h-4' /><span>Contractors</span></TabsTrigger>
             <TabsTrigger value='reconciliation' className='flex items-center gap-2 py-2 px-3 bg-blue-600/20 hover:bg-blue-500/30 data-[state=active]:bg-blue-600 data-[state=active]:text-white text-blue-100 border border-blue-500/20 text-sm'><FileText className='w-4 h-4' /><span>Reconciliation</span></TabsTrigger>
+            <TabsTrigger value='accountant' className='flex items-center gap-2 py-2 px-3 bg-purple-600/20 hover:bg-purple-500/30 data-[state=active]:bg-purple-600 data-[state=active]:text-white text-blue-100 border border-purple-500/20 text-sm'><Calculator className='w-4 h-4' /><span>Accountant</span></TabsTrigger>
           </TabsList>
         </div>
         <TabsContent value='revenue'>
@@ -144,6 +148,7 @@ export default function AdminDashboard() {
         <TabsContent value='payroll'><div className='w-full max-w-full overflow-x-auto'><WorkforceManagementSystem organizationId={organizationId} userId={userId} /></div></TabsContent>
         <TabsContent value='contractors'><div className='w-full max-w-full overflow-x-auto'><ContractorManager /></div></TabsContent>
         <TabsContent value='reconciliation'><div className='w-full max-w-full overflow-x-auto'><PayrollReconciliation organizationId={organizationId} /></div></TabsContent>
+        <TabsContent value='accountant'><div className='w-full max-w-full overflow-x-auto'><AccountantDashboard userId={userId} /></div></TabsContent>
       </Tabs>
     </div>
   );
