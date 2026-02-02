@@ -20,8 +20,8 @@ export const STRIPE_PRODUCTS = {
   basic: {
     id: 'basic',
     name: 'ODYSSEY Basic',
-    priceId: 'price_1SJO5TDPqeWRzwCXv8IxKMfG', // Updated from sync-stripe-products
-    productId: 'prod_TFtt6rchuEcLmY',
+    priceId: 'price_1SwEPSDPqeWRzwCXYv4mkeRB', // ✅ Updated Feb 1, 2026
+    productId: 'prod_Tu2UmgnFUCvyYz',
     amount: 99.00,
     currency: 'usd',
     interval: 'month'
@@ -29,8 +29,8 @@ export const STRIPE_PRODUCTS = {
   pro: {
     id: 'pro', 
     name: 'ODYSSEY Professional',
-    priceId: 'price_1SJO5TDPqeWRzwCXNnKe6WzE', // Updated from sync-stripe-products
-    productId: 'prod_TFttMiqtD7Vk3h',
+    priceId: 'price_1SwEPTDPqeWRzwCXNCulPzxo', // ✅ Updated Feb 1, 2026
+    productId: 'prod_Tu2UZG3VPi9slG',
     amount: 299.00,
     currency: 'usd',
     interval: 'month'
@@ -38,8 +38,8 @@ export const STRIPE_PRODUCTS = {
   enterprise: {
     id: 'enterprise',
     name: 'ODYSSEY Enterprise', 
-    priceId: 'price_1SJO5UDPqeWRzwCX630n9LJF', // Updated from sync-stripe-products
-    productId: 'prod_TFttpS0y8zIG2p',
+    priceId: 'price_1SwEPTDPqeWRzwCX8xzuCHmz', // ✅ Updated Feb 1, 2026
+    productId: 'prod_Tu2U4epDf42oFU',
     amount: 999.00,
     currency: 'usd',
     interval: 'month'
