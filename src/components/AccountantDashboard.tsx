@@ -68,7 +68,7 @@ export default function AccountantDashboard({ userId }: AccountantDashboardProps
       {
         type: 'recommendation',
         category: 'Tax Planning',
-        message: 'Q1 2026 estimated tax payment due April 15th - prepare calculations',
+        message: 'Q1 2026 estimated tax payment due April 15th - prepare calculations per IRC §6654',
         impact: 'high'
       },
       {
@@ -80,7 +80,19 @@ export default function AccountantDashboard({ userId }: AccountantDashboardProps
       {
         type: 'recommendation',
         category: 'Compliance',
-        message: 'Annual reports due: Review corporate filings for March deadlines',
+        message: 'Annual reports due: Review corporate filings for March deadlines per GA Code §14-2-1622',
+        impact: 'medium'
+      },
+      {
+        type: 'info',
+        category: 'UCC-1',
+        message: 'No active UCC-1 financing statements detected - review if equipment financing or secured debt exists',
+        impact: 'low'
+      },
+      {
+        type: 'recommendation',
+        category: 'Federal Tax Law',
+        message: 'Review IRC §162 ordinary and necessary business expense deductions for current fiscal year',
         impact: 'medium'
       }
     ];
@@ -143,25 +155,29 @@ export default function AccountantDashboard({ userId }: AccountantDashboardProps
   if (loading) return <div className="p-4">Loading intelligent accountant dashboard...</div>;
 
   return (
-    <div className="space-y-6 p-6">
-      <div className="text-center space-y-2">
+    <div className="space-y-8 p-6">
+      <div className="text-center space-y-2 mb-8">
         <h1 className="text-3xl font-bold text-white">Accountant & Tax Center</h1>
         <p className="text-gray-300">Complete Financial Management & Tax Filing System</p>
         <Badge className="bg-blue-600/20 text-blue-300">ACCOUNTANT ACCESS</Badge>
       </div>
 
-      <Tabs defaultValue="overview" className="space-y-4">
-        <TabsList className="grid grid-cols-6 w-full bg-blue-900/30">
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="insights">AI Insights</TabsTrigger>
-          <TabsTrigger value="bookkeeping">Bookkeeping</TabsTrigger>
-          <TabsTrigger value="tax">Tax Tools</TabsTrigger>
-          <TabsTrigger value="compliance">Compliance</TabsTrigger>
-          <TabsTrigger value="reports">Reports</TabsTrigger>
-        </TabsList>
+      <Tabs defaultValue="overview" className="w-full">
+        <div className="w-full mt-32 mb-8">
+          <TabsList className="flex flex-wrap gap-2 w-full bg-blue-900/30 p-3 overflow-x-auto">
+            <TabsTrigger value="overview" className="flex-1 min-w-[100px] text-white data-[state=active]:text-blue-900">Overview</TabsTrigger>
+            <TabsTrigger value="insights" className="flex-1 min-w-[100px] text-white data-[state=active]:text-blue-900">AI Insights</TabsTrigger>
+            <TabsTrigger value="bookkeeping" className="flex-1 min-w-[100px] text-white data-[state=active]:text-blue-900">Bookkeeping</TabsTrigger>
+            <TabsTrigger value="tax" className="flex-1 min-w-[100px] text-white data-[state=active]:text-blue-900">Tax Tools</TabsTrigger>
+            <TabsTrigger value="compliance" className="flex-1 min-w-[100px] text-white data-[state=active]:text-blue-900">Compliance</TabsTrigger>
+            <TabsTrigger value="reports" className="flex-1 min-w-[100px] text-white data-[state=active]:text-blue-900">Reports</TabsTrigger>
+          </TabsList>
+        </div>
 
-        {/{/* Real-time Financial Metrics */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        {/* OVERVIEW TAB */}
+        <TabsContent value="overview" className="space-y-6 relative">
+          {/* Real-time Financial Metrics */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {metrics.map((metric, idx) => (
               <Card key={idx} className="p-4 bg-slate-900/50 border-slate-700">
                 <div className="flex flex-col">
@@ -199,7 +215,7 @@ export default function AccountantDashboard({ userId }: AccountantDashboardProps
         </TabsContent>
 
         {/* AI INSIGHTS TAB */}
-        <TabsContent value="insights" className="space-y-4">
+        <TabsContent value="insights" className="space-y-4 relative">
           <Card className="p-6 bg-gradient-to-br from-purple-900/30 to-blue-900/30 border-purple-500/30">
             <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
               <Brain className="w-6 h-6 text-purple-400" />
@@ -261,14 +277,179 @@ export default function AccountantDashboard({ userId }: AccountantDashboardProps
             <p className="text-xs text-gray-400 mt-2">
               AI can access all business documents, contracts, invoices, and financial data to provide informed answers
             </p>
-          </Card/div>
-            </Card>
-          </div>
+          </Card>
         </TabsContent>
 
         {/* BOOKKEEPING TAB */}
-        <TabCOMPLIANCE TAB */}
-        <TabsContent value="compliance" className="space-y-4">
+        <TabsContent value="bookkeeping" className="space-y-4 relative">
+          <Card className="p-6 bg-slate-900/50 border-slate-700">
+            <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+              <Calculator className="w-5 h-5" />
+              Bookkeeping & Accounting Software
+            </h3>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Button 
+                variant="outline" 
+                className="h-auto flex-col items-start p-4 hover:bg-slate-800"
+                onClick={() => window.open('https://quickbooks.intuit.com', '_blank')}
+              >
+                <span className="font-semibold">QuickBooks Online</span>
+                <span className="text-xs text-gray-400">Industry-leading accounting software</span>
+              </Button>
+              
+              <Button 
+                variant="outline" 
+                className="h-auto flex-col items-start p-4 hover:bg-slate-800"
+                onClick={() => window.open('https://www.xero.com', '_blank')}
+              >
+                <span className="font-semibold">Xero</span>
+                <span className="text-xs text-gray-400">Beautiful business accounting software</span>
+              </Button>
+              
+              <Button 
+                variant="outline" 
+                className="h-auto flex-col items-start p-4 hover:bg-slate-800"
+                onClick={() => window.open('https://www.bill.com', '_blank')}
+              >
+                <span className="font-semibold">Bill.com</span>
+                <span className="text-xs text-gray-400">Accounts payable & receivable automation</span>
+              </Button>
+              
+              <Button 
+                variant="outline" 
+                className="h-auto flex-col items-start p-4 hover:bg-slate-800"
+                onClick={() => window.open('https://www.expensify.com', '_blank')}
+              >
+                <span className="font-semibold">Expensify</span>
+                <span className="text-xs text-gray-400">Expense tracking & reporting</span>
+              </Button>
+            </div>
+          </Card>
+        </TabsContent>
+
+        {/* TAX TOOLS TAB */}
+        <TabsContent value="tax" className="space-y-4 relative">
+          <Card className="p-6 bg-slate-900/50 border-slate-700">
+            <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+              <Receipt className="w-5 h-5" />
+              Professional Tax Software
+            </h3>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Button 
+                variant="outline" 
+                className="h-auto flex-col items-start p-4 hover:bg-slate-800"
+                onClick={() => window.open('https://proconnect.intuit.com', '_blank')}
+              >
+                <span className="font-semibold">ProConnect Tax Online</span>
+                <span className="text-xs text-gray-400">Professional tax preparation software</span>
+              </Button>
+              
+              <Button 
+                variant="outline" 
+                className="h-auto flex-col items-start p-4 hover:bg-slate-800"
+                onClick={() => window.open('https://www.taxact.com', '_blank')}
+              >
+                <span className="font-semibold">TaxAct Professional</span>
+                <span className="text-xs text-gray-400">Affordable professional tax software</span>
+              </Button>
+              
+              <Button 
+                variant="outline" 
+                className="h-auto flex-col items-start p-4 hover:bg-slate-800"
+                onClick={() => window.open('https://www.ultimatetax.com', '_blank')}
+              >
+                <span className="font-semibold">UltimateTax</span>
+                <span className="text-xs text-gray-400">Cloud-based tax preparation</span>
+              </Button>
+              
+              <Button 
+                variant="outline" 
+                className="h-auto flex-col items-start p-4 hover:bg-slate-800"
+                onClick={() => window.open('https://www.hrblock.com/tax-software', '_blank')}
+              >
+                <span className="font-semibold">H&R Block Tax Pro</span>
+                <span className="text-xs text-gray-400">Trusted tax software for professionals</span>
+              </Button>
+            </div>
+          </Card>
+
+          <Card className="p-6 bg-slate-900/50 border-slate-700">
+            <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+              <Building2 className="w-5 h-5" />
+              IRS E-Filing & Resources
+            </h3>
+            
+            <div className="space-y-2">
+              <Button 
+                variant="outline" 
+                className="w-full justify-start"
+                onClick={() => window.open('https://www.irs.gov/e-file-providers/e-file-application', '_blank')}
+              >
+                <ExternalLink className="w-4 h-4 mr-2" />
+                IRS E-File Application
+              </Button>
+              
+              <Button 
+                variant="outline" 
+                className="w-full justify-start"
+                onClick={() => window.open('https://www.irs.gov/filing/free-file-do-your-federal-taxes-for-free', '_blank')}
+              >
+                <ExternalLink className="w-4 h-4 mr-2" />
+                IRS Free File System
+              </Button>
+              
+              <Button 
+                variant="outline" 
+                className="w-full justify-start"
+                onClick={() => window.open('https://www.irs.gov/forms-pubs/about-form-1120', '_blank')}
+              >
+                <ExternalLink className="w-4 h-4 mr-2" />
+                Form 1120 (Corporate Tax Return)
+              </Button>
+              
+              <Button 
+                variant="outline" 
+                className="w-full justify-start"
+                onClick={() => window.open('https://www.irs.gov/payments', '_blank')}
+              >
+                <ExternalLink className="w-4 h-4 mr-2" />
+                IRS Payment Portal
+              </Button>
+            </div>
+          </Card>
+
+          <Card className="p-6 bg-slate-900/50 border-slate-700">
+            <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+              <Building2 className="w-5 h-5" />
+              Georgia Tax Center
+            </h3>
+            
+            <div className="space-y-2">
+              <Button 
+                variant="outline" 
+                className="w-full justify-start"
+                onClick={() => window.open('https://gtc.dor.ga.gov', '_blank')}
+              >
+                <ExternalLink className="w-4 h-4 mr-2" />
+                Georgia Tax Center Portal
+              </Button>
+              
+              <Button 
+                variant="outline" 
+                className="w-full justify-start"
+                onClick={() => window.open('https://dor.georgia.gov/businesses', '_blank')}
+              >
+                <ExternalLink className="w-4 h-4 mr-2" />
+                GA Business Tax Information
+              </Button>
+            </div>
+          </Card>
+        </TabsContent>
+
+        {/* COMPLIANCE TAB */}
+        <TabsContent value="compliance" className="space-y-4 relative">
           <Card className="p-6 bg-slate-900/50 border-slate-700">
             <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
               <FileCheck className="w-5 h-5" />
@@ -433,6 +614,168 @@ export default function AccountantDashboard({ userId }: AccountantDashboardProps
                         <ExternalLink className="w-4 h-4 ml-auto" />
                       </div>
                       <span className="text-xs text-gray-400">Independent contractor classification</span>
+                    </div>
+                  </Button>
+                </div>
+              </div>
+
+              {/* UCC-1 & Secured Transactions */}
+              <div>
+                <h4 className="font-semibold text-purple-400 mb-3">UCC-1 & Secured Transactions</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Button
+                    variant="outline"
+                    className="justify-start h-auto py-4 px-6 bg-purple-900/30 hover:bg-purple-800/50 border-purple-500/30"
+                    onClick={() => window.open('https://www.law.cornell.edu/ucc', '_blank')}
+                  >
+                    <div className="flex flex-col items-start gap-1 w-full">
+                      <div className="flex items-center gap-2">
+                        <FileText className="w-5 h-5 text-purple-400" />
+                        <span className="font-semibold">UCC Full Text (Cornell Law)</span>
+                        <ExternalLink className="w-4 h-4 ml-auto" />
+                      </div>
+                      <span className="text-xs text-gray-400">Uniform Commercial Code - Article 9 secured transactions</span>
+                    </div>
+                  </Button>
+
+                  <Button
+                    variant="outline"
+                    className="justify-start h-auto py-4 px-6 bg-purple-900/30 hover:bg-purple-800/50 border-purple-500/30"
+                    onClick={() => window.open('https://sos.ga.gov/page/ucc-filings', '_blank')}
+                  >
+                    <div className="flex flex-col items-start gap-1 w-full">
+                      <div className="flex items-center gap-2">
+                        <Building2 className="w-5 h-5 text-purple-400" />
+                        <span className="font-semibold">Georgia UCC-1 Filing</span>
+                        <ExternalLink className="w-4 h-4 ml-auto" />
+                      </div>
+                      <span className="text-xs text-gray-400">File & search UCC financing statements in GA</span>
+                    </div>
+                  </Button>
+
+                  <Button
+                    variant="outline"
+                    className="justify-start h-auto py-4 px-6 bg-purple-900/30 hover:bg-purple-800/50 border-purple-500/30"
+                    onClick={() => window.open('https://www.uniformlaws.org/committees/community-home?CommunityKey=a0e3d6d0-9628-4c74-8526-e7e3ed0c2c2d', '_blank')}
+                  >
+                    <div className="flex flex-col items-start gap-1 w-full">
+                      <div className="flex items-center gap-2">
+                        <FileCheck className="w-5 h-5 text-purple-400" />
+                        <span className="font-semibold">UCC Official Text</span>
+                        <ExternalLink className="w-4 h-4 ml-auto" />
+                      </div>
+                      <span className="text-xs text-gray-400">Uniform Law Commission - official UCC provisions</span>
+                    </div>
+                  </Button>
+
+                  <Button
+                    variant="outline"
+                    className="justify-start h-auto py-4 px-6 bg-purple-900/30 hover:bg-purple-800/50 border-purple-500/30"
+                    onClick={() => window.open('https://www.sba.gov/business-guide/manage-your-business/get-business-loan', '_blank')}
+                  >
+                    <div className="flex flex-col items-start gap-1 w-full">
+                      <div className="flex items-center gap-2">
+                        <DollarSign className="w-5 h-5 text-purple-400" />
+                        <span className="font-semibold">SBA Loan Guidance</span>
+                        <ExternalLink className="w-4 h-4 ml-auto" />
+                      </div>
+                      <span className="text-xs text-gray-400">Small Business Administration secured lending</span>
+                    </div>
+                  </Button>
+                </div>
+              </div>
+
+              {/* Federal Tax Law & IRC */}
+              <div>
+                <h4 className="font-semibold text-red-400 mb-3">Federal Tax Law & Internal Revenue Code</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Button
+                    variant="outline"
+                    className="justify-start h-auto py-4 px-6 bg-red-900/30 hover:bg-red-800/50 border-red-500/30"
+                    onClick={() => window.open('https://www.law.cornell.edu/uscode/text/26', '_blank')}
+                  >
+                    <div className="flex flex-col items-start gap-1 w-full">
+                      <div className="flex items-center gap-2">
+                        <FileText className="w-5 h-5 text-red-400" />
+                        <span className="font-semibold">IRC - Title 26 (Full Code)</span>
+                        <ExternalLink className="w-4 h-4 ml-auto" />
+                      </div>
+                      <span className="text-xs text-gray-400">Complete Internal Revenue Code text</span>
+                    </div>
+                  </Button>
+
+                  <Button
+                    variant="outline"
+                    className="justify-start h-auto py-4 px-6 bg-red-900/30 hover:bg-red-800/50 border-red-500/30"
+                    onClick={() => window.open('https://www.irs.gov/newsroom/treasury-regulations', '_blank')}
+                  >
+                    <div className="flex flex-col items-start gap-1 w-full">
+                      <div className="flex items-center gap-2">
+                        <Receipt className="w-5 h-5 text-red-400" />
+                        <span className="font-semibold">Treasury Regulations</span>
+                        <ExternalLink className="w-4 h-4 ml-auto" />
+                      </div>
+                      <span className="text-xs text-gray-400">Official IRS regulatory guidance</span>
+                    </div>
+                  </Button>
+
+                  <Button
+                    variant="outline"
+                    className="justify-start h-auto py-4 px-6 bg-red-900/30 hover:bg-red-800/50 border-red-500/30"
+                    onClick={() => window.open('https://www.irs.gov/privacy-disclosure/tax-code-regulations-and-official-guidance', '_blank')}
+                  >
+                    <div className="flex flex-col items-start gap-1 w-full">
+                      <div className="flex items-center gap-2">
+                        <FileCheck className="w-5 h-5 text-red-400" />
+                        <span className="font-semibold">IRS Official Guidance</span>
+                        <ExternalLink className="w-4 h-4 ml-auto" />
+                      </div>
+                      <span className="text-xs text-gray-400">Revenue rulings, procedures, notices</span>
+                    </div>
+                  </Button>
+
+                  <Button
+                    variant="outline"
+                    className="justify-start h-auto py-4 px-6 bg-red-900/30 hover:bg-red-800/50 border-red-500/30"
+                    onClick={() => window.open('https://www.irs.gov/businesses/corporations', '_blank')}
+                  >
+                    <div className="flex flex-col items-start gap-1 w-full">
+                      <div className="flex items-center gap-2">
+                        <Building2 className="w-5 h-5 text-red-400" />
+                        <span className="font-semibold">Corporate Tax Compliance</span>
+                        <ExternalLink className="w-4 h-4 ml-auto" />
+                      </div>
+                      <span className="text-xs text-gray-400">C-Corp, S-Corp, LLC tax requirements</span>
+                    </div>
+                  </Button>
+
+                  <Button
+                    variant="outline"
+                    className="justify-start h-auto py-4 px-6 bg-red-900/30 hover:bg-red-800/50 border-red-500/30"
+                    onClick={() => window.open('https://www.irs.gov/tax-professionals/tax-code-regs-and-official-guidance', '_blank')}
+                  >
+                    <div className="flex flex-col items-start gap-1 w-full">
+                      <div className="flex items-center gap-2">
+                        <Users className="w-5 h-5 text-red-400" />
+                        <span className="font-semibold">Tax Professional Resources</span>
+                        <ExternalLink className="w-4 h-4 ml-auto" />
+                      </div>
+                      <span className="text-xs text-gray-400">Comprehensive tax law research tools</span>
+                    </div>
+                  </Button>
+
+                  <Button
+                    variant="outline"
+                    className="justify-start h-auto py-4 px-6 bg-red-900/30 hover:bg-red-800/50 border-red-500/30"
+                    onClick={() => window.open('https://home.treasury.gov/policy-issues/tax-policy', '_blank')}
+                  >
+                    <div className="flex flex-col items-start gap-1 w-full">
+                      <div className="flex items-center gap-2">
+                        <Briefcase className="w-5 h-5 text-red-400" />
+                        <span className="font-semibold">Treasury Tax Policy</span>
+                        <ExternalLink className="w-4 h-4 ml-auto" />
+                      </div>
+                      <span className="text-xs text-gray-400">Federal tax policy updates and initiatives</span>
                     </div>
                   </Button>
                 </div>
@@ -729,7 +1072,7 @@ export default function AccountantDashboard({ userId }: AccountantDashboardProps
         </TabsContent>
 
         {/* REPORTS TAB */}
-        <TabsContent value="reports" className="space-y-4">
+        <TabsContent value="reports" className="space-y-4 relative">
           <Card className="p-6 bg-slate-900/50 border-slate-700">
             <h3 className="text-xl font-bold text-white mb-4">Financial Reports</h3>
             <div className="space-y-3">

@@ -32,19 +32,19 @@ const MobileNavigationMenu: React.FC = () => {
   const navigate = useNavigate();
 
   const navItems = [
-    { path: '/', label: 'Dashboard', icon: Home },
-    { path: '/trading', label: 'Trading', icon: BarChart3 },
-    { path: '/calculator', label: 'Calculator', icon: Monitor },
-    { path: '/workforce', label: 'Workforce', icon: DollarSign },
-    { path: '/admin', label: 'Admin Center', icon: Settings },
-    { path: '/user-manual', label: 'Manual', icon: BookOpen },
-    { path: '/subscription', label: 'Subscription', icon: CreditCard },
+    { path: '/app/apex', label: 'Apex Dashboard', icon: Home },
+    { path: '/app/trading', label: 'Trading', icon: BarChart3 },
+    { path: '/app/calculator', label: 'Calculator', icon: Monitor },
+    { path: '/app/workforce', label: 'Workforce', icon: DollarSign },
+    { path: '/app/admin', label: 'Admin Center', icon: Settings },
+    { path: '/app/user-manual', label: 'Manual', icon: BookOpen },
+    { path: '/app/subscription', label: 'Subscription', icon: CreditCard },
   ];
 
   // Define the missing secondaryNavItems
   const secondaryNavItems = [
-    { path: '/profile', label: 'Profile', icon: User },
-    { path: '/subscription', label: 'Subscription', icon: CreditCard },
+    { path: '/app/profile', label: 'Profile', icon: User },
+    { path: '/app/subscription', label: 'Subscription', icon: CreditCard },
   ];
 
   const handleNavigation = (path: string) => {

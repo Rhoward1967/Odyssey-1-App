@@ -1,16 +1,16 @@
 import { supabase } from '@/lib/supabaseClient';
 import {
-  AlertTriangle,
-  Brain,
-  Calculator,
-  CheckCircle,
-  DollarSign,
-  FileText,
-  Flag,
-  Settings,
-  TrendingUp,
-  Users,
-  Zap
+    AlertTriangle,
+    Brain,
+    Calculator,
+    CheckCircle,
+    DollarSign,
+    FileText,
+    Flag,
+    Settings,
+    TrendingUp,
+    Users,
+    Zap
 } from 'lucide-react';
 import { useState } from 'react';
 import AccountantDashboard from './AccountantDashboard';
@@ -92,8 +92,8 @@ export default function AdminDashboard() {
       </div>
       <Tabs value={activeTab} onValueChange={setActiveTab} className='space-y-2 md:space-y-4'>
         {/* Mobile: Vertical Stack - Compact */}
-        <div className='block md:hidden'>
-          <TabsList className='bg-blue-900/30 flex flex-col gap-1 h-auto p-2 border border-blue-500/30 w-fit items-center'>
+        <div className='block md:hidden mb-8'>
+          <TabsList className='bg-blue-900/30 flex flex-col gap-1 h-auto p-2 border border-blue-500/30 w-fit items-center min-h-[80px]'>
             <TabsTrigger value='revenue' className='justify-start gap-2 py-2 px-3 bg-green-600/20 hover:bg-green-500/30 data-[state=active]:bg-green-600 data-[state=active]:text-white text-blue-100 border border-green-500/20 w-fit'><TrendingUp className='w-4 h-4' /><span className='text-sm'>Revenue</span></TabsTrigger>
             <TabsTrigger value='control' className='justify-start gap-2 py-2 px-3 bg-blue-600/20 hover:bg-blue-500/30 data-[state=active]:bg-blue-600 data-[state=active]:text-white text-blue-100 border border-blue-500/20 w-fit'><Settings className='w-4 h-4' /><span className='text-sm'>Control</span></TabsTrigger>
             <TabsTrigger value='autonomous' className='justify-start gap-2 py-2 px-3 bg-blue-600/20 hover:bg-blue-500/30 data-[state=active]:bg-blue-600 data-[state=active]:text-white text-blue-100 border border-blue-500/20 w-fit'><Brain className='w-4 h-4' /><span className='text-sm'>Autonomous</span></TabsTrigger>
@@ -109,8 +109,8 @@ export default function AdminDashboard() {
           </TabsList>
         </div>
         {/* Desktop: Compact Horizontal Flow */}
-        <div className='hidden md:block'>
-          <TabsList className='flex flex-wrap gap-1 p-2 w-full mb-4 items-center'>
+        <div className='hidden md:block mb-12'>
+          <TabsList className='flex flex-wrap gap-1 p-2 w-full items-center min-h-[120px]'>
             <TabsTrigger value='revenue' className='flex items-center gap-2 py-2 px-3 bg-green-600/20 hover:bg-green-500/30 data-[state=active]:bg-green-600 data-[state=active]:text-white text-blue-100 border border-green-500/20 text-sm'><TrendingUp className='w-4 h-4' /><span>Revenue</span></TabsTrigger>
             <TabsTrigger value='control' className='flex items-center gap-2 py-2 px-3 bg-blue-600/20 hover:bg-blue-500/30 data-[state=active]:bg-blue-600 data-[state=active]:text-white text-blue-100 border border-blue-500/20 text-sm'><Settings className='w-4 h-4' /><span>Control</span></TabsTrigger>
             <TabsTrigger value='autonomous' className='flex items-center gap-2 py-2 px-3 bg-blue-600/20 hover:bg-blue-500/30 data-[state=active]:bg-blue-600 data-[state=active]:text-white text-blue-100 border border-blue-500/20 text-sm'><Brain className='w-4 h-4' /><span>Autonomous</span></TabsTrigger>
@@ -127,7 +127,7 @@ export default function AdminDashboard() {
             <TabsTrigger value='accountant' className='flex items-center gap-2 py-2 px-3 bg-purple-600/20 hover:bg-purple-500/30 data-[state=active]:bg-purple-600 data-[state=active]:text-white text-blue-100 border border-purple-500/20 text-sm'><Calculator className='w-4 h-4' /><span>Accountant</span></TabsTrigger>
           </TabsList>
         </div>
-        <TabsContent value='revenue'>
+        <TabsContent value='revenue' className="mt-24">
           <div className='w-full max-w-full overflow-x-auto space-y-6'>
             {/* Annual Billing Reminder - Top Priority Alert */}
             <AnnualBillingReminder userId={userId} />
@@ -136,19 +136,19 @@ export default function AdminDashboard() {
             <RevenueOverview userId={userId} />
           </div>
         </TabsContent>
-        <TabsContent value='control'><div className='w-full max-w-full overflow-x-auto'><AdminControlPanel /></div></TabsContent>
-        <TabsContent value='autonomous'><div className='w-full max-w-full overflow-x-auto'><AutonomousSystemActivator /></div></TabsContent>
-        <TabsContent value='core'><div className='w-full max-w-full overflow-x-auto'><AutonomousOdysseyCore /></div></TabsContent>
-        <TabsContent value='autofix'><div className='w-full max-w-full overflow-x-auto'><AutoFixSystem /></div></TabsContent>
-        <TabsContent value='evolution'><div className='w-full max-w-full overflow-x-auto'><SelfEvolutionEngine /></div></TabsContent>
-        <TabsContent value='flags'><div className='w-full max-w-full overflow-x-auto'><FeatureFlagsManager /></div></TabsContent>
-        <TabsContent value='employees'><div className='w-full max-w-full overflow-x-auto'><EmployeeManagement /></div></TabsContent>
-        <TabsContent value='handbook'><div className='w-full max-w-full overflow-x-auto'><CompanyHandbook /></div></TabsContent>
-        <TabsContent value='budget'><div className='w-full max-w-full overflow-x-auto'>{/* System-level Budget Dashboard for admins only */}<BudgetDashboard /></div></TabsContent>
-        <TabsContent value='payroll'><div className='w-full max-w-full overflow-x-auto'><WorkforceManagementSystem organizationId={organizationId} userId={userId} /></div></TabsContent>
-        <TabsContent value='contractors'><div className='w-full max-w-full overflow-x-auto'><ContractorManager /></div></TabsContent>
-        <TabsContent value='reconciliation'><div className='w-full max-w-full overflow-x-auto'><PayrollReconciliation organizationId={organizationId} /></div></TabsContent>
-        <TabsContent value='accountant'><div className='w-full max-w-full overflow-x-auto'><AccountantDashboard userId={userId} /></div></TabsContent>
+        <TabsContent value='control' className="mt-24"><div className='w-full max-w-full overflow-x-auto'><AdminControlPanel /></div></TabsContent>
+        <TabsContent value='autonomous' className="mt-24"><div className='w-full max-w-full overflow-x-auto'><AutonomousSystemActivator /></div></TabsContent>
+        <TabsContent value='core' className="mt-24"><div className='w-full max-w-full overflow-x-auto'><AutonomousOdysseyCore /></div></TabsContent>
+        <TabsContent value='autofix' className="mt-24"><div className='w-full max-w-full overflow-x-auto'><AutoFixSystem /></div></TabsContent>
+        <TabsContent value='evolution' className="mt-24"><div className='w-full max-w-full overflow-x-auto'><SelfEvolutionEngine /></div></TabsContent>
+        <TabsContent value='flags' className="mt-24"><div className='w-full max-w-full overflow-x-auto'><FeatureFlagsManager /></div></TabsContent>
+        <TabsContent value='employees' className="mt-24"><div className='w-full max-w-full overflow-x-auto'><EmployeeManagement /></div></TabsContent>
+        <TabsContent value='handbook' className="mt-24"><div className='w-full max-w-full overflow-x-auto'><CompanyHandbook /></div></TabsContent>
+        <TabsContent value='budget' className="mt-24"><div className='w-full max-w-full overflow-x-auto'>{/* System-level Budget Dashboard for admins only */}<BudgetDashboard /></div></TabsContent>
+        <TabsContent value='payroll' className="mt-24"><div className='w-full max-w-full overflow-x-auto'><WorkforceManagementSystem organizationId={organizationId} userId={userId} /></div></TabsContent>
+        <TabsContent value='contractors' className="mt-24"><div className='w-full max-w-full overflow-x-auto'><ContractorManager /></div></TabsContent>
+        <TabsContent value='reconciliation' className="mt-24"><div className='w-full max-w-full overflow-x-auto'><PayrollReconciliation organizationId={organizationId} /></div></TabsContent>
+        <TabsContent value='accountant' className="mt-24"><div className='w-full max-w-full overflow-x-auto'><AccountantDashboard userId={userId} /></div></TabsContent>
       </Tabs>
     </div>
   );

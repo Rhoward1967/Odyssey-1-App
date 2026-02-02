@@ -17,6 +17,7 @@ import ApexDashboard from '@/pages/ApexDashboard';
 import BidsList from '@/pages/BidsList';
 import Calculator from '@/pages/Calculator';
 import CatalogManager from '@/pages/CatalogManager';
+import ContractorOnboarding from '@/pages/ContractorOnboarding';
 import Handbook from '@/pages/Handbook';
 import HowardJanitorial from '@/pages/HowardJanitorial';
 import Index from '@/pages/Index';
@@ -195,6 +196,7 @@ function App() {
                     <Route path="/subscribe" element={<Subscribe />} />
                     <Route path="/onboard" element={<Onboard />} />
                     <Route path="/login" element={<LoginPage />} />
+                    <Route path="/onboarding/contractor/:token" element={<ContractorOnboarding />} />
 
                     {/* Protected Routes */}
                     <Route element={<ProtectedRoute />}>

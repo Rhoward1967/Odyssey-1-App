@@ -139,7 +139,7 @@ serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'ODYSSEY-1 AI LLC <onboarding@resend.dev>',  // Use Resend's test domain first
+        from: 'Rickey Howard <onboarding@odyssey-1.ai>',  // Verified domain - Production
         to: recipients,
         subject: emailSubject,
         html: emailHtml || `<p>${textContent}</p>`,

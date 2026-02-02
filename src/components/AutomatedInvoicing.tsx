@@ -2,7 +2,7 @@ import { supabase } from '@/lib/supabaseClient';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useAuth } from './AuthProvider';
 import CustomerProfile, {
-  CustomerProfileData,
+    CustomerProfileData,
 } from './customers/CustomerProfile';
 // Service type for cleaning/janitorial services/products
 type Service = {

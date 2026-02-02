@@ -125,7 +125,7 @@ export const RevenueOverview: React.FC<Props> = ({ userId }) => {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 relative z-0">
       <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
         <h3 className="text-sm font-medium text-green-800">Monthly MRR</h3>
         <p className="text-2xl font-bold text-green-900">${monthlyMRR.toLocaleString()}</p>
