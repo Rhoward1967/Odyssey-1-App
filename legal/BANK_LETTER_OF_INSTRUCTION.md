@@ -273,37 +273,46 @@ The Trust's senior lien on all LLC revenue means Trust payments must be tracked 
 
 ## IX. BANKING INSTRUCTIONS SUMMARY
 
-### For Truist Bank (Trust Reserve + Expense Accounts):
+### For Truist Bank (All 3 Accounts at Single Institution):
 
-**Action Items:**
-1. ✅ Open **Trust Reserve Account** in name of Howard Jones Family Ancestral Trust
-   - Signatories: Christla Howard, Teara Howard (ONLY)
-   - Initial deposit: $__________ (optional)
+**Account 1: Trust Reserve Account**
+- ✅ Account Name: Howard Jones Family Ancestral Trust
+- ✅ Authorized Signatories: Christla Howard and Teara Howard (Co-Trustees ONLY)
+- ✅ Purpose: Trust asset management and creditor position maintenance
+- ✅ Initial deposit: $__________ (optional)
+- ✅ Account Type: Business Checking or Money Market
 
-2. ✅ Open **Expense Account** in name of Odyssey-1 AI LLC
-   - Signatories: Christla Howard, Teara Howard (as Co-Trustees of 100% owner)
-   - Link to Main Operating Account for transfers
+**Account 2: Expense Account**
+- ✅ Account Name: Odyssey-1 AI LLC
+- ✅ Authorized Signatories: Christla Howard and Teara Howard (as Co-Trustees of 100% owner)
+- ✅ Purpose: Operational expenses, payroll, contractor payments
+- ✅ Initial deposit: $__________ (optional)
+- ✅ Account Type: Business Checking
 
-3. ✅ Maintain **complete separation** between Trust and LLC accounts
-4. ✅ Provide separate account statements for each account
-5. ✅ Do NOT add Rickey Allan Howard as signatory
+**Account 3: Main Operating Account**
+- ✅ Account Name: Odyssey-1 AI LLC
+- ✅ Authorized Signatories: Christla Howard and Teara Howard (as Co-Trustees of 100% owner)
+- ✅ Purpose: Revenue collection (Stripe deposits), invoice payments
+- ✅ Initial deposit: $__________ (optional)
+- ✅ Account Type: Business Checking
+- ✅ Special Requirements: ACH/Wire transfer authority, Stripe payout connection
 
-### For Main Account Bank (Revenue Collection):
-
-**Action Items:**
-1. ✅ Open **Main Operating Account** in name of Odyssey-1 AI LLC
-   - Signatories: Christla Howard, Teara Howard (as Co-Trustees of 100% owner)
-   - Purpose: Stripe revenue deposits
-
-2. ✅ Set up ACH/Wire transfer capability to:
-   - Truist Bank Trust Reserve Account (for senior creditor payments)
-   - Truist Bank Expense Account (for operational costs)
-
-3. ✅ Connect to Stripe payment processing:
+**Additional Truist Banking Setup:**
+1. ✅ Enable **internal ACH transfers** between all 3 accounts (instant, no fees)
+2. ✅ Provide **separate account statements** for each account
+3. ✅ Set up **online banking access** for Christla and Teara on all 3 accounts
+4. ✅ Issue **debit cards** for all 3 accounts (Christla & Teara)
+5. ✅ Do **NOT add** Rickey Allan Howard as signatory on any account
+6. ✅ Connect Main Operating Account to **Stripe payment processing**:
    - Stripe account: Live mode (sk_live_51S2w0SDPqeWRzwCX...)
    - Expected deposits: $8K-$12K/month Year 1, scaling to $40K-$60K/month Year 2
 
-4. ✅ Do NOT add Rickey Allan Howard as signatory
+**Benefits of Single-Institution Banking:**
+- Instant internal transfers (no external ACH delays)
+- Single relationship manager
+- Streamlined account management
+- Lower fees for internal transfers
+- Easier reconciliation and reporting
 
 ---
 
