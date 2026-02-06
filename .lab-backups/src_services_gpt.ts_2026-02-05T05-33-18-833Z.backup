@@ -1,0 +1,7 @@
+{
+  "originalPath": "src\\services\\gpt.ts",
+  "timestamp": "2026-02-05T05:33:18.833Z",
+  "hash": "990bd59f34d42fee07918f307e2f10fe3e5c7772355add075c5fc517d8ecd971",
+  "size": 698,
+  "content": "export type ChatMessage = { role: \"system\" | \"user\" | \"assistant\"; content: string };\r\n\r\nexport async function gptChat(\r\n  messages: ChatMessage[],\r\n  opts?: { model?: string; temperature?: number }\r\n): Promise<ChatMessage> {\r\n  const res = await fetch(\"/functions/v1/gpt-chat\", {\r\n    method: \"POST\",\r\n    headers: { \"Content-Type\": \"application/json\" },\r\n    body: JSON.stringify({\r\n      messages,\r\n      model: opts?.model,\r\n      temperature: opts?.temperature,\r\n    }),\r\n  });\r\n\r\n  if (!res.ok) {\r\n    const err = await res.json().catch(() => ({}));\r\n    throw new Error(err?.error || \"Failed to call GPT\");\r\n  }\r\n\r\n  const data = await res.json();\r\n  return data.message as ChatMessage;\r\n}\r\n"
+}

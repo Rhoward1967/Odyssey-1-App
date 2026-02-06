@@ -1,0 +1,7 @@
+{
+  "originalPath": "src\\components\\DashboardHeader.tsx",
+  "timestamp": "2026-02-05T05:33:01.459Z",
+  "hash": "4f7d2897dd4cdb5989d3f9f08c2b76d5eacb9bf2b2a11d941f40a9468866b56a",
+  "size": 371,
+  "content": "export default function DashboardHeader() {\r\n  return (\r\n    <div className=\"mb-6 border-b pb-4\">\r\n      <h1 className=\"text-3xl font-bold text-gray-800 dark:text-gray-100\">\r\n        Application Dashboard\r\n      </h1>\r\n      <p className=\"mt-1 text-gray-500 dark:text-gray-400\">\r\n        Welcome! Here is the main overview of your system.\r\n      </p>\r\n    </div>\r\n  );\r\n}"
+}

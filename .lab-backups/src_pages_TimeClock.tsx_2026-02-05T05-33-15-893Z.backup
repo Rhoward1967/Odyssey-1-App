@@ -1,0 +1,7 @@
+{
+  "originalPath": "src\\pages\\TimeClock.tsx",
+  "timestamp": "2026-02-05T05:33:15.894Z",
+  "hash": "9a9f0dfeef952c061bc864780d022e22dfe208f35f1e213e5420287ba4562901",
+  "size": 421,
+  "content": "import TimeClockManagement from '@/components/TimeClockManagement';\r\n\r\n/**\r\n * Time Clock Page - Employee Time Tracking System\r\n * \r\n * This page provides comprehensive time clock functionality including:\r\n * - Active time clock entries\r\n * - Time entry management and editing\r\n * - Flagged entries for review\r\n * - Administrative controls\r\n */\r\nexport default function TimeClock() {\r\n  return <TimeClockManagement />;\r\n}"
+}

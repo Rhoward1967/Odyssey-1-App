@@ -1,0 +1,7 @@
+{
+  "originalPath": "src\\pages\\Schedule.tsx",
+  "timestamp": "2026-02-05T05:33:15.603Z",
+  "hash": "037c2b2556f0aeec30f05fd9d0cc25a996d3b864c7d84a1a9d764f728b4ed0bc",
+  "size": 728,
+  "content": "/**\r\n * Schedule/Calendar Page\r\n * © 2025 Rickey A Howard. All Rights Reserved.\r\n */\r\n\r\nimport { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';\r\nimport { Calendar } from 'lucide-react';\r\n\r\nexport default function Schedule() {\r\n  return (\r\n    <div className=\"p-6 space-y-6\">\r\n      <Card>\r\n        <CardHeader>\r\n          <CardTitle className=\"flex items-center gap-2\">\r\n            <Calendar className=\"h-6 w-6\" />\r\n            Schedule & Appointments\r\n          </CardTitle>\r\n        </CardHeader>\r\n        <CardContent>\r\n          <p className=\"text-gray-600\">\r\n            Calendar and scheduling functionality coming soon.\r\n          </p>\r\n        </CardContent>\r\n      </Card>\r\n    </div>\r\n  );\r\n}"
+}

@@ -1,0 +1,7 @@
+{
+  "originalPath": "src\\components\\TradingCockpitAI.tsx",
+  "timestamp": "2026-02-05T05:33:08.883Z",
+  "hash": "bba4058240771485223b04559bdf17af88c9308b1791aa3b5e991dd3e632bbb0",
+  "size": 911,
+  "content": "import { Brain, TrendingUp } from 'lucide-react';\r\nimport React from 'react';\r\nimport { Badge } from './ui/badge';\r\nimport { Card, CardHeader, CardTitle } from './ui/card';\r\n\r\nconst TradingCockpitAI: React.FC = () => {\r\n  return (\r\n    <div className=\"space-y-6\">\r\n      <Card className=\"border-green-400 bg-gradient-to-r from-green-100 to-blue-100\">\r\n        <CardHeader className=\"text-center\">\r\n          <CardTitle className=\"flex items-center justify-center gap-3 text-2xl text-green-800\">\r\n            <TrendingUp className=\"h-8 w-8 text-blue-600\" />\r\n            Trading Cockpit\r\n            <Brain className=\"h-8 w-8 text-green-600\" />\r\n          </CardTitle>\r\n          <Badge className=\"mx-auto bg-green-200 text-green-800 text-lg px-4 py-2\">\r\n            AI-Powered Trading Platform\r\n          </Badge>\r\n        </CardHeader>\r\n      </Card>\r\n    </div>\r\n  );\r\n};\r\n\r\nexport default TradingCockpitAI;\r\n"
+}

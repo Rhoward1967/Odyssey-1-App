@@ -1,0 +1,7 @@
+{
+  "originalPath": "src\\services\\aiActivityLogger.ts",
+  "timestamp": "2026-02-05T05:33:16.798Z",
+  "hash": "af69f6fb136c4d0eca95b9ec3270a1ec55f3ea5651ab2255883fd0e30a3be4d7",
+  "size": 1146,
+  "content": "import { logSystemActivity } from './logSystemActivity';\r\n\r\n/**\r\n * Log an AI recommendation event (e.g., suggest disabling API)\r\n */\r\nexport async function logAIRecommendation({ recommendation, details, status = 'pending', user_id = null }: { recommendation: string; details?: string; status?: string; user_id?: string | null }) {\r\n  await logSystemActivity({\r\n    action: `AI Recommendation: ${recommendation}`,\r\n    details,\r\n    status,\r\n  });\r\n}\r\n\r\n/**\r\n * Log an AI action execution (with or without approval)\r\n */\r\nexport async function logAIAction({ action, details, status = 'executed', user_id = null }: { action: string; details?: string; status?: string; user_id?: string | null }) {\r\n  await logSystemActivity({\r\n    action: `AI Action: ${action}`,\r\n    details,\r\n    status,\r\n  });\r\n}\r\n\r\n/**\r\n * Log an AI override or manual intervention\r\n */\r\nexport async function logAIOverride({ override, details, status = 'override', user_id = null }: { override: string; details?: string; status?: string; user_id?: string | null }) {\r\n  await logSystemActivity({\r\n    action: `AI Override: ${override}`,\r\n    details,\r\n    status,\r\n  });\r\n}\r\n"
+}

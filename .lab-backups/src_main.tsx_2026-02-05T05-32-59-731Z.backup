@@ -1,0 +1,7 @@
+{
+  "originalPath": "src/main.tsx",
+  "timestamp": "2026-02-05T05:32:59.732Z",
+  "hash": "adda65bc6171c4544cf29efffa3e4a29779c1ee615aeaf697e3c5d7938715346",
+  "size": 657,
+  "content": "import React from 'react'\r\nimport ReactDOM from 'react-dom/client'\r\nimport App from './App.tsx'\r\nimport './index.css'\r\n\r\n// Register service worker for performance - but wait for React to mount\r\nif ('serviceWorker' in navigator && import.meta.env.PROD) {\r\n  window.addEventListener('load', () => {\r\n    // Delay to ensure React has mounted first\r\n    setTimeout(() => {\r\n      navigator.serviceWorker.register('/sw.js').catch(() => {\r\n        // Silent fail - not critical\r\n      });\r\n    }, 1000);\r\n  });\r\n}\r\n\r\nconst root = document.getElementById('root')!;\r\n\r\nReactDOM.createRoot(root).render(\r\n  <React.StrictMode>\r\n    <App />\r\n  </React.StrictMode>,\r\n)"
+}

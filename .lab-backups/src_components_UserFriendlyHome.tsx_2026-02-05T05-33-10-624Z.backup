@@ -1,0 +1,7 @@
+{
+  "originalPath": "src\\components\\UserFriendlyHome.tsx",
+  "timestamp": "2026-02-05T05:33:10.624Z",
+  "hash": "2975cbcc8816f66a4d1a0ca0dfe3265b8f570bb49c5cfd42860f2c31b6c9dd4a",
+  "size": 1174,
+  "content": "import React from 'react';\r\nimport { DynamicIndustryHero } from './DynamicIndustryHero';\r\nimport { IndustryCarousel } from './IndustryCarousel';\r\nimport { BusinessShowcase } from './BusinessShowcase';\r\nimport { BusinessModelShowcase } from './BusinessModelShowcase';\r\nimport { JanitorialServices } from './JanitorialServices';\r\nimport { UniversalIndustryGrid } from './UniversalIndustryGrid';\r\nimport CompetitiveAdvantage from './CompetitiveAdvantage';\r\nimport StudentHero from './StudentHero';\r\nimport StudentFeatures from './StudentFeatures';\r\nimport EducationFeatures from './EducationFeatures';\r\nimport { IndustryAnalysisGrid } from './IndustryAnalysisGrid';\r\nimport { OdysseyDemo } from './OdysseyDemo';\r\n\r\nexport default function UserFriendlyHome() {\r\n  return (\r\n    <div className=\"min-h-screen\">\r\n      <DynamicIndustryHero />\r\n      <IndustryCarousel />\r\n      <IndustryAnalysisGrid />\r\n      <OdysseyDemo />\r\n      <BusinessModelShowcase />\r\n      <JanitorialServices />\r\n      <StudentHero />\r\n      <StudentFeatures />\r\n      <EducationFeatures />\r\n      <BusinessShowcase />\r\n      <UniversalIndustryGrid />\r\n      <CompetitiveAdvantage />\r\n    </div>\r\n  );\r\n}"
+}

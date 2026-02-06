@@ -1,0 +1,7 @@
+{
+  "originalPath": "src\\pages\\Test.tsx",
+  "timestamp": "2026-02-05T05:33:15.886Z",
+  "hash": "b3fdd07f7d0f83326bd856d2c4ea2197489517bf77f595778e7e0bd214992c35",
+  "size": 620,
+  "content": "import React from 'react';\r\n\r\nconst Test: React.FC = () => {\r\n  return (\r\n    <div className=\"p-8\">\r\n      <h1 className=\"text-4xl font-bold text-purple-600 mb-4\">Test Page</h1>\r\n      <p className=\"text-lg text-gray-700\">\r\n        This is a simple test page to verify routing is working.\r\n      </p>\r\n      <div className=\"mt-8 p-4 bg-blue-100 rounded-lg\">\r\n        <h2 className=\"text-xl font-semibold mb-2\">Routing Status:</h2>\r\n        <p>✅ React Router is working</p>\r\n        <p>✅ AppLayout is rendering</p>\r\n        <p>✅ Outlet is displaying content</p>\r\n      </div>\r\n    </div>\r\n  );\r\n};\r\n\r\nexport default Test;"
+}

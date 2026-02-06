@@ -1,0 +1,7 @@
+{
+  "originalPath": "src\\components\\WorkforceDashboard.tsx",
+  "timestamp": "2026-02-05T05:33:10.749Z",
+  "hash": "6314405bc79b5bc1b444d7c3cc5283a64d16dac13000a4dd7e1ad8dacc5c7651",
+  "size": 547,
+  "content": "/**\r\n * ODYSSEY-1 Workforce Dashboard Component\r\n * \r\n * © 2025 Rickey A Howard. All Rights Reserved.\r\n * \r\n * NOTE: This file now serves as a compatibility layer.\r\n * The actual Workforce Management System is in WorkspaceManager.tsx\r\n * and is accessed via UserManual.tsx\r\n */\r\n\r\n// Simply re-export UserManual to avoid component duplication\r\nexport { UserManual as default, UserManual } from './UserManual';\r\n\r\n// OLD WorkforceManagementSystem component REMOVED to prevent conflicts\r\n// All workforce functionality is now in WorkspaceManager.tsx"
+}

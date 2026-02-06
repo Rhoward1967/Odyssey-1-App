@@ -1,0 +1,7 @@
+{
+  "originalPath": "src\\components\\FeatureGate.tsx",
+  "timestamp": "2026-02-05T05:33:03.551Z",
+  "hash": "b11402466a98bd1104709265f37e303e9b14daa0346712875d0bf117c14f022f",
+  "size": 778,
+  "content": "import React from 'react';\r\nimport { useRealtimeAdmin } from '@/hooks/useRealtimeAdmin';\r\n\r\ninterface FeatureGateProps {\r\n  feature: string;\r\n  userType?: 'trial' | 'subscriber' | 'public';\r\n  children: React.ReactNode;\r\n  fallback?: React.ReactNode;\r\n}\r\n\r\nexport const FeatureGate: React.FC<FeatureGateProps> = ({ \r\n  feature, \r\n  userType = 'public', \r\n  children, \r\n  fallback = null \r\n}) => {\r\n  const { featureToggles } = useRealtimeAdmin();\r\n\r\n  const featureToggle = featureToggles.find(toggle => toggle.feature_name === feature);\r\n  \r\n  if (!featureToggle || !featureToggle.is_enabled) {\r\n    return <>{fallback}</>;\r\n  }\r\n\r\n  if (!featureToggle.user_types.includes(userType) && userType !== 'public') {\r\n    return <>{fallback}</>;\r\n  }\r\n\r\n  return <>{children}</>;\r\n};"
+}

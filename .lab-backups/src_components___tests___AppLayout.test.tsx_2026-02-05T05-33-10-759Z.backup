@@ -1,0 +1,7 @@
+{
+  "originalPath": "src\\components\\__tests__\\AppLayout.test.tsx",
+  "timestamp": "2026-02-05T05:33:10.759Z",
+  "hash": "0fe45a95ea7f48d61508712769f658faa4cb496ec04a12d5c205271e476284e5",
+  "size": 585,
+  "content": "import { render, screen } from '@testing-library/react';\r\nimport { BrowserRouter } from 'react-router-dom';\r\nimport AppLayout from '../AppLayout';\r\n\r\nconst renderWithRouter = (component: React.ReactElement) => {\r\n  return render(\r\n    <BrowserRouter>\r\n      {component}\r\n    </BrowserRouter>\r\n  );\r\n};\r\n\r\ndescribe('AppLayout', () => {\r\n  test('renders without crashing', () => {\r\n    renderWithRouter(<AppLayout />);\r\n  });\r\n\r\n  test('renders navigation', () => {\r\n    renderWithRouter(<AppLayout />);\r\n    // Add specific navigation tests based on your AppLayout component\r\n  });\r\n});"
+}

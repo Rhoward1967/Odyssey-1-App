@@ -1,0 +1,7 @@
+{
+  "originalPath": "src\\components\\ResponsiveMediaWorkstation.tsx",
+  "timestamp": "2026-02-05T05:33:06.520Z",
+  "hash": "2b942ba5c9ee6600429ec761f2a845f228f0ecc002c84232a81373d6c84a1a66",
+  "size": 389,
+  "content": "import React from 'react';\r\nimport { useMediaQuery } from '@/hooks/use-mobile';\r\nimport MediaWorkstation from './MediaWorkstation';\r\nimport MobileMediaWorkstation from './MobileMediaWorkstation';\r\n\r\nexport default function ResponsiveMediaWorkstation() {\r\n  const isMobile = useMediaQuery('(max-width: 768px)');\r\n  \r\n  return isMobile ? <MobileMediaWorkstation /> : <MediaWorkstation />;\r\n}"
+}

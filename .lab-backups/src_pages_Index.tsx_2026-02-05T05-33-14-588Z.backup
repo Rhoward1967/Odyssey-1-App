@@ -1,0 +1,7 @@
+{
+  "originalPath": "src\\pages\\Index.tsx",
+  "timestamp": "2026-02-05T05:33:14.588Z",
+  "hash": "feff785a767feede2e09189bc1e525debdd858907b72dcaab193f95fd1a3ad1f",
+  "size": 327,
+  "content": "import { useEffect } from 'react';\r\nimport { useNavigate } from 'react-router-dom';\r\n\r\nexport default function Index() {\r\n  const navigate = useNavigate();\r\n\r\n  useEffect(() => {\r\n    // Redirect to Apex Dashboard as the main landing page\r\n    navigate('/app/apex', { replace: true });\r\n  }, [navigate]);\r\n\r\n  return null;\r\n}\r\n"
+}

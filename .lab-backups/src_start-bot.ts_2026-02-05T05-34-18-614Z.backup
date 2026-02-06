@@ -1,0 +1,7 @@
+{
+  "originalPath": "src\\start-bot.ts",
+  "timestamp": "2026-02-05T05:34:18.614Z",
+  "hash": "eecf5f4609a419842126a5e1169ca684acba239792c77d14847e26d65c7396c9",
+  "size": 415,
+  "content": "\r\n(async () => {\r\n  // Initialize R.O.M.A.N.'s Constitutional Core (Sacred Geometry Framework)\r\n  const { initializeConstitutionalCore } = await import('./lib/roman-constitutional-core.js');\r\n  initializeConstitutionalCore();\r\n  \r\n  // Start Discord Bot\r\n  const { startDiscordBot } = await import('./services/discord-bot.js');\r\n  console.log('🤖 Starting R.O.M.A.N. Discord Bot...');\r\n  startDiscordBot();\r\n})();\r\n"
+}

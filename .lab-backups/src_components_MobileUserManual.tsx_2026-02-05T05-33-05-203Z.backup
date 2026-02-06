@@ -1,0 +1,7 @@
+{
+  "originalPath": "src\\components\\MobileUserManual.tsx",
+  "timestamp": "2026-02-05T05:33:05.203Z",
+  "hash": "d9fb43b04e71a145dde29491e56620fd11f03c2cc9f4fa2c1f6d715c54961960",
+  "size": 433,
+  "content": "/**\r\n * ODYSSEY-1 Mobile User Manual\r\n * \r\n * © 2025 Rickey A Howard. All Rights Reserved.\r\n * Property of Rickey A Howard\r\n * \r\n * Mobile-optimized interface with vertical stack or horizontal carousel\r\n */\r\n\r\n// TODO: Implement after Genesis Protocol success\r\n// Features:\r\n// - Responsive vertical card stack\r\n// - Swipe gestures for carousel navigation\r\n// - Bottom navigation bar\r\n// - Simplified UI for essential features only\r\n"
+}

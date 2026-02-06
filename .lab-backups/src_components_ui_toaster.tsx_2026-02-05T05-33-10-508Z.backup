@@ -1,0 +1,7 @@
+{
+  "originalPath": "src\\components\\ui\\toaster.tsx",
+  "timestamp": "2026-02-05T05:33:10.508Z",
+  "hash": "d336e69dc56f72df1da448f1f39eedddb3b7e0dd0e5a69ca5be8db7acb32b7e4",
+  "size": 805,
+  "content": "import { useToast } from \"@/hooks/use-toast\"\r\nimport {\r\n  Toast,\r\n  ToastClose,\r\n  ToastDescription,\r\n  ToastProvider,\r\n  ToastTitle,\r\n  ToastViewport,\r\n} from \"@/components/ui/toast\"\r\n\r\nexport function Toaster() {\r\n  const { toasts } = useToast()\r\n\r\n  return (\r\n    <ToastProvider>\r\n      {toasts.map(function ({ id, title, description, action, ...props }) {\r\n        return (\r\n          <Toast key={id} {...props}>\r\n            <div className=\"grid gap-1\">\r\n              {title && <ToastTitle>{title}</ToastTitle>}\r\n              {description && (\r\n                <ToastDescription>{description}</ToastDescription>\r\n              )}\r\n            </div>\r\n            {action}\r\n            <ToastClose />\r\n          </Toast>\r\n        )\r\n      })}\r\n      <ToastViewport />\r\n    </ToastProvider>\r\n  )\r\n}\r\n"
+}

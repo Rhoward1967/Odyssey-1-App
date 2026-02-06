@@ -1,0 +1,7 @@
+{
+  "originalPath": "src\\components\\MainScheduleWithSidebar.tsx",
+  "timestamp": "2026-02-05T05:33:05.139Z",
+  "hash": "f99572e19871cd21e25f90f26ec1bb1dc89e01c12a148c1ed47dba8dc9ae1ace",
+  "size": 231,
+  "content": "import React from 'react';\r\nimport MonthlyScheduleCalendar from './MonthlyScheduleCalendar';\r\n\r\nconst MainScheduleWithSidebar: React.FC = () => {\r\n  return <MonthlyScheduleCalendar />;\r\n};\r\n\r\nexport default MainScheduleWithSidebar;"
+}

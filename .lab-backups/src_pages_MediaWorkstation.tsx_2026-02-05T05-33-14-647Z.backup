@@ -1,0 +1,7 @@
+{
+  "originalPath": "src\\pages\\MediaWorkstation.tsx",
+  "timestamp": "2026-02-05T05:33:14.647Z",
+  "hash": "7bf98202115353c540d48fe2d40cb73cdd59b23def27c64bdd25b633e3d3fb02",
+  "size": 245,
+  "content": "import React from 'react';\r\nimport ResponsiveMediaWorkstation from '@/components/ResponsiveMediaWorkstation';\r\n\r\nconst MediaWorkstationPage: React.FC = () => {\r\n  return <ResponsiveMediaWorkstation />;\r\n};\r\n\r\nexport default MediaWorkstationPage;"
+}

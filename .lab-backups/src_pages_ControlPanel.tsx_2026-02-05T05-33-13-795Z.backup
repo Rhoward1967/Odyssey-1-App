@@ -1,0 +1,7 @@
+{
+  "originalPath": "src\\pages\\ControlPanel.tsx",
+  "timestamp": "2026-02-05T05:33:13.795Z",
+  "hash": "9f26f021adc194f27942a95354f9015b12ff92083c7170e2987ac866574ba749",
+  "size": 994,
+  "content": "import React, { useState } from 'react';\r\nimport { AppProvider } from '@/contexts/AppContext';\r\n\r\nimport ControlPanel from '@/components/ControlPanel';\r\nimport VerticalNavigation from '@/components/VerticalNavigation';\r\n\r\nconst ControlPanelPage: React.FC = () => {\r\n  const [showMainSidebar, setShowMainSidebar] = useState(true);\r\n\r\n  return (\r\n    <AppProvider>\r\n      <div className=\"min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900\">\r\n        {/* Desktop sidebar - always visible on desktop */}\r\n        <div className=\"hidden md:block\">\r\n          <VerticalNavigation />\r\n        </div>\r\n        \r\n        {/* Main content area with proper spacing for sidebar */}\r\n        <div className=\"md:ml-64\">\r\n          <ControlPanel \r\n            onMobileContentShow={() => setShowMainSidebar(false)}\r\n            onMobileMenuShow={() => setShowMainSidebar(true)}\r\n          />\r\n        </div>\r\n      </div>\r\n    </AppProvider>\r\n  );\r\n};\r\n\r\nexport default ControlPanelPage;"
+}

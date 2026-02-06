@@ -1,0 +1,7 @@
+{
+  "originalPath": "src\\pages\\Odyssey.tsx",
+  "timestamp": "2026-02-05T05:33:14.664Z",
+  "hash": "8b277bde08f2f87dd25307927c876e1700fc65712d7668d4b462ba2e523a0949",
+  "size": 404,
+  "content": "import React from 'react';\r\nimport AppLayout from '@/components/AppLayout';\r\nimport Navigation from '@/components/Navigation';\r\nimport { AppProvider } from '@/contexts/AppContext';\r\n\r\nconst Odyssey: React.FC = () => {\r\n  return (\r\n    <AppProvider>\r\n      <div className=\"min-h-screen\">\r\n        <Navigation />\r\n        <AppLayout />\r\n      </div>\r\n    </AppProvider>\r\n  );\r\n};\r\n\r\nexport default Odyssey;"
+}

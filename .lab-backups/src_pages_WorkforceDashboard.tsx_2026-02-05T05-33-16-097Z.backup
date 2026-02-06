@@ -1,0 +1,7 @@
+{
+  "originalPath": "src\\pages\\WorkforceDashboard.tsx",
+  "timestamp": "2026-02-05T05:33:16.097Z",
+  "hash": "aaeee16694d3fff6efd16d36052614de269a027b6ec1912bdb811e5bebf4bb0c",
+  "size": 905,
+  "content": "import { supabase } from '@/lib/supabaseClient';\r\nimport React, { useEffect, useState } from 'react';\r\nimport WorkforceManagementSystem from '../components/WorkspaceManager';\r\n\r\n/**\r\n * WorkforceDashboard Page\r\n * \r\n * UPDATED: Now uses the unified WorkspaceManager component\r\n * OLD: Used to show Gemini-designed mock-up (removed)\r\n */\r\n\r\nconst WorkforceDashboard: React.FC = () => {\r\n  const [userId, setUserId] = useState<string>('00000000-0000-0000-0000-000000000000');\r\n  const organizationId = 1;\r\n\r\n  useEffect(() => {\r\n    const getUser = async () => {\r\n      const { data: { user } } = await supabase.auth.getUser();\r\n      if (user) {\r\n        setUserId(user.id);\r\n      }\r\n    };\r\n    getUser();\r\n  }, []);\r\n\r\n  return (\r\n    <div className=\"p-6\">\r\n      <WorkforceManagementSystem organizationId={organizationId} userId={userId} />\r\n    </div>\r\n  );\r\n};\r\n\r\nexport default WorkforceDashboard;\r\n"
+}

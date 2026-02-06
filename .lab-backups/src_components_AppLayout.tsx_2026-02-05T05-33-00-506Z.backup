@@ -1,0 +1,7 @@
+{
+  "originalPath": "src\\components\\AppLayout.tsx",
+  "timestamp": "2026-02-05T05:33:00.506Z",
+  "hash": "4f8d0221c0ff77701a9ed3b41d0f12bdefb4e7e191cca48129dde4f5d92ca2fd",
+  "size": 1088,
+  "content": "import { Outlet } from 'react-router-dom';\r\nimport Sidebar from './Sidebar';\r\nimport MobileNavigationMenu from './MobileNavigationMenu';\r\n\r\nexport default function AppLayout() {\r\n  return (\r\n    <div className=\"flex h-screen bg-slate-900\">\r\n      {/* Fixed sidebar on the left - hidden on mobile */}\r\n      <Sidebar />\r\n      \r\n      {/* Main content area that takes up remaining space */}\r\n      <main className=\"flex-1 overflow-auto\">\r\n        {/* Mobile navigation menu - only visible on small screens */}\r\n        <div className=\"md:hidden fixed top-0 left-0 right-0 z-50 bg-slate-800 border-b border-slate-700 p-4\">\r\n          <div className=\"flex items-center justify-between\">\r\n            <h1 className=\"text-lg font-bold text-white\">ODYSSEY-1</h1>\r\n            <MobileNavigationMenu />\r\n          </div>\r\n        </div>\r\n        \r\n        {/* Content area with responsive padding */}\r\n        <div className=\"p-4 md:p-6 max-w-none mt-16 md:mt-0\">\r\n          {/* THIS IS CRITICAL - renders child routes */}\r\n          <Outlet />\r\n        </div>\r\n      </main>\r\n    </div>\r\n  );\r\n}"
+}

@@ -1,0 +1,7 @@
+{
+  "originalPath": "src\\services\\isAdmin.ts",
+  "timestamp": "2026-02-05T05:33:18.840Z",
+  "hash": "d6489812af99bbf28b340491f5de3b4db47d09b087dd4a0b68b41c7aa7bbc4a9",
+  "size": 313,
+  "content": "// R.O.M.A.N. admin check helper\r\nimport { supabase } from '@/lib/supabaseClient';\r\n\r\nexport async function isAdmin(email: string): Promise<boolean> {\r\n  const { data, error } = await supabase\r\n    .from('app_admins')\r\n    .select('email')\r\n    .eq('email', email)\r\n    .single();\r\n  return !!data && !error;\r\n}\r\n"
+}

@@ -1,0 +1,7 @@
+{
+  "originalPath": "src\\services\\MultiAgentConsensus.ts",
+  "timestamp": "2026-02-05T05:33:18.898Z",
+  "hash": "50b1f1ee0972d4e37617498af24fe1e44ba1a338be4f4d0cc630fedbecb36703",
+  "size": 836,
+  "content": "import { RomanCommand } from '@/schemas/RomanCommands';\r\nimport { SynchronizationLayer } from './SynchronizationLayer';\r\n\r\n/**\r\n * COMPONENT 3: THE CREATIVE HEMISPHERE\r\n * The \"Right Brain\" that generates commands from constrained prompts\r\n */\r\nexport class MultiAgentConsensus {\r\n  \r\n  /**\r\n   * UPDATED: Now receives schema-injected prompts from Synchronization Layer\r\n   */\r\n  static async processWithConsensus(userIntent: string, userId: string): Promise<RomanCommand> {\r\n    // STEP 1: Get the Smart Prompt with schema injection\r\n    const command = await SynchronizationLayer.generateCommand(userIntent, userId);\r\n    \r\n    // STEP 2: Multi-agent consensus (optional enhancement)\r\n    // Multiple AI agents could vote on the best interpretation\r\n    // For now, single agent output is returned\r\n    \r\n    return command;\r\n  }\r\n}\r\n"
+}

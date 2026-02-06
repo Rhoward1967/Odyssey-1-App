@@ -1,0 +1,7 @@
+{
+  "originalPath": "src\\components\\ui\\use-toast.ts",
+  "timestamp": "2026-02-05T05:33:10.530Z",
+  "hash": "3fbe3b856affdf39f3eb2a82c898b96d44560d93d05674ab2fd6105825ca78d1",
+  "size": 85,
+  "content": "import { useToast, toast } from \"@/hooks/use-toast\";\r\n\r\nexport { useToast, toast };\r\n"
+}

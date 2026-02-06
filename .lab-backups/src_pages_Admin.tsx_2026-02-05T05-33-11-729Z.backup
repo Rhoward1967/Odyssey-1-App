@@ -1,0 +1,7 @@
+{
+  "originalPath": "src\\pages\\Admin.tsx",
+  "timestamp": "2026-02-05T05:33:11.729Z",
+  "hash": "9c69b4f08cffca04ae97523f7ab5637653cdbda297bb8a5ba741726a0b21dcad",
+  "size": 127,
+  "content": "import AdminDashboard from '@/components/AdminDashboard';\r\n\r\nexport default function Admin() {\r\n  return <AdminDashboard />;\r\n}"
+}

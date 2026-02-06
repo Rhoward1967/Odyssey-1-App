@@ -1,0 +1,7 @@
+{
+  "originalPath": "src\\pages\\Mel.tsx",
+  "timestamp": "2026-02-05T05:33:14.651Z",
+  "hash": "584f1c87dd4c84236cd878818b12e3672b4ba817b84391bac1121bf8cc819c8c",
+  "size": 180,
+  "content": "import React from 'react';\r\nimport MelDashboard from '../components/MelDashboard';\r\n\r\nconst MelPage: React.FC = () => {\r\n  return <MelDashboard />;\r\n};\r\n\r\nexport default MelPage;\r\n"
+}

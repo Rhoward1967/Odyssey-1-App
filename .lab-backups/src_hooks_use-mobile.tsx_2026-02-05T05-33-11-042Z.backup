@@ -1,0 +1,7 @@
+{
+  "originalPath": "src\\hooks\\use-mobile.tsx",
+  "timestamp": "2026-02-05T05:33:11.042Z",
+  "hash": "7fe3efd3d1ea4513aeda402cc1da159dedaf9d5eedd0fd86074690bbb29b3fa8",
+  "size": 1040,
+  "content": "import * as React from \"react\"\r\n\r\nconst MOBILE_BREAKPOINT = 768;\r\n\r\nexport function useIsMobile() {\r\n  const [isMobile, setIsMobile] = React.useState<boolean | undefined>(undefined);\r\n\r\n  React.useEffect(() => {\r\n    const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`);\r\n\r\n    const onChange = () => {\r\n      setIsMobile(window.innerWidth < MOBILE_BREAKPOINT)\r\n    };\r\n\r\n    mql.addEventListener(\"change\", onChange);\r\n    setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);\r\n    return () => mql.removeEventListener(\"change\", onChange);\r\n  }, []);\r\n\r\n  return !!isMobile;\r\n}\r\n\r\nexport function useMediaQuery(query: string) {\r\n  const [matches, setMatches] = React.useState<boolean>(false);\r\n\r\n  React.useEffect(() => {\r\n    const mql = window.matchMedia(query);\r\n    \r\n    const onChange = () => {\r\n      setMatches(mql.matches);\r\n    };\r\n\r\n    mql.addEventListener(\"change\", onChange);\r\n    setMatches(mql.matches);\r\n    return () => mql.removeEventListener(\"change\", onChange);\r\n  }, [query]);\r\n\r\n  return matches;\r\n}"
+}

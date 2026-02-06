@@ -1,0 +1,7 @@
+{
+  "originalPath": "src\\components\\ui\\skeleton.tsx",
+  "timestamp": "2026-02-05T05:33:10.458Z",
+  "hash": "a254c269ef77d7292a6ef268ec473e370878d7907e097277272f65505432f038",
+  "size": 458,
+  "content": "import * as React from \"react\"\r\nimport { cn } from \"@/lib/utils\"\r\n\r\ninterface SkeletonProps extends React.HTMLAttributes<HTMLDivElement> {\r\n  animated?: boolean\r\n}\r\n\r\nfunction Skeleton({\r\n  className,\r\n  animated = true,\r\n  ...props\r\n}: SkeletonProps) {\r\n  return (\r\n    <div\r\n      className={cn(\r\n        \"rounded-md bg-muted/70\",\r\n        animated && \"animate-pulse\",\r\n        className\r\n      )}\r\n      {...props}\r\n    />\r\n  )\r\n}\r\n\r\nexport { Skeleton }\r\n"
+}

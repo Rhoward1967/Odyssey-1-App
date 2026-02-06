@@ -1,0 +1,7 @@
+{
+  "originalPath": "src\\components\\ui\\progress.tsx",
+  "timestamp": "2026-02-05T05:33:10.415Z",
+  "hash": "03c8ed3881c4058f81ca7167a6128a1f18c36ebe945a67eab621a1a9873e6821",
+  "size": 1204,
+  "content": "import * as React from \"react\"\r\nimport * as ProgressPrimitive from \"@radix-ui/react-progress\"\r\n\r\nimport { cn } from \"@/lib/utils\"\r\n\r\ninterface ProgressProps extends\r\n  React.ComponentPropsWithoutRef<typeof ProgressPrimitive.Root> {\r\n  variant?: \"default\" | \"success\" | \"warning\" | \"error\"\r\n}\r\n\r\nconst Progress = React.forwardRef<\r\n  React.ElementRef<typeof ProgressPrimitive.Root>,\r\n  ProgressProps\r\n>(({ className, value, variant = \"default\", ...props }, ref) => (\r\n  <ProgressPrimitive.Root\r\n    ref={ref}\r\n    className={cn(\r\n      \"relative h-2 w-full overflow-hidden rounded-full bg-secondary/40\",\r\n      className\r\n    )}\r\n    {...props}\r\n  >\r\n    <ProgressPrimitive.Indicator\r\n      className={cn(\r\n        \"h-full w-full flex-1 transition-all duration-300 ease-in-out\",\r\n        variant === \"default\" && \"bg-primary\",\r\n        variant === \"success\" && \"bg-green-500\",\r\n        variant === \"warning\" && \"bg-yellow-500\",\r\n        variant === \"error\" && \"bg-destructive\",\r\n      )}\r\n      style={{ transform: `translateX(-${100 - (value || 0)}%)` }}\r\n    />\r\n  </ProgressPrimitive.Root>\r\n))\r\nProgress.displayName = ProgressPrimitive.Root.displayName\r\n\r\nexport { Progress }\r\nexport default Progress\r\n"
+}

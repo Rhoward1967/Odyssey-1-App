@@ -1,0 +1,7 @@
+{
+  "originalPath": "src\\components\\ui\\ChatResponse.tsx",
+  "timestamp": "2026-02-05T05:33:09.953Z",
+  "hash": "6f9af0214ebc72a39138412680fede4df73d4da529e91ee3bef46f1da47d8ed4",
+  "size": 998,
+  "content": "/**\r\n * ChatResponse Component\r\n * Renders a list of chat messages with standardized styling.\r\n *\r\n * @prop {Array<{role: string; content: string}>} messages - Array of message objects with role and content.\r\n */\r\nimport React from \"react\";\r\n\r\nexport interface ChatResponseProps {\r\n  messages: Array<{ role: string; content: string }>;\r\n}\r\n\r\nexport const ChatResponse: React.FC<ChatResponseProps> = ({ messages }) => (\r\n  <div className=\"space-y-2 w-full\" aria-live=\"polite\">\r\n    {messages.map((msg, idx) => (\r\n      <div\r\n        key={idx}\r\n        className={`p-2 rounded-md text-sm ${\r\n          msg.role === \"user\"\r\n            ? \"bg-primary/10 text-primary\"\r\n            : msg.role === \"assistant\"\r\n            ? \"bg-background text-foreground\"\r\n            : msg.role === \"error\"\r\n            ? \"bg-destructive/20 text-destructive\"\r\n            : \"bg-muted text-muted-foreground\"\r\n        }`}\r\n        data-role={msg.role}\r\n      >\r\n        {msg.content}\r\n      </div>\r\n    ))}\r\n  </div>\r\n);"
+}

@@ -1,0 +1,7 @@
+{
+  "originalPath": "src\\utils\\systemAudit.ts",
+  "timestamp": "2026-02-05T05:34:19.063Z",
+  "hash": "794fbfcef5c1c49f75a3ed51c2b32a9c952e2da1eb2ea19da5706c60ee54b514",
+  "size": 1272,
+  "content": "export const runSystemAudit = () => {\r\n  console.log('🔍 === SYSTEM AUDIT STARTING ===');\r\n  \r\n  // 1. Check React Router\r\n  console.log('📍 Current URL:', window.location.href);\r\n  console.log('📍 Current pathname:', window.location.pathname);\r\n  \r\n  // 2. Check navigation elements\r\n  const navLinks = document.querySelectorAll('nav a');\r\n  console.log('🔗 Navigation links found:', navLinks.length);\r\n  navLinks.forEach((link, index) => {\r\n    console.log(`   ${index + 1}. ${link.textContent} -> ${link.getAttribute('href')}`);\r\n  });\r\n  \r\n  // 3. Check for Media Center specifically\r\n  const mediaCenterLink = Array.from(navLinks).find(link => \r\n    link.textContent?.includes('Media Center')\r\n  );\r\n  console.log('📺 Media Center link:', mediaCenterLink ? '✅ Found' : '❌ Missing');\r\n  \r\n  // 4. Check if Sidebar component exists\r\n  const sidebarElement = document.querySelector('[data-component=\"Sidebar\"]');\r\n  console.log('🧩 Sidebar component:', sidebarElement ? '✅ Found' : '❌ Missing');\r\n  \r\n  // 5. Check React (without TypeScript error)\r\n  console.log('⚛️ React detected:', typeof window !== 'undefined');\r\n  \r\n  console.log('🔍 === AUDIT COMPLETE ===');\r\n};\r\n\r\n// Auto-run audit\r\nif (typeof window !== 'undefined') {\r\n  setTimeout(runSystemAudit, 2000);\r\n}\r\n"
+}

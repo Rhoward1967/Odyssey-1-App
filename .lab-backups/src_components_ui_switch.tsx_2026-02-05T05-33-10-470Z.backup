@@ -1,0 +1,7 @@
+{
+  "originalPath": "src\\components\\ui\\switch.tsx",
+  "timestamp": "2026-02-05T05:33:10.470Z",
+  "hash": "2330a8b05692b61d18a5d8b127d799b66349569dd332fa99145f5216e3376ce1",
+  "size": 1221,
+  "content": "import * as React from \"react\"\r\nimport * as SwitchPrimitives from \"@radix-ui/react-switch\"\r\n\r\nimport { cn } from \"@/lib/utils\"\r\n\r\nconst Switch = React.forwardRef<\r\n  React.ElementRef<typeof SwitchPrimitives.Root>,\r\n  React.ComponentPropsWithoutRef<typeof SwitchPrimitives.Root>\r\n>(({ className, ...props }, ref) => (\r\n  <SwitchPrimitives.Root\r\n    className={cn(\r\n      \"peer inline-flex h-5 w-10 shrink-0 cursor-pointer items-center rounded-full border border-transparent transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=unchecked]:bg-input\",\r\n      className\r\n    )}\r\n    {...props}\r\n    ref={ref}\r\n  >\r\n    <SwitchPrimitives.Thumb\r\n      className={cn(\r\n        \"pointer-events-none block h-4 w-4 rounded-full bg-background shadow-md ring-0 transition-transform duration-200 ease-in-out data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-0.5 data-[state=checked]:bg-white\"\r\n      )}\r\n    />\r\n  </SwitchPrimitives.Root>\r\n))\r\nSwitch.displayName = SwitchPrimitives.Root.displayName\r\n\r\nexport { Switch }\r\n"
+}

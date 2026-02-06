@@ -1,0 +1,7 @@
+{
+  "originalPath": "src\\components\\ui\\aspect-ratio.tsx",
+  "timestamp": "2026-02-05T05:33:09.632Z",
+  "hash": "62f29cd87c19f52d403dc2d17823849db2c8cbd541c9f96de20ef13e58d379db",
+  "size": 145,
+  "content": "import * as AspectRatioPrimitive from \"@radix-ui/react-aspect-ratio\"\r\n\r\nconst AspectRatio = AspectRatioPrimitive.Root\r\n\r\nexport { AspectRatio }\r\n"
+}

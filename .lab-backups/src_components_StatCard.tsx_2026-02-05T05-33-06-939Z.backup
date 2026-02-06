@@ -1,0 +1,7 @@
+{
+  "originalPath": "src\\components\\StatCard.tsx",
+  "timestamp": "2026-02-05T05:33:06.939Z",
+  "hash": "5cdbb6ccae5f9cabe58f709749078707e9baff8ffa770770f231de3ed58b8b9d",
+  "size": 866,
+  "content": "import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';\r\nimport React from 'react'; // Import React for the ElementType\r\n\r\ninterface StatCardProps {\r\n  title: string;\r\n  value: string;\r\n  icon: React.ElementType; // Use the generic React.ElementType for the icon\r\n}\r\n\r\nexport default function StatCard({ title, value, icon: Icon }: StatCardProps) {\r\n  return (\r\n    <Card>\r\n      <CardHeader className=\"flex flex-row items-center justify-between space-y-0 pb-2\">\r\n        <CardTitle className=\"text-sm font-medium text-gray-500 dark:text-gray-400\">\r\n          {title}\r\n        </CardTitle>\r\n        <Icon className=\"h-4 w-4 text-gray-400\" />\r\n      </CardHeader>\r\n      <CardContent>\r\n        <div className=\"text-2xl font-bold text-gray-800 dark:text-gray-100\">\r\n          {value}\r\n        </div>\r\n      </CardContent>\r\n    </Card>\r\n  );\r\n}"
+}

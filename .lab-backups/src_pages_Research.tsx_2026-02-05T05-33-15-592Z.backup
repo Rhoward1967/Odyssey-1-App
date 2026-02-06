@@ -1,0 +1,7 @@
+{
+  "originalPath": "src\\pages\\Research.tsx",
+  "timestamp": "2026-02-05T05:33:15.592Z",
+  "hash": "311e8d50039325bade16067e0b1be450c5d5349484201f5aff43abda019e79a7",
+  "size": 427,
+  "content": "import React from 'react';\r\nimport VerticalNavigation from '../components/VerticalNavigation';\r\nimport ClientAppMonitor from '../components/ClientAppMonitor';\r\n\r\nconst Research: React.FC = () => {\r\n  return (\r\n    <div className=\"min-h-screen bg-slate-900 flex\">\r\n      <VerticalNavigation />\r\n      <div className=\"md:ml-64 flex-1\">\r\n        <ClientAppMonitor />\r\n      </div>\r\n    </div>\r\n  );\r\n};\r\n\r\nexport default Research;"
+}

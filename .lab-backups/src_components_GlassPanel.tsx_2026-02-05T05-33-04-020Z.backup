@@ -1,0 +1,7 @@
+{
+  "originalPath": "src\\components\\GlassPanel.tsx",
+  "timestamp": "2026-02-05T05:33:04.020Z",
+  "hash": "10c96cb99c83978e97c898e3e7354ab25b5cb5fff253dfeff46999cc6d24ddbf",
+  "size": 648,
+  "content": "import React from 'react';\r\n\r\ninterface GlassPanelProps {\r\n  children: React.ReactNode;\r\n  className?: string;\r\n  title?: string;\r\n}\r\n\r\nconst GlassPanel: React.FC<GlassPanelProps> = ({ children, className = '', title }) => {\r\n  return (\r\n    <div className={`bg-gray-900/80 backdrop-blur-xl border border-gray-700/50 rounded-lg shadow-2xl ${className}`}>\r\n      {title && (\r\n        <div className=\"px-6 py-4 border-b border-gray-700/50\">\r\n          <h2 className=\"text-xl font-bold text-white\">{title}</h2>\r\n        </div>\r\n      )}\r\n      <div className=\"p-6\">\r\n        {children}\r\n      </div>\r\n    </div>\r\n  );\r\n};\r\n\r\nexport default GlassPanel;"
+}

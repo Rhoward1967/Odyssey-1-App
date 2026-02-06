@@ -1,0 +1,7 @@
+{
+  "originalPath": "src\\components\\QAREVisualizer.tsx",
+  "timestamp": "2026-02-05T05:33:06.080Z",
+  "hash": "71bc5f88d01e0505fed7e55873acdd8b016b412a8a2a6f1f2e99bf99bc7ad256",
+  "size": 898,
+  "content": "/**\r\n * QARE Conceptual Visualizer\r\n * © 2025 Rickey A Howard. All Rights Reserved.\r\n * \r\n * Interactive visualization of the Multi-Dimensional AI Ecosystem\r\n */\r\n\r\nimport { useRef, useState } from 'react';\r\n\r\nexport default function QAREVisualizer() {\r\n  const [activeComponent, setActiveComponent] = useState<string | null>(null);\r\n  const infoRef = useRef<HTMLDivElement>(null);\r\n\r\n  // ...existing code from your React component...\r\n  \r\n  const components = {\r\n    QPAI: {\r\n      title: 'Quantum Programmed AI (QPAI)',\r\n      description: 'The central, intrinsically quantum intelligence...',\r\n      // ...rest of your components data...\r\n    },\r\n    // ...other components...\r\n  };\r\n\r\n  return (\r\n    <div className=\"min-h-screen bg-gradient-to-br from-indigo-50 to-purple-100 dark:from-gray-900 dark:to-black p-8\">\r\n      {/* ...existing JSX from your visualizer... */}\r\n    </div>\r\n  );\r\n}\r\n"
+}

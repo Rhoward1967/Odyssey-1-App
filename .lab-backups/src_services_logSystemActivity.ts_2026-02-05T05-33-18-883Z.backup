@@ -1,0 +1,7 @@
+{
+  "originalPath": "src\\services\\logSystemActivity.ts",
+  "timestamp": "2026-02-05T05:33:18.883Z",
+  "hash": "34cf38ce820c358a5ff7492d7e6eba150a73bab23f0a2b9032686c47f1a65bd1",
+  "size": 1199,
+  "content": "import { supabase } from '@/lib/supabaseClient';\r\n\r\n/**\r\n * Logs a system activity event to the activity_logs table in Supabase.\r\n * @param {Object} params\r\n * @param {string} params.action - The action performed (e.g., 'login', 'budget_update').\r\n * @param {string} [params.details] - Optional details about the action.\r\n * @param {string} [params.status] - Status of the action (e.g., 'success', 'failed').\r\n */\r\nexport async function logSystemActivity({ action, details = '', status = 'success' }: { action: string; details?: string; status?: string }) {\r\n  try {\r\n    const user = supabase.auth.getUser ? (await supabase.auth.getUser()).data.user : null;\r\n    const user_id = user?.id || null;\r\n    const ip_address = '';\r\n    const user_agent = typeof window !== 'undefined' ? window.navigator.userAgent : '';\r\n    const { error } = await supabase.from('activity_logs').insert([\r\n      {\r\n        user_id,\r\n        action,\r\n        details,\r\n        status,\r\n        ip_address,\r\n        user_agent,\r\n      },\r\n    ]);\r\n    if (error) {\r\n      console.error('Failed to log system activity:', error);\r\n    }\r\n  } catch (err) {\r\n    console.error('Error logging system activity:', err);\r\n  }\r\n}\r\n"
+}

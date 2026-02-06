@@ -1,0 +1,7 @@
+{
+  "originalPath": "src\\components\\APICapabilityIndicator.tsx",
+  "timestamp": "2026-02-05T05:33:00.449Z",
+  "hash": "96d40fd22fbeac46e512f4284077c44da89c440e5a9e5ab9357396ec7ded8796",
+  "size": 823,
+  "content": "import { Badge } from '@/components/ui/badge';\r\nimport { apiManager } from '@/lib/api/api-manager';\r\nimport { CheckCircle, XCircle, Zap } from 'lucide-react';\r\n\r\ninterface APICapabilityIndicatorProps {\r\n  capability: string;\r\n  requiredFor: string;\r\n}\r\n\r\nexport default function APICapabilityIndicator({ capability, requiredFor }: APICapabilityIndicatorProps) {\r\n  const hasCapability = apiManager.hasCapability(capability);\r\n  \r\n  return (\r\n    <Badge \r\n      variant={hasCapability ? 'default' : 'secondary'}\r\n      className=\"flex items-center gap-1\"\r\n    >\r\n      {hasCapability ? (\r\n        <CheckCircle className=\"w-3 h-3\" />\r\n      ) : (\r\n        <XCircle className=\"w-3 h-3\" />\r\n      )}\r\n      <span>{capability}</span>\r\n      {hasCapability && <Zap className=\"w-3 h-3 text-yellow-500\" />}\r\n    </Badge>\r\n  );\r\n}\r\n"
+}

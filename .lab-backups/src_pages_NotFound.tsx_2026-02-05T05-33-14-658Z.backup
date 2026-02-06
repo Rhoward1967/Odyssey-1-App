@@ -1,0 +1,7 @@
+{
+  "originalPath": "src\\pages\\NotFound.tsx",
+  "timestamp": "2026-02-05T05:33:14.658Z",
+  "hash": "f3b0c3d8049dc7d5e6e008ef03b489632d7f60b4189cff2c35bca2e3062def34",
+  "size": 1057,
+  "content": "import { useEffect } from \"react\";\r\nimport { Link } from \"react-router-dom\";\r\n\r\nconst NotFound = () => {\r\n  useEffect(() => {\r\n    console.error(\r\n      \"404 Error: User attempted to access non-existent route:\",\r\n      window.location.pathname\r\n    );\r\n  }, []);\r\n\r\n  return (\r\n    <div className=\"min-h-screen flex items-center justify-center bg-background\">\r\n      <div className=\"text-center p-8 rounded-lg border border-border bg-card shadow-md animate-slide-in max-w-md\">\r\n        <h1 className=\"text-5xl font-bold mb-6 text-primary\">404</h1>\r\n        <p className=\"text-xl text-card-foreground mb-6\">Page not found</p>\r\n        <div className=\"space-y-3\">\r\n          <Link to=\"/\" className=\"block text-primary hover:text-primary/80 underline transition-colors\">\r\n            Return to Home\r\n          </Link>\r\n          <Link to=\"/app\" className=\"block text-primary hover:text-primary/80 underline transition-colors\">\r\n            Go to Dashboard\r\n          </Link>\r\n        </div>\r\n      </div>\r\n    </div>\r\n    );\r\n  };\r\n\r\nexport default NotFound;\r\n"
+}

@@ -1,0 +1,7 @@
+{
+  "originalPath": "src\\lib\\roman-logger.ts",
+  "timestamp": "2026-02-05T05:33:11.317Z",
+  "hash": "8589908b6389058f900a5914fa270819d94b7376513eb5f3b02a79c0ef20a55b",
+  "size": 1149,
+  "content": "import { romanSupabase } from '@/services/romanSupabase';\r\n\r\ntype RomanEvent = {\r\n  actor?: string;\r\n  action_type: string;\r\n  context?: Record<string, any>;\r\n  payload?: Record<string, any>;\r\n  severity?: 'info' | 'warn' | 'error';\r\n};\r\n\r\nexport async function recordRomanEvent(e: RomanEvent) {\r\n  const { error } = await romanSupabase.from('ops_roman_events').insert({\r\n    actor: e.actor ?? 'roman',\r\n    action_type: e.action_type,\r\n    context: e.context ?? {},\r\n    payload: e.payload ?? {},\r\n    severity: e.severity ?? 'info',\r\n  });\r\n  if (error) {\r\n    // Optional: lightweight retry once for transient issues\r\n    try {\r\n      await new Promise((r) => setTimeout(r, 150));\r\n      const retry = await romanSupabase.from('ops_roman_events').insert({\r\n        actor: e.actor ?? 'roman',\r\n        action_type: e.action_type,\r\n        context: e.context ?? {},\r\n        payload: e.payload ?? {},\r\n        severity: e.severity ?? 'info',\r\n      });\r\n      if (retry.error) console.error('roman_event insert failed (retry):', retry.error);\r\n    } catch (err) {\r\n      console.error('roman_event insert exception (retry):', err);\r\n    }\r\n  }\r\n}\r\n"
+}

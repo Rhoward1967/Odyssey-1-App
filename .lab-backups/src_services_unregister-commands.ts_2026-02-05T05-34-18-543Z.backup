@@ -1,0 +1,7 @@
+{
+  "originalPath": "src\\services\\unregister-commands.ts",
+  "timestamp": "2026-02-05T05:34:18.543Z",
+  "hash": "ee0a441d65937844a5b7c14d32285f980fb6efff07515170a3e6bcefd251c9d5",
+  "size": 812,
+  "content": "import dotenv from 'dotenv';\r\ndotenv.config();\r\n\r\nconst APPLICATION_ID = '1437291719690289224';\r\nconst DISCORD_TOKEN = process.env.DISCORD_BOT_TOKEN;\r\n\r\nasync function unregisterCommands() {\r\n  const url = `https://discord.com/api/v10/applications/${APPLICATION_ID}/commands`;\r\n  \r\n  const response = await fetch(url, {\r\n    headers: { Authorization: `Bot ${DISCORD_TOKEN}` }\r\n  });\r\n  \r\n  const commands = await response.json();\r\n  console.log(`Found ${commands.length} commands to delete`);\r\n  \r\n  for (const command of commands) {\r\n    await fetch(`${url}/${command.id}`, {\r\n      method: 'DELETE',\r\n      headers: { Authorization: `Bot ${DISCORD_TOKEN}` }\r\n    });\r\n    console.log(`✅ Deleted command: ${command.name}`);\r\n  }\r\n  \r\n  console.log('✅ All slash commands removed!');\r\n}\r\n\r\nunregisterCommands();\r\n"
+}
