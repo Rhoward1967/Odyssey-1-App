@@ -20,7 +20,7 @@ async function logUCC1Filing029026000102() {
   const { data: syslog, error: syslogError } = await supabase
     .from('system_logs')
     .insert({
-      level: 'info',
+      severity: 'info',
       source: 'legal_filing',
       message: 'UCC-1 Financing Statement Filed - Record #029-2026-000102 (Personal Asset Security Interest)',
       metadata: {
