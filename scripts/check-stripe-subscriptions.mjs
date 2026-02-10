@@ -5,7 +5,13 @@
 
 import Stripe from 'stripe';
 
-const STRIPE_SECRET_KEY = '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';
+const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
+
+if (!STRIPE_SECRET_KEY) {
+  console.error('❌ STRIPE_SECRET_KEY environment variable not set');
+  console.error('   Set it in your .env file or environment');
+  process.exit(1);
+}
 
 const stripe = new Stripe(STRIPE_SECRET_KEY, {
   apiVersion: '2023-10-16',
