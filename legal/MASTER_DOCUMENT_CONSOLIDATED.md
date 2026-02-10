@@ -909,7 +909,7 @@ Date: _______________
 **Trust Type:** Irrevocable Ancestral Bloodline Trust  
 **Date of Trust Creation:** January 8, 2026  
 **Governing Law:** Common Law, Georgia  
-**Trust EIN:** [To be assigned]
+**Trust EIN:** 41-6850149
 
 ---
 

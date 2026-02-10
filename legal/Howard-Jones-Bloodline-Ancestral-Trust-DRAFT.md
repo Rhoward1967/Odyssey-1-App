@@ -698,8 +698,8 @@ This is not a startup valuation. This is an enterprise asset protection and succ
 - If ALL named institutions cease to exist, trust shall transfer to United Negro College Fund (UNCF) for administration at other HBCUs and community organizations serving Black and poor communities
 
 **Tax Identification:**
-- During Grantor's life, trust uses Grantor's Social Security Number (Grantor Trust status)
-- Upon death of Grantor, Successor Trustees shall obtain separate Federal EIN
+- Trust EIN: 41-6850149 (Assigned February 2026)
+- Trust files as irrevocable trust with separate Federal EIN
 - Trust shall file all required tax returns (Form 1041) as irrevocable trust
 
 **Tax Apportionment:**
