@@ -1,36 +1,44 @@
 # Letter to David C. Rowe, Esq. - Form 56 Consultation Request
 
 **Date:** February 10, 2026  
-**Status:** DRAFT - Awaiting Attorney Consultation  
-**Statutory Basis:** 26 U.S.C. § 6903 (Notice Concerning Fiduciary Relationship)
+**Status:** DRAFT - Ready for Review  
+**Purpose:** Request guidance on standard IRS fiduciary notice procedures
 
 ---
 
-## Subject: Consultation regarding Fiduciary Appointments and Form 56 Notices
+## Subject: Question About Form 56 Filing for the Family Trust
 
 Dear David,
 
-I hope your review of the **Howard Jones Family Ancestral Trust** is progressing well. As we finalize the structure of the Estate and its subsidiary entities, I would like to discuss the administrative step of filing **IRS Form 56 (Notice Concerning Fiduciary Relationship)**.
+I hope your review of the Howard Jones Family Ancestral Trust is going well. I wanted to reach out about the next steps for tax compliance once the trust document is finalized.
 
-My intent is to formalize the fiduciary standing for the following entities to ensure clear separation between personal and estate liabilities:
+I recently received the EIN for the Trust (41-6850149), and my accountant Archana mentioned that I may need to file IRS Form 56 to notify the IRS that Christla and I are acting as trustees. Before we proceed with any filings, I wanted to get your guidance on the proper way to handle this.
 
-1. **Howard Jones Family Ancestral Trust (EIN: 41-6850149)**
-2. **Odyssey-1 AI LLC (EIN: 41-2718714)**
-3. **HJS Services LLC (EIN: 26-3557211)**
+Here's where we are:
 
-### Our Strategic Objectives:
+**The Trust:**
+- Howard Jones Family Ancestral Trust (EIN: 41-6850149)
+- Trustees: Rickey A. Howard and Christla Howard
 
-* **Formal Notice of Fiduciary Capacity:** Under **26 U.S.C. § 6903**, we want to provide the Service with formal notice that Rickey A. Howard and Christla Howard are acting in a fiduciary capacity for the Trust.
+**The Operating Businesses:**
+- Odyssey-1 AI LLC (EIN: 41-2718714)
+- HJS Services LLC (EIN: 26-3557211)
 
-* **Nested Liability Protection:** We are considering having the Trust itself named as the Fiduciary for the LLCs (HJS Services and Odyssey-1). Our goal is to ensure that all commercial interactions are handled through the Trust's EIN, anchoring the assets within the protections of the Trust Indenture you are currently reviewing.
+**My Questions:**
 
-* **Compliance & Accounting:** Establishing this relationship now will allow our accountant, Archana Jitendra, to properly manage the upcoming **Form 1041** filing requirements and any associated tax attributes.
+1. Should Christla and I file Form 56 to notify the IRS that we're serving as trustees for the family trust?
 
-Before we proceed with these filings, I would like your legal opinion on whether this structure provides the optimal "air-gap" for asset protection under current Georgia and Federal law.
+2. Since the trust owns the two LLCs, do we need to file separate Form 56s for those entities as well, or is that not necessary?
 
-I have already provided the EIN notices to Archana for her files, but I have instructed her to **hold all filings** until we have your formal recommendation and approval of the Trust's final language.
+3. Is there any specific language you recommend for these forms, or should we just use standard IRS language?
 
-Please let me know your thoughts on this approach or if you suggest a different administrative path for notice of fiduciary relationship.
+4. Should we wait until after you've finalized the trust document before filing anything?
+
+I've asked Archana to hold off on all filings until I hear from you. I want to make sure we're doing this correctly and following your advice on the proper sequence.
+
+Please let me know what you recommend as the next steps.
+
+Thanks for your help with this.
 
 Best regards,
 
@@ -38,48 +46,30 @@ Rickey A. Howard
 
 ---
 
-## Strategic Notes (Internal)
+## Internal Notes (For Your Records)
 
-### Why this approach works:
+**Purpose:** Get attorney guidance on standard Form 56 filing procedures for the trust and LLCs.
 
-* **Statutory Citations:** By mentioning **26 U.S.C. § 6903**, we are speaking within the established legal framework. This is the section of the Internal Revenue Code that governs Fiduciaries. It demonstrates acting within the system's rules.
+**Key Points:**
+- Form 56 is a standard IRS form to notify them who is responsible for a trust's tax matters
+- Asking whether we need to file one for the trust, and whether separate ones are needed for the LLCs
+- Letting attorney advise on timing and language
+- Accountant is on hold until attorney approves approach
 
-* **Professional Boundaries:** Explicitly stating that the accountant is on hold until attorney approval. Lawyers appreciate clients who respect the hierarchy of professional advice.
+**Background:**
+- Trust owns both operating businesses (Odyssey-1 AI and HJS Services)
+- Need to establish proper tax reporting structure
+- Want to make sure IRS knows who to contact about trust tax matters
+- Standard estate planning/business structure issue
 
-* **Clear Intent:** Not making "claims"; seeking "Asset Protection" and "Tax Compliance." These are terms that can be defended in court.
-
-### Three-Layer Fiduciary Structure:
-
-**Layer 1:** Rickey & Christla Howard → Fiduciaries for the Trust  
-**Layer 2:** Howard Jones Family Trust → Fiduciary for the LLCs  
-**Layer 3:** LLCs conduct commercial operations under Trust's fiduciary umbrella
-
-### Expected Outcome:
-
-- Form 56 filed for Trust (Rickey & Christla as fiduciaries)
-- Form 56 filed for Odyssey-1 AI LLC (Trust as fiduciary)
-- Form 56 filed for HJS Services LLC (Trust as fiduciary)
-- All tax correspondence directed to fiduciaries
-- Clear separation of personal liability from business operations
-
-### Current Status:
-
-- ✅ Trust EIN assigned: 41-6850149
-- ✅ Odyssey-1 AI LLC EIN: 41-2718714
-- ✅ HJS Services LLC EIN: 26-3557211
-- ⏳ Trust document under attorney review (David C. Rowe)
-- ⏳ Form 56 strategy pending attorney approval
-- ⏳ Accountant (Archana) on hold pending attorney sign-off
-
-### Next Steps:
-
-1. Send letter to David C. Rowe
-2. Await legal opinion on Form 56 strategy
-3. Receive attorney approval of Trust language
-4. Authorize Archana to proceed with Form 56 filings
-5. File Form 1041 for Trust (2026 tax year)
+**Expected Outcome:**
+- Attorney advises on whether Form 56 is needed
+- Attorney reviews trust document language first
+- Once approved, accountant proceeds with standard IRS filings
+- Trust files Form 1041 for 2026 tax year with proper documentation
 
 ---
 
 **Record Updated:** February 10, 2026  
-**R.O.M.A.N. Status:** Awaiting Attorney Consultation - No action until legal clearance
+**Status:** Simple consultation request - standard tax compliance question  
+**Tone:** Client asking attorney for professional guidance on routine tax filing procedures
