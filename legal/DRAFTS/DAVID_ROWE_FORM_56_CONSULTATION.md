@@ -12,13 +12,14 @@ Dear David,
 
 I hope your review of the Howard Jones Family Ancestral Trust is going well. I wanted to reach out about the next steps for tax compliance once the trust document is finalized.
 
-I recently received the EIN for the Trust (41-6850149), and my accountant Archana mentioned that I may need to file IRS Form 56 to notify the IRS that Christla and I are acting as trustees. Before we proceed with any filings, I wanted to get your guidance on the proper way to handle this.
+I recently received the EIN for the Trust (41-6850149), and my accountant Archana mentioned that the trustees (Teara and Christla) may need to file IRS Form 56 to notify the IRS of their fiduciary role. Before we proceed with any filings, I wanted to get your guidance on the proper way to handle this.
 
 Here's where we are:
 
 **The Trust:**
 - Howard Jones Family Ancestral Trust (EIN: 41-6850149)
-- Trustees: Rickey A. Howard and Christla Howard
+- Grantor: Rickey A. Howard
+- Trustees: Teara Howard and Christla Howard
 
 **The Operating Businesses:**
 - Odyssey-1 AI LLC (EIN: 41-2718714)
@@ -26,7 +27,7 @@ Here's where we are:
 
 **My Questions:**
 
-1. Should Christla and I file Form 56 to notify the IRS that we're serving as trustees for the family trust?
+1. Should Teara and Christla file Form 56 to notify the IRS that they're serving as trustees for the family trust?
 
 2. Since the trust owns the two LLCs, do we need to file separate Form 56s for those entities as well, or is that not necessary?
 
@@ -57,6 +58,8 @@ Rickey A. Howard
 - Accountant is on hold until attorney approves approach
 
 **Background:**
+- Rickey A. Howard is the Grantor (creator) of the trust
+- Teara Howard and Christla Howard are the Trustees (fiduciaries)
 - Trust owns both operating businesses (Odyssey-1 AI and HJS Services)
 - Need to establish proper tax reporting structure
 - Want to make sure IRS knows who to contact about trust tax matters

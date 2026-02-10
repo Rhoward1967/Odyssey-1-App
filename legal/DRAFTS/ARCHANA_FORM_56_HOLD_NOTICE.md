@@ -43,13 +43,15 @@ Rickey A. Howard
 
 ### Three-Layer Structure (For Attorney Approval):
 
-**Layer 1:** Rickey & Christla Howard → Fiduciaries for Trust  
+**Layer 1:** Teara Howard & Christla Howard → Trustees/Fiduciaries for Trust  
 **Layer 2:** Howard Jones Family Trust → Fiduciary for LLCs  
 **Layer 3:** LLCs conduct operations under Trust umbrella
 
+**Note:** Rickey A. Howard is the Grantor (creator) of the trust, not a trustee
+
 ### Form 56 Filing Sequence (Post-Attorney Approval):
 
-1. Form 56 for Howard Jones Family Ancestral Trust (Rickey & Christla as fiduciaries)
+1. Form 56 for Howard Jones Family Ancestral Trust (Teara & Christla as trustees/fiduciaries)
 2. Form 56 for Odyssey-1 AI LLC (Trust as fiduciary)
 3. Form 56 for HJS Services LLC (Trust as fiduciary)
 

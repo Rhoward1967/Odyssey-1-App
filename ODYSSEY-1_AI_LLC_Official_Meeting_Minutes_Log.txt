@@ -20,7 +20,8 @@ EIN: 41-6850149
 Type: Irrevocable Ancestral Bloodline Trust
 Date Established: January 8, 2026
 Governing Law: Common Law, Georgia
-Fiduciaries: Rickey A. Howard and Christla Howard
+Grantor: Rickey A. Howard
+Trustees: Teara Howard and Christla Howard
 CP 575 B Receipt: Confirmed February 10, 2026
 
 B. Operating Entities (Subsidiaries)
@@ -41,12 +42,12 @@ Authority: 26 U.S.C. § 6903 (Notice Concerning Fiduciary Relationship)
 Purpose: Formal notice to IRS of fiduciary capacity for tax and legal affairs
 
 B. Proposed Fiduciary Structure
-Layer 1: Rickey & Christla Howard → Fiduciaries for the Trust
+Layer 1: Teara Howard & Christla Howard → Trustees/Fiduciaries for the Trust
 Layer 2: Howard Jones Family Trust → Fiduciary for the LLCs
 Layer 3: LLCs conduct commercial operations under Trust's fiduciary umbrella
 
 C. Strategic Objectives
-1. Formal Notice of Fiduciary Capacity: Provide Service with formal notice that Rickey A. Howard and Christla Howard are acting in fiduciary capacity for the Trust under 26 U.S.C. § 6903
+1. Formal Notice of Fiduciary Capacity: Provide Service with formal notice that Teara Howard and Christla Howard are acting in fiduciary capacity as Trustees for the Trust under 26 U.S.C. § 6903
 
 2. Nested Liability Protection: Trust named as Fiduciary for both LLCs (HJS Services and Odyssey-1), ensuring all commercial interactions are handled through the Trust's EIN, anchoring assets within Trust protections
 
@@ -73,7 +74,7 @@ Rationale: Respect professional hierarchy - legal review precedes accounting act
 V. Expected Filing Sequence (Post-Attorney Approval)
 
 Filing 1: Form 56 for Howard Jones Family Ancestral Trust
-Fiduciaries: Rickey A. Howard and Christla Howard
+Fiduciaries/Trustees: Teara Howard and Christla Howard
 Tax ID: 41-6850149
 Tax Form: Form 1041 (Estates and Trusts)
 
@@ -111,7 +112,7 @@ RESOLVED FURTHER that all Form 56 filings are contingent upon receipt of legal a
 
 RESOLVED FURTHER that accountant Archana Jitendra is instructed to hold all fiduciary-related IRS filings pending attorney consultation and approval;
 
-RESOLVED FURTHER that the proposed three-layer fiduciary structure (Rickey & Christla → Trust → LLCs) be presented to counsel for legal opinion on asset protection efficacy under Georgia and Federal law.
+RESOLVED FURTHER that the proposed three-layer fiduciary structure (Teara & Christla as Trustees → Trust → LLCs) be presented to counsel for legal opinion on asset protection efficacy under Georgia and Federal law.
 
 Adopted this 10th day of February, 2026.
 
