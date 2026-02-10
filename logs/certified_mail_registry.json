@@ -1,0 +1,200 @@
+{
+  "campaign_name": "Trust Creditor Standing - Credit Reporting Disputes",
+  "campaign_date": "2026-02-09",
+  "trustor": "Rickey Allan Howard",
+  "trust_entity": "Howard Jones Bloodline Ancestral Trust",
+  "legal_basis": [
+    "Fair Credit Reporting Act (FCRA)",
+    "Fair Debt Collection Practices Act (FDCPA)",
+    "UCC Article 9 - Secured Creditor Rights"
+  ],
+  "sovereign_standing": {
+    "creditor_ratio": "2387042:1",
+    "ucc1_filing": "Book 5782, Page 262, Clarke County GA",
+    "trust_valuation": 4237000000,
+    "business_liabilities": 1775
+  },
+  "mailings": [
+    {
+      "id": 1,
+      "entity": "Bank of America (Vehicle Loan)",
+      "date_mailed": "2026-02-09",
+      "tracking_number": "9589 0710 5270 2244 1850 52",
+      "expected_delivery": "2026-02-13",
+      "return_receipt_received": false,
+      "response_deadline": "2026-03-11",
+      "status": "SENT"
+    },
+    {
+      "id": 2,
+      "entity": "Peach State Federal Credit Union",
+      "accounts": ["139209-71", "139209-72", "139209-73"],
+      "date_mailed": "2026-02-09",
+      "tracking_number": "9589 0710 5270 2244 1697 93",
+      "expected_delivery": "2026-02-13",
+      "return_receipt_received": false,
+      "response_deadline": "2026-03-11",
+      "status": "SENT"
+    },
+    {
+      "id": 3,
+      "entity": "JPMorgan Chase Bank",
+      "accounts": ["4147 4004 0372 4568"],
+      "date_mailed": "2026-02-09",
+      "tracking_number": "9589 0710 5270 2244 1698 78",
+      "expected_delivery": "2026-02-13",
+      "return_receipt_received": false,
+      "response_deadline": "2026-03-11",
+      "status": "SENT"
+    },
+    {
+      "id": 4,
+      "entity": "Experian Business",
+      "date_mailed": "2026-02-09",
+      "tracking_number": "9589 0710 5270 2244 1697 31",
+      "expected_delivery": "2026-02-13",
+      "return_receipt_received": false,
+      "response_deadline": "2026-03-11",
+      "status": "SENT"
+    },
+    {
+      "id": 5,
+      "entity": "Equifax Business",
+      "date_mailed": "2026-02-09",
+      "tracking_number": "9589 0710 5270 2244 1697 48",
+      "expected_delivery": "2026-02-13",
+      "return_receipt_received": false,
+      "response_deadline": "2026-03-11",
+      "status": "SENT"
+    },
+    {
+      "id": 6,
+      "entity": "Equifax (Consumer)",
+      "date_mailed": "2026-02-09",
+      "tracking_number": "9589 0710 5270 2244 1697 55",
+      "expected_delivery": "2026-02-13",
+      "return_receipt_received": false,
+      "response_deadline": "2026-03-11",
+      "status": "SENT"
+    },
+    {
+      "id": 7,
+      "entity": "Dun & Bradstreet",
+      "date_mailed": "2026-02-09",
+      "tracking_number": "9589 0710 5270 2244 1697 24",
+      "expected_delivery": "2026-02-13",
+      "return_receipt_received": false,
+      "response_deadline": "2026-03-11",
+      "status": "SENT"
+    },
+    {
+      "id": 8,
+      "entity": "Capital One Spark Business",
+      "accounts": ["6011003502343044", "6011003002227969"],
+      "date_mailed": "2026-02-09",
+      "tracking_number": "9589 0710 5270 2244 1850 45",
+      "expected_delivery": "2026-02-13",
+      "return_receipt_received": false,
+      "response_deadline": "2026-03-11",
+      "status": "SENT"
+    },
+    {
+      "id": 9,
+      "entity": "Capital One (Consumer)",
+      "accounts": ["4147060041000267"],
+      "date_mailed": "2026-02-09",
+      "tracking_number": "9589 0710 5270 2244 1850 38",
+      "expected_delivery": "2026-02-13",
+      "return_receipt_received": false,
+      "response_deadline": "2026-03-11",
+      "status": "SENT"
+    },
+    {
+      "id": 10,
+      "entity": "Intuit Financing (Legal)",
+      "date_mailed": "2026-02-09",
+      "tracking_number": "9589 0710 5270 2244 1850 21",
+      "expected_delivery": "2026-02-13",
+      "return_receipt_received": false,
+      "response_deadline": "2026-03-11",
+      "status": "SENT"
+    },
+    {
+      "id": 11,
+      "entity": "TransUnion",
+      "date_mailed": "2026-02-09",
+      "tracking_number": "9589 0710 5270 2244 1697 79",
+      "expected_delivery": "2026-02-13",
+      "return_receipt_received": false,
+      "response_deadline": "2026-03-11",
+      "status": "SENT"
+    },
+    {
+      "id": 12,
+      "entity": "Experian (Consumer)",
+      "date_mailed": "2026-02-09",
+      "tracking_number": "9589 0710 5270 2244 1697 62",
+      "expected_delivery": "2026-02-13",
+      "return_receipt_received": false,
+      "response_deadline": "2026-03-11",
+      "status": "SENT"
+    },
+    {
+      "id": 13,
+      "entity": "Synchrony Bank (Legal)",
+      "date_mailed": "2026-02-09",
+      "tracking_number": "9589 0710 5270 2244 1698 09",
+      "expected_delivery": "2026-02-13",
+      "return_receipt_received": false,
+      "response_deadline": "2026-03-11",
+      "status": "SENT"
+    },
+    {
+      "id": 14,
+      "entity": "American Express (1)",
+      "date_mailed": "2026-02-09",
+      "tracking_number": "9589 0710 5270 2244 1698 30",
+      "expected_delivery": "2026-02-13",
+      "return_receipt_received": false,
+      "response_deadline": "2026-03-11",
+      "status": "SENT"
+    },
+    {
+      "id": 15,
+      "entity": "American Express (2)",
+      "date_mailed": "2026-02-09",
+      "tracking_number": "9589 0710 5270 2244 1698 47",
+      "expected_delivery": "2026-02-13",
+      "return_receipt_received": false,
+      "response_deadline": "2026-03-11",
+      "status": "SENT"
+    },
+    {
+      "id": 16,
+      "entity": "Amex Legal Compliance",
+      "date_mailed": "2026-02-09",
+      "tracking_number": "9589 0710 5270 2244 1698 61",
+      "expected_delivery": "2026-02-13",
+      "return_receipt_received": false,
+      "response_deadline": "2026-03-11",
+      "status": "SENT"
+    },
+    {
+      "id": 17,
+      "entity": "Citibank (Central Dispute)",
+      "date_mailed": "2026-02-09",
+      "tracking_number": "9589 0710 5270 2244 1698 23",
+      "expected_delivery": "2026-02-13",
+      "return_receipt_received": false,
+      "response_deadline": "2026-03-11",
+      "status": "SENT"
+    }
+  ],
+  "summary": {
+    "total_mailings": 17,
+    "sent": 17,
+    "pending_tracking": 0,
+    "campaign_complete": true,
+    "response_deadline": "2026-03-11"
+  }
+}
