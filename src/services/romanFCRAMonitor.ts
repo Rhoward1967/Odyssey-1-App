@@ -5,8 +5,8 @@
  * Alerts via Discord when response deadlines are approaching or overdue
  */
 
-import { fcraMonitoring } from './fcraMonitoringService';
 import type { Client, TextChannel } from 'discord.js';
+import { fcraMonitoring } from './fcraMonitoringService';
 
 interface FCRAAlert {
   level: 'critical' | 'warning' | 'info';
