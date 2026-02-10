@@ -65,17 +65,17 @@ if (odysseyProducts.length === 0) {
 // Check what's configured in our code
 console.log('=' .repeat(80));
 console.log('\n📋 CONFIGURED IN CODE (src/config/stripe.ts):\n');
-console.log('Basic:       price_1SJO5TDPqeWRzwCXv8IxKMfG ($99/month)');
-console.log('Professional: price_1SJO5TDPqeWRzwCXNnKe6WzE ($299/month)');
-console.log('Enterprise:   price_1SJO5UDPqeWRzwCX630n9LJF ($999/month)');
+console.log('Basic:        price_1SwEPSDPqeWRzwCXYv4mkeRB ($99/month)');
+console.log('Professional: price_1SwEPTDPqeWRzwCXNCulPzxo ($299/month)');
+console.log('Enterprise:   price_1SwEPTDPqeWRzwCX8xzuCHmz ($999/month)');
 
 // Verify each configured price exists
 console.log('\n🔍 Verifying configured prices...\n');
 
 const configuredPrices = [
-  { name: 'Basic', id: 'price_1SJO5TDPqeWRzwCXv8IxKMfG', expected: 9900 },
-  { name: 'Professional', id: 'price_1SJO5TDPqeWRzwCXNnKe6WzE', expected: 29900 },
-  { name: 'Enterprise', id: 'price_1SJO5UDPqeWRzwCX630n9LJF', expected: 99900 },
+  { name: 'Basic', id: 'price_1SwEPSDPqeWRzwCXYv4mkeRB', expected: 9900 },
+  { name: 'Professional', id: 'price_1SwEPTDPqeWRzwCXNCulPzxo', expected: 29900 },
+  { name: 'Enterprise', id: 'price_1SwEPTDPqeWRzwCX8xzuCHmz', expected: 99900 },
 ];
 
 for (const config of configuredPrices) {
