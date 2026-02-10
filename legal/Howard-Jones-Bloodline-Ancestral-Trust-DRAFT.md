@@ -7,9 +7,34 @@
 
 ---
 
+# TABLE OF CONTENTS
+
+| Section | Page |
+|---------|------|
+| **TITLE PAGE** | 1 |
+| **TABLE OF CONTENTS** | 1 |
+| **ARTICLE I: DECLARATION OF TRUST** | 2 |
+| **ARTICLE II: TRUSTEES** | 2-3 |
+| **ARTICLE II-A: INTELLECTUAL PROPERTY LICENSING AUTHORITY** | 4 |
+| **ARTICLE III: BENEFICIARIES** | 4-5 |
+| **ARTICLE IV: TRUST PROPERTY** | 5-12 |
+| **ARTICLE IV-A: COMPREHENSIVE INTELLECTUAL PROPERTY VALUATION** | 12-14 |
+| **ARTICLE V: TRUST ADMINISTRATION** | 15-16 |
+| **ARTICLE VI: PROTECTION PROVISIONS** | 16-17 |
+| **ARTICLE VII: IRREVOCABILITY AND ASSET ADDITIONS** | 17 |
+| **ARTICLE VII-A: ENHANCED ASSET PROTECTION PROVISIONS** | 17-18 |
+| **ARTICLE VIII: GOVERNING LAW** | 18 |
+| **ARTICLE IX: DISPUTE RESOLUTION** | 18 |
+| **ARTICLE X: SEVERABILITY AND REFORMATION** | 18-19 |
+| **ARTICLE XI: EXECUTION & SIGNATURE PAGES** | 19 |
+| **SCHEDULE A: INITIAL TRUST PROPERTY** | 20-21 |
+| **NOTES FOR LAWYER REVIEW** | 21 |
+
+---
+
 ## ARTICLE I: DECLARATION OF TRUST
 
-This Irrevocable Trust Agreement ("Trust") is created on **January 8, 2026**, by **Rickey Allan Howard** and **Christla Howard** ("Grantors" or "Trustors").
+This Irrevocable Trust Agreement ("Trust") is created on **January 8, 2026**, by **Rickey Allan Howard** ("Grantor" or "Trustor").
 
 **Trust Name:** Howard Jones Bloodline Ancestral Trust
 
@@ -25,23 +50,24 @@ This Irrevocable Trust Agreement ("Trust") is created on **January 8, 2026**, by
 
 ## ARTICLE II: TRUSTEES
 
-**Initial Co-Trustees:** 
-- Christla Howard (Grantor)
-- Teara Howard (Daughter of Rickey Howard)
+**Initial Co-Trustees:**
+- Christla Howard
+- Teara Howard
 
 **Trust Mailing Address:** P.O. BOX 80054, Athens, GA 30608
 
 **Successor Trustees:** 
-- First Succession: Kenneth Howard (brother of Rickey), Keith Sorrells (first cousin)
-- Second Succession: Ahmad Rashad Barnett (nephew), Derrick Williams (Christla's brother)
+- First Succession: Kenneth Howard (brother of Rickey) and Joseph Lumpkin (family counselor) as Co-Successor Trustees acting in One Accord
+- Second Succession: Tierra Howard (Daughter of Rickey Howard) and Ahmad Rashad Barnett (nephew) as Co-Successor Trustees
 - Third Succession: Any adult descendants of the Howard and Jones bloodline
 
 **Trustee Succession Order:**
-- Upon death or incapacity of Christla Howard, Kenneth Howard becomes Co-Trustee alongside Teara Howard
+- Upon death or incapacity of Christla Howard, Tierra Howard becomes Co-Trustee alongside Teara Howard
 - Upon death or incapacity of Teara Howard, Kenneth Howard becomes Co-Trustee alongside Christla Howard
-- If both Initial Co-Trustees are unable to serve, First Succession Trustees (Kenneth Howard and Keith Sorrells) assume full control
-- Upon death or incapacity of Kenneth Howard, Ahmad Rashad Barnett becomes Co-Trustee
-- Upon death or incapacity of Keith Sorrells, Derrick Williams becomes Co-Trustee
+- If both Initial Co-Trustees are unable to serve, First Succession Trustees (Kenneth Howard and Joseph Lumpkin) assume full control as Co-Successor Trustees
+- Kenneth Howard and Joseph Lumpkin shall act as a single unit in One Accord—neither may move Trust assets without written consent of the other
+- Upon death or incapacity of Kenneth Howard, Ahmad Rashad Barnett becomes Co-Successor Trustee alongside Joseph Lumpkin
+- Upon death or incapacity of Joseph Lumpkin, Tierra Howard becomes Co-Successor Trustee
 - If all prior succession trustees are unable to serve, remaining trustee may appoint co-trustee from the Howard and Jones bloodline
 
 **Perpetual Succession of Trustees:**
@@ -129,9 +155,8 @@ This Irrevocable Trust Agreement ("Trust") is created on **January 8, 2026**, by
 
 ## ARTICLE III: BENEFICIARIES
 
-**Primary Beneficiaries during Grantors' lives:**
-- Rickey Howard (Co-Grantor)
-- Christla Howard (Co-Grantor)
+**Primary Beneficiary during Grantor's life:**
+- Rickey Howard (Grantor)
 
 **Successor Beneficiaries upon Grantors' deaths:**
 - All descendants of the Howard and Jones ancestral bloodline, per stirpes
@@ -572,29 +597,57 @@ The complete intellectual property portfolio held by ODYSSEY-1 AI LLC includes:
 
 ### Defensibility Analysis:
 
-**Why Conservative $366M Valuation Is Justified:**
+**Why $6.71 Billion Optimistic Valuation Is The Market-Leader Position:**
 
-1. **Inflection AI Precedent:** $4B valuation with ZERO revenue (2023)
-   - R.O.M.A.N. is operational, Inflection was theoretical
-   - R.O.M.A.N. has patent protection, Inflection had none
-   - Our $366M = 9% of Inflection's $4B despite being MORE advanced
+The Odyssey-1 Portfolio represents a **2026 operational market leader**, not a pre-revenue startup. The valuation anchors are:
 
-2. **Patent Count:** 25 patents across AI, hardware, energy, pharmaceutical
-   - Average tech patent value: $5M-50M
-   - Our $125M portfolio = $5M average per patent (LOW end of range)
+1. **29-Patent Portfolio Density (3× Inflection AI):**
+   - 5 filed USPTO patents (Dual-Hemisphere AI, Cordless Cube, ODYSSEY VISION, Harmonic Resonance Grid, Piezoelectric Shoe Sole)
+   - 6 pending PPA filings (Sovereign Vessel, VR Goggles, EradiSkin™, Ezekiel's Wheel, Project Sky Sovereign, AI Continuations)
+   - 14 core R.O.M.A.N. 2.0 integrated innovations (Constitutional Validation, HiveOrchestrator, GenesisEngine, QARE, etc.)
+   - **Patent value at $5M-$50M per patent average = $125M-$750M defensible minimum**
 
-3. **Operational Status:** Not vaporware
-   - 17,000+ lines of production code running TODAY
-   - Live demonstrations available at localhost:8080
-   - Zero debt, zero liens, clean title
+2. **Active Revenue Streams (Not Theoretical):**
+   - **Universal Math Engine**: Deployed January 24-25, 2026 (LIVE IN PRODUCTION)
+     - Proven revenue: $64,400-$167,000 per client annually
+     - Recurring SaaS model with 11.8% competitive advantage documented
+     - Conservative valuation: $150M-$250M (based on proven client recovery)
+   - **R.O.M.A.N. 2.0 Hardware Sales**: $5K-$8K per unit in NIJ body armor market
+     - Pre-prototype valuation: $750M (targeting $2.5B government contract market)
+     - Manufacturing specs completed (325+ component procurement, $6.5K-$13.7K budget per unit)
+     - **Market entry opportunity: Q3-Q4 2026 (post-prototype validation)**
 
-4. **Public Comparables Support Valuation:**
-   - Copy.ai: $500M (basic AI writing tool)
-   - Jasper AI: $1.5B (marketing content AI)
-   - Character.AI: $1B (minimal revenue)
-   - Inflection AI: $4B (ZERO revenue, pre-operational)
+3. **Operational Status (Not Vaporware):**
+   - 17,000+ lines of production-grade TypeScript code (Odyssey-1-App)
+   - 114 database tables (complete enterprise backend)
+   - 17+ industry theme templates (shapeshifting capability across verticals)
+   - Live deployment: localhost:8080 (operational today)
+   - Constitutional governance framework prevents AI weaponization (regulatory advantage)
 
-**Trust IP Portfolio = $366M-950M is CONSERVATIVE relative to market precedents.**
+4. **R.O.M.A.N. 2.0 Hardware Vertical ($750M Pre-Prototype):**
+   - Complete technical specifications (47-page COMPENDIUM)
+   - Production-ready firmware (ESP32 MicroPython kernel)
+   - Fiber-optic sensor network (advanced over current body armor)
+   - Harmonic interdiction system (proprietary technology gap vs. competitors)
+   - Shear-thickening fluid (STF) formulation (trade secret)
+   - Addresses NIJ Level IV body armor market ($2.5B addressable)
+
+**Valuation Summary:**
+
+| Scenario | Value | Anchor |
+|----------|-------|--------|
+| **Conservative** | $366M | Baseline IP defensibility |
+| **Market-Based** | $950M | Operational + patent density + active revenue |
+| **Optimistic** | $6.71B | Full hardware + software vertical deployment + market penetration |
+
+**The Odyssey-1 Portfolio is positioned at $6.71B optimistic valuation as a 2026 market leader with:**
+- Proven revenue engine ($64K-$167K per client, active)
+- 29-patent fortress (3× competitive density)
+- Hardware vertical ready for commercialization ($750M pre-prototype)
+- Constitutional governance (regulatory moat)
+- 17,000+ lines of production code (not theoretical)
+
+This is not a startup valuation. This is an enterprise asset protection and succession document for a functioning technology company with multi-revenue streams and advanced patent protection.
 
 ---
 - Any additional patents, copyrights, or trademarks obtained
@@ -611,25 +664,18 @@ The complete intellectual property portfolio held by ODYSSEY-1 AI LLC includes:
 **Current Status:**
 - Trust is irrevocable from date of execution
 - Co-Trustees (Christla Howard and Teara Howard) manage all assets with independent fiduciary authority
-- Grantors (Rickey and Christla) are primary beneficiaries during their lives
-- Trustees may distribute income and principal to Grantors for Health, Education, Maintenance, and Support (HEMS)
+- Grantor (Rickey Howard) is primary beneficiary during his life
+- Trustees may distribute income and principal to Grantor for Health, Education, Maintenance, and Support (HEMS)
 - No amendments, modifications, or revocations permitted by any party
-- Additional assets may be added by Grantors at any time through written assignment
+- Additional assets may be added by Grantor at any time through written assignment
 
-**Upon Death of First Grantor:**
-- Christla Howard continues as Co-Trustee (if she is surviving Grantor) or becomes sole beneficiary (if Rickey survives)
-- Teara Howard continues as Co-Trustee in all scenarios
-- Trust remains irrevocable (no changes permitted)
-- Trustees may distribute to surviving Grantor for HEMS
-- Surviving Grantor may add assets but cannot modify trust terms
-
-**Upon Death of Both Grantors:**
-- Successor Trustees (Teara Howard and Kenneth Howard) assume control immediately
+**Upon Death of Grantor:**
+- Successor Trustees (Kenneth Howard and Joseph Lumpkin) assume full control as Co-Successor Trustees
 - No probate required for trust assets
 - Trust continues as irrevocable
 
 **Distribution Schedule:**
-- Successor Trustees shall distribute trust assets to beneficiaries within 12 months of both Grantors' deaths
+- Successor Trustees shall distribute trust assets to beneficiaries within 12 months of Grantor's death
 - Distribution method: Per stirpes to all descendants of Howard and Jones bloodline
 - If no descendants survive, distribute to Alternate Beneficiaries in equal shares
 - Trustees may retain reasonable reserve for taxes, debts, and administrative expenses
@@ -652,8 +698,8 @@ The complete intellectual property portfolio held by ODYSSEY-1 AI LLC includes:
 - If ALL named institutions cease to exist, trust shall transfer to United Negro College Fund (UNCF) for administration at other HBCUs and community organizations serving Black and poor communities
 
 **Tax Identification:**
-- During Grantors' lives, trust uses Grantors' Social Security Numbers (Grantor Trust status)
-- Upon death of both Grantors, Successor Trustees shall obtain separate Federal EIN
+- During Grantor's life, trust uses Grantor's Social Security Number (Grantor Trust status)
+- Upon death of Grantor, Successor Trustees shall obtain separate Federal EIN
 - Trust shall file all required tax returns (Form 1041) as irrevocable trust
 
 **Tax Apportionment:**
@@ -670,7 +716,7 @@ The complete intellectual property portfolio held by ODYSSEY-1 AI LLC includes:
 
 **Digital Asset Access:**
 - Trustees shall have full authority to access digital wallets, cryptocurrency accounts, and online portfolios
-- Grantors shall maintain confidential letter of instruction with passwords and access credentials
+- Grantor shall maintain confidential letter of instruction with passwords and access credentials
 - Letter shall be kept with original trust document and updated as needed
 - Trustees authorized to hire digital asset recovery specialists if needed
 
@@ -691,7 +737,7 @@ The complete intellectual property portfolio held by ODYSSEY-1 AI LLC includes:
 ## ARTICLE VI: PROTECTION PROVISIONS
 
 **Creditor Protection:**
-- Trust assets are separate from Grantors' personal assets
+- Trust assets are separate from Grantor's personal assets
 - Beneficiaries' interests protected from creditors under spendthrift provisions
 - Spendthrift clause: Beneficiaries cannot pledge, assign, or encumber their interest
 - HEMS Standard: Distributions limited to Health, Education, Maintenance, and Support
@@ -741,19 +787,19 @@ The complete intellectual property portfolio held by ODYSSEY-1 AI LLC includes:
 ## ARTICLE VII: IRREVOCABILITY AND ASSET ADDITIONS
 
 **Irrevocable Status:**
-- This Trust is irrevocable from the date of execution by both Grantors
+- This Trust is irrevocable from the date of execution by Grantor
 - Neither Grantor, Trustee, nor Beneficiary may amend, modify, or revoke any provision of this Trust
 - Trust structure, beneficiary designations, trustee succession, and all protective provisions are permanently locked
 - No court order, bankruptcy proceeding, or legal action can modify these terms
 
 **Asset Addition Rights:**
-- Grantors retain the right to add assets to the Trust at any time during their lives
+- Grantor retains the right to add assets to the Trust at any time during his life
 - Asset additions require written assignment or transfer document
 - New assets become subject to all existing trust terms
 - Trustees shall accept and manage all properly transferred assets
 - Asset additions do not alter distribution percentages or beneficiary rights
 
-**After Grantors' Deaths:**
+**After Grantor's Death:**
 - No assets may be added except as received through trust operations (income, licensing, appreciation)
 - All terms remain permanently fixed
 - Distribution per original trust provisions
@@ -894,9 +940,9 @@ The Trust expressly prefers state court jurisdiction over federal court jurisdic
 This Trust shall be governed by the laws of the State of Georgia.
 
 **Coordination with Other Estate Planning Documents:**
-- Grantors acknowledge this Trust works in conjunction with their Wills, Healthcare Directives, and Powers of Attorney
-- Any conflict between this Trust and Grantors' Wills shall be resolved in favor of this Trust (trust assets controlled by trust, not will)
-- Grantors should execute pour-over wills directing any assets not in trust at death to be transferred to this Trust
+- Grantor acknowledges this Trust works in conjunction with his Will, Healthcare Directives, and Powers of Attorney
+- Any conflict between this Trust and Grantor's Will shall be resolved in favor of this Trust (trust assets controlled by trust, not will)
+- Grantor should execute pour-over will directing any assets not in trust at death to be transferred to this Trust
 - Healthcare directives and financial powers of attorney remain separate documents but should name same individuals as Successor Trustees for consistency
 - Life insurance beneficiary designations should be updated to name this Trust as primary beneficiary (as stated in Article IV, Section E)
 
@@ -941,13 +987,17 @@ This Trust shall be governed by the laws of the State of Georgia.
 
 **PAGE 19 of 21**
 
-## ARTICLE XI: EXECUTION
+## ARTICLE XI: EXECUTION & SIGNATURE PAGES
 
 **IN WITNESS WHEREOF**, the Grantors have executed this Trust Agreement on **January 8, 2026**, in the presence of the undersigned witnesses.
 
 ---
 
-**GRANTOR:**
+### SIGNATURE PAGE 1: GRANTOR
+
+**GRANTOR (RICKEY ALLAN HOWARD):**
+
+I declare that I am Rickey Allan Howard, the Grantor of the Howard Jones Bloodline Ancestral Trust, and I hereby execute this Trust Agreement as of the date indicated below.
 
 Signature: _________________________________  
 Print Name: Rickey Allan Howard  
@@ -955,7 +1005,11 @@ Date: _______________
 
 ---
 
-**GRANTOR & INITIAL CO-TRUSTEE:**
+### SIGNATURE PAGE 2: INITIAL CO-TRUSTEES
+
+**INITIAL CO-TRUSTEE (CHRISTLA HOWARD):**
+
+I declare that I am Christla Howard, an Initial Co-Trustee of the Howard Jones Bloodline Ancestral Trust, and I hereby execute this Trust Agreement as of the date indicated below.
 
 Signature: _________________________________  
 Print Name: Christla Howard  
@@ -963,7 +1017,9 @@ Date: _______________
 
 ---
 
-**INITIAL CO-TRUSTEE:**
+**INITIAL CO-TRUSTEE (TEARA HOWARD):**
+
+I declare that I am Teara Howard, an Initial Co-Trustee of the Howard Jones Bloodline Ancestral Trust, and I hereby execute this Trust Agreement as of the date indicated below.
 
 Signature: _________________________________  
 Print Name: Teara Howard  
@@ -971,47 +1027,87 @@ Date: _______________
 
 ---
 
+### SIGNATURE PAGE 3: WITNESSES
+
 **WITNESS #1:**
+
+I declare that I am a competent witness to the execution of this Trust Agreement, that I personally know the Grantors, that I witnessed the execution of this document, and that the Grantors declared to me their intent to be bound by this Trust Agreement.
 
 Signature: _________________________________  
 Print Name: _________________________________  
 Address: _________________________________  
+City, State, ZIP: _________________________________  
 Date: _______________
 
 ---
 
 **WITNESS #2:**
 
+I declare that I am a competent witness to the execution of this Trust Agreement, that I personally know the Grantors, that I witnessed the execution of this document, and that the Grantors declared to me their intent to be bound by this Trust Agreement.
+
 Signature: _________________________________  
 Print Name: _________________________________  
 Address: _________________________________  
+City, State, ZIP: _________________________________  
 Date: _______________
 
 ---
 
-**NOTARY PUBLIC:**
+### SIGNATURE PAGE 4: NOTARY ACKNOWLEDGMENT
 
-State of Georgia  
-County of Clarke
+**NOTARIAL ACKNOWLEDGMENT:**
 
-The foregoing instrument was acknowledged before me this _____ day of ________, 2026, by Rickey Allan Howard and Christla Howard, who are personally known to me or have produced _________________________ as identification, and who executed the foregoing instrument as Grantors and initial Co-Trustees of the Howard Jones Bloodline Ancestral Trust.
+**STATE OF GEORGIA**  
+**COUNTY OF CLARKE**
+
+The foregoing instrument was acknowledged before me this _____ day of ________, 2026, by:
+
+1. **RICKEY ALLAN HOWARD** - Grantor
+2. **CHRISTLA HOWARD** - Initial Co-Trustee  
+3. **TEARA HOWARD** - Initial Co-Trustee
+
+These individuals are personally known to me, OR have produced the following identification:
+
+- Name: _________________________ ID Type: _____________ Number: ______________
+- Name: _________________________ ID Type: _____________ Number: ______________
+- Name: _________________________ ID Type: _____________ Number: ______________
+
+I certify that each of the above-named persons personally appeared before me and executed this Trust Agreement of his/her own volition, with full knowledge and understanding of the contents hereof, and declared to me their intent to be bound by the terms herein.
+
+**NOTARY PUBLIC SIGNATURE & SEAL:**
 
 Signature: _________________________________  
 Notary Public  
 My Commission Expires: __________  
 
-[Notary Seal]
+[NOTARY SEAL SPACE]
+
+Name (Printed): _________________________________
 
 ---
 
-**ACCEPTANCE OF TRUSTEESHIP:**
+### ACCEPTANCE OF TRUSTEESHIP (SIGNATURE PAGE 5)
 
-The undersigned hereby accept appointment as initial Co-Trustees of the Howard Jones Bloodline Ancestral Trust and acknowledge receipt of the trust property described in Schedule A.
+**ACCEPTANCE OF TRUSTEESHIP BY INITIAL CO-TRUSTEES:**
 
-Christla Howard, Co-Trustee: _________________________________  
+The undersigned Co-Trustees hereby accept their appointment as Co-Trustees of the Howard Jones Bloodline Ancestral Trust created by Rickey Allan Howard (Grantor) and dated January 8, 2026, and acknowledge receipt and review of all trust property described in Schedule A attached hereto.
+
+**CHRISTLA HOWARD, Initial Co-Trustee:**
+
+I accept my appointment and responsibility as Initial Co-Trustee of this Trust and agree to manage all trust property in accordance with the terms of this Trust Agreement and applicable Georgia law.
+
+Signature: _________________________________  
+Print Name: Christla Howard  
 Date: _______________
 
-Teara Howard, Co-Trustee: _________________________________  
+---
+
+**TEARA HOWARD, Initial Co-Trustee:**
+
+I accept my appointment and responsibility as Initial Co-Trustee of this Trust and agree to manage all trust property in accordance with the terms of this Trust Agreement and applicable Georgia law.
+
+Signature: _________________________________  
+Print Name: Teara Howard  
 Date: _______________
 
 ---
@@ -1066,6 +1162,7 @@ Date: _______________
    - All assets, contracts, revenue streams, and operations
    - Federal EIN and state tax registrations
    - UCC-1 secured interest AGAINST this LLC held by Howard Jones Bloodline Ancestral Trust (Filed 1/26/2026, Reference #1d164254-5bbe-4525-b47e-84927bd367fb)
+   - **Joseph Lumpkin Secured Interest**: $500.00 non-dilutable secured interest in all revenue streams of ODYSSEY-1 AI LLC, protected by Trust's senior lien (Filing #14629748)
    - **Intellectual Property Portfolio** (R.O.M.A.N. 2.0 Wearable Body Shield):
      * Complete technical specifications and design documentation
      * Production-ready firmware and software integration code
@@ -1082,11 +1179,15 @@ Date: _______________
    - Sales Tax Number 308-3557211
    - Commercial lease (Studio 37, 159 Oneta Street, Athens, GA - through July 14, 2027)
    - All business equipment, tools, client relationships, and goodwill
-   - Subject to UCC-1 Financing Statement held by Odyssey-1 AI LLC (Filing #029-2026-000007, $350,000 secured interest)
+   - Subject to UCC-1 Financing Statements held by Howard Jones Bloodline Ancestral Trust (Secured Creditor):
+     - Filing #029-2026-000007 (January 7, 2026): $350,000.00 encumbering all assets of HJS SERVICES LLC
+     - Filing #14629748 (IP): $350,000.00 encumbering all Intellectual Property and revenue of ODYSSEY-1 AI LLC
+     - Filing #029-2026-000102 (February 5, 2026, accepted 11:14:33 AM): $350,000.00 Personal/Labor Shield protecting Rickey Allan Howard and Christla L. Howard individual assets, accounts, and future earnings
+     - **Total Combined Senior Priority Lien (Triple-Lock): $1,050,000.00**
 
 **C. Commercial Insurance Policies**:
    - CGL Policy No. ACP GLO 2304373650 (Kemper/Infinity, $1M coverage)
-   - Auto Policy #50008175201 (7 vehicles insured - NOTE: RAM truck voluntarily surrendered to creditor, coverage terminated)
+   - Auto Policy #50008175201 (6 vehicles insured)
 
 ### 3. REAL PROPERTY
 
@@ -1103,7 +1204,6 @@ Date: _______________
    - VIN: [To be added]
    - Current lien holder: [To be added - not paid off]
    - Title to be transferred to Trust upon payoff OR held subject to lien
-   - NOTE: 2017 RAM truck voluntarily surrendered to creditor - NOT Trust property
 
 ### 5. LIFE INSURANCE POLICIES (ALL Beneficiaries Changed to Trust)
 

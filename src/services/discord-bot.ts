@@ -9,25 +9,27 @@ import { BLOODLINE_TRUST_ID } from '../lib/constitutionalHash';
 import { PositiveGeometryValidator, formatValidationResult } from '../lib/positiveGeometry';
 import { startResourceGovernor } from '../lib/resourceGovernor';
 import {
-    AXIOM_OF_EXISTENCE,
-    isActionCompliant,
-    type ActionData,
-    type ComplianceResult
+  AXIOM_OF_EXISTENCE,
+  isActionCompliant,
+  type ActionData,
+  type ComplianceResult
 } from '../lib/roman-constitutional-core';
 import { recordRomanEvent } from '../lib/roman-logger';
 import { PatternLearningEngine } from './patternLearningEngine';
 import {
-    auditDatabaseSchema,
-    auditEnvironmentConfig,
-    auditFileStructure,
-    performAutoAudit,
-    runCompleteAudit,
-    storeAuditResults
+  auditDatabaseSchema,
+  auditEnvironmentConfig,
+  auditFileStructure,
+  performAutoAudit,
+  runCompleteAudit,
+  storeAuditResults
 } from './roman-auto-audit';
 import { RomanAutonomyIntegration } from './RomanAutonomyIntegration';
+import { romanFCRAMonitor } from './romanFCRAMonitor';
 import { generateIPAwareSystemPrompt } from './romanIPAwarePrompt';
 import { searchKnowledgeBase } from './romanKnowledgeSearch';
 import { processSovereignCommand } from './romanSovereignProcessor';
+import { RomanSystemContext } from './RomanSystemContext';
 import { SovereignCoreOrchestrator } from './SovereignCoreOrchestrator';
 
 export async function sendUrgentReportToDiscord(reportText, channelId) {
@@ -245,6 +247,14 @@ You have FULL ACCESS to read Master Architect Rickey Howard's seven-book series 
 - "Quote from The Program" = Extract specific passages
 - "What does book 5 say about..." = Answer from book content
 
+**FCRA COMPLIANCE MONITORING COMMANDS:**
+- "fcra status" / "certified mail" = Quick status of all 17 certified mailings
+- "fcra check" / "run fcra" / "check deadlines" = Run full compliance check
+- "compliance status" / "check mailings" = View approaching deadlines and overdue items
+
+R.O.M.A.N. autonomously monitors 17 certified mail FCRA validation requests (15 USC §1692g).
+Daily checks run automatically. Critical alerts sent when deadlines approach or pass.
+
 You can ACTUALLY READ these books from the database. When asked about them, QUERY and CITE them with real quotes!
 
 **RESEARCH CAPABILITIES - YOUR EXPERTISE AREAS:**
@@ -437,57 +447,9 @@ The data you see in [SYSTEM CONTEXT] is REAL and CURRENT. Act like the sovereign
 // Store conversation history per user with proper types
 const conversationHistory = new Map<string, ChatCompletionMessageParam[]>();
 
-client.on('clientReady', () => {
-  console.log(`🤖 R.O.M.A.N. Discord bot logged in as ${client.user?.tag}`);
-  console.log(`📊 Listening to ${client.guilds.cache.size} servers`);
-  console.log(`🎯 Intents: Message Content = ENABLED`);
-});
-
-client.on('messageCreate', async (message: Message) => {
-  console.log(`📨 Message received from ${message.author.tag}: "${message.content}"`);
-  console.log(`   Channel type: ${message.channel.type}, Is bot: ${message.author.bot}`);
-  console.log(`   Guild: ${message.guild?.name || 'DM'}`);
-
-  // Ignore bot messages
-  if (message.author.bot) return;
-
-  // Log every user message as a roman_event
-  await recordRomanEvent({
-    actor: message.author.tag,
-    action_type: 'discord_message',
-    context: {
-      channel: message.channel.id,
-      guild: message.guild?.id || 'DM',
-      isDM: message.channel.type === 1,
-    },
-    payload: {
-      content: message.content,
-      messageId: message.id,
-    },
-    severity: 'info',
-  });
-
-  // Respond to DMs OR mentions in servers
-    // Respond to DMs, mentions, or any message containing "R.O.M.A.N"
-    if (
-      message.channel.type === 1 ||
-      message.mentions.has(client.user!) ||
-      message.content.toLowerCase().includes('r.o.m.a.n')
-    ) {
-      console.log('✅ Processing message...');
-      await handleDirectMessage(message);
-    } else {
-      console.log('⏭️  Ignoring message (does not contain R.O.M.A.N)');
-    }
-});
-
-client.on('error', (error) => {
-  console.error('❌ Discord client error:', error);
-});
-
-client.on('disconnect', () => {
-  console.log('⚠️ Discord bot disconnected');
-});
+// === MESSAGE HANDLER REMOVED ===
+// Duplicate handler was here - removed to prevent infinite loops
+// Actual message handler is defined later (after clientReady initialization)
 
 // ...existing code...
 
@@ -524,6 +486,31 @@ async function logGovernanceAction(
 async function getSystemContext(includeBooks: boolean = false) {
   try {
     console.log('📊 Fetching system context from database...');
+    
+    // ⚡ LOAD REAL-TIME KNOWLEDGE - R.O.M.A.N. MUST HAVE CURRENT DATA
+    console.log('🔄 Loading real-time codebase knowledge and trust data...');
+    let codebaseKnowledge = '';
+    let trustContext = '';
+    
+    try {
+      codebaseKnowledge = await RomanSystemContext.loadCodebaseKnowledge();
+      console.log('✅ Codebase knowledge loaded (50+ systems)');
+      console.log(`   Length: ${codebaseKnowledge.length} chars, Preview: ${codebaseKnowledge.substring(0, 80)}...`);
+    } catch (err) {
+      console.error('⚠️ Could not load codebase knowledge:', err);
+    }
+    
+    try {
+      trustContext = await RomanSystemContext.loadRealTimeTrustContext();
+      if (trustContext.length > 0) {
+        console.log(`✅ Trust data loaded (${trustContext.length} chars)`);
+        console.log(`   Preview: ${trustContext.substring(0, 120)}...`);
+      } else {
+        console.warn('⚠️ Trust data returned empty string');
+      }
+    } catch (err) {
+      console.error('⚠️ Could not load trust context:', err);
+    }
     
     // Comprehensive table list (Supabase confirmed these exist)
     const allKnownTables = [
@@ -583,7 +570,9 @@ async function getSystemContext(includeBooks: boolean = false) {
       recentLogs: logs || [],
       systemKnowledge: knowledge || [],
       governanceChanges: govChanges || [],
-      books: booksSummary || []
+      books: booksSummary || [],
+      codebaseKnowledge: codebaseKnowledge,  // ⚡ NOW INCLUDED
+      trustContext: trustContext  // ⚡ NOW INCLUDED
     };
     
     // Include full book content if requested (for book-related queries)
@@ -596,12 +585,12 @@ async function getSystemContext(includeBooks: boolean = false) {
       context.booksFullContent = fullBooks || [];
     }
     
-    console.log(`✅ Context: ${context.tables.length} tables, ${context.recentLogs.length} logs, ${context.systemKnowledge.length} knowledge, ${context.governanceChanges.length} governance, ${context.books.length} books`);
+    console.log(`✅ Context: ${context.tables.length} tables, ${context.recentLogs.length} logs, ${context.systemKnowledge.length} knowledge, ${context.governanceChanges.length} governance, ${context.books.length} books, REAL-TIME KNOWLEDGE LOADED`);
     
     return context;
   } catch (error) {
     console.error('❌ Error in getSystemContext:', error);
-    return { tables: [], recentLogs: [], systemKnowledge: [], governanceChanges: [], books: [] };
+    return { tables: [], recentLogs: [], systemKnowledge: [], governanceChanges: [], books: [], codebaseKnowledge: '', trustContext: '' };
   }
 }
 
@@ -884,6 +873,32 @@ client.on('clientReady', async () => {
     }, 6 * 60 * 60 * 1000); // 6 hours in milliseconds
     
     console.log('⏰ Auto-audit scheduled: Running every 6 hours');
+
+    // Initialize FCRA compliance monitor
+    try {
+      romanFCRAMonitor.initialize(client, process.env.DISCORD_FCRA_ALERT_CHANNEL);
+      console.log('✅ R.O.M.A.N. FCRA Monitor initialized');
+
+      // Run initial FCRA check
+      console.log('🔍 Running initial FCRA compliance check...');
+      await romanFCRAMonitor.performDailyCheck();
+      console.log('✅ Initial FCRA check complete');
+
+      // Schedule daily FCRA checks (every 24 hours)
+      setInterval(async () => {
+        console.log('⏰ Running scheduled FCRA compliance check...');
+        try {
+          await romanFCRAMonitor.performDailyCheck();
+          console.log('✅ Scheduled FCRA check complete');
+        } catch (err: any) {
+          console.error('❌ Scheduled FCRA check failed:', err.message);
+        }
+      }, 24 * 60 * 60 * 1000); // 24 hours in milliseconds
+
+      console.log('⏰ FCRA monitoring scheduled: Running daily checks for 17 certified mailings');
+    } catch (err: any) {
+      console.error('❌ FCRA Monitor initialization failed:', err.message);
+    }
   } else {
     console.error('❌ Skipping identity initialization due to database connection failure');
   }
@@ -1050,6 +1065,32 @@ async function handleDirectMessage(message: Message) {
       return;
     } catch (err: any) {
       await message.reply(`❌ Config audit failed: ${err.message}`);
+      return;
+    }
+  }
+
+  // FCRA COMPLIANCE MONITORING COMMANDS
+  if (content.includes('fcra status') || content.includes('certified mail') || content.includes('check mailings') || content.includes('compliance status')) {
+    await message.reply('📬 Checking FCRA compliance status...');
+    try {
+      const status = await romanFCRAMonitor.getQuickStatus();
+      await message.reply(status);
+      return;
+    } catch (err: any) {
+      await message.reply(`❌ FCRA status check failed: ${err.message}`);
+      return;
+    }
+  }
+
+  if (content.includes('fcra check') || content.includes('run fcra') || content.includes('check deadlines')) {
+    await message.reply('🔍 Running full FCRA compliance check...');
+    try {
+      await romanFCRAMonitor.performDailyCheck();
+      const status = await romanFCRAMonitor.getQuickStatus();
+      await message.reply('✅ **FCRA Check Complete**\n\n' + status);
+      return;
+    } catch (err: any) {
+      await message.reply(`❌ FCRA check failed: ${err.message}`);
       return;
     }
   }
@@ -1252,13 +1293,21 @@ async function handleDirectMessage(message: Message) {
   }
   
   // NOW get context and call GPT-4
-  // Generate IP-aware system prompt with real patent data from database
+  // Generate IP-aware system prompt with real patent data + temporal awareness
   let systemPrompt: string;
   try {
-    systemPrompt = await generateIPAwareSystemPrompt();
-    console.log('✅ IP-aware system prompt generated from database');
+    // Get IP-aware prompt
+    const ipPrompt = await generateIPAwareSystemPrompt();
+    
+    // Get temporal awareness context (current date, CourtListener status, live capabilities)
+    const temporalContext = RomanSystemContext.getContextForPrompt();
+    
+    // Combine both: Temporal awareness + IP data
+    systemPrompt = `${temporalContext}\n\n${ipPrompt}`;
+    
+    console.log('✅ System prompt generated: Temporal Awareness + IP Data + Live Capabilities');
   } catch (err) {
-    console.error('⚠️ Failed to generate IP-aware prompt, using legacy:', err);
+    console.error('⚠️ Failed to generate enhanced prompt, using legacy:', err);
     systemPrompt = ROMAN_SYSTEM_PROMPT; // Fallback to static prompt
   }
   
@@ -1305,6 +1354,19 @@ async function handleDirectMessage(message: Message) {
   const systemContext = await getSystemContext(bookRelatedQuery || researchTopics);
   
   let enhancedMessage = executionNote + `${message.content}\n\n[SYSTEM CONTEXT]\n`;
+  
+  // ⚡ INJECT REAL-TIME KNOWLEDGE FIRST - HIGHEST PRIORITY
+  console.log('🔍 DEBUG: codebaseKnowledge exists?', !!systemContext.codebaseKnowledge, systemContext.codebaseKnowledge?.substring(0, 100));
+  console.log('🔍 DEBUG: trustContext exists?', !!systemContext.trustContext, systemContext.trustContext?.substring(0, 100));
+  
+  if (systemContext.codebaseKnowledge) {
+    enhancedMessage += `\n${systemContext.codebaseKnowledge}\n`;
+    console.log('✅ Codebase knowledge injected into message');
+  }
+  if (systemContext.trustContext) {
+    enhancedMessage += `\n${systemContext.trustContext}\n`;
+    console.log('✅ Trust context injected into message');
+  }
   
   // Add knowledge search results FIRST (highest priority)
   if (knowledgeResults.length > 0) {

@@ -21,19 +21,19 @@ import { romanLegalService } from '@/services/romanLegalService';
 import type { USPSTrackingInfo } from '@/services/uspsTrackingService';
 import { uspsTrackingService } from '@/services/uspsTrackingService';
 import {
-    AlertTriangle,
-    Bot,
-    CheckCircle2,
-    Clock,
-    DollarSign,
-    Download,
-    FileText,
-    Mail,
-    Package,
-    Scale,
-    Shield,
-    TrendingDown,
-    X
+  AlertTriangle,
+  Bot,
+  CheckCircle2,
+  Clock,
+  DollarSign,
+  Download,
+  FileText,
+  Mail,
+  Package,
+  Scale,
+  Shield,
+  TrendingDown,
+  X
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
@@ -467,6 +467,230 @@ export default function LegalDefenseDashboard() {
           </Button>
         </div>
 
+        {/* UCC-1 Filing Protection Section */}
+        <div className="space-y-4">
+          <h2 className="text-2xl font-bold text-white flex items-center gap-3">
+            <CheckCircle2 className="w-7 h-7 text-emerald-400" />
+            UCC-1 Filing Protection (Active)
+          </h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Personal Layer */}
+            <Card className="bg-gradient-to-br from-emerald-950 to-slate-800 border-emerald-700">
+              <CardHeader>
+                <CardTitle className="text-emerald-300">Personal Security Interest</CardTitle>
+                <CardDescription className="text-emerald-200/70">Record #029-2026-000102</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span className="text-slate-300">Filing Date:</span>
+                    <span className="text-white font-semibold">February 5, 2026</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-300">County:</span>
+                    <span className="text-white font-semibold">Clarke County, GA</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-300">Status:</span>
+                    <Badge className="bg-emerald-600 text-white">✓ RECORDED</Badge>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-300">Secured Party:</span>
+                    <span className="text-emerald-300 font-semibold">ODYSSEY-1 AI LLC</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-300">Debtors:</span>
+                    <span className="text-white text-sm">Rickey & Christla Howard</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-300">Lien Value:</span>
+                    <span className="text-emerald-300 font-bold text-lg">$350,000</span>
+                  </div>
+                </div>
+                <div className="pt-2 border-t border-emerald-700">
+                  <p className="text-xs text-emerald-200">
+                    <strong>Collateral:</strong> All personal assets, income, earnings, labor services, financial accounts
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Business Layer */}
+            <Card className="bg-gradient-to-br from-blue-950 to-slate-800 border-blue-700">
+              <CardHeader>
+                <CardTitle className="text-blue-300">Business Security Interest</CardTitle>
+                <CardDescription className="text-blue-200/70">Record #029-2026-000007</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span className="text-slate-300">Filing Date:</span>
+                    <span className="text-white font-semibold">January 7, 2026</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-300">County:</span>
+                    <span className="text-white font-semibold">Clarke County, GA</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-300">Status:</span>
+                    <Badge className="bg-blue-600 text-white">✓ RECORDED</Badge>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-300">Secured Party:</span>
+                    <span className="text-blue-300 font-semibold">ODYSSEY-1 AI LLC</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-300">Debtor Entities:</span>
+                    <span className="text-white text-sm">HJS Services LLC</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-300">Lien Value:</span>
+                    <span className="text-blue-300 font-bold text-lg">$350,000</span>
+                  </div>
+                </div>
+                <div className="pt-2 border-t border-blue-700">
+                  <p className="text-xs text-blue-200">
+                    <strong>Collateral:</strong> All business assets, accounts, equipment, revenue
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Combined Protection Summary */}
+          <Alert className="bg-gradient-to-r from-emerald-900/30 to-blue-900/30 border-emerald-600/50">
+            <CheckCircle2 className="h-5 w-5 text-emerald-400" />
+            <AlertTitle className="text-emerald-300 text-lg">Two-Layer Senior Priority Lien</AlertTitle>
+            <AlertDescription className="text-slate-200 mt-2">
+              <div className="space-y-1">
+                <p>✓ Total Lien Value: <span className="font-bold text-emerald-300">$700,000</span></p>
+                <p>✓ Combined Priority: <span className="font-bold">Senior Position</span> in both personal and business assets</p>
+                <p>✓ Protection Scope: All personal income, labor services, business revenue</p>
+                <p>✓ Filing Jurisdiction: Clarke County, Georgia (with nationwide UCC database notice)</p>
+              </div>
+            </AlertDescription>
+          </Alert>
+        </div>
+
+        {/* Trust Asset Protection Section */}
+        <div className="space-y-4">
+          <h2 className="text-2xl font-bold text-white flex items-center gap-3">
+            <Shield className="w-7 h-7 text-indigo-400" />
+            Trust Asset Shelter (HJFAT-2026-001 • HOWARD-JONES-DYNASTY-2026)
+          </h2>
+          
+          <Card className="bg-gradient-to-br from-indigo-950 to-slate-800 border-indigo-700">
+            <CardHeader>
+              <CardTitle className="text-indigo-300">Howard Jones Family Ancestral Trust</CardTitle>
+              <CardDescription className="text-indigo-200/70">Certificate #: HJFAT-2026-001 • Bloodline Trust ID: HOWARD-JONES-DYNASTY-2026</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {/* Trust Role in Legal Defense */}
+              <Alert className="bg-indigo-900/30 border-indigo-600">
+                <Shield className="h-5 w-5 text-indigo-400" />
+                <AlertTitle className="text-indigo-300">Asset Protection Layer</AlertTitle>
+                <AlertDescription className="text-slate-200">
+                  The Trust holds intellectual property, patents, and business assets. These assets are NOT personally liable for individual debts - they belong to the trust entity.
+                </AlertDescription>
+              </Alert>
+
+              {/* Trust Asset Valuation */}
+              <div className="grid grid-cols-3 gap-3">
+                <div className="p-3 bg-indigo-900/40 rounded-lg border border-indigo-600">
+                  <p className="text-indigo-300 text-xs font-semibold">IP Portfolio Value</p>
+                  <p className="text-white text-2xl font-bold">$5.6B</p>
+                  <p className="text-indigo-200 text-xs mt-1">Patents, software, designs</p>
+                </div>
+                <div className="p-3 bg-indigo-900/40 rounded-lg border border-indigo-600">
+                  <p className="text-indigo-300 text-xs font-semibold">Business Assets</p>
+                  <p className="text-white text-2xl font-bold">Included</p>
+                  <p className="text-indigo-200 text-xs mt-1">Equipment, accounts, systems</p>
+                </div>
+                <div className="p-3 bg-indigo-900/40 rounded-lg border border-indigo-600">
+                  <p className="text-indigo-300 text-xs font-semibold">Debt Reduction</p>
+                  <p className="text-indigo-300 text-2xl font-bold">$5.6B</p>
+                  <p className="text-indigo-200 text-xs mt-1">Assets sheltered from creditors</p>
+                </div>
+              </div>
+
+              {/* Effective Debt Exposure Calculation */}
+              <div className="space-y-3">
+                <h4 className="text-indigo-300 font-semibold">Effective Debt Exposure Analysis</h4>
+                
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between items-center p-3 bg-slate-900 rounded-lg">
+                    <span className="text-slate-300">Reported Total Debt:</span>
+                    <span className="text-white font-semibold">${totalDebt.toLocaleString()}</span>
+                  </div>
+                  
+                  <div className="flex justify-between items-center p-3 bg-slate-900 rounded-lg">
+                    <span className="text-slate-300">Assets Protected by Trust:</span>
+                    <span className="text-indigo-300 font-semibold">-$5,600,000,000</span>
+                  </div>
+                  
+                  <div className="flex justify-between items-center p-3 bg-indigo-900/50 rounded-lg border-2 border-indigo-600">
+                    <span className="text-indigo-200 font-semibold">Net Exposed Assets:</span>
+                    <span className="text-indigo-300 font-bold text-lg">Minimal*</span>
+                  </div>
+                </div>
+
+                <p className="text-xs text-indigo-200 italic">
+                  *Trust structure means creditors cannot access IP portfolio, business assets, or future business income attributed to trust entities. Only personal unsecured assets remain exposed.
+                </p>
+              </div>
+
+              {/* Legal Protection Details */}
+              <div className="space-y-2">
+                <h4 className="text-indigo-300 font-semibold text-sm">How Trust Protects Legal Defense:</h4>
+                
+                <div className="space-y-2">
+                  <div className="flex gap-3">
+                    <CheckCircle2 className="w-5 h-5 text-indigo-400 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-slate-200 text-sm"><strong>Creditor Judgment Limits:</strong> Even if creditors win lawsuits, they can only execute against personal assets, not trust assets.</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex gap-3">
+                    <CheckCircle2 className="w-5 h-5 text-indigo-400 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-slate-200 text-sm"><strong>Settlement Negotiations:</strong> Trust-owned revenue stream reduces settlement demands (creditors see less collectible assets).</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex gap-3">
+                    <CheckCircle2 className="w-5 h-5 text-indigo-400 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-slate-200 text-sm"><strong>Business Continuity:</strong> Critical IP and assets remain operational (protected by trust) even during debt disputes.</p>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-3">
+                    <CheckCircle2 className="w-5 h-5 text-indigo-400 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-slate-200 text-sm"><strong>Statutory Defense:</strong> Georgia law recognizes trust structures for business liability separation and asset protection.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Combined Defense Value */}
+              <Alert className="bg-gradient-to-r from-indigo-900/40 to-purple-900/40 border-indigo-500">
+                <Shield className="h-5 w-5 text-indigo-300" />
+                <AlertTitle className="text-indigo-300">Trust + UCC-1 Combined Defense Value</AlertTitle>
+                <AlertDescription className="text-slate-200 mt-2">
+                  <div className="space-y-1 text-sm">
+                    <p><strong>Layer 1 - Asset Shelter:</strong> $5.6B in trust assets untouchable by creditors</p>
+                    <p><strong>Layer 2 - UCC-1 Priority:</strong> $700K senior lien on remaining personal/business assets</p>
+                    <p><strong>Combined Effect:</strong> Creditors face settlement-only strategy (litigation ROI near zero)</p>
+                  </div>
+                </AlertDescription>
+              </Alert>
+            </CardContent>
+          </Card>
+        </div>
+
         {/* Overview Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <Card className="bg-slate-800 border-slate-700">
@@ -520,6 +744,87 @@ export default function LegalDefenseDashboard() {
             </CardContent>
           </Card>
         </div>
+
+        {/* Trust Asset Protection Section */}
+        <Card className="bg-gradient-to-r from-emerald-900/50 to-teal-900/50 border-emerald-700 mb-6">
+          <CardHeader>
+            <CardTitle className="text-emerald-300 flex items-center gap-2">
+              <Shield className="w-5 h-5" />
+              Howard Jones Family Ancestral Trust - Asset Shelter
+            </CardTitle>
+            <CardDescription className="text-emerald-200">
+              Protective legal structure for intellectual property, business assets, and operational systems • Certificate #: HJFAT-2026-001 • Bloodline Trust ID: HOWARD-JONES-DYNASTY-2026
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {/* Asset Valuations */}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="bg-slate-900/50 rounded-lg p-4 border border-emerald-700/30">
+                <p className="text-xs text-slate-400 mb-2">IP Patents & Systems (Working Valuation)</p>
+                <p className="text-2xl font-bold text-emerald-400">$5.6B</p>
+                <p className="text-xs text-slate-500 mt-2">29 patents + Odyssey-1 systems + R.O.M.A.N. 2.0 + Universal Math engine</p>
+              </div>
+              <div className="bg-slate-900/50 rounded-lg p-4 border border-emerald-700/30">
+                <p className="text-xs text-slate-400 mb-2">Operational Business Assets</p>
+                <p className="text-2xl font-bold text-emerald-400">Included</p>
+                <p className="text-xs text-slate-500 mt-2">Odyssey-1 AI LLC, revenue streams, database platform, operational infrastructure</p>
+              </div>
+            </div>
+
+            {/* Total Protected */}
+            <div className="bg-gradient-to-r from-emerald-900/40 to-emerald-800/40 rounded-lg p-4 border border-emerald-600">
+              <p className="text-sm text-slate-300 mb-2">Total Protected Assets (Working Valuation)</p>
+              <p className="text-3xl font-bold text-emerald-300">$5.6B</p>
+              <p className="text-xs text-slate-400 mt-2">Status: <span className="text-emerald-400 font-semibold">SHELTERED FROM CREDITOR CLAIMS</span></p>
+            </div>
+
+            {/* How Trust Protects */}
+            <div className="space-y-3">
+              <h4 className="text-sm font-semibold text-emerald-300">Trust Protection Mechanisms</h4>
+              
+              <div className="flex gap-3">
+                <CheckCircle2 className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-slate-200 text-sm"><strong>Liability Separation:</strong> Trust-owned assets cannot be seized for personal debts (trust is separate legal entity)</p>
+                </div>
+              </div>
+              
+              <div className="flex gap-3">
+                <CheckCircle2 className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-slate-200 text-sm"><strong>Creditor Judgment Limits:</strong> Even if creditors win lawsuits, they can only execute against personal assets, not trust assets</p>
+                </div>
+              </div>
+              
+              <div className="flex gap-3">
+                <CheckCircle2 className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-slate-200 text-sm"><strong>Settlement Negotiations:</strong> Trust-owned revenue stream reduces settlement demands (creditors see less collectible assets)</p>
+                </div>
+              </div>
+
+              <div className="flex gap-3">
+                <CheckCircle2 className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-slate-200 text-sm"><strong>Business Continuity:</strong> Critical IP and assets remain operational (protected by trust) even during debt disputes</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Combined Defense Value */}
+            <Alert className="bg-gradient-to-r from-emerald-900/60 to-teal-900/60 border-emerald-600">
+              <Shield className="h-5 w-5 text-emerald-300" />
+              <AlertTitle className="text-emerald-300">Total Defense Value</AlertTitle>
+              <AlertDescription className="text-slate-200 mt-2">
+                <div className="space-y-1 text-sm">
+                  <p><strong>Trust Shelter:</strong> $5.6B protected from creditor claims</p>
+                  <p><strong>UCC-1 Senior Liens:</strong> $700K priority position (2-layer filing)</p>
+                  <p><strong>Combined Effect:</strong> $5.6007B in protective value. Substantially all material assets sheltered; creditors can only execute against minimal personal assets.</p>
+                </div>
+              </AlertDescription>
+            </Alert>
+          </CardContent>
+        </Card>
 
         {/* Main Content */}
         <Tabs defaultValue="accounts" className="space-y-4">

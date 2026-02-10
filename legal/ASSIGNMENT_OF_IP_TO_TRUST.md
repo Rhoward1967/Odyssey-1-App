@@ -1,43 +1,45 @@
-# ASSIGNMENT AND TRANSFER OF BUSINESS ENTITY AND INTELLECTUAL PROPERTY
-## TO THE HOWARD JONES BLOODLINE FAMILY TRUST
+# ASSIGNMENT AND TRANSFER OF INTELLECTUAL PROPERTY
+## TO THE HOWARD JONES BLOODLINE ANCESTRAL TRUST
+
+**EXECUTED:** February 7, 2026  
+**GOVERNING LAW:** State of Georgia
 
 ---
 
 **KNOW ALL BY THESE PRESENTS:**
 
-This **Assignment and Transfer of Business Entity and Intellectual Property** ("Assignment") is executed this _____ day of _________________, 2026, by and between:
+This **Assignment and Transfer of Intellectual Property** ("Assignment") is executed this _____ day of _________________, 2026, by and between:
 
-**GRANTOR:**  
-rickey-allan: howard  
-Living Soul, Non-Corporate  
-Ecclesiastical Jurisdiction  
-("Grantor" or "Living Soul")
+**ASSIGNOR:**  
+Rickey Allan Howard  
+An individual, resident of Georgia  
+("Assignor")
 
 **AND**
 
-**GRANTEE:**  
-Howard Jones Bloodline Family Trust  
+**ASSIGNEE:**  
+Howard Jones Bloodline Ancestral Trust  
 A Private Irrevocable Trust  
-Established under Natural Law  
-("Trust" or "Grantee")
+Established under the laws of the State of Georgia  
+("Trust" or "Assignee")
 
 ---
 
 ## RECITALS
 
-**WHEREAS**, the Grantor is the original creator, inventor, and architect of certain intellectual property, technologies, systems, and innovations collectively known as the "Odyssey-1 System" and related works;
+**WHEREAS**, the Assignor is the original inventor, developer, and architect of certain intellectual property, technologies, systems, and innovations collectively known as the "Odyssey-1 System" and related works;
 
-**WHEREAS**, the Grantor is the owner of **Odyssey-1 AI LLC**, a limited liability company organized under the laws of [State], which holds business operations, contracts, and secured interests;
+**WHEREAS**, the Assignor owns **Odyssey-1 AI LLC**, a limited liability company organized under the laws of Georgia, which holds business operations, contracts, and secured interests;
 
-**WHEREAS**, Odyssey-1 AI LLC has filed a **UCC-1 Financing Statement** establishing a secured interest against Howard Jones Services (HJS), which the Grantor has determined to be insolvent;
+**WHEREAS**, Odyssey-1 AI LLC has established a **UCC-1 Financing Statement** as part of a strategic business restructuring and asset protection strategy;
 
-**WHEREAS**, the Grantor, with the full knowledge and consent of his wife Christla howard, desires to transfer **all ownership interest in Odyssey-1 AI LLC** and all related intellectual property to the Howard Jones Bloodline Family Trust for the benefit of the bloodline and future generations;
+**WHEREAS**, the Assignor, with the full knowledge and consent of Christla L. Howard (Primary Co-Trustee of the Howard Jones Bloodline Ancestral Trust), desires to transfer **all ownership interest in Odyssey-1 AI LLC** and all related intellectual property to the Trust for the benefit of the bloodline and future generations;
 
 **WHEREAS**, the Trust is established to hold, protect, and preserve the business entity, intellectual property, and assets of the Howard Jones bloodline;
 
-**WHEREAS**, this transfer is made in accordance with Natural Law, Common Law, and the Grantor's inherent sovereign rights as a Living Soul;
+**WHEREAS**, this transfer is made in accordance with the laws of the State of Georgia and the Assignor's rights as an individual;
 
-**NOW, THEREFORE**, in consideration of the mutual covenants and agreements herein contained, and for other good and valuable consideration, the receipt and sufficiency of which are hereby acknowledged, the parties agree as follows:
+**NOW, THEREFORE**, in consideration of the mutual covenants and agreements herein contained, and for other good and valuable consideration (including but not limited to Ten Dollars ($10.00) and other valuable consideration), the receipt and sufficiency of which are hereby acknowledged, the parties agree as follows:
 
 ---
 
@@ -45,7 +47,7 @@ Established under Natural Law
 
 ### 1.1 Complete Transfer
 
-The Grantor does hereby **irrevocably transfer, assign, and convey** to the Trust, its successors and assigns, all right, title, and interest in and to the following property (collectively, the "Assigned Property"):
+The Assignor does hereby **irrevocably transfer, assign, and convey** to the Trust, its successors and assigns, all right, title, and interest in and to the following property (collectively, the "Assigned Property"):
 
 #### A. BUSINESS ENTITY
 
@@ -60,7 +62,7 @@ The Grantor does hereby **irrevocably transfer, assign, and convey** to the Trus
    - Operating Agreement and all organizational documents
    - Federal EIN and state tax registrations
 
-**Effect of Transfer**: Upon execution of this Assignment, the Trust becomes the **sole member** of Odyssey-1 AI LLC. The Grantor retains no ownership interest in the LLC.
+**Effect of Transfer**: Upon execution of this Assignment, the Trust becomes the **sole member** of Odyssey-1 AI LLC. The Assignor retains no ownership interest in the LLC.
 
 #### B. SOFTWARE AND SYSTEMS
 
@@ -210,17 +212,17 @@ The Grantor does hereby **irrevocably transfer, assign, and convey** to the Trus
 
 ## ARTICLE II: REPRESENTATIONS AND WARRANTIES
 
-### 2.1 Grantor's Representations
+### 2.1 Assignor's Representations
 
-The Grantor represents and warrants that:
+The Assignor represents and warrants that:
 
-1. **Ownership**: The Grantor is the sole and exclusive owner of all right, title, and interest in the Assigned Property
-2. **Authority**: The Grantor has full power and authority to execute this Assignment
-3. **No Encumbrances**: The Assigned Property is free and clear of all liens, claims, encumbrances, and adverse interests
+1. **Ownership**: The Assignor is the sole and exclusive owner of all right, title, and interest in the Assigned Property
+2. **Authority**: The Assignor has full power and authority to execute this Assignment
+3. **No Encumbrances**: The Assigned Property is free and clear of all liens, claims, encumbrances, and adverse interests (except as disclosed in writing)
 4. **No Conflicts**: This Assignment does not violate any agreement, contract, or obligation
-5. **Originality**: All works are original creations of the Grantor
+5. **Originality**: All works are original creations of the Assignor
 6. **No Infringement**: The Assigned Property does not infringe upon the rights of any third party
-7. **Sovereign Status**: The Grantor is a Living Soul operating in ecclesiastical jurisdiction, not a corporate fiction
+7. **Legal Status**: The Assignor is an individual with full legal capacity to execute this Assignment under Georgia law
 
 ### 2.2 Trust's Acceptance
 
@@ -235,25 +237,27 @@ The Trust accepts this Assignment and agrees to:
 
 ## ARTICLE III: CONSIDERATION
 
-### 3.1 Good and Valuable Consideration
+### 3.1 Consideration
 
-In consideration for this Assignment, the Trust provides:
+In consideration for this Assignment, the Trust and the Assignor acknowledge:
 
-1. **Protection**: Protection of the Assigned Property (including the LLC and its secured interests) from corporate claims, bankruptcy proceedings, and statutory jurisdiction
-2. **Perpetual Benefit**: Perpetual benefit to the Grantor and the bloodline
-3. **Sovereign Recognition**: Recognition of the Grantor's status as Living Soul and original creator
-4. **Revenue Rights**: Rights to income and benefits derived from the Assigned Property
-5. **Spousal Consent**: Christla howard, wife of the Grantor, has full knowledge of and consents to this transfer
+1. **Monetary Consideration**: Ten Dollars ($10.00) paid by the Trust to the Assignor
+2. **Valuable Consideration**: 
+   - Protection of the Assigned Property from claims, bankruptcy proceedings, and creditor action
+   - Perpetual benefit to the Assignor and the Howard and Jones bloodline
+   - Asset preservation for future generations
+3. **Spousal Acknowledgment**: Christla L. Howard, Primary Co-Trustee of the Howard Jones Bloodline Ancestral Trust, has full knowledge of and consents to this transfer
+4. **Retained Benefits**: The Assignor retains the right to receive distributions from the Trust as beneficiary
 
 ---
 
 ## ARTICLE IV: SPECIAL PROVISIONS
 
-### 4.1 HJS Insolvency and Secured Interest
+### 4.1 Strategic Business Restructuring and Asset Protection
 
-The Grantor declares that **Howard Jones Services (HJS)** is insolvent and unable to satisfy its obligations. Odyssey-1 AI LLC holds a perfected security interest in HJS assets pursuant to the UCC-1 Financing Statement filed on [date].
+The Assignor has undertaken a strategic business restructuring to separate intellectual property ownership from operational liabilities. Odyssey-1 AI LLC holds a perfected security interest in Howard Jones Services (HJS) assets pursuant to UCC-1 Financing Statements filed in Clarke County, Georgia.
 
-**Preservation of Security Interest**: This Assignment transfers ownership of Odyssey-1 AI LLC to the Trust, but does NOT release or impair the UCC-1 security interest. The Trust, as new owner of the LLC, succeeds to all rights to:
+**Preservation of Security Interest**: This Assignment transfers ownership of Odyssey-1 AI LLC to the Trust, but does NOT release or impair any UCC-1 security interests. The Trust, as new owner of the LLC, succeeds to all rights to enforce those security interests.
 
 1. Enforce the security interest against HJS assets
 2. Collect on secured debts
@@ -294,10 +298,11 @@ Odyssey-1 AI LLC → UCC-1 Financing Statement against → Howard Jones Services
 
 **Non-Release**: This Assignment does NOT release, impair, or subordinate the Grantor's UCC-1 security interest in Odyssey-1 AI LLC. That security interest remains perfected and enforceable.
 
-### 4.3 Ecclesiastical Jurisdiction
+### 4.3 Governing Law and Jurisdiction
 
-This Assignment is executed under:
-- **Natural Law** (inalienable rights of the Living Soul)
+This Assignment is a private contract executed under and governed by the laws of the State of Georgia. The Assignor and the Trust consent to the jurisdiction of the Superior Courts of Clarke County, Georgia for any disputes arising from this Assignment.
+
+**Severability**: If any provision is held invalid or unenforceable, the remaining provisions shall continue in full force and effect.
 - **Common Law** (first possession and labor-mixing)
 - **Ecclesiastical Law** (jurisdiction of conscience and spirit)
 
@@ -1090,7 +1095,38 @@ I, **Christla howard**, wife of rickey-allan: howard, hereby certify that:
 **Signed under penalty of perjury:**
 
 ___________________________________  
-Christla howard  
+Christla L. Howard  
+Wife and Spouse of Assignor  
 Date: __________
 
-═══════════════════════════════════════════════════════════════════
+---
+
+## NOTARIAL ACKNOWLEDGMENT - ASSIGNMENT OF IP
+
+**STATE OF GEORGIA**  
+**COUNTY OF CLARKE**
+
+The foregoing instrument was acknowledged before me this _____ day of ________, 2026, by:
+
+1. **RICKEY ALLAN HOWARD** - Assignor
+2. **CHRISTLA L. HOWARD** - Spouse (Consenting Party)
+
+These individuals are personally known to me, OR have produced the following identification:
+
+**Rickey Allan Howard:**  
+ID Type: _____________ Number: ______________
+
+**Christla L. Howard:**  
+ID Type: _____________ Number: ______________
+
+I certify that each of the above-named persons personally appeared before me and executed this Assignment of Intellectual Property of his/her own volition, with full knowledge and understanding of the contents hereof, and declared to me their intent to be bound by the terms herein.
+
+**NOTARY PUBLIC SIGNATURE & SEAL:**
+
+Signature: _________________________________  
+Notary Public  
+Printed Name: _________________________________  
+My Commission Expires: __________  
+Serial Number: __________
+
+[NOTARY SEAL SPACE - Leave 2 inches for notary stamp]

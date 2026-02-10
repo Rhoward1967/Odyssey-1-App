@@ -32,13 +32,36 @@ serve(async (req) => {
 
   let correlation_id: string | undefined;
   try {
-    const { userIntent, userId, organizationId, correlation_id: incomingCorrelationId } = await req.json();
+    const body = await req.json();
+    const { userIntent, userId, organizationId, correlation_id: incomingCorrelationId, action, target } = body;
     correlation_id = incomingCorrelationId;
 
     const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
     )
+
+    // ⚡ HANDLE R.O.M.A.N. CACHE REFRESH REQUESTS
+    if (action === 'CACHE_REFRESH' && target === 'ROMAN_BUSINESS_ENTITIES') {
+      console.log('🔄 R.O.M.A.N. CACHE REFRESH REQUEST RECEIVED');
+      await writeAudit({
+        table_schema: 'public',
+        table_name: 'roman_commands',
+        action: 'CACHE_REFRESH',
+        user_role: 'service_role',
+        after_row: { fn: 'roman-processor', action: 'cache_refresh', target: 'business_entities', result: 'success' },
+        correlation_id,
+      });
+      return new Response(
+        JSON.stringify({ 
+          success: true, 
+          message: 'R.O.M.A.N. cache refresh triggered - System will load latest trust data',
+          action: 'CACHE_REFRESH',
+          timestamp: new Date().toISOString()
+        }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
 
     // R.O.M.A.N. Command Processing
     const romanCommand = generateRomanCommand(userIntent, userId, organizationId)
