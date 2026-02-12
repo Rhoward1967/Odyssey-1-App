@@ -105,8 +105,8 @@ const TIERS: Tier[] = [
     },
   },
   {
-    id: 'ultimate',
-    name: 'Ultimate',
+    id: 'enterprise',
+    name: 'Enterprise',
     price: 999,
     period: 'month',
     description: 'Enterprise-grade power and customization',
