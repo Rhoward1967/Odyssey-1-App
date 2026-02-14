@@ -21,6 +21,9 @@
 
 import { supabase } from '@/lib/supabaseClient';
 import type { DebtAccount } from './legalDefenseEngine';
+import { romanAdvancedFraudDetection, type FraudDetectionResult } from './romanAdvancedFraudDetection';
+import { romanDeprogrammingModule, type DeprogrammingAnalysis } from './romanDeprogrammingModule';
+import { romanBlacksLawFraud } from './romanBlacksLawFraud';
 
 // Constitutional AI Validation Prompt (embedded in all R.O.M.A.N. operations)
 const CONSTITUTIONAL_GUARDRAILS = `
@@ -92,6 +95,8 @@ interface ViolationAnalysis {
   recommendedAction: string;
   legalStrength: number; // 0-100
   nextSteps: string[];
+  // Advanced fraud detection
+  advancedFraudAnalysis?: FraudDetectionResult;
 }
 
 interface LetterRequest {
@@ -112,8 +117,50 @@ interface ResponseStrategy {
 
 class RomanLegalService {
   /**
+   * MASTER ANALYSIS: Combines vision detection + advanced fraud detection
+   * Runs automatically on every debt analysis
+   */
+  async analyzeDebtComprehensive(
+    account: DebtAccount
+  ): Promise<{
+    basicAnalysis: ViolationAnalysis;
+    advancedFrauds: FraudDetectionResult;
+    combinedStrength: number;
+    totalDamages: number;
+    urgentActions: string[];
+  }> {
+    try {
+      // Run advanced fraud detection (always runs automatically)
+      const advancedFrauds = romanAdvancedFraudDetection.detectAllFrauds(account);
+
+      // Create comprehensive analysis
+      return {
+        basicAnalysis: {
+          violationCount: 0, // Will be populated by vision analysis if provided
+          violations: [],
+          statutoryDamagesTotal: 0,
+          recommendedAction: advancedFrauds.summary,
+          legalStrength: advancedFrauds.legalStrength,
+          nextSteps: advancedFrauds.recommendedDiscovery.map(d => d.requestText.split('\n')[0]),
+          advancedFraudAnalysis: advancedFrauds
+        },
+        advancedFrauds,
+        combinedStrength: advancedFrauds.legalStrength,
+        totalDamages: advancedFrauds.estimatedDamages,
+        urgentActions: advancedFrauds.recommendedDiscovery
+          .filter(d => d.priority === 'CRITICAL')
+          .map(d => `${d.category}: ${d.expectedResult}`)
+      };
+    } catch (error) {
+      console.error('R.O.M.A.N. comprehensive analysis error:', error);
+      throw error;
+    }
+  }
+
+  /**
    * Analyze evidence image using Claude vision
    * Detects FDCPA violations, reads amounts, dates, etc.
+   * NOW INCLUDES ADVANCED FRAUD DETECTION
    */
   async analyzeEvidence(
     imageUrl: string,
@@ -190,14 +237,30 @@ Provide detailed JSON analysis following the specified format.`,
 
       // Parse R.O.M.A.N.'s response
       const analysis = JSON.parse(data.response);
-      
+
+      // AUTOMATICALLY run advanced fraud detection
+      const advancedFrauds = romanAdvancedFraudDetection.detectAllFrauds({
+        creditor: accountInfo.creditor,
+        currentAmount: accountInfo.currentAmount,
+        originalAmount: accountInfo.currentAmount,
+        accountNumber: accountInfo.accountNumber,
+        dateOfDefault: new Date(Date.now() - (3 * 365 * 24 * 60 * 60 * 1000)), // Assume 3 years old if not provided
+        lastPaymentDate: new Date(Date.now() - (3 * 365 * 24 * 60 * 60 * 1000)),
+        collectionAgency: undefined // Will be detected from letter
+      });
+
       return {
         violationCount: analysis.violations.length,
         violations: analysis.violations,
         statutoryDamagesTotal: analysis.violations.reduce((sum: number, v: any) => sum + v.statutoryDamages, 0),
         recommendedAction: analysis.recommendedAction,
-        legalStrength: analysis.legalStrength,
-        nextSteps: analysis.nextSteps
+        legalStrength: Math.max(analysis.legalStrength, advancedFrauds.legalStrength), // Use higher strength
+        nextSteps: [
+          ...analysis.nextSteps,
+          `ADVANCED FRAUDS DETECTED: ${advancedFrauds.fraudsDetected.length} patterns (Score: ${advancedFrauds.totalFraudScore}/100)`,
+          ...advancedFrauds.recommendedDiscovery.slice(0, 3).map(d => d.category)
+        ],
+        advancedFraudAnalysis: advancedFrauds
       };
 
     } catch (error) {
@@ -589,6 +652,63 @@ OUTPUT JSON:
         reasoning: `Debt is ${yearsOld.toFixed(1)} years old`
       };
     }
+  }
+
+  /**
+   * Get deprogramming analysis
+   * Teaches users WHY they've been programmed and HOW to see through the fraud
+   *
+   * "People are programmed not to see. Schools did this."
+   * - Rickey Allan Howard
+   */
+  getDeprogrammingAnalysis(): DeprogrammingAnalysis {
+    return romanDeprogrammingModule.getDeprogrammingAnalysis();
+  }
+
+  /**
+   * Generate full deprogramming report (user-friendly text)
+   */
+  generateDeprogrammingReport(): string {
+    return romanDeprogrammingModule.generateDeprogrammingReport();
+  }
+
+  /**
+   * Detect if user shows signs of programming in their responses
+   */
+  detectProgramming(userResponse: string): {
+    isProgrammed: boolean;
+    programmingIndicators: string[];
+    deprogrammingSuggestion: string;
+  } {
+    return romanDeprogrammingModule.detectProgramming(userResponse);
+  }
+
+  /**
+   * Get specific programming layer explanation by topic
+   */
+  getProgrammingLayer(topic: 'money' | 'math' | 'contract' | 'tax' | 'court' | 'insolvency' | 'education') {
+    return romanDeprogrammingModule.getProgrammingLayer(topic);
+  }
+
+  /**
+   * Generate Black's Law Dictionary fraud analysis
+   *
+   * "If I'm wrong, they gonna have to prove me wrong. I'm only looking at their own laws,
+   * and what I see is fraud as defined in Black's Law."
+   * - Rickey Allan Howard
+   *
+   * Maps detected frauds to Black's Law Dictionary definitions, proving fraud using
+   * the system's own authoritative legal dictionary. Shifts burden to them to disprove.
+   */
+  generateBlacksLawAnalysis(fraudsDetected: FraudDetectionResult['fraudsDetected']): string {
+    return romanBlacksLawFraud.generateBlacksLawAnalysis(fraudsDetected);
+  }
+
+  /**
+   * Get Black's Law mapping for specific fraud type
+   */
+  getBlacksLawMapping(fraudType: string) {
+    return romanBlacksLawFraud.mapFraudToBlacksLaw(fraudType);
   }
 }
 
