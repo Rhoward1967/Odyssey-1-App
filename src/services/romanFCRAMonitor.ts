@@ -76,7 +76,7 @@ export class RomanFCRAMonitor {
         level: 'critical',
         message: `🔴 **CRITICAL: ${report.overdue_count} Non-Responsive Entit${report.overdue_count === 1 ? 'y' : 'ies'}**\n\nThe following entities have exceeded their 30-day FCRA response deadline:`,
         entities: report.overdue.map((r: any) => {
-          const daysOverdue = Math.abs(Math.floor((new Date(r.response_deadline).getTime() - Date.now()) / (1000 * 60 * 60 * 24)));
+          const daysOverdue = Math.abs(Math.floor((new Date(r.fcra_deadline).getTime() - Date.now()) / (1000 * 60 * 60 * 24)));
           return `• **${r.entity_name}** (${r.entity_type}) - OVERDUE by ${daysOverdue} days\n  Tracking: ${r.tracking_number}`;
         }),
       });
@@ -85,12 +85,12 @@ export class RomanFCRAMonitor {
     // Warning: Approaching deadlines
     if (report.approaching_deadline.length > 0) {
       const critical = report.approaching_deadline.filter((r: any) => {
-        const days = Math.floor((new Date(r.response_deadline).getTime() - Date.now()) / (1000 * 60 * 60 * 24));
+        const days = Math.floor((new Date(r.fcra_deadline).getTime() - Date.now()) / (1000 * 60 * 60 * 24));
         return days < 3;
       });
 
       const approaching = report.approaching_deadline.filter((r: any) => {
-        const days = Math.floor((new Date(r.response_deadline).getTime() - Date.now()) / (1000 * 60 * 60 * 24));
+        const days = Math.floor((new Date(r.fcra_deadline).getTime() - Date.now()) / (1000 * 60 * 60 * 24));
         return days >= 3 && days <= 7;
       });
 
@@ -99,7 +99,7 @@ export class RomanFCRAMonitor {
           level: 'warning',
           message: `⚠️ **URGENT: ${critical.length} Deadline${critical.length === 1 ? '' : 's'} in Next 3 Days**`,
           entities: critical.map((r: any) => {
-            const days = Math.floor((new Date(r.response_deadline).getTime() - Date.now()) / (1000 * 60 * 60 * 24));
+            const days = Math.floor((new Date(r.fcra_deadline).getTime() - Date.now()) / (1000 * 60 * 60 * 24));
             return `• **${r.entity_name}** (${r.entity_type}) - ${days} day${days === 1 ? '' : 's'} remaining\n  Tracking: ${r.tracking_number}`;
           }),
         });
@@ -110,7 +110,7 @@ export class RomanFCRAMonitor {
           level: 'info',
           message: `📅 **${approaching.length} Deadline${approaching.length === 1 ? '' : 's'} Approaching (3-7 Days)**`,
           entities: approaching.map((r: any) => {
-            const days = Math.floor((new Date(r.response_deadline).getTime() - Date.now()) / (1000 * 60 * 60 * 24));
+            const days = Math.floor((new Date(r.fcra_deadline).getTime() - Date.now()) / (1000 * 60 * 60 * 24));
             return `• **${r.entity_name}** (${r.entity_type}) - ${days} days remaining`;
           }),
         });
@@ -197,7 +197,7 @@ export class RomanFCRAMonitor {
 
       if (report.approaching_deadline.length > 0) {
         const critical = report.approaching_deadline.filter((r: any) => {
-          const days = Math.floor((new Date(r.response_deadline).getTime() - Date.now()) / (1000 * 60 * 60 * 24));
+          const days = Math.floor((new Date(r.fcra_deadline).getTime() - Date.now()) / (1000 * 60 * 60 * 24));
           return days < 3;
         });
         if (critical.length > 0) {

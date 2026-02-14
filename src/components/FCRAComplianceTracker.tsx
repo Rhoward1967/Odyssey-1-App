@@ -13,7 +13,7 @@ interface CertifiedMailTracking {
   tracking_number: string;
   mail_date: string;
   delivery_date: string | null;
-  response_deadline: string;
+  fcra_deadline: string;
   response_received: boolean;
   response_date: string | null;
   verification_provided: boolean;
@@ -35,7 +35,7 @@ export default function FCRAComplianceTracker() {
       const { data, error } = await supabase
         .from('certified_mail_tracking')
         .select('*')
-        .order('response_deadline', { ascending: true });
+        .order('fcra_deadline', { ascending: true });
 
       if (error) throw error;
       setTrackingData(data || []);
@@ -61,7 +61,7 @@ export default function FCRAComplianceTracker() {
   }
 
   function getStatusBadge(item: CertifiedMailTracking) {
-    const daysUntilDeadline = differenceInDays(new Date(item.response_deadline), new Date());
+    const daysUntilDeadline = differenceInDays(new Date(item.fcra_deadline), new Date());
 
     if (item.response_received) {
       return (
@@ -102,7 +102,7 @@ export default function FCRAComplianceTracker() {
     const total = trackingData.length;
     const responded = trackingData.filter(t => t.response_received).length;
     const overdue = trackingData.filter(t => {
-      const daysUntil = differenceInDays(new Date(t.response_deadline), new Date());
+      const daysUntil = differenceInDays(new Date(t.fcra_deadline), new Date());
       return daysUntil < 0 && !t.response_received;
     }).length;
     const pending = total - responded - overdue;
@@ -154,7 +154,7 @@ export default function FCRAComplianceTracker() {
 
           <div className="space-y-4">
             {trackingData.map(item => {
-              const daysUntilDeadline = differenceInDays(new Date(item.response_deadline), new Date());
+              const daysUntilDeadline = differenceInDays(new Date(item.fcra_deadline), new Date());
               
               return (
                 <Card key={item.id} className={`${daysUntilDeadline < 0 && !item.response_received ? 'border-red-500' : ''}`}>
@@ -188,7 +188,7 @@ export default function FCRAComplianceTracker() {
                       </div>
                       <div>
                         <div className="text-muted-foreground mb-1">Response Deadline</div>
-                        <div className="font-medium">{format(new Date(item.response_deadline), 'MMM d, yyyy')}</div>
+                        <div className="font-medium">{format(new Date(item.fcra_deadline), 'MMM d, yyyy')}</div>
                       </div>
                       <div>
                         <div className="text-muted-foreground mb-1">Days Remaining</div>

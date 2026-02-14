@@ -18,7 +18,7 @@ interface TrackingRecord {
   tracking_number: string;
   mail_date: string;
   delivery_date: string | null;
-  response_deadline: string;
+  fcra_deadline: string;
   response_received: boolean;
   response_date: string | null;
   verification_provided: boolean;
@@ -45,7 +45,7 @@ export class FCRAMonitoringService {
     const { data, error } = await supabase
       .from('certified_mail_tracking')
       .select('*')
-      .order('response_deadline', { ascending: true });
+      .order('fcra_deadline', { ascending: true });
 
     if (error) {
       console.error('Error fetching tracking data:', error);
@@ -69,13 +69,13 @@ export class FCRAMonitoringService {
 
     const approaching_deadline = records.filter(r => {
       if (r.response_received) return false;
-      const daysUntil = differenceInDays(new Date(r.response_deadline), now);
+      const daysUntil = differenceInDays(new Date(r.fcra_deadline), now);
       return daysUntil >= 0 && daysUntil <= 7;
     });
 
     const overdue = records.filter(r => {
       if (r.response_received) return false;
-      const daysUntil = differenceInDays(new Date(r.response_deadline), now);
+      const daysUntil = differenceInDays(new Date(r.fcra_deadline), now);
       return daysUntil < 0;
     });
 
@@ -91,7 +91,7 @@ export class FCRAMonitoringService {
     if (approaching_deadline.length > 0) {
       summary += `⚠️ DEADLINES APPROACHING (≤7 days):\n`;
       approaching_deadline.forEach(r => {
-        const daysLeft = differenceInDays(new Date(r.response_deadline), now);
+        const daysLeft = differenceInDays(new Date(r.fcra_deadline), now);
         summary += `  • ${r.entity_name} (${r.entity_type}): ${daysLeft} days remaining\n`;
       });
       summary += `\n`;
@@ -100,7 +100,7 @@ export class FCRAMonitoringService {
     if (overdue_count > 0) {
       summary += `🔴 NON-RESPONSIVE (Past Deadline):\n`;
       overdue.forEach(r => {
-        const daysOverdue = Math.abs(differenceInDays(new Date(r.response_deadline), now));
+        const daysOverdue = Math.abs(differenceInDays(new Date(r.fcra_deadline), now));
         summary += `  • ${r.entity_name} (${r.entity_type}): ${daysOverdue} days overdue\n`;
       });
       summary += `\n`;
@@ -140,7 +140,7 @@ export class FCRAMonitoringService {
 
     return records.filter(r => {
       if (r.response_received) return false;
-      const daysUntil = differenceInDays(new Date(r.response_deadline), now);
+      const daysUntil = differenceInDays(new Date(r.fcra_deadline), now);
       return daysUntil < 3; // Critical if less than 3 days or overdue
     });
   }

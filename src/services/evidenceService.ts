@@ -96,7 +96,7 @@ class EvidenceService {
           mime_type: file.type,
           document_date: metadata?.documentDate?.toISOString(),
           delivery_date: metadata?.deliveryDate?.toISOString(),
-          response_deadline: responseDeadline?.toISOString(),
+          fcra_deadline: responseDeadline?.toISOString(),
           notes: metadata?.notes
         })
         .select()
@@ -382,7 +382,7 @@ class EvidenceService {
       statutoryDamagesTotal: parseFloat(row.statutory_damages_total || 0),
       documentDate: row.document_date ? new Date(row.document_date) : undefined,
       deliveryDate: row.delivery_date ? new Date(row.delivery_date) : undefined,
-      responseDeadline: row.response_deadline ? new Date(row.response_deadline) : undefined,
+      responseDeadline: row.fcra_deadline ? new Date(row.fcra_deadline) : undefined,
       notes: row.notes,
       tags: row.tags || [],
       createdAt: new Date(row.created_at)
