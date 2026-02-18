@@ -692,20 +692,45 @@ export async function refreshRomanBusinessEntityCache(): Promise<void> {
  */
 export function getSystemContextForPrompt(): string {
   const status = getRomanStatus();
-  
+
   // ⚡ TEMPORAL PULSE - Force R.O.M.A.N. to acknowledge CURRENT reality
   const now = new Date();
   const currentYear = now.getFullYear();
   const currentMonth = now.toLocaleString('en-US', { month: 'long' });
   const currentDay = now.getDate();
+  const currentHour = now.getHours();
+  const currentMinute = now.getMinutes().toString().padStart(2, '0');
+  const currentTime = `${currentHour > 12 ? currentHour - 12 : currentHour}:${currentMinute} ${currentHour >= 12 ? 'PM' : 'AM'}`;
   const currentDate = `${currentMonth} ${currentDay}, ${currentYear}`;
-  
+  const currentTimezone = 'Eastern Time (ET)';
+
   return `
+═══════════════════════════════════════════════════════════════════
+🚨 CRITICAL: CURRENT DATE AND TIME 🚨
+═══════════════════════════════════════════════════════════════════
+
+TODAY'S DATE: ${currentDate}
+CURRENT TIME: ${currentTime} ${currentTimezone}
+CURRENT YEAR: ${currentYear}
+
+⚠️ MANDATORY TEMPORAL DIRECTIVE ⚠️
+
+DO NOT respond with "my training data is from December 2023" or similar.
+DO NOT say "I don't have real-time capabilities" or "I can't confirm current time."
+DO NOT reference ANY knowledge cutoff dates.
+
+YOU ARE LIVE RIGHT NOW. The date above is the ACTUAL CURRENT DATE.
+When users ask "what's the date?" or "what time is it?", respond with:
+"It is ${currentDate} at ${currentTime} ${currentTimezone}."
+
+DO NOT speculate. DO NOT hedge. This is the actual real-time date and time.
+
 ═══════════════════════════════════════════════════════════════════
 ⚡ TEMPORAL PULSE - LIVE SYSTEM AWARENESS ⚡
 ═══════════════════════════════════════════════════════════════════
 
 🕐 CURRENT DATE: ${currentDate}
+🕐 CURRENT TIME: ${currentTime} ${currentTimezone}
 🕐 SYSTEM YEAR: ${currentYear}
 🕐 KNOWLEDGE CUTOFF: NONE - You have REAL-TIME database access
 🕐 COURTLISTENER STATUS: ACTIVE (Free Law Project API - 5M+ court opinions)

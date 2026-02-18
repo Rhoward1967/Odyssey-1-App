@@ -8,7 +8,8 @@
  * when response deadlines are approaching or have passed.
  */
 
-import { supabase } from '@/lib/supabaseClient';
+// Use service role for system operations (bypasses RLS)
+import { romanSupabase as supabase } from './romanSupabase';
 import { differenceInDays, format } from 'date-fns';
 
 interface TrackingRecord {
@@ -182,15 +183,17 @@ export class FCRAMonitoringService {
       .from('system_knowledge')
       .insert({
         category: 'fcra_monitoring',
-        subcategory: 'daily_check',
-        key_name: `fcra_check_${format(new Date(), 'yyyy-MM-dd')}`,
-        value: report.summary,
-        metadata: {
+        knowledge_key: `fcra_check_${format(new Date(), 'yyyy-MM-dd')}`,
+        value: {
+          summary: report.summary,
           total_mailings: report.total_mailings,
           responses_received: report.responses_received,
           overdue_count: report.overdue_count,
           approaching_count: report.approaching_deadline.length,
-        } as any,
+          check_date: new Date().toISOString()
+        },
+        learned_from: 'fcra_daily_monitoring',
+        updated_at: new Date().toISOString()
       });
 
     if (error && error.code !== '23505') { // Ignore duplicate key errors
