@@ -1,6 +1,7 @@
 # SIGNING AND FILING CHECKLIST
 **Howard Jones Bloodline Ancestral Trust**
 **Created:** February 15, 2026
+**Amended:** February 19, 2026 — Updated trustee structure (Teara Howard + Joseph Lumpkin Jr. as Initial Co-Trustees; Christla Howard redesignated as Protected Lifetime Beneficiary)
 
 ---
 
@@ -14,15 +15,24 @@
 - UCC-1 filing depends on Trust existing
 
 **Actions:**
-- [ ] Review Trust instrument with Archana
-- [ ] Both sign as Settlor/Trustee (you) and Co-Trustee (Archana)
-- [ ] Get notarized (U.S. notary is fine for Trust)
+- [ ] Confirm **Teara Howard** (Co-Trustee) availability
+- [ ] Confirm **Joseph Lumpkin Jr.** (Co-Trustee) availability
+- [ ] Confirm **Christla Howard** (Co-Grantor) availability — signs as Co-Grantor ONLY, NOT as Co-Trustee
+- [ ] Review Trust instrument with Teara Howard and Joseph Lumpkin Jr.
+- [ ] **Rickey Allan Howard** signs as Grantor/Settlor
+- [ ] **Teara Howard** signs as Initial Co-Trustee
+- [ ] **Joseph Lumpkin Jr.** signs as Initial Co-Trustee
+- [ ] **Christla Howard** signs Grantor page + Assignment consent ONLY (⚠️ NOT any Co-Trustee lines)
+- [ ] Get notarized (Clarke County, GA Notary — all four parties present same time, same place)
 - [ ] Make copies (keep originals safe)
 - [ ] **Date Signed:** ____________
 
 **Location to Sign:**
-- (Check Trust instrument for signature pages)
-- Typically at end: "Settlor" and "Trustee" lines
+- Check Trust instrument for signature pages
+- Grantor signs: Grantor signature page
+- Co-Trustees sign: Co-Trustee acceptance page + Acceptance of Trusteeship page
+- Christla Howard signs: Grantor/Co-Grantor page + Assignment consent (NOT Co-Trustee lines)
+- Notary acknowledges: All parties
 
 ---
 
@@ -643,6 +653,7 @@ Thread 🧵👇
 ---
 
 **Document Created:** February 15, 2026
+**Amended:** February 19, 2026 — Trustee structure updated: Teara Howard + Joseph Lumpkin Jr. as Initial Co-Trustees; Christla Howard = Protected Lifetime Beneficiary (Co-Grantor only at notarization)
 **Purpose:** Step-by-step signing and filing guide
 **Status:** Ready for Use
 

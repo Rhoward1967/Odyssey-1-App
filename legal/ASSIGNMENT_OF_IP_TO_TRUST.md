@@ -1,7 +1,8 @@
 # ASSIGNMENT AND TRANSFER OF INTELLECTUAL PROPERTY
 ## TO THE HOWARD JONES BLOODLINE ANCESTRAL TRUST
 
-**EXECUTED:** February 7, 2026  
+**EXECUTED:** February 7, 2026
+**AMENDED:** February 19, 2026 — Trustee structure updated: Teara Howard + Joseph Lumpkin Jr. as Initial Co-Trustees; Christla Howard redesignated as Co-Grantor and Protected Lifetime Beneficiary (not a Trustee)
 **GOVERNING LAW:** State of Georgia
 
 ---
@@ -33,7 +34,7 @@ Established under the laws of the State of Georgia
 
 **WHEREAS**, Odyssey-1 AI LLC has established a **UCC-1 Financing Statement** as part of a strategic business restructuring and asset protection strategy;
 
-**WHEREAS**, the Assignor, with the full knowledge and consent of Christla L. Howard (Primary Co-Trustee of the Howard Jones Bloodline Ancestral Trust), desires to transfer **all ownership interest in Odyssey-1 AI LLC** and all related intellectual property to the Trust for the benefit of the bloodline and future generations;
+**WHEREAS**, the Assignor, with the full knowledge and consent of Christla L. Howard (Co-Grantor and Protected Lifetime Beneficiary of the Howard Jones Bloodline Ancestral Trust — NOT a Trustee), desires to transfer **all ownership interest in Odyssey-1 AI LLC** and all related intellectual property to the Trust for the benefit of the bloodline and future generations;
 
 **WHEREAS**, the Trust is established to hold, protect, and preserve the business entity, intellectual property, and assets of the Howard Jones bloodline;
 
@@ -246,7 +247,7 @@ In consideration for this Assignment, the Trust and the Assignor acknowledge:
    - Protection of the Assigned Property from claims, bankruptcy proceedings, and creditor action
    - Perpetual benefit to the Assignor and the Howard and Jones bloodline
    - Asset preservation for future generations
-3. **Spousal Acknowledgment**: Christla L. Howard, Primary Co-Trustee of the Howard Jones Bloodline Ancestral Trust, has full knowledge of and consents to this transfer
+3. **Spousal Acknowledgment**: Christla L. Howard, Co-Grantor and Protected Lifetime Beneficiary of the Howard Jones Bloodline Ancestral Trust (NOT serving as Co-Trustee), has full knowledge of and consents to this transfer as Co-Grantor only
 4. **Retained Benefits**: The Assignor retains the right to receive distributions from the Trust as beneficiary
 
 ---
@@ -513,7 +514,7 @@ Athens, Georgia Republic
 
 ### 8.2 Notice to Trust
 
-Howard Jones Bloodline Family Trust  
+Howard Jones Bloodline Ancestral Trust  
 c/o Trustee  
 [Address to be determined]
 
@@ -525,7 +526,7 @@ c/o Trustee
 
 Upon transfer of Odyssey-1 AI LLC to the Trust:
 
-1. **Trust as Sole Member**: The Howard Jones Bloodline Family Trust becomes the sole member of Odyssey-1 AI LLC
+1. **Trust as Sole Member**: The Howard Jones Bloodline Ancestral Trust becomes the sole member of Odyssey-1 AI LLC
 2. **Manager Designation**: The Trustee(s) shall designate a Manager for the LLC (may be the Grantor, a Trustee, or a third party)
 3. **Operating Agreement**: The LLC Operating Agreement shall be amended to reflect Trust ownership
 4. **Bank Accounts**: All LLC bank accounts shall be updated to show the Trust as the member/owner
@@ -590,7 +591,7 @@ The Trustee(s), as owner of Odyssey-1 AI LLC, shall have full authority to:
    - Employee relationships (if any)
    - Banking relationships and merchant accounts
 
-**Trust Ownership of Foreclosed Assets**: Upon successful foreclosure, all seized assets shall become property of **Odyssey-1 AI LLC**, which is owned by the **Howard Jones Bloodline Family Trust**. This establishes the following ownership chain:
+**Trust Ownership of Foreclosed Assets**: Upon successful foreclosure, all seized assets shall become property of **Odyssey-1 AI LLC**, which is owned by the **Howard Jones Bloodline Ancestral Trust**. This establishes the following ownership chain:
 
 ```
 Trust → owns → LLC → seizes → HJS Assets
@@ -668,11 +669,20 @@ This Assignment may be executed in counterparts, each of which shall be deemed a
 
 ### GRANTEE (TRUST):
 
-**Howard Jones Bloodline Family Trust**
+**Howard Jones Bloodline Ancestral Trust**
 
-**By:** ___________________________________  
-**Name:** ___________________________________  
-**Title:** Trustee  
+**Co-Trustee #1:**
+
+**By:** ___________________________________
+**Name:** Teara Howard
+**Title:** Initial Co-Trustee, Howard Jones Bloodline Ancestral Trust
+**Date:** ___________________________________
+
+**Co-Trustee #2:**
+
+**By:** ___________________________________
+**Name:** Joseph Lumpkin Jr.
+**Title:** Initial Co-Trustee, Howard Jones Bloodline Ancestral Trust
 **Date:** ___________________________________
 
 ---
@@ -764,9 +774,11 @@ No amendment shall diminish or revoke the core transfer of intellectual property
 
 **Authorized Trustees** for purposes of this provision include:
 
-- **Primary Trustee**: [Wife's name - to be filled in]
-- **Co-Trustee**: [Daughter's name - to be filled in]
-- **Successor Trustees**: Any person(s) designated in the Howard Jones Bloodline Family Trust instrument
+- **Initial Co-Trustee**: Teara Howard
+- **Initial Co-Trustee**: Joseph Lumpkin Jr.
+- **First Succession Co-Trustees**: Ahmad Rashad Barnett + Derrick Williams (One Accord)
+- **Second Succession Co-Trustees**: Kenneth Howard + Keith Sorrells (One Accord)
+- **Successor Trustees**: Any person(s) designated in the Howard Jones Bloodline Ancestral Trust instrument
 
 This authority allows the Trustee(s) to protect and administer the Trust's intellectual property rights without requiring the Grantor's involvement in every administrative matter.
 
@@ -991,7 +1003,7 @@ Upon execution of this Assignment, the following actions must be completed to ef
 **Within 30 Days of Execution:**
 
 1. **Amend LLC Operating Agreement** to reflect:
-   - Howard Jones Bloodline Family Trust as sole member (100% ownership)
+   - Howard Jones Bloodline Ancestral Trust as sole member (100% ownership)
    - rickey-allan: howard has zero ownership interest
    - Manager designation (Trustee or delegated person)
 
@@ -1002,7 +1014,7 @@ Upon execution of this Assignment, the following actions must be completed to ef
 3. **Banking Updates**:
    - Notify bank of ownership change
    - Update signature authority on LLC accounts
-   - Ensure accounts are titled "Odyssey-1 AI LLC, owned by Howard Jones Bloodline Family Trust"
+   - Ensure accounts are titled "Odyssey-1 AI LLC, owned by Howard Jones Bloodline Ancestral Trust"
 
 4. **IRS Notification**:
    - File Form 8832 if changing LLC tax classification
@@ -1046,7 +1058,7 @@ Upon execution of this Assignment, the following actions must be completed to ef
 
 **As Contracts Arise:**
 
-1. **New Contracts**: All new customer contracts shall be executed by "Odyssey-1 AI LLC, a member of Howard Jones Bloodline Family Trust"
+1. **New Contracts**: All new customer contracts shall be executed by "Odyssey-1 AI LLC, a member of Howard Jones Bloodline Ancestral Trust"
 2. **Existing Contracts**: Assign or novate existing contracts from Grantor personally to the LLC
 3. **Government Contracts**: Ensure SAM.gov registration (if applicable) reflects LLC ownership by Trust
 
@@ -1059,64 +1071,82 @@ Upon execution of this Assignment, the following actions must be completed to ef
 3. **Expense Reimbursement**: Grantor's business expenses paid from LLC account, with proper documentation
 4. **W-2/1099 Setup**: If Grantor performs labor for the LLC, establish proper employment or contractor relationship
 
-### 12.6 Spousal Acknowledgment
+### 12.6 Co-Grantor Acknowledgment (Christla Howard)
 
-Christla howard acknowledges:
+⚠️ **Christla Howard signs here as Co-Grantor ONLY — she is NOT a Trustee or Co-Trustee. She is a Protected Lifetime Beneficiary under Trust Article III.**
 
-1. She has been fully informed of this transfer by her husband rickey-allan: howard
+Christla L. Howard, as Co-Grantor, acknowledges:
+
+1. She has been fully informed of this transfer by her husband Rickey Allan Howard
 2. She understands the LLC and all IP are now Trust property, not marital property
 3. She consents to this arrangement as beneficial to the family bloodline
-4. She agrees to serve as Trustee or Co-Trustee if designated
+4. She is designated as a **Protected Lifetime Beneficiary** — all her care, bills, and monthly allowance are provided by the Trust for the rest of her natural life
+5. She does NOT serve as Trustee or Co-Trustee — the Co-Trustees are Teara Howard and Joseph Lumpkin Jr.
+6. She holds no signature authority over Trust bank accounts or Trust decisions
 
-**Christla's Signature** (acknowledging consent):
+**Christla's Signature** (as Co-Grantor — consenting party only):
 
-___________________________________  
-Christla howard  
+___________________________________
+Christla L. Howard
+Co-Grantor / Protected Lifetime Beneficiary
 Date: __________
 
 ---
 
-## SPOUSAL CONSENT CERTIFICATION
+## CO-GRANTOR CONSENT CERTIFICATION
 
-I, **Christla howard**, wife of rickey-allan: howard, hereby certify that:
+⚠️ **Christla L. Howard signs below as Co-Grantor ONLY. She is NOT signing as a Trustee or Co-Trustee. Her role is Protected Lifetime Beneficiary under Trust Article III.**
 
-1. I have full knowledge of the transfer of Odyssey-1 AI LLC and all intellectual property to the Howard Jones Bloodline Family Trust.
+I, **Christla L. Howard**, wife of Rickey Allan Howard and Co-Grantor of the Howard Jones Bloodline Ancestral Trust, hereby certify that:
 
-2. My husband has convinced me that this transfer is necessary and beneficial for our family due to the insolvency of Howard Jones Services (HJS) and the need to protect our future income streams.
+1. I have full knowledge of the transfer of Odyssey-1 AI LLC and all intellectual property to the Howard Jones Bloodline Ancestral Trust.
+
+2. I understand that this transfer is necessary and beneficial for our family and for the protection of our future income streams and our bloodline.
 
 3. I understand that this transfer removes the LLC and IP from our marital estate and places them in an irrevocable trust for the benefit of our bloodline.
 
-4. I consent to this transfer freely and voluntarily, without duress or coercion.
+4. I consent to this transfer freely and voluntarily, without duress or coercion, in my capacity as Co-Grantor.
 
-5. I agree to cooperate in all post-execution actions necessary to complete the transfer, including signing bank documents, LLC amendments, and other related instruments.
+5. I agree to cooperate in all post-execution actions necessary to complete the transfer, including signing relevant documents in my Co-Grantor capacity.
 
-6. I am willing to serve as Trustee or Co-Trustee of the Howard Jones Bloodline Family Trust if requested.
+6. I understand that I am designated as a **Protected Lifetime Beneficiary** under Trust Article III — all my bills, care, and monthly allowance are provided by the Trust for the rest of my natural life. I hold no Trustee authority.
+
+7. I understand that **Teara Howard and Joseph Lumpkin Jr.** are the Initial Co-Trustees, and I hold no signature authority over Trust bank accounts or Trust administration.
 
 **Signed under penalty of perjury:**
 
-___________________________________  
-Christla L. Howard  
-Wife and Spouse of Assignor  
+___________________________________
+Christla L. Howard
+Co-Grantor / Protected Lifetime Beneficiary
+(NOT a Trustee or Co-Trustee)
 Date: __________
 
 ---
 
 ## NOTARIAL ACKNOWLEDGMENT - ASSIGNMENT OF IP
 
-**STATE OF GEORGIA**  
+**STATE OF GEORGIA**
 **COUNTY OF CLARKE**
 
 The foregoing instrument was acknowledged before me this _____ day of ________, 2026, by:
 
-1. **RICKEY ALLAN HOWARD** - Assignor
-2. **CHRISTLA L. HOWARD** - Spouse (Consenting Party)
+1. **RICKEY ALLAN HOWARD** — Assignor / Grantor
+2. **CHRISTLA L. HOWARD** — Co-Grantor / Consenting Party (NOT Trustee)
+3. **TEARA HOWARD** — Initial Co-Trustee, Howard Jones Bloodline Ancestral Trust
+4. **JOSEPH LUMPKIN JR.** — Initial Co-Trustee, Howard Jones Bloodline Ancestral Trust
 
 These individuals are personally known to me, OR have produced the following identification:
 
-**Rickey Allan Howard:**  
+**Rickey Allan Howard:**
 ID Type: _____________ Number: ______________
 
-**Christla L. Howard:**  
+**Christla L. Howard:**
+ID Type: _____________ Number: ______________
+
+**Teara Howard:**
+ID Type: _____________ Number: ______________
+
+**Joseph Lumpkin Jr.:**
 ID Type: _____________ Number: ______________
 
 I certify that each of the above-named persons personally appeared before me and executed this Assignment of Intellectual Property of his/her own volition, with full knowledge and understanding of the contents hereof, and declared to me their intent to be bound by the terms herein.

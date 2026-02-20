@@ -1,5 +1,6 @@
 # FINAL READINESS SUMMARY
-**Friday Evening, February 7, 2026**
+**Original: Friday Evening, February 7, 2026**
+**Amended: February 19, 2026 — Trustee structure updated throughout: Teara Howard + Joseph Lumpkin Jr. as Initial Co-Trustees; Christla Howard = Co-Grantor + Protected Lifetime Beneficiary (NOT Co-Trustee)**
 
 ---
 
@@ -13,11 +14,13 @@ All documents have been reviewed for signature completeness, professional format
 
 | Document | Pages | Grantor Sig | Co-Trustee Sig | Witness | Notary | Status |
 |----------|-------|-----------|--------------|---------|--------|--------|
-| **Trust** | 21 | ✅ Rickey | ✅ Christla, Teara | ✅ 2 req'd | ✅ Complete | **READY** |
-| **Certificate** | 8 | ✅ Rickey | ✅ Christla, Teara | — | ✅ Complete | **READY** |
-| **Assignment** | 12 | ✅ Rickey | ✅ Christla (spouse) | — | ✅ Complete | **READY** |
-| **Bank Letter** | 12 | ✅ Rickey | ✅ Christla, Teara | — | Bank only | **READY** |
+| **Trust** | 21 | ✅ Rickey (Grantor) + Christla (Co-Grantor) | ✅ Teara Howard, Joseph Lumpkin Jr. | ✅ 2 req'd | ✅ Complete | **READY** |
+| **Certificate** | 8 | ✅ Rickey | ✅ Teara Howard, Joseph Lumpkin Jr. | — | ✅ Complete | **READY** |
+| **Assignment** | 12 | ✅ Rickey (Assignor) + Christla (Co-Grantor consent) | ✅ Teara Howard, Joseph Lumpkin Jr. (accept on behalf of Trust) | — | ✅ Complete | **READY** |
+| **Bank Letter** | 12 | ✅ Rickey (Grantor Acknowledgment) | ✅ Teara Howard, Joseph Lumpkin Jr. | — | Bank only | **READY** |
 | **Pocket Ref** | 3 | — | — | — | — | **READY** |
+
+⚠️ **Christla Howard signs as Co-Grantor ONLY on the Trust Grantor page and Assignment consent page. She does NOT sign any Co-Trustee line on any document.**
 
 **Total Document Set: 56 pages**
 
@@ -130,10 +133,15 @@ All documents have been reviewed for signature completeness, professional format
    - Get account confirmations
 
 ### This Week:
-1. **Notarization Ceremony** (45 minutes):
-   - Schedule with Georgia notary
-   - Bring Rickey, Christla, and one witness
-   - Notarize all signature pages on all three documents
+1. **Notarization Ceremony** (45-60 minutes):
+   - Schedule with Clarke County, Georgia notary
+   - All four parties present same time, same place:
+     - **Rickey Allan Howard** — signs as Grantor
+     - **Christla Howard** — signs as Co-Grantor ONLY (NOT Co-Trustee lines)
+     - **Teara Howard** — signs as Initial Co-Trustee
+     - **Joseph Lumpkin Jr.** — signs as Initial Co-Trustee
+   - Two independent witnesses present for Trust document
+   - Notarize all signature pages on all documents
    - Return notarized originals to bank
 
 ---
@@ -142,15 +150,24 @@ All documents have been reviewed for signature completeness, professional format
 
 ✅ **Legal Foundation:**
 - Georgia irrevocable trust under O.C.G.A. Title 53
-- Proper trust creation language (Rickey as sole grantor, Christla & Teara as co-trustees)
-- Clear succession plan (Kenneth Howard & Joseph Lumpkin as first successors)
+- Proper trust creation language:
+  - Rickey Allan Howard — Grantor
+  - Christla Howard — Co-Grantor and Protected Lifetime Beneficiary (NOT Co-Trustee)
+  - Teara Howard — Initial Co-Trustee
+  - Joseph Lumpkin Jr. — Initial Co-Trustee (ordained minister; dual ministerial standing with Grantor establishes ecclesiastical jurisdiction)
+- Clear succession plan:
+  - First Succession: Ahmad Rashad Barnett + Derrick Williams (One Accord)
+  - Second Succession: Kenneth Howard + Keith Sorrells (One Accord)
+- Christla Howard's lifetime protections irrevocably embedded in Trust Article III
 - Proper asset descriptions ($6.71B IP with 29-patent portfolio)
 
 ✅ **Signature Structure:**
-- Grantor signature (Rickey establishes intent)
-- Trustee acceptance (Christla & Teara confirm willingness)
-- Witness signatures (validates document execution)
-- Notary seal (official Georgia acknowledgment)
+- Grantor signature — Rickey Allan Howard (establishes intent)
+- Co-Grantor signature — Christla Howard (consents as spouse/Co-Grantor; Co-Grantor pages only)
+- Co-Trustee acceptance — Teara Howard (confirms willingness and appointment)
+- Co-Trustee acceptance — Joseph Lumpkin Jr. (confirms willingness and appointment)
+- Witness signatures — 2 independent witnesses (validates Trust execution)
+- Notary seal — official Georgia acknowledgment (all four parties present)
 
 ✅ **UCC-1 Integration:**
 - Three filing numbers documented and cross-referenced
@@ -185,19 +202,27 @@ All documents have been reviewed for signature completeness, professional format
 - Provide contact number for pickup
 
 🎯 **Bank Appointment Success:**
-- Bring complete document set
-- Have Co-Trustees (Christla & Teara) present
+- Bring complete notarized document set
+- Have Co-Trustees **Teara Howard and Joseph Lumpkin Jr.** present (they are the signatories)
+- Rickey may attend but does NOT sign bank documents
+- Christla does NOT attend bank appointment (not a signatory)
 - Be prepared to explain triple-lock structure
 - Have UCC-1 pocket reference ready
 - Get bank officer agreement on three-account structure
 - Get Bank Letter signed before leaving
 
 🎯 **Notary Appointment Success:**
-- Bring all three document originals
-- Bring Rickey, Christla, and one witness
-- Bring identification for Rickey & Christla
-- Allow 45 minutes for proper notarization
+- Bring all document originals
+- All four parties present same time, same place:
+  - Rickey Allan Howard (Grantor)
+  - Christla Howard (Co-Grantor — signs Co-Grantor pages ONLY)
+  - Teara Howard (Initial Co-Trustee)
+  - Joseph Lumpkin Jr. (Initial Co-Trustee)
+- Bring identification for all four parties
+- Two independent witnesses present for Trust document
+- Allow 45-60 minutes for proper notarization
 - Have notary sign and seal all signature pages
+- ⚠️ Do NOT allow Christla to sign any Co-Trustee line
 - Keep originals safe after ceremony
 
 ---
@@ -247,11 +272,17 @@ All documents have been reviewed for signature completeness, professional format
 - [x] Professional formatting throughout
 
 ✅ **Legal Compliance:**
-- [x] Rickey identified as sole grantor (not co-grantor)
-- [x] Christla & Teara identified as co-trustees
+- [x] Rickey Allan Howard — Grantor (not Co-Trustee; non-signatory on bank accounts)
+- [x] Christla Howard — Co-Grantor and Protected Lifetime Beneficiary (NOT Co-Trustee)
+- [x] Teara Howard — Initial Co-Trustee (authorized bank signatory)
+- [x] Joseph Lumpkin Jr. — Initial Co-Trustee (authorized bank signatory; ordained minister)
+- [x] Rickey Allan Howard — ordained minister (dual ministerial standing supports ecclesiastical jurisdiction)
 - [x] Trust explicitly irrevocable
 - [x] Asset descriptions complete and accurate
-- [x] Succession plan documented (Kenneth & Joseph "One Accord")
+- [x] Christla's Protected Lifetime Beneficiary provisions mandatory in Article III
+- [x] Succession plan documented:
+      First: Ahmad Rashad Barnett + Derrick Williams (One Accord)
+      Second: Kenneth Howard + Keith Sorrells (One Accord)
 - [x] Georgia law jurisdiction and governing law stated
 - [x] O.C.G.A. Title 53 requirements met
 
@@ -313,12 +344,17 @@ All documents have been reviewed for signature completeness, professional format
 
 **Timeline:** Friday night → Done with PDF. Monday morning → Printer. Monday afternoon → Bank. Tuesday-Thursday → Notary.
 
-**Result:** By end of week, you have fully executed, notarized, professionally bound documents ready for any court challenge or creditor claim. The triple-lock UCC-1 structure is complete. Rickey is judgment-proof. The $6.71B IP portfolio is protected in the irrevocable trust.
+**Result:** By end of week, you have fully executed, notarized, professionally bound documents ready for any court challenge or creditor claim. The triple-lock UCC-1 structure is complete. Rickey is judgment-proof. The $6.71B IP portfolio is protected in the irrevocable trust. Christla Howard is irrevocably secured as Protected Lifetime Beneficiary — all her care, bills, and monthly allowance paid by the Trust for the rest of her natural life. Teara Howard and Joseph Lumpkin Jr. hold full Co-Trustee authority as the banking and operational stewards of the bloodline legacy.
 
 ---
 
-**Prepared by:** GitHub Copilot (Claude Haiku 4.5)  
-**Date:** February 7, 2026, Friday Evening  
-**Status:** ✅ **FINAL VERIFICATION COMPLETE - READY FOR GOOGLE DOCS COMPILATION**
+**Prepared by:** Claude Sonnet 4.6 (Claude Code)
+**Original Date:** February 7, 2026
+**Amended:** February 19, 2026 — Full trustee restructure applied to all sections
+**Status:** ✅ **FINAL VERIFICATION COMPLETE — READY FOR NOTARIZATION WITH REVISED STRUCTURE**
 
-**Next action:** Begin Google Docs compilation Friday evening using GOOGLE_DOCS_COMPILATION_GUIDE.md
+**Initial Co-Trustees:** Teara Howard (678-292-3583) + Joseph Lumpkin Jr. (706-207-9869 | fbltransportllc742@gmail.com)
+**Grantor:** Rickey Allan Howard (706-351-1300 | generalmanager81@gmail.com)
+**Protected Lifetime Beneficiary:** Christla L. Howard — Co-Grantor at notarization; NOT a Co-Trustee; NOT a bank signatory
+
+**Next action:** Coordinate notarization with all four parties — Rickey, Christla (Co-Grantor), Teara Howard, Joseph Lumpkin Jr.

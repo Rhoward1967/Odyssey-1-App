@@ -38,7 +38,7 @@ This Irrevocable Trust Agreement ("Trust") is created on **January 8, 2026**, by
 
 **Trust Name:** Howard Jones Bloodline Ancestral Trust
 
-**Initial Co-Trustees:** Christla Howard and Teara Howard
+**Initial Co-Trustees:** Teara Howard and Joseph Lumpkin Jr.
 
 **Irrevocable Status:** This Trust is irrevocable from the date of execution. No Grantor, Trustee, or Beneficiary may revoke, amend, or modify the terms of this Trust. Assets may be added but structure, beneficiaries, and trustee succession cannot be changed.
 
@@ -51,23 +51,23 @@ This Irrevocable Trust Agreement ("Trust") is created on **January 8, 2026**, by
 ## ARTICLE II: TRUSTEES
 
 **Initial Co-Trustees:**
-- Christla Howard
 - Teara Howard
+- Joseph Lumpkin Jr.
 
 **Trust Mailing Address:** P.O. BOX 80054, Athens, GA 30608
 
-**Successor Trustees:** 
-- First Succession: Kenneth Howard (brother of Rickey) and Joseph Lumpkin (family counselor) as Co-Successor Trustees acting in One Accord
-- Second Succession: Tierra Howard (Daughter of Rickey Howard) and Ahmad Rashad Barnett (nephew) as Co-Successor Trustees
+**Successor Trustees:**
+- First Succession: Ahmad Rashad Barnett (nephew of Rickey Howard) and Derrick Williams (brother of Christla Howard) as Co-Successor Trustees acting in One Accord
+- Second Succession: Kenneth Howard (brother of Rickey) and Keith Sorrells as Co-Successor Trustees acting in One Accord
 - Third Succession: Any adult descendants of the Howard and Jones bloodline
 
 **Trustee Succession Order:**
-- Upon death or incapacity of Christla Howard, Tierra Howard becomes Co-Trustee alongside Teara Howard
-- Upon death or incapacity of Teara Howard, Kenneth Howard becomes Co-Trustee alongside Christla Howard
-- If both Initial Co-Trustees are unable to serve, First Succession Trustees (Kenneth Howard and Joseph Lumpkin) assume full control as Co-Successor Trustees
-- Kenneth Howard and Joseph Lumpkin shall act as a single unit in One Accord—neither may move Trust assets without written consent of the other
-- Upon death or incapacity of Kenneth Howard, Ahmad Rashad Barnett becomes Co-Successor Trustee alongside Joseph Lumpkin
-- Upon death or incapacity of Joseph Lumpkin, Tierra Howard becomes Co-Successor Trustee
+- Upon death or incapacity of Joseph Lumpkin Jr., Ahmad Rashad Barnett becomes Co-Trustee alongside Teara Howard
+- Upon death or incapacity of Teara Howard, Derrick Williams becomes Co-Trustee alongside Joseph Lumpkin Jr.
+- If both Initial Co-Trustees are unable to serve, First Succession Trustees (Ahmad Rashad Barnett and Derrick Williams) assume full control as Co-Successor Trustees
+- Ahmad Rashad Barnett and Derrick Williams shall act as a single unit in One Accord—neither may move Trust assets without written consent of the other
+- Upon death or incapacity of Ahmad Rashad Barnett, Kenneth Howard becomes Co-Successor Trustee alongside Derrick Williams
+- Upon death or incapacity of Derrick Williams, Keith Sorrells becomes Co-Successor Trustee alongside Kenneth Howard
 - If all prior succession trustees are unable to serve, remaining trustee may appoint co-trustee from the Howard and Jones bloodline
 
 **Perpetual Succession of Trustees:**
@@ -90,8 +90,7 @@ This Irrevocable Trust Agreement ("Trust") is created on **January 8, 2026**, by
 - Negotiate and execute IP licensing agreements (subject to Article II-A limitations)
 
 **Trustee Compensation:**
-- Christla Howard (Grantor-Trustee) shall serve without compensation during her lifetime
-- Teara Howard and all Successor Trustees are entitled to reasonable compensation as determined by Georgia law (typically 1-3% of trust assets annually)
+- Teara Howard, Joseph Lumpkin Jr., and all Successor Trustees are entitled to reasonable compensation as determined by Georgia law (typically 1-3% of trust assets annually)
 - All Trustees may be reimbursed for reasonable expenses incurred in trust administration
 
 **Trustee Removal and Resignation:**
@@ -157,6 +156,84 @@ This Irrevocable Trust Agreement ("Trust") is created on **January 8, 2026**, by
 
 **Primary Beneficiary during Grantor's life:**
 - Rickey Howard (Grantor)
+
+---
+
+**CHRISTLA HOWARD — PROTECTED LIFETIME BENEFICIARY (Mandatory, Irrevocable)**
+
+Christla Howard, spouse of the Grantor, is hereby designated a **Protected Lifetime Beneficiary** of the Howard Jones Bloodline Ancestral Trust. Her full care and financial wellbeing for the remainder of her natural life is a **mandatory, non-discretionary, first-priority obligation** of this Trust. No Trustee, successor trustee, beneficiary, court order, or creditor claim may reduce, suspend, interrupt, or diminish these protections in any form, for any reason, at any time during her natural life.
+
+The Grantor's intent is absolute and clear: **Christla Howard shall want for nothing.** The Trust shall provide for every aspect of her life — her housing, her health, her comfort, her dignity, and her financial freedom. She shall never bear the burden of a bill, a medical cost, or a financial worry from the day this Trust becomes operative until the last day of her life.
+
+### Section 1 — Complete Bill Coverage (Trust Pays All, Directly)
+
+The Trust shall pay **100% of all living expenses** for Christla Howard directly to service providers. These payments are made directly by the Trust and shall never be deducted from or charged against her personal allowance. Covered expenses include, without limitation:
+
+- **Housing:** Rent, mortgage payments, property taxes, HOA fees, homeowner's or renter's insurance, and all costs necessary to maintain her primary residence in good condition — including repairs, improvements, and furnishings
+- **Utilities:** Electricity, gas, water, sewer, trash, internet, cable/streaming, and telephone
+- **Healthcare:** Health insurance premiums (including Medicare supplements), all deductibles and co-pays, physician visits, specialist care, hospital stays, surgeries, lab work, imaging, and any and all medically necessary treatment
+- **Dental and Vision:** 100% of dental care including cleanings, fillings, crowns, dentures, implants, and orthodontia; 100% of vision care including exams, eyeglasses, and contact lenses
+- **Mental Health:** Therapy, counseling, psychiatric care, and medications related to mental health and emotional wellbeing
+- **Prescriptions:** All prescription medications, medical devices, and health supplies
+- **Transportation:** Vehicle payments, automobile insurance, fuel, maintenance, repairs, and registration — or if she prefers, reasonable rideshare and transportation costs in lieu of a personal vehicle
+- **Personal Care:** Salon, grooming, spa, and personal hygiene products and services
+- **Clothing and Personal Effects:** A reasonable annual clothing and personal effects budget, reviewed and increased annually
+- **Food and Groceries:** Monthly grocery and household supply budget paid directly or via trust-issued funds
+- **Elder Care (Future):** Should Christla Howard ever require assisted living, in-home nursing care, memory care, or any form of elder care, the Trust shall pay 100% of all such costs without limitation, ensuring she receives the highest standard of care available
+
+### Section 2 — Monthly Personal Allowance (Hers Alone, No Restrictions)
+
+In addition to all bills paid under Section 1, the Trust shall distribute to Christla Howard a **personal monthly allowance** — money that is entirely hers, with no restrictions, no accounting required, and no trustee oversight on how she spends it. This is her personal freedom fund.
+
+**Allowance Structure:**
+
+- **During Grantor's Lifetime:** The greater of **$5,000.00 per month** or **10% of the Trust's net monthly revenue**, whichever is larger
+- **Upon Grantor's Death:** The allowance shall automatically increase to the greater of **$10,000.00 per month** or **15% of the Trust's net monthly revenue**, whichever is larger — effective immediately upon the Grantor's passing, with no trustee vote or approval required
+- **Annual Cost-of-Living Adjustment:** The dollar floor ($5,000 / $10,000) shall increase by **3% on January 1st of each year**, compounded annually, for the remainder of her life
+- **Revenue Scaling:** As Trust revenue grows from patent licensing, IP commercialization, business operations, or any other source, her percentage-based allowance grows proportionally — she rises with the Trust
+
+### Section 3 — Windfall Participation (Patent Licensing and Sales)
+
+Christla Howard shall participate directly in major Trust revenue events:
+
+- **Patent or IP Licensing Deals:** Upon the closing of any patent license, technology license, or IP licensing agreement generating net proceeds to the Trust, Christla Howard shall receive **5% of net licensing proceeds** as a lump-sum distribution within 30 days of the Trust receiving payment
+- **Patent or IP Sales:** Upon the sale or assignment of any patent, copyright, trademark, or other intellectual property held by the Trust, Christla Howard shall receive **5% of net sale proceeds** as a lump-sum distribution within 30 days of closing
+- **Business Sale or Major Transaction:** Upon the sale of any Trust-held business entity or equity interest, Christla Howard shall receive **5% of net proceeds** as a lump-sum distribution
+
+These windfall distributions are in **addition to** her monthly allowance and bill coverage — they are never offset against or substituted for her regular benefits.
+
+### Section 4 — Housing Security (Absolute)
+
+Christla Howard shall have **secured, stable housing** for the remainder of her natural life. Specifically:
+
+- If she resides in Trust-owned real property, she has the right to continue residing there rent-free for life — no trustee may sell, lease, or encumber her primary residence without her written notarized consent
+- If she rents, the Trust pays all rent directly, and Trustees are prohibited from allowing her lease to lapse or her housing to be threatened for any reason
+- If she is ever at risk of eviction, mortgage foreclosure, or loss of housing for any reason, Trustees are **required** to intervene immediately using Trust principal if necessary to prevent any disruption to her housing
+- She has the right to choose where she lives — Trustees may not restrict her to a specific residence or location
+
+### Section 5 — Medical Emergency Reserve
+
+Trustees shall maintain a **dedicated, segregated reserve** of no less than **$25,000.00** within Trust accounts at all times, held exclusively for Christla Howard's emergency medical expenses and immediate needs. This reserve is not available to other beneficiaries or for Trust operations. It shall be replenished to $25,000.00 within 60 days of any draw.
+
+### Section 6 — Priority of Payment
+
+Christla Howard's benefits under this Article shall be funded as follows in order of priority, second only to mandatory Trust taxes and legal compliance costs:
+
+1. All direct bill payments (Section 1) — paid first, before any other Trust expenditure
+2. Her monthly personal allowance (Section 2) — paid by the 1st of each month without delay
+3. Her medical emergency reserve (Section 5) — maintained continuously
+4. All other Trust operations and beneficiary distributions
+
+If Trust revenue is temporarily insufficient to fund all obligations, Trustees SHALL draw from Trust principal to ensure Christla Howard's benefits are never interrupted, before reducing or deferring any other Trust expense.
+
+### Section 7 — Irrevocability and Survival
+
+- These provisions are **irrevocable** and may not be amended, reduced, suspended, or terminated by any Trustee, successor trustee, beneficiary vote, court order, or legal proceeding
+- All benefits continue **unchanged upon the Grantor's death**, with the automatic allowance increase described in Section 2 taking effect immediately
+- These protections **terminate only upon Christla Howard's natural death** — they may not be terminated for any other reason
+- Any Trustee who willfully fails to fund these obligations shall be deemed to have committed a **breach of fiduciary duty** and shall be subject to immediate removal and personal liability for damages
+
+---
 
 **Successor Beneficiaries upon Grantors' deaths:**
 - All descendants of the Howard and Jones ancestral bloodline, per stirpes
@@ -663,14 +740,14 @@ This is not a startup valuation. This is an enterprise asset protection and succ
 
 **Current Status:**
 - Trust is irrevocable from date of execution
-- Co-Trustees (Christla Howard and Teara Howard) manage all assets with independent fiduciary authority
+- Co-Trustees (Teara Howard and Joseph Lumpkin Jr.) manage all assets with independent fiduciary authority
 - Grantor (Rickey Howard) is primary beneficiary during his life
 - Trustees may distribute income and principal to Grantor for Health, Education, Maintenance, and Support (HEMS)
 - No amendments, modifications, or revocations permitted by any party
 - Additional assets may be added by Grantor at any time through written assignment
 
 **Upon Death of Grantor:**
-- Successor Trustees (Kenneth Howard and Joseph Lumpkin) assume full control as Co-Successor Trustees
+- Successor Trustees (Ahmad Rashad Barnett and Derrick Williams) assume full control as Co-Successor Trustees
 - No probate required for trust assets
 - Trust continues as irrevocable
 
@@ -1007,12 +1084,12 @@ Date: _______________
 
 ### SIGNATURE PAGE 2: INITIAL CO-TRUSTEES
 
-**INITIAL CO-TRUSTEE (CHRISTLA HOWARD):**
+**INITIAL CO-TRUSTEE (JOSEPH LUMPKIN JR.):**
 
-I declare that I am Christla Howard, an Initial Co-Trustee of the Howard Jones Bloodline Ancestral Trust, and I hereby execute this Trust Agreement as of the date indicated below.
+I declare that I am Joseph Lumpkin Jr., an Initial Co-Trustee of the Howard Jones Bloodline Ancestral Trust, and I hereby execute this Trust Agreement as of the date indicated below.
 
-Signature: _________________________________  
-Print Name: Christla Howard  
+Signature: _________________________________
+Print Name: Joseph Lumpkin Jr.
 Date: _______________
 
 ---
@@ -1063,8 +1140,8 @@ Date: _______________
 The foregoing instrument was acknowledged before me this _____ day of ________, 2026, by:
 
 1. **RICKEY ALLAN HOWARD** - Grantor
-2. **CHRISTLA HOWARD** - Initial Co-Trustee  
-3. **TEARA HOWARD** - Initial Co-Trustee
+2. **TEARA HOWARD** - Initial Co-Trustee
+3. **JOSEPH LUMPKIN JR.** - Initial Co-Trustee
 
 These individuals are personally known to me, OR have produced the following identification:
 
@@ -1092,12 +1169,12 @@ Name (Printed): _________________________________
 
 The undersigned Co-Trustees hereby accept their appointment as Co-Trustees of the Howard Jones Bloodline Ancestral Trust created by Rickey Allan Howard (Grantor) and dated January 8, 2026, and acknowledge receipt and review of all trust property described in Schedule A attached hereto.
 
-**CHRISTLA HOWARD, Initial Co-Trustee:**
+**JOSEPH LUMPKIN JR., Initial Co-Trustee:**
 
 I accept my appointment and responsibility as Initial Co-Trustee of this Trust and agree to manage all trust property in accordance with the terms of this Trust Agreement and applicable Georgia law.
 
-Signature: _________________________________  
-Print Name: Christla Howard  
+Signature: _________________________________
+Print Name: Joseph Lumpkin Jr.
 Date: _______________
 
 ---

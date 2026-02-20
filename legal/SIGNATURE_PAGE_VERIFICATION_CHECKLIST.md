@@ -1,8 +1,8 @@
 # SIGNATURE PAGE VERIFICATION CHECKLIST
 
-**Prepared for:** Rickey Allan Howard  
-**Document Review Date:** February 7, 2026  
-**Status:** ✅ ALL DOCUMENTS READY FOR GOOGLE DOCS COMPILATION & NOTARIZATION
+**Prepared for:** Rickey Allan Howard
+**Document Review Date:** February 19, 2026 (Amended — Original: February 7, 2026)
+**Status:** ✅ ALL DOCUMENTS UPDATED — READY FOR NOTARIZATION WITH REVISED TRUSTEE STRUCTURE
 
 ---
 
@@ -25,22 +25,23 @@
   - Witness 2: _________________________ (Print name: ____________)
   - Spacing: ✅ Adequate for signatures and relationship to parties
 
-- **Signature Page 3 (Co-Trustee Acceptance - CHRISTLA HOWARD):**
-  - Signature line: Yes
-  - Acceptance language: Yes (acknowledges appointment and review of trust property)
-  - Date line: Yes
-  - Spacing: ✅ Adequate
-
-- **Signature Page 3 (Co-Trustee Acceptance - TEARA HOWARD):**
-  - Signature line: Yes
-  - Acceptance language: Yes (acknowledges appointment and review of trust property)
-  - Date line: Yes
-  - Spacing: ✅ Adequate
+- **Signature Page 2 (Initial Co-Trustees):**
+  - ✅ **UPDATED — Co-Trustee #1: TEARA HOWARD**
+    - Signature line: Yes
+    - Acceptance language: Yes (acknowledges appointment and review of trust property)
+    - Date line: Yes
+    - Spacing: ✅ Adequate
+  - ✅ **UPDATED — Co-Trustee #2: JOSEPH LUMPKIN JR.** (replaces Christla Howard)
+    - Signature line: Yes
+    - Acceptance language: Yes (acknowledges appointment and review of trust property)
+    - Date line: Yes
+    - Spacing: ✅ Adequate
+  - ⚠️ **NOTE:** Christla Howard was redesignated as Protected Lifetime Beneficiary. She does NOT sign as Co-Trustee. She signs only as Co-Grantor on the Grantor signature page.
 
 - **Signature Page 4 (Notary Acknowledgment):**
-  - ✅ **Present and Complete**
+  - ✅ **Present and Complete — UPDATED**
   - Format: STATE OF GEORGIA / COUNTY OF CLARKE (correct)
-  - Parties identified: Rickey Allan Howard (Grantor), Christla Howard (Co-Trustee), Teara Howard (Co-Trustee)
+  - Parties identified: Rickey Allan Howard (Grantor), Teara Howard (Co-Trustee), Joseph Lumpkin Jr. (Co-Trustee)
   - Identification section: Yes (for personal knowledge or ID production)
   - Voluntary execution language: Yes ("executed this Trust Agreement of his/her own volition, with full knowledge and understanding")
   - Notary signature line: Yes
@@ -49,9 +50,9 @@
   - Spacing: ✅ 2+ inches reserved for seal
 
 - **Signature Page 5 (Acceptance of Trusteeship):**
-  - ✅ **Present**
-  - CHRISTLA HOWARD acceptance: Yes (signature line, print name, date line)
+  - ✅ **Present — UPDATED**
   - TEARA HOWARD acceptance: Yes (signature line, print name, date line)
+  - JOSEPH LUMPKIN JR. acceptance: Yes (signature line, print name, date line)
   - Spacing: ✅ Adequate
 
 **Georgia Compliance:** ✅ O.C.G.A. Title 53 (Georgia Trust Code) requirements met
@@ -72,26 +73,26 @@
 
 - **Grantor Signature:**
   - Rickey Allan Howard signature line: Yes
-  - Title: "Grantor, Howard Jones Family Ancestral Trust"
+  - Title: "Grantor, Howard Jones Bloodline Ancestral Trust"
   - Date: "February 1, 2026"
-  - Spacing: ✅ Adequate
-
-- **Co-Trustee Acceptance - CHRISTLA HOWARD:**
-  - Signature line: Yes
-  - Title: "Co-Trustee, Howard Jones Family Ancestral Trust"
-  - Date line: Yes (blank for execution date)
   - Spacing: ✅ Adequate
 
 - **Co-Trustee Acceptance - TEARA HOWARD:**
   - Signature line: Yes
-  - Title: "Co-Trustee, Howard Jones Family Ancestral Trust"
+  - Title: "Co-Trustee, Howard Jones Bloodline Ancestral Trust"
+  - Date line: Yes (blank for execution date)
+  - Spacing: ✅ Adequate
+
+- **Co-Trustee Acceptance - JOSEPH LUMPKIN JR.:** ✅ UPDATED (replaces Christla Howard)
+  - Signature line: Yes
+  - Title: "Co-Trustee, Howard Jones Bloodline Ancestral Trust"
   - Date line: Yes (blank for execution date)
   - Spacing: ✅ Adequate
 
 - **Notary Acknowledgment (Section XI):**
-  - ✅ **Present and Complete**
+  - ✅ **Present and Complete — UPDATED**
   - Format: STATE OF GEORGIA / COUNTY OF CLARKE (correct)
-  - Parties identified: Rickey Allan Howard, Christla Howard, Teara Howard
+  - Parties identified: Rickey Allan Howard, Teara Howard, Joseph Lumpkin Jr.
   - Date line: Yes (blank for notary ceremony date)
   - Notary signature line: Yes
   - Notary expiration line: Yes
@@ -114,20 +115,21 @@
   - Status: ✅ Present earlier in document with full acceptance language
   - Spacing: ✅ Adequate
 
-- **Spousal Consent & Acknowledgment (Christla Howard):**
+- **Co-Grantor Consent & Acknowledgment (Christla Howard):**
   - Signature line: Yes
-  - Title: "Wife and Spouse of Assignor"
+  - Title: "Co-Grantor and Spouse of Assignor / Protected Lifetime Beneficiary"
   - Date line: Yes
-  - Legal language: Yes (Christla acknowledges transfer, understands implications, consents freely)
+  - Legal language: Yes (Christla acknowledges transfer as Co-Grantor, understands implications, consents freely)
   - Spacing: ✅ Adequate
+  - ⚠️ **NOTE:** Christla signs here as Co-Grantor ONLY — not as Trustee. She is a Protected Lifetime Beneficiary per Trust Article III.
 
-- **Notary Acknowledgment Section (NEW - Just Added):**
+- **Notary Acknowledgment Section:**
   - ✅ **Present and Complete**
   - Section Title: "NOTARIAL ACKNOWLEDGMENT - ASSIGNMENT OF IP"
   - Format: STATE OF GEORGIA / COUNTY OF CLARKE (correct)
-  - Parties listed: 
-    - **RICKEY ALLAN HOWARD** - Assignor
-    - **CHRISTLA L. HOWARD** - Spouse (Consenting Party)
+  - Parties listed:
+    - **RICKEY ALLAN HOWARD** - Assignor / Grantor
+    - **CHRISTLA L. HOWARD** - Co-Grantor / Consenting Party (NOT Trustee)
   - Identification section: Yes ("personally known to me, OR have produced identification")
   - Personal appearance language: Yes ("executed this Assignment of Intellectual Property")
   - Voluntary execution: Yes ("of his/her own volition, with full knowledge and understanding")
@@ -150,18 +152,18 @@
 
 **Signature Pages Present:** ✅ **YES - COMPLETE**
 
-- **Section X: Trustee Authorization Confirmation**
-  - Christla Howard (Co-Trustee) signature line: Yes
+- **Section X: Trustee Authorization Confirmation — UPDATED**
+  - Teara Howard (Co-Trustee) signature line: Yes
   - Date line: Yes
   - Spacing: ✅ Adequate
 
-  - Teara Howard (Co-Trustee) signature line: Yes
+  - Joseph Lumpkin Jr. (Co-Trustee) signature line: Yes ✅ UPDATED (replaces Christla Howard)
   - Date line: Yes
   - Spacing: ✅ Adequate
 
 - **Grantor Acknowledgment (Non-Signatory):**
   - Rickey Allan Howard signature line: Yes
-  - Title: "Grantor, Howard Jones Family Ancestral Trust"
+  - Title: "Grantor, Howard Jones Bloodline Ancestral Trust"
   - Date line: Yes
   - Acknowledgment language: Yes (confirms he is NOT a signatory on bank accounts, acknowledges Co-Trustee authority)
   - Spacing: ✅ Adequate
@@ -297,11 +299,16 @@ All 4 primary documents have complete, professionally formatted signature pages 
 - Font is clear and printer-friendly (no special formatting needed)
 
 ### ✅ Ready for Notarization Ceremony:
-- All signature blocks present for Rickey, Christla, Teara
-- Witness section properly formatted (Trust document)
+- All signature blocks present for the correct parties:
+  - **Rickey Allan Howard** — Grantor (all documents)
+  - **Teara Howard** — Initial Co-Trustee (Trust, Certificate, Bank Letter)
+  - **Joseph Lumpkin Jr.** — Initial Co-Trustee (Trust, Certificate, Bank Letter)
+  - **Christla Howard** — Co-Grantor ONLY (Trust Grantor page + Assignment consent page — NOT as Trustee)
+- Witness section properly formatted (Trust document — 2 witnesses required)
 - Notary acknowledgment language matches Georgia requirements (O.C.G.A. § 44-2-1 et seq.)
 - Identification documentation section present
 - Personal appearance language properly documented
+- ⚠️ **Do NOT have Christla Howard sign any Co-Trustee line** — she signs only where labeled "Grantor" or "Co-Grantor"
 
 ---
 
@@ -323,24 +330,33 @@ All 4 primary documents have complete, professionally formatted signature pages 
 1. ✅ Truist Bank appointment: Present documents, open accounts
 2. ✅ Bank signs authorization on Bank Letter
 
-**Phase 4 (Week of Feb 10):**
-1. ✅ Notarization ceremony with Georgia notary
-2. ✅ Rickey, Christla, Teara present with identification
-3. ✅ All signature lines signed
-4. ✅ Notary seals affixed to documents
-5. ✅ Copies made for records
+**Phase 4 (Notarization — Coordinate with Teara & Joseph Lumpkin Jr.'s availability):**
+1. ✅ Notarization ceremony with Clarke County Notary Public
+2. ✅ **Required Present:** Rickey Allan Howard (Grantor), Teara Howard (Co-Trustee), Joseph Lumpkin Jr. (Co-Trustee)
+3. ✅ **Also Present:** Christla Howard (Co-Grantor — signs Grantor page and Assignment consent only)
+4. ✅ All correct signature lines signed in blue ink
+5. ✅ Notary seals affixed to all documents
+6. ✅ Copies made for all parties' records
+7. ⚠️ **Critical:** Confirm Joseph Lumpkin Jr. availability before scheduling notary
 
 ---
 
 ## FINAL CERTIFICATION
 
-**Reviewed by:** GitHub Copilot (Claude Haiku 4.5)  
-**Review Date:** February 7, 2026  
-**Review Method:** Comprehensive read_file operations verifying all signature pages, notary acknowledgments, and Georgia compliance requirements
+**Reviewed by:** Claude Sonnet 4.6 (Claude Code)
+**Review Date:** February 19, 2026
+**Review Method:** Full document review following trustee restructure — Christla Howard removed as Co-Trustee, Joseph Lumpkin Jr. appointed as Initial Co-Trustee alongside Teara Howard. All signature pages, notary acknowledgments, and party identifications updated accordingly.
 
-**CERTIFICATION:** All documents contain complete, professionally formatted signature pages and notary acknowledgment sections in compliance with Georgia law. Documents are ready for Google Docs compilation, printer delivery, and notarization ceremony.
+**Amendment Summary:**
+- Christla Howard: Removed as Co-Trustee → Designated as Protected Lifetime Beneficiary (Article III)
+- Joseph Lumpkin Jr.: Appointed Initial Co-Trustee (alongside Teara Howard)
+- All Co-Trustee signature blocks updated across Trust, Certificate, and Bank Letter
+- Christla Howard retains Co-Grantor signature role on Trust Grantor page and Assignment consent page only
+- Trust name corrected throughout: "Family" → "Bloodline Ancestral"
 
-**Status:** ✅ **APPROVED FOR NEXT PHASE**
+**CERTIFICATION:** All documents have been updated to reflect the revised trustee structure. Signature pages are accurate, party identifications are correct, and documents are ready for notarization with the correct parties.
+
+**Status:** ✅ **APPROVED — READY FOR NOTARIZATION WITH REVISED STRUCTURE**
 
 ---
 

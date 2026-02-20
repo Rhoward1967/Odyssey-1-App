@@ -1,19 +1,20 @@
 # TRUSTEE CERTIFICATE OF AUTHORITY
-## Howard Jones Family Ancestral Trust
+## Howard Jones Bloodline Ancestral Trust
 
-**Document Date:** February 1, 2026  
-**Certificate Number:** HJFAT-2026-001  
+**Document Date:** February 19, 2026 (Amended)
+**Original Date:** February 1, 2026
+**Certificate Number:** HJFAT-2026-001
 **Purpose:** Banking and Financial Institution Authorization
 
 ---
 
 ## I. TRUST IDENTIFICATION
 
-**Trust Name:** Howard Jones Family Ancestral Trust  
-**Trust Type:** Irrevocable Ancestral Bloodline Trust  
-**Date of Trust Creation:** [Trust Execution Date]  
-**Governing Law:** Common Law, Georgia  
-**Trust EIN:** [To be assigned]
+**Trust Name:** Howard Jones Bloodline Ancestral Trust
+**Trust Type:** Irrevocable Ancestral Bloodline Trust
+**Date of Trust Creation:** January 8, 2026 (Pending Notarization)
+**Governing Law:** Georgia Trust Code (O.C.G.A. Title 53) and Common Law
+**Trust EIN:** 41-6850149
 
 ---
 
@@ -33,24 +34,40 @@ The Grantor has intentionally separated operational authority from asset ownersh
 
 ### A. Co-Trustees Appointed
 
-**Co-Trustee #1: Christla Howard**  
-- **Relationship to Grantor:** [Family relationship]  
-- **Appointment Date:** February 1, 2026  
-- **Authority:** Full banking and financial institution signature authority  
-- **Term:** Serving at the pleasure of the Trust
+**Co-Trustee #1: Teara Howard**
+- **Relationship to Grantor:** Family member of Rickey Allan Howard
+- **Appointment Date:** January 8, 2026
+- **Authority:** Full banking and financial institution signature authority
+- **Term:** Serving as Initial Co-Trustee per Trust instrument
+- **Contact:** 678-292-3583
 
-**Co-Trustee #2: Teara Howard**  
-- **Relationship to Grantor:** [Family relationship]  
-- **Appointment Date:** February 1, 2026  
-- **Authority:** Full banking and financial institution signature authority  
-- **Term:** Serving at the pleasure of the Trust
+**Co-Trustee #2: Joseph Lumpkin Jr.**
+- **Relationship to Grantor:** Family counselor, trusted associate, and fellow ordained minister
+- **Appointment Date:** January 8, 2026
+- **Authority:** Full banking and financial institution signature authority
+- **Term:** Serving as Initial Co-Trustee per Trust instrument
+- **Contact:** 706-207-9869 | fbltransportllc742@gmail.com
+- **Ministerial Standing:** Ordained Minister — co-establishes ecclesiastical jurisdiction of the Trust alongside Grantor
+
+### C. Ministerial and Ecclesiastical Standing
+
+Both the Grantor and Co-Trustee Joseph Lumpkin Jr. hold ordained ministerial credentials. This is not incidental — it is foundational to the Trust's legal framework:
+
+| Party | Role | Ministerial Status |
+|-------|------|--------------------|
+| **Rickey Allan Howard** | Grantor | Ordained Minister |
+| **Joseph Lumpkin Jr.** | Initial Co-Trustee | Ordained Minister |
+
+This dual ministerial standing establishes the Trust's foundation in **Natural Law and Ecclesiastical Law** as stated throughout the Trust instrument. All UCC 1-308 reservations, Common Law first-claim positions, and sovereign jurisdiction declarations in this Trust are grounded in and supported by this ecclesiastical standing. The Trust is a ministerial covenant of stewardship for the Howard Jones bloodline — not merely a commercial legal structure.
+
+> **Note on Christla Howard:** Christla Howard (spouse of Grantor) was redesignated from Co-Trustee to **Protected Lifetime Beneficiary** of the Trust prior to execution. She holds no signature authority on Trust accounts but holds irrevocable, mandatory lifetime financial protections under Article III of the Trust instrument. She remains a Co-Grantor of the Trust.
 
 ### B. Powers Granted to Co-Trustees
 
 The Co-Trustees, acting jointly or severally, are hereby authorized and empowered to:
 
 1. **Open Bank Accounts:**  
-   - Open, maintain, and close checking, savings, money market, and investment accounts in the name of the Howard Jones Family Ancestral Trust
+   - Open, maintain, and close checking, savings, money market, and investment accounts in the name of the Howard Jones Bloodline Ancestral Trust
    - Open accounts for Trust-owned subsidiary entities (Odyssey-1 AI LLC)
    - Execute all necessary signature cards and bank documentation
 
@@ -84,7 +101,7 @@ The Co-Trustees, acting jointly or severally, are hereby authorized and empowere
 
 ### A. Three-Tier Valuation Framework
 
-The Howard Jones Family Ancestral Trust employs a **methodologically sound, three-tier valuation approach** to accurately represent the capitalization of its intellectual property and operating assets:
+The Howard Jones Bloodline Ancestral Trust employs a **methodologically sound, three-tier valuation approach** to accurately represent the capitalization of its intellectual property and operating assets:
 
 #### Tier 1: Market Valuation (Full Commercial Potential)
 **$6,710,000,000** - Projected mature market value based on:
@@ -132,7 +149,7 @@ The Howard Jones Family Ancestral Trust employs a **methodologically sound, thre
    - 100% membership interest in Odyssey-1 AI LLC (Georgia)
    - Secured creditor position (first-priority UCC-1 lien, Filing ID 14629748)
    - Debtor: Odyssey-1 AI LLC
-   - Secured Party: Howard Jones Family Ancestral Trust
+   - Secured Party: Howard Jones Bloodline Ancestral Trust
    - **Trust maintains apex creditor position over all LLC revenue**
 
 3. **Revenue-Generating Assets**
@@ -176,7 +193,7 @@ This approach is **transparent, legally sound, and ethically mandated** by the G
 
 **Jurisdiction:** Georgia  
 **Status:** Active and in good standing  
-**Ownership:** 100% owned by Howard Jones Family Ancestral Trust  
+**Ownership:** 100% owned by Howard Jones Bloodline Ancestral Trust  
 **Managing Member:** Rickey Allan Howard  
 **Principal Address:** P.O. Box 80054, Athens, GA 30608
 
@@ -200,7 +217,7 @@ Trust Account (HJFAT at Truist Bank) + Expense Account (Operations at Truist Ban
 
 **TO ALL BANKS, CREDIT UNIONS, AND FINANCIAL INSTITUTIONS:**
 
-This Certificate of Authority confirms that **Christla Howard** and **Teara Howard** are duly appointed Co-Trustees of the **Howard Jones Family Ancestral Trust** and are authorized to:
+This Certificate of Authority confirms that **Teara Howard** and **Joseph Lumpkin Jr.** are duly appointed Co-Trustees of the **Howard Jones Bloodline Ancestral Trust** and are authorized to:
 
 ✅ Open accounts in the name of the Trust  
 ✅ Open accounts in the name of Trust-owned entities (Odyssey-1 AI LLC)  
@@ -225,8 +242,8 @@ This Certificate of Authority confirms that **Christla Howard** and **Teara Howa
    - Directs strategy as Managing Member of Odyssey-1 AI LLC
    - Retains "Origin and Creditor" sovereign position
 
-2. **Trustee Position:**  
-   - Christla Howard and Teara Howard are Co-Trustees
+2. **Trustee Position:**
+   - Teara Howard and Joseph Lumpkin Jr. are Co-Trustees
    - Public-facing signatories on all bank accounts
    - Execute "Receiving" and "Sending" transfers
    - Handle formal banking interface
@@ -267,7 +284,7 @@ This Certificate of Authority confirms that **Christla Howard** and **Teara Howa
 
 ---
 
-### UCC-1 Filing #2: Howard Jones Family Ancestral Trust → Odyssey-1 AI LLC
+### UCC-1 Filing #2: Howard Jones Bloodline Ancestral Trust → Odyssey-1 AI LLC
 
 **Reference Number:** 1d164254-5bbe-4525-b47e-84927bd367fb  
 **Filing ID:** 14629748  
@@ -278,7 +295,7 @@ This Certificate of Authority confirms that **Christla Howard** and **Teara Howa
 **Status:** ✅ ACCEPTED and RECORDED
 
 **Parties:**
-- **Secured Party:** Howard Jones Family Ancestral Trust
+- **Secured Party:** Howard Jones Bloodline Ancestral Trust
 - **Debtor:** Odyssey-1 AI LLC (Georgia)
 - **Collateral:** All assets, intellectual property, patents, copyrights, trademarks, accounts receivable, equipment, inventory, and future property of Odyssey-1 AI LLC
 
@@ -311,7 +328,7 @@ This Certificate of Authority confirms that **Christla Howard** and **Teara Howa
 
 **The Apex Structure:**
 1. **First Lock:** Odyssey-1 AI LLC holds $350K senior secured interest over HJS Services LLC (Filing #029-2026-000007)
-2. **Second Lock:** Howard Jones Family Ancestral Trust holds first-priority lien over Odyssey-1 AI LLC ($366M+ assets, Filing #14629748)
+2. **Second Lock:** Howard Jones Bloodline Ancestral Trust holds first-priority lien over Odyssey-1 AI LLC ($366M+ assets, Filing #14629748)
 3. **Third Lock:** Odyssey-1 AI LLC holds $350K senior secured interest over Rickey A. Howard & Christla L. Howard personal assets (Filing #029-2026-000102)
 4. **Result:** Trust is the ultimate apex creditor with $1,050,000 combined senior priority liens protecting entire business ecosystem
 
@@ -324,7 +341,7 @@ This Certificate of Authority confirms that **Christla Howard** and **Teara Howa
 ## IX. MARCH 1, 2026 LAUNCH TIMELINE
 
 **Banking Setup (Week of February 3, 2026):**
-- ☐ Truist Bank appointments scheduled (Christla and Teara as Co-Trustees)
+- ☐ Truist Bank appointments scheduled (Teara Howard and Joseph Lumpkin Jr. as Co-Trustees)
 - ☐ Trust Account opening (for secured creditor reserves)
 - ☐ Expense Account opening (for operational expenses)
 - ☐ Main Operating Account opening (for Stripe deposits)
@@ -346,34 +363,35 @@ This Certificate of Authority confirms that **Christla Howard** and **Teara Howa
 **This Certificate is executed by the Grantor to confirm the authority of the Co-Trustees:**
 
 **Grantor Acknowledgment:**  
-I, Rickey Allan Howard, as Grantor of the Howard Jones Family Ancestral Trust, hereby certify that:
+I, Rickey Allan Howard, as Grantor of the Howard Jones Bloodline Ancestral Trust, hereby certify that:
 
-1. Christla Howard and Teara Howard are duly appointed Co-Trustees
+1. Teara Howard and Joseph Lumpkin Jr. are duly appointed Initial Co-Trustees
 2. The Co-Trustees have full authority to open and operate bank accounts for the Trust and its subsidiaries
 3. The Co-Trustees may execute all banking documents and financial transactions on behalf of the Trust
 4. This Certificate may be relied upon by all financial institutions as proof of the Co-Trustees' authority
 5. The Grantor has intentionally stepped back from signature authority to maintain secured creditor position
+6. Christla Howard (Grantor's spouse) is a Protected Lifetime Beneficiary — she is NOT a Trustee and has no signature authority on Trust accounts
 
 ---
 
 **Grantor Signature:**  
 _________________________________  
 Rickey Allan Howard  
-Grantor, Howard Jones Family Ancestral Trust  
+Grantor, Howard Jones Bloodline Ancestral Trust  
 Date: February 1, 2026
 
 ---
 
 **Co-Trustee Acceptance:**
 
-_________________________________  
-Christla Howard, Co-Trustee  
-Howard Jones Family Ancestral Trust  
+_________________________________
+Teara Howard, Co-Trustee
+Howard Jones Bloodline Ancestral Trust
 Date: _______________
 
-_________________________________  
-Teara Howard, Co-Trustee  
-Howard Jones Family Ancestral Trust  
+_________________________________
+Joseph Lumpkin Jr., Co-Trustee
+Howard Jones Bloodline Ancestral Trust
 Date: _______________
 
 ---
@@ -383,7 +401,7 @@ Date: _______________
 **STATE OF GEORGIA**  
 **COUNTY OF CLARKE**
 
-On this _____ day of ___________, 2026, before me personally appeared Rickey Allan Howard, Christla Howard, and Teara Howard, to me known to be the persons described in and who executed the foregoing instrument, and acknowledged that they executed the same as their free act and deed.
+On this _____ day of ___________, 2026, before me personally appeared Rickey Allan Howard, Teara Howard, and Joseph Lumpkin Jr., to me known to be the persons described in and who executed the foregoing instrument, and acknowledged that they executed the same as their free act and deed.
 
 _________________________________  
 Notary Public  
@@ -397,7 +415,7 @@ My Commission Expires: _______________
 
 The following documents are attached to this Certificate for the bank's verification:
 
-☐ **Attachment A:** Howard Jones Family Ancestral Trust Instrument (Irrevocable Trust Document)  
+☐ **Attachment A:** Howard Jones Bloodline Ancestral Trust Instrument (Irrevocable Trust Document)  
 ☐ **Attachment B:** UCC-1 Financing Statement (HJFAT as Secured Party, Odyssey-1 AI LLC as Debtor)  
 ☐ **Attachment C:** Comprehensive IP Valuation Report ($366M/$950M/$6.71B valuations)  
 ☐ **Attachment D:** Odyssey-1 AI LLC Articles of Organization (Georgia Secretary of State)  

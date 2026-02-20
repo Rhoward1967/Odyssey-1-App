@@ -53,8 +53,9 @@
 
 **Who Signs:**
 - rickey-allan: howard (Grantor) - **YOUR SIGNATURE**
-- [Trustee Name] (Trustee of Howard Jones Bloodline Family Trust) - **WIFE OR DAUGHTER**
-- Christla howard (Spousal Consent) - **WIFE'S SIGNATURE**
+- Teara Howard (Initial Co-Trustee, Howard Jones Bloodline Ancestral Trust) - **TRUSTEE SIGNATURE**
+- Joseph Lumpkin Jr. (Initial Co-Trustee, Howard Jones Bloodline Ancestral Trust) - **TRUSTEE SIGNATURE**
+- Christla Howard (Co-Grantor / Protected Lifetime Beneficiary) - **CO-GRANTOR SIGNATURE** (she signs as Grantor, not as Trustee)
 - Two witnesses
 - Notary public
 
@@ -76,10 +77,10 @@
 1. Schedule appointment with Odyssey-1 AI LLC bank (bring executed Assignment)
 2. Update account ownership:
    - **Old Owner**: rickey-allan: howard (individual)
-   - **New Owner**: Howard Jones Bloodline Family Trust (sole member of LLC)
+   - **New Owner**: Howard Jones Bloodline Ancestral Trust (sole member of LLC)
 3. Update signature authority:
    - Remove rickey-allan: howard as individual signer
-   - Add Trustee(s) as authorized signers
+   - Add Teara Howard and Joseph Lumpkin Jr. as authorized signers (Co-Trustees)
 4. Request updated account documentation showing Trust as owner
 
 **Documents to Bring:**
@@ -101,8 +102,8 @@
 **Action Steps:**
 1. Open current Odyssey-1 AI LLC Operating Agreement
 2. Amend to reflect:
-   - **Sole Member**: Howard Jones Bloodline Family Trust (100% ownership)
-   - **Manager**: [Designate Trustee, Grantor, or third party as Manager]
+   - **Sole Member**: Howard Jones Bloodline Ancestral Trust (100% ownership)
+   - **Manager**: Rickey Allan Howard (Managing Member / Grantor retains operational control)
    - **Distributions**: All profits distributed to Trust (sole member)
 3. Both old member (rickey) AND new member (Trust via Trustee) must sign amendment
 4. File with LLC records
@@ -114,14 +115,19 @@ AMENDMENT TO OPERATING AGREEMENT
 The members of Odyssey-1 AI LLC hereby amend the Operating Agreement as follows:
 
 1. rickey-allan: howard is no longer a member and has zero ownership interest.
-2. Howard Jones Bloodline Family Trust is now the sole member with 100% ownership.
+2. Howard Jones Bloodline Ancestral Trust is now the sole member with 100% ownership.
 3. All profits shall be distributed to the Trust as sole member.
 
 Signed this ___ day of _______, 2026.
 
 _________________________          _________________________
-rickey-allan: howard                [Trustee], on behalf of
-(Transferring Member)              Howard Jones Bloodline Family Trust
+rickey-allan: howard                Teara Howard, Co-Trustee
+(Transferring Member)              on behalf of Howard Jones Bloodline Ancestral Trust
+                                   (New Member)
+
+                                   _________________________
+                                   Joseph Lumpkin Jr., Co-Trustee
+                                   on behalf of Howard Jones Bloodline Ancestral Trust
                                    (New Member)
 ```
 
@@ -200,7 +206,7 @@ If you fail to cure, Odyssey-1 AI LLC will exercise its rights under UCC Article
 Collateral includes: Client lists, customer contracts, equipment, accounts receivable, business name, and all other assets of HJS.
 
 Odyssey-1 AI LLC
-c/o Howard Jones Bloodline Family Trust
+c/o Howard Jones Bloodline Ancestral Trust
 [Address]
 ```
 
@@ -336,7 +342,7 @@ Thank you for your continued business.
 Sincerely,
 
 Odyssey-1 AI LLC
-A member of Howard Jones Bloodline Family Trust
+A member of Howard Jones Bloodline Ancestral Trust
 ```
 
 **File Location**: `/communications/client-transition-letters/`
@@ -413,7 +419,7 @@ Client Payment → Odyssey-1 AI LLC Bank Account → LLC Profit → Distribution
 1. Register Odyssey-1-App software with U.S. Copyright Office
 2. Register R.O.M.A.N. Protocol as separate work
 3. File Form CO (online) or Form TX (paper)
-4. List owner as: "Howard Jones Bloodline Family Trust"
+4. List owner as: "Howard Jones Bloodline Ancestral Trust"
 5. List author as: "rickey-allan: howard"
 
 **Cost**: $65 per registration (online)
@@ -430,7 +436,7 @@ Client Payment → Odyssey-1 AI LLC Bank Account → LLC Profit → Distribution
 1. Register "Odyssey-1" trademark with USPTO
 2. Register "R.O.M.A.N." trademark
 3. File Form TEAS Plus (online)
-4. List owner as: "Howard Jones Bloodline Family Trust"
+4. List owner as: "Howard Jones Bloodline Ancestral Trust"
 
 **Cost**: $250-350 per trademark
 
@@ -446,7 +452,7 @@ Client Payment → Odyssey-1 AI LLC Bank Account → LLC Profit → Distribution
 1. Consult patent attorney about Universal Math algorithms
 2. If patentable, file provisional patent application (cost: ~$140 + attorney fees)
 3. List inventor as: "rickey-allan: howard"
-4. Assign patent rights to: "Howard Jones Bloodline Family Trust"
+4. Assign patent rights to: "Howard Jones Bloodline Ancestral Trust"
 
 **File Location**: `/legal/IP-registrations/Patent-Applications/`
 
@@ -458,7 +464,7 @@ Client Payment → Odyssey-1 AI LLC Bank Account → LLC Profit → Distribution
 
 **Action Steps:**
 1. Update WHOIS records for odyssey-1.com (and any other domains)
-2. Change registrant to: "Howard Jones Bloodline Family Trust"
+2. Change registrant to: "Howard Jones Bloodline Ancestral Trust"
 3. Update admin contact to Trustee email
 4. Ensure domain registration is set to auto-renew
 
@@ -574,7 +580,7 @@ Client Payment → Odyssey-1 AI LLC Bank Account → LLC Profit → Distribution
 
 **State Law Variations**: UCC foreclosure procedures vary by state. Confirm your state's requirements.
 
-**Spousal Consent**: Christla must remain informed and supportive throughout. Any resistance could jeopardize the plan.
+**Christla Howard**: Christla is a Co-Grantor and Protected Lifetime Beneficiary of the Trust. She signs as Co-Grantor at execution. She is NOT a Trustee and carries no decision-making authority over Trust operations. Her mandatory lifetime financial protections are irrevocably secured under Article III of the Trust instrument.
 
 **Urgency**: HJS insolvency means other creditors may move against HJS assets. Speed is essential.
 

@@ -1,5 +1,6 @@
 # EXECUTIVE SUMMARY - TRUIST BANK CHEATSHEET
 **Howard Jones Bloodline Ancestral Trust**
+**Amended: February 19, 2026 — Co-Trustees: Teara Howard + Joseph Lumpkin Jr. | Christla Howard = Protected Lifetime Beneficiary (NOT a Co-Trustee, NOT a bank signatory)**
 
 **Read This First (60 Seconds)**
 
@@ -38,19 +39,19 @@
 ### Account #1: TRUST RESERVE
 - **Type:** Savings (Interest-Bearing)
 - **Purpose:** Quarterly distributions
-- **Signatories:** Christla Howard, Teara Howard
+- **Signatories:** Teara Howard (Co-Trustee), Joseph Lumpkin Jr. (Co-Trustee)
 - **Activity Level:** Low (4 times/year)
 
 ### Account #2: ODYSSEY-1 EXPENSE
 - **Type:** Checking + Debit Card
 - **Purpose:** Pay operational costs (salaries, utilities, software)
-- **Signatories:** Christla Howard, Teara Howard
+- **Signatories:** Teara Howard (Co-Trustee), Joseph Lumpkin Jr. (Co-Trustee)
 - **Activity Level:** Daily
 
 ### Account #3: ODYSSEY-1 MAIN OPERATING
 - **Type:** Checking (No Debit Card)
 - **Purpose:** Receive Stripe customer deposits
-- **Signatories:** Christla Howard, Teara Howard
+- **Signatories:** Teara Howard (Co-Trustee), Joseph Lumpkin Jr. (Co-Trustee)
 - **Activity Level:** Daily ($5K-$15K average)
 
 **CRITICAL:** These accounts CANNOT be commingled. Set up separate funding sources and audit trail.
@@ -59,10 +60,11 @@
 
 ## AUTHORIZED SIGNATORIES
 
-✅ **CHRISTLA HOWARD** (Co-Trustee) — 762-728-0761  
-✅ **TEARA HOWARD** (Co-Trustee) — 678-292-3583  
+✅ **TEARA HOWARD** (Initial Co-Trustee) — 678-292-3583
+✅ **JOSEPH LUMPKIN JR.** (Initial Co-Trustee) — [Joseph's phone number]
 
 🚫 **NOT AUTHORIZED:** Rickey Allan Howard (Grantor/Secured Creditor)
+🚫 **NOT AUTHORIZED:** Christla L. Howard (Protected Lifetime Beneficiary — receives distributions, does NOT control accounts)
 
 **Why?** The intentional exclusion of the Grantor from signature authority creates the "third-party wall" required for Georgia asset protection (O.C.G.A. § 53-12-28). This is the legal firewall that makes the Trust judgment-proof.
 
@@ -93,16 +95,37 @@
 
 ## SUCCESSION STRUCTURE
 
-**Initial Co-Trustees (Now):**
-- Christla Howard
+**Initial Co-Trustees (Current):**
 - Teara Howard
+- Joseph Lumpkin Jr.
 
-**First Succession Trustees (Upon Death/Incapacity):**
+**Protected Lifetime Beneficiary (NOT a Trustee):**
+- Christla L. Howard — all bills, care, and monthly allowance paid by Trust for life
+
+**First Succession Co-Trustees (Upon Vacancy):**
+- Ahmad Rashad Barnett
+- Derrick Williams (Christla's Brother)
+- **Act in "One Accord"** — Cannot move assets without BOTH signatures
+
+**Second Succession Co-Trustees:**
 - Kenneth Howard (Brother of Grantor)
-- Joseph Lumpkin Jr (Family Counselor)
+- Keith Sorrells
 - **Act in "One Accord"** — Cannot move assets without BOTH signatures
 
 **Perpetual Succession:** Each generation of Trustees can appoint the next from the Howard/Jones bloodline.
+
+---
+
+## MINISTERIAL AND ECCLESIASTICAL STANDING
+
+Both the Grantor and the Initial Co-Trustee hold ordained ministerial credentials, reinforcing the ecclesiastical jurisdiction under which this Trust operates:
+
+| Person | Role | Ministerial Status |
+|--------|------|--------------------|
+| **Rickey Allan Howard** | Grantor / Managing Member | Ordained Minister |
+| **Joseph Lumpkin Jr.** | Initial Co-Trustee | Ordained Minister |
+
+This dual ministerial standing supports the Trust's foundation in Natural Law and Ecclesiastical Law, as referenced throughout the Trust instrument and Assignment of Intellectual Property. The Trust's sovereign framework — including UCC 1-308 reservations and Common Law first-claim priority — is grounded in this ecclesiastical standing.
 
 ---
 
@@ -125,7 +148,7 @@
 
 ## THE BANK'S JOB IN ONE SENTENCE
 
-**Open three separate accounts per the specifications in this book, verify the three UCC-1 filings on GSCCCA in 5 minutes, and ensure only Christla Howard and Teara Howard are signatories on all accounts.**
+**Open three separate accounts per the specifications in this book, verify the three UCC-1 filings on GSCCCA in 5 minutes, and ensure only Teara Howard and Joseph Lumpkin Jr. are signatories on all accounts.**
 
 ---
 
@@ -134,7 +157,7 @@
 1. ✅ Confirm receipt of 210-page Master Book
 2. ✅ Go to gsccca.org and verify Filing IDs: 14472596, 14629748, 029-2026-000102
 3. ✅ Open three accounts (Trust Reserve, Odyssey-1 Expense, Odyssey-1 Main Operating)
-4. ✅ Confirm ONLY Christla Howard and Teara Howard are authorized signatories
+4. ✅ Confirm ONLY Teara Howard and Joseph Lumpkin Jr. are authorized signatories (NOT Rickey Howard, NOT Christla Howard)
 5. ✅ Set up account separation protocols in internal systems
 6. ✅ Call Rickey at 706-351-1300 to confirm account numbers once created
 
@@ -147,12 +170,14 @@ P.O. Box 80054
 Athens, Georgia 30608
 
 **Co-Trustees (Account Authority):**
-- Christla Howard: 762-728-0761
 - Teara Howard: 678-292-3583
+- Joseph Lumpkin Jr.: 706-207-9869 | fbltransportllc742@gmail.com
+
+**Protected Lifetime Beneficiary (NOT account signatory):**
+- Christla L. Howard: 762-728-0761
 
 **Grantor/Managing Member (Operational Contact):**
-- Rickey Allan Howard: 706-351-1300
-- Email: generalmanager81@gmail.com
+- Rickey Allan Howard: 706-351-1300 | generalmanager81@gmail.com
 
 ---
 

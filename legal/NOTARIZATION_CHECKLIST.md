@@ -1,9 +1,9 @@
 # NOTARIZATION & SIGNATURE CHECKLIST
 ## Week of February 3, 2026 - Banking Appointments
 
-**Prepared for:** Rickey Allan Howard (Grantor), Christla Howard (Co-Trustee), Teara Howard (Co-Trustee)  
-**Purpose:** Bank account openings for Howard Jones Family Ancestral Trust and Odyssey-1 AI LLC  
-**Date:** February 1, 2026
+**Prepared for:** Rickey Allan Howard (Grantor), Teara Howard (Co-Trustee), Joseph Lumpkin Jr. (Co-Trustee), Christla Howard (Co-Grantor / Protected Lifetime Beneficiary)
+**Purpose:** Notarization and bank account openings for Howard Jones Bloodline Ancestral Trust and Odyssey-1 AI LLC
+**Date:** February 19, 2026 (Amended — Original: February 1, 2026)
 
 ---
 
@@ -21,49 +21,63 @@
    - Sign as: "Rickey Allan Howard, Living Soul"
    - Date: February 1-3, 2026
 
-2. ☐ **Christla Howard** (Co-Trustee)
-   - Signature line: "Co-Trustee Acceptance" (Section X)
-   - Sign as: "Christla Howard, Co-Trustee"
-   - Date: February 1-3, 2026
-
-3. ☐ **Teara Howard** (Co-Trustee)
+2. ☐ **Teara Howard** (Co-Trustee)
    - Signature line: "Co-Trustee Acceptance" (Section X)
    - Sign as: "Teara Howard, Co-Trustee"
-   - Date: February 1-3, 2026
+   - Date: [Notarization date]
+
+3. ☐ **Joseph Lumpkin Jr.** (Co-Trustee) ✅ UPDATED — replaces Christla Howard
+   - Signature line: "Co-Trustee Acceptance" (Section X)
+   - Sign as: "Joseph Lumpkin Jr., Co-Trustee"
+   - Date: [Notarization date]
 
 4. ☐ **Notary Public** (Georgia)
    - Notary section: Section XI - Notary Acknowledgment
-   - Must verify ID for all 3 signers
+   - Must verify ID for all 3 signers: Rickey Allan Howard, Teara Howard, Joseph Lumpkin Jr.
    - Must stamp with official notary seal
    - Commission expiration must be current
+   - ⚠️ Christla Howard does NOT sign this document as Co-Trustee
 
 **Action:** Print 3 copies → Sign → Notarize → Bring to bank appointments
 
 ---
 
-### Document 2: Howard Jones Family Ancestral Trust (Trust Instrument)
+### Document 2: Howard Jones Bloodline Ancestral Trust (Trust Instrument)
 
-**File:** `legal/Howard-Jones-Bloodline-Ancestral-Trust-DRAFT.md`  
-**Status:** DRAFT (may already be executed - check files)
+**File:** `legal/Howard-Jones-Bloodline-Ancestral-Trust-DRAFT.md`
+**Status:** DRAFT — Pending notarization. Trustee structure updated February 19, 2026.
 
 **Signatures Required:**
-1. ☐ **rickey-allan: howard** (Grantor)
-   - Sign with lowercase and colon format
-   - Witness line available
+1. ☐ **Rickey Allan Howard** (Grantor)
+   - Signature Page 1 — Grantor signature
+   - Sign as: "Rickey Allan Howard, Grantor"
+   - Wet ink, blue pen
 
-2. ☐ **Christla howard** (Co-Grantor/Spouse)
-   - Spousal consent signature
-   - Witness line available
+2. ☐ **Christla Howard** (Co-Grantor / Protected Lifetime Beneficiary)
+   - Signature Page 1 — Co-Grantor signature only
+   - Sign as: "Christla Howard, Co-Grantor"
+   - ⚠️ Signs as CO-GRANTOR ONLY — NOT as Co-Trustee
+   - Do NOT have her sign any Co-Trustee line
 
-3. ☐ **[Trustee Name]** (if different from Co-Trustees)
-   - Trustee acceptance signature
+3. ☐ **Teara Howard** (Initial Co-Trustee)
+   - Signature Page 2 — Co-Trustee signature
+   - Signature Page 5 — Acceptance of Trusteeship
+   - Sign as: "Teara Howard, Initial Co-Trustee"
 
-4. ☐ **Two Witnesses** (Georgia requirement for trust execution)
-   - Independent witnesses (not family members)
+4. ☐ **Joseph Lumpkin Jr.** (Initial Co-Trustee) ✅ UPDATED
+   - Signature Page 2 — Co-Trustee signature
+   - Signature Page 5 — Acceptance of Trusteeship
+   - Sign as: "Joseph Lumpkin Jr., Initial Co-Trustee"
 
-5. ☐ **Notary Public** (Georgia)
+5. ☐ **Two Witnesses** (Georgia requirement for trust execution)
+   - Independent witnesses (not immediate family members if possible)
+   - Both witnesses must be present for all signatures
 
-**Action:** Check if already executed. If not, execute before bank appointments.
+6. ☐ **Notary Public** (Georgia)
+   - Notary Acknowledgment — Signature Page 4
+   - All four parties appear before notary: Rickey Allan Howard, Christla Howard (Co-Grantor), Teara Howard, Joseph Lumpkin Jr.
+
+**Action:** All four parties must be physically present before the Notary on the same day. Schedule around Joseph Lumpkin Jr. and Teara Howard's availability.
 
 ---
 
@@ -78,13 +92,15 @@
    - Sign as: "rickey-allan: howard" (lowercase with colon)
    - Date signature
 
-2. ☐ **[Trustee]** (on behalf of Trust)
-   - Could be Christla or Teara as Co-Trustee
-   - Sign as: "[Name], Co-Trustee, Howard Jones Family Ancestral Trust"
+2. ☐ **Teara Howard** (Co-Trustee, on behalf of Trust)
+   - Sign as: "Teara Howard, Co-Trustee, Howard Jones Bloodline Ancestral Trust"
 
-3. ☐ **Christla howard** (Spousal Consent)
-   - Wife's signature required for community property
-   - Date signature
+3. ☐ **Joseph Lumpkin Jr.** (Co-Trustee, on behalf of Trust) ✅ UPDATED
+   - Sign as: "Joseph Lumpkin Jr., Co-Trustee, Howard Jones Bloodline Ancestral Trust"
+
+4. ☐ **Christla Howard** (Co-Grantor / Consenting Party)
+   - Sign as: "Christla Howard, Co-Grantor"
+   - ⚠️ Signs as Co-Grantor consenting to assignment — NOT as Co-Trustee
 
 4. ☐ **Two Witnesses**
    - Independent witnesses
@@ -113,7 +129,7 @@
 - **Filing ID:** 14629748
 
 **Debtor:** ODYSSEY-1 AI LLC  
-**Secured Party:** Howard Jones Family Ancestral Trust  
+**Secured Party:** Howard Jones Bloodline Ancestral Trust  
 **Collateral:** All assets, intellectual property, patents, copyrights, trademarks, accounts receivable, equipment, inventory, and future property of Odyssey-1 AI LLC
 
 **Action:** ✅ COMPLETED. Bring file-stamped copy to bank appointments (already on public record).
@@ -137,31 +153,34 @@
 
 **Documents Bank Will Provide:**
 1. ☐ **Trust Account Signature Card**
-   - Christla Howard (Co-Trustee) signature
    - Teara Howard (Co-Trustee) signature
+   - Joseph Lumpkin Jr. (Co-Trustee) signature ✅ UPDATED
    - **NOT Rickey** (maintains third-party wall)
+   - **NOT Christla** (Protected Beneficiary — no banking authority)
 
 2. ☐ **Expense Account Signature Card** (Odyssey-1 AI LLC)
-   - Christla Howard (Co-Trustee of 100% owner)
    - Teara Howard (Co-Trustee of 100% owner)
+   - Joseph Lumpkin Jr. (Co-Trustee of 100% owner) ✅ UPDATED
    - **NOT Rickey** (maintains separation)
+   - **NOT Christla** (Protected Beneficiary — no banking authority)
 
 3. ☐ **Account Opening Agreements**
    - Standard bank forms
    - Terms & conditions
 
 4. ☐ **W-9 Forms**
-   - Howard Jones Family Ancestral Trust (EIN if assigned)
+   - Howard Jones Bloodline Ancestral Trust (EIN: 41-6850149)
    - Odyssey-1 AI LLC (EIN on file)
 
 **Documents to Bring:**
 - ✅ Trustee Certificate of Authority (notarized)
-- ✅ Trust Instrument (if executed)
+- ✅ Trust Instrument (executed and notarized)
 - ✅ UCC-1 Filing (file-stamped copy)
 - ✅ LLC Articles of Organization
 - ✅ Bank Presentation Package
 - ✅ IP Valuation Report
-- ✅ Government IDs (Christla and Teara)
+- ✅ Government IDs (Teara Howard and Joseph Lumpkin Jr.)
+- ✅ Note: Christla Howard does NOT attend banking appointments in a trustee capacity
 
 ---
 
@@ -169,9 +188,10 @@
 
 **Documents Bank Will Provide:**
 1. ☐ **Business Account Signature Card** (Odyssey-1 AI LLC)
-   - Christla Howard (Co-Trustee of 100% owner)
    - Teara Howard (Co-Trustee of 100% owner)
+   - Joseph Lumpkin Jr. (Co-Trustee of 100% owner) ✅ UPDATED
    - **NOT Rickey**
+   - **NOT Christla** (Protected Beneficiary — no banking authority)
 
 2. ☐ **Account Opening Agreements**
 3. ☐ **ACH/Wire Transfer Authorization Forms**
@@ -187,25 +207,34 @@
 ## ✍️ SIGNATURE PROTOCOL REMINDERS
 
 ### For Rickey Allan Howard (Grantor):
-- ✅ Sign legal documents as: **"rickey-allan: howard"** (lowercase with colon)
-- ✅ Use title: "Living Soul" or "Grantor, Howard Jones Family Ancestral Trust"
+- ✅ Sign legal documents as: **"Rickey Allan Howard, Grantor"**
+- ✅ Use title: "Grantor, Howard Jones Bloodline Ancestral Trust"
 - ❌ DO NOT sign bank signature cards (maintains creditor position)
 - ✅ Can sign as "Managing Member" for LLC operational documents if needed
 - ✅ Use **wet ink signatures** for trust/assignment documents (not electronic)
 
-### For Christla Howard (Co-Trustee):
-- ✅ Sign as: **"Christla Howard, Co-Trustee"**
-- ✅ Add: "Howard Jones Family Ancestral Trust"
+### For Christla Howard (Co-Grantor / Protected Lifetime Beneficiary): ✅ UPDATED
+- ✅ Sign as: **"Christla Howard, Co-Grantor"**
+- ✅ Signs ONLY on: Trust Grantor page + Assignment of IP consent page
+- ❌ DO NOT sign any Co-Trustee line — she is NOT a Trustee
+- ❌ DO NOT sign bank signature cards — she has no banking authority
+- ❌ Does NOT attend bank appointments in any official capacity
+- ℹ️ She is a Protected Lifetime Beneficiary — her financial protections are irrevocably secured in Trust Article III
+
+### For Teara Howard (Initial Co-Trustee):
+- ✅ Sign as: **"Teara Howard, Co-Trustee"**
+- ✅ Add: "Howard Jones Bloodline Ancestral Trust"
 - ✅ Sign ALL bank signature cards
 - ✅ Present government ID at bank
 - ✅ May need to provide SSN for KYC compliance
 
-### For Teara Howard (Co-Trustee):
-- ✅ Sign as: **"Teara Howard, Co-Trustee"**
-- ✅ Add: "Howard Jones Family Ancestral Trust"
+### For Joseph Lumpkin Jr. (Initial Co-Trustee): ✅ NEW — Replaces Christla Howard
+- ✅ Sign as: **"Joseph Lumpkin Jr., Co-Trustee"**
+- ✅ Add: "Howard Jones Bloodline Ancestral Trust"
 - ✅ Sign ALL bank signature cards
 - ✅ Present government ID at bank
 - ✅ May need to provide SSN for KYC compliance
+- ✅ Must be present at notarization ceremony
 
 ---
 
@@ -213,12 +242,17 @@
 
 ### Before Bank Appointments (Feb 1-3):
 
-**Monday, February 3:**
-☐ Print Trustee Certificate of Authority (3 copies)
-☐ Gather all signers: Rickey, Christla, Teara
-☐ Schedule notary appointment (can use bank notary or mobile notary)
-☐ Execute all signatures on Trustee Certificate
-☐ Notarize Trustee Certificate (same day as signatures)
+**Step 1 — Coordinate Availability (Do This First):**
+☐ Confirm Joseph Lumpkin Jr. availability for notarization date
+☐ Confirm Teara Howard availability (coordinate around her union schedule)
+☐ Confirm Christla Howard availability (attends as Co-Grantor only)
+☐ Schedule Clarke County Notary Public — all four parties must appear in person
+
+**Step 2 — Print & Prepare Documents:**
+☐ Print all documents (5 complete sets on 24lb acid-free bond paper)
+☐ Print Trustee Certificate of Authority (3 copies minimum)
+☐ Verify all Co-Trustee signature lines show Teara Howard and Joseph Lumpkin Jr.
+☐ Verify no Co-Trustee signature lines still reference Christla Howard
 
 ☐ Review Trust Instrument - confirm if already executed
 ☐ Review Assignment of IP - confirm if already executed
@@ -238,16 +272,23 @@
   - LLC Articles of Organization
   - Stripe subscription documentation
 
-**Tuesday-Thursday, February 4-6:**
-☐ Truist Bank appointment (Christla and Teara attend)
+**Step 3 — Notarization Ceremony:**
+☐ All four parties present before Notary: Rickey, Christla (Co-Grantor), Teara, Joseph Lumpkin Jr.
+☐ Sign all documents in blue wet ink
+☐ Notary verifies ID for all parties and affixes seals
+☐ Collect all notarized copies before leaving
+
+**Step 4 — Bank Appointment (After Notarization Complete):**
+☐ Truist Bank appointment — **Teara Howard and Joseph Lumpkin Jr. attend**
   - Open Trust Account
   - Open Expense Account
-  - Sign signature cards (Christla and Teara only)
+  - Sign signature cards (Teara Howard and Joseph Lumpkin Jr. only)
   - Collect account numbers and routing numbers
+  - Rickey does NOT attend as signatory — Christla does NOT attend
 
-☐ Main Account bank appointment (Christla and Teara attend)
+☐ Main Account bank appointment — **Teara Howard and Joseph Lumpkin Jr. attend**
   - Open Main Operating Account (Odyssey-1 AI LLC)
-  - Sign signature cards (Christla and Teara only)
+  - Sign signature cards (Teara Howard and Joseph Lumpkin Jr. only)
   - Set up ACH/wire transfer capability
   - Collect account details for Stripe connection
 
@@ -299,14 +340,14 @@
 - ☑️ Checkbook or voided check (if existing account for reference)
 
 **Information to Have Ready:**
-- ☑️ Howard Jones Family Ancestral Trust EIN (if assigned)
+- ☑️ Howard Jones Bloodline Ancestral Trust EIN: **41-6850149**
 - ☑️ Odyssey-1 AI LLC EIN (on file)
-- ☑️ SSNs for Christla and Teara (KYC requirements)
+- ☑️ SSNs for Teara Howard and Joseph Lumpkin Jr. (KYC requirements)
 - ☑️ Initial deposit amounts (Trust Account, Expense Account, Main Account)
 - ☑️ Expected monthly deposits (Stripe revenue: $100K-$150K Year 1)
 
 **Key Talking Points:**
-- ☑️ "We are the Co-Trustees opening accounts for the Trust and its LLC subsidiary"
+- ☑️ "We are the Co-Trustees — Teara Howard and Joseph Lumpkin Jr. — opening accounts for the Trust and its LLC subsidiary"
 - ☑️ "The Trust holds $366M in secured assets (25-patent portfolio, AI platform)"
 - ☑️ "We are depositing revenue, not seeking credit (creditor position, not debtor)"
 - ☑️ "The Grantor intentionally stepped back from signature authority to maintain asset protection"
@@ -314,10 +355,10 @@
 
 ---
 
-**Status:** READY FOR EXECUTION  
-**Next Action:** Schedule notary appointment for Trustee Certificate signatures  
-**Target Date:** February 3, 2026 (Monday) - Execute and notarize  
-**Bank Appointments:** February 4-6, 2026 (Christla and Teara to attend)
+**Status:** UPDATED — READY FOR NOTARIZATION WITH REVISED TRUSTEE STRUCTURE
+**Next Action:** Confirm Joseph Lumpkin Jr. and Teara Howard availability → Schedule Notary → Print all documents
+**Notarization Parties:** Rickey Allan Howard (Grantor), Christla Howard (Co-Grantor), Teara Howard (Co-Trustee), Joseph Lumpkin Jr. (Co-Trustee)
+**Bank Appointment Parties:** Teara Howard and Joseph Lumpkin Jr. ONLY (Rickey and Christla do not sign bank documents)
 
 ---
 

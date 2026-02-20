@@ -1,7 +1,9 @@
 # TRUSTEE BRIEFING MEMO
-**For Christla Howard & Teara Howard**
+**For Teara Howard & Joseph Lumpkin Jr.**
 
 **CONFIDENTIAL — For Co-Trustees Only**
+
+> **NOTE:** Christla Howard has been redesignated as a Protected Lifetime Beneficiary, not a Trustee. She does not attend the bank appointment or sign as Trustee. Rickey Allan Howard (Grantor) and Christla Howard will sign the Trust as Grantor and Co-Grantor respectively. Teara Howard and Joseph Lumpkin Jr. are the sole Initial Co-Trustees.
 
 **Date:** February 7, 2026  
 **Timeline (Flexible - Scheduled Around Teara's Union Availability):**
@@ -107,9 +109,10 @@ You are the **Public-Facing Co-Trustees** of the Howard Jones Bloodline Ancestra
 - **Do not accept any variation from these specs.**
 
 ✅ **Confirm Signatories**
-- Only Christla Howard on all three accounts
 - Only Teara Howard on all three accounts
+- Only Joseph Lumpkin Jr. on all three accounts
 - Rickey Allan Howard: NOT on any account
+- Christla Howard: NOT on any account (she is a Protected Beneficiary, not a Trustee)
 - **Request written confirmation of this restriction.**
 
 ✅ **Request Account Numbers & Routing Info**
@@ -182,12 +185,14 @@ You are the **Public-Facing Co-Trustees** of the Howard Jones Bloodline Ancestra
 
 You have succeeded if you leave the bank on Monday with:
 
-✅ All three accounts opened and functional  
-✅ Only Christla Howard and Teara Howard listed as signatories  
-✅ Written confirmation that accounts are NOT commingled  
-✅ Bank's verification of UCC-1 filings (they can print the GSCCCA records)  
-✅ Account numbers and routing information  
-✅ Clear written instructions for each account  
+✅ All three accounts opened and functional
+✅ Only **Teara Howard** and **Joseph Lumpkin Jr.** listed as signatories on all accounts
+✅ Written confirmation that Rickey Allan Howard is NOT on any account
+✅ Written confirmation that Christla Howard is NOT on any account (Protected Lifetime Beneficiary only)
+✅ Written confirmation that accounts are NOT commingled
+✅ Bank's verification of UCC-1 filings (they can print the GSCCCA records)
+✅ Account numbers and routing information
+✅ Clear written instructions for each account
 ✅ Direct phone number of your bank contact person
 
 ---
@@ -209,14 +214,19 @@ You have:
 
 ## FINAL CHECKLIST BEFORE YOU GO
 
-**Friday-Monday (Feb 7-10):**
-- [ ] Review this memo together (Christla & Teara)
+**Before Appointment:**
+- [ ] Review this memo together (Teara Howard & Joseph Lumpkin Jr.)
 - [ ] Review the Executive Summary
 - [ ] Review the first 10 pages of the Master Book
-- [ ] Ensure you have valid government ID
-- [ ] Confirm printer delivery for Monday, Feb 10
-- [ ] **CRITICAL:** Confirm Teara's union schedule for the week of Feb 17-24
-- [ ] Schedule notarization appointment based on when Teara will be in town
+- [ ] Teara Howard — valid government-issued photo ID
+- [ ] Joseph Lumpkin Jr. — valid government-issued photo ID
+- [ ] Confirm printer delivery of 210-page Master Book
+- [ ] **CRITICAL:** Confirm Teara's union schedule and Joseph Lumpkin Jr.'s availability
+- [ ] Schedule notarization appointment — ALL FOUR parties must be available same day:
+  - Rickey Allan Howard (Grantor)
+  - Christla Howard (Co-Grantor — signs Co-Grantor pages ONLY)
+  - Teara Howard (Initial Co-Trustee)
+  - Joseph Lumpkin Jr. (Initial Co-Trustee)
 
 **Tuesday-Wednesday (Feb 11-12):**
 - [ ] Pick up 210-page Master Book from printer (Monday, Feb 10)
@@ -224,16 +234,18 @@ You have:
 - [ ] Confirm notarization date with Teara (must coordinate with her union commitments)
 - [ ] Reserve copies for your personal records
 
-**Week of Feb 17-24 (TBD - Based on Teara's Availability):**
+**Notarization Ceremony (TBD - All Four Parties Must Be Available Same Day):**
 - [ ] Attend notarization ceremony with Clarke County Notary Public
-- [ ] **PRESENT:** Rickey Allan Howard (Grantor)
-- [ ] **PRESENT:** Christla Howard (Co-Trustee)
-- [ ] **PRESENT:** Teara Howard (Co-Trustee) — Must be in town
+- [ ] **PRESENT:** Rickey Allan Howard — signs as Grantor
+- [ ] **PRESENT:** Christla Howard — signs as **Co-Grantor ONLY** (⚠️ NOT as Co-Trustee — Co-Grantor pages only)
+- [ ] **PRESENT:** Teara Howard — signs as Initial Co-Trustee (must be in town)
+- [ ] **PRESENT:** Joseph Lumpkin Jr. — signs as Initial Co-Trustee
 - [ ] **LOCATION:** Clarke County, Georgia
-- [ ] **SIGNATURES:** All in blue ink on all signature pages
+- [ ] **SIGNATURES:** All parties in blue ink on their correct pages
 - [ ] **NOTARY SEAL:** Notary Public seals and certifies entire 210-page volume as integrated document
 - [ ] Receive sealed, notarized copies
-- [ ] Verify all pages are signed and sealed
+- [ ] Verify all pages are signed and sealed correctly
+- [ ] ⚠️ Do NOT have Christla sign any Co-Trustee line — only Co-Grantor designation
 
 **Week of Feb 25+ (TBD - After Notarization Complete):**
 - [ ] Schedule bank appointment at Truist Bank (call after notarization complete)
@@ -254,17 +266,17 @@ You have:
 
 ## CLOSING STATEMENT
 
-Christla and Teara, you have three missions with flexible timing:
+**Teara Howard and Joseph Lumpkin Jr.** — you have three missions with flexible timing:
 
-**Mission 1 (February 10):** Pick up the 210-page Master Book from the printer. Inspect quality, confirm all pages present.
+**Mission 1:** Pick up the 210-page Master Book from the printer. Inspect quality, confirm all pages present, confirm all four signature blocks are formatted correctly.
 
-**Mission 2 (February 17-24, TBD):** Attend the notarization ceremony with the Notary Public in Clarke County. This date is **flexible and scheduled around Teara's union availability**. You, Rickey, and the Notary will sign all signature pages in blue ink. The Notary will seal and certify the entire 210-page volume as one integrated document.
+**Mission 2 (Notarization — TBD):** Attend the notarization ceremony with the Notary Public in Clarke County. This date must be coordinated so all four parties are present: Rickey Allan Howard (Grantor), Christla Howard (Co-Grantor — signs Co-Grantor pages only, NOT Co-Trustee lines), Teara Howard (Co-Trustee), and Joseph Lumpkin Jr. (Co-Trustee). All sign in blue ink. The Notary seals and certifies the entire 210-page volume as one integrated document.
 
-**Mission 3 (February 25+, TBD):** Walk into Truist Bank with the fully notarized Master Book, Executive Summary, and this briefing memo. This date is scheduled **after notarization is complete**. Open the three accounts per specification, verify the UCC-1 filings, and return with account numbers.
+**Mission 3 (Bank — TBD after Notarization):** Walk into Truist Bank as the Co-Trustees of the Howard Jones Bloodline Ancestral Trust. Present the fully notarized Master Book, Executive Summary, and this briefing memo. Open the three accounts per specification with only your names as signatories. Verify the UCC-1 filings. Return with account numbers.
 
-**KEY REQUIREMENT:** Teara must be in town for the notarization. Coordinate with her union schedule first, then lock in the notary appointment around her availability. This is non-negotiable—all three of you must be present in person before the Notary Public.
+**KEY REQUIREMENT:** Teara must be in town and Joseph Lumpkin Jr. must be available for both the notarization and the bank appointment. The notarization must happen first — you cannot open accounts without notarized documents. Both missions are scheduled around your combined availability.
 
-You are executing the institutional foundation of a multi-billion-dollar intellectual property legacy. Your clarity, confidence, and adherence to the three-account mandate are what will make this work.
+As ordained ministers and Co-Trustees, you and the Grantor bring ecclesiastical standing and deep personal integrity to this Trust. Your role is not merely administrative — you are stewards of the Howard Jones bloodline legacy and guardians of Christla Howard's lifetime security.
 
 Rickey has spent decades building this innovation. Your job is to give it the banking infrastructure it needs to survive and grow for generations.
 
@@ -274,9 +286,13 @@ You've got this.
 
 **CONFIDENTIAL — TRUSTEES ONLY**
 
-**Created:** February 7, 2026  
-**For:** Christla Howard & Teara Howard  
-**Timeline:** Printer (Feb 10) → Notarization (Feb 17-24, TBD based on Teara's union schedule) → Bank (Feb 25+, TBD after notarization)
+**Created:** February 7, 2026
+**Amended:** February 19, 2026 — Updated for revised trustee structure
+**For:** Teara Howard (Initial Co-Trustee) & Joseph Lumpkin Jr. (Initial Co-Trustee)
+**Contact — Teara Howard:** 678-292-3583
+**Contact — Joseph Lumpkin Jr.:** 706-207-9869 | fbltransportllc742@gmail.com
+**Contact — Rickey Allan Howard (Grantor):** 706-351-1300 | generalmanager81@gmail.com
+**Timeline:** Printer → Notarization (all four parties: Rickey, Christla as Co-Grantor, Teara, Joseph) → Bank (Teara + Joseph only)
 
 ---
 

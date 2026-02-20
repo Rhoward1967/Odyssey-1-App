@@ -1,5 +1,6 @@
 # TRUIST BANKING APPOINTMENT - CHEAT SHEET
-**For Christla Howard & Teara Howard**
+**For Teara Howard & Joseph Lumpkin Jr. (Initial Co-Trustees)**
+**Amended: February 19, 2026 — Christla Howard is a Protected Lifetime Beneficiary, NOT a Co-Trustee. She does NOT attend this appointment.**
 
 ---
 
@@ -7,7 +8,7 @@
 
 Opening **3 separate business accounts** for our family's technology company and Trust:
 
-1. **Trust Reserve Account** (Howard Jones Family Ancestral Trust)
+1. **Trust Reserve Account** (Howard Jones Bloodline Ancestral Trust)
 2. **Expense Account** (Odyssey-1 AI LLC)
 3. **Main Operating Account** (Odyssey-1 AI LLC)
 
@@ -17,10 +18,11 @@ Opening **3 separate business accounts** for our family's technology company and
 
 ## WHO WE ARE
 
-- **Christla Howard** - Co-Trustee
-- **Teara Howard** - Co-Trustee
+- **Teara Howard** — Initial Co-Trustee, Howard Jones Bloodline Ancestral Trust | 678-292-3583
+- **Joseph Lumpkin Jr.** — Initial Co-Trustee, Howard Jones Bloodline Ancestral Trust | 706-207-9869
 - **Our Authority**: We are the **exclusive banking signatories** for both the Trust and the LLC
 - **Our Company**: Odyssey-1 AI LLC (AI-powered business automation platform, launching March 1, 2026)
+- **Additional Standing**: Joseph Lumpkin Jr. and Rickey Allan Howard (Grantor) are both ordained ministers — the Trust is established under Ecclesiastical and Natural Law jurisdiction
 
 ---
 
@@ -32,7 +34,7 @@ Opening **3 separate business accounts** for our family's technology company and
 
 ### "Who owns the LLC?"
 
-> "The Howard Jones Family Ancestral Trust owns 100% of Odyssey-1 AI LLC. As Co-Trustees, we manage both entities."
+> "The Howard Jones Bloodline Ancestral Trust owns 100% of Odyssey-1 AI LLC. As Co-Trustees, we manage both entities."
 
 ### "Why isn't Rickey Howard on the accounts?"
 
@@ -55,24 +57,24 @@ Opening **3 separate business accounts** for our family's technology company and
 ## ACCOUNT REQUIREMENTS
 
 ### Account 1: Trust Reserve Account
-- **Name on Account**: Howard Jones Family Ancestral Trust
-- **Signatories**: Christla Howard & Teara Howard (Co-Trustees)
-- **Tax ID**: Trust EIN (bring EIN letter)
-- **Purpose**: Trust asset management
+- **Name on Account**: Howard Jones Bloodline Ancestral Trust
+- **Signatories**: Teara Howard (Co-Trustee) & Joseph Lumpkin Jr. (Co-Trustee)
+- **Tax ID**: Trust EIN 41-6850149 (bring EIN letter)
+- **Purpose**: Trust asset management — receives quarterly distributions from LLC
 - **Initial Deposit**: $[Amount TBD]
 
-### Account 2: Expense Account  
+### Account 2: Expense Account
 - **Name on Account**: Odyssey-1 AI LLC
-- **Signatories**: Christla Howard & Teara Howard
-- **Tax ID**: LLC EIN 92-3207374
-- **Purpose**: Operating expenses, payroll
+- **Signatories**: Teara Howard (Co-Trustee) & Joseph Lumpkin Jr. (Co-Trustee)
+- **Tax ID**: LLC EIN 41-2718714 (bring EIN letter)
+- **Purpose**: Operating expenses, payroll, contractors
 - **Initial Deposit**: $[Amount TBD]
 
 ### Account 3: Main Operating Account
 - **Name on Account**: Odyssey-1 AI LLC
-- **Signatories**: Christla Howard & Teara Howard
-- **Tax ID**: LLC EIN 92-3207374
-- **Purpose**: Revenue collection (Stripe payments)
+- **Signatories**: Teara Howard (Co-Trustee) & Joseph Lumpkin Jr. (Co-Trustee)
+- **Tax ID**: LLC EIN 41-2718714 (bring EIN letter)
+- **Purpose**: Revenue collection (Stripe payments, invoices)
 - **Initial Deposit**: $[Amount TBD]
 - **Special Needs**: Need to connect to Stripe for payment processing
 
@@ -81,7 +83,7 @@ Opening **3 separate business accounts** for our family's technology company and
 ## WHAT TO REQUEST
 
 ✅ **All 3 accounts opened today**
-✅ **Debit cards for all 3 accounts** (Christla & Teara on each)
+✅ **Debit cards for all 3 accounts** (Teara Howard & Joseph Lumpkin Jr. on each)
 ✅ **Online banking access** for all 3 accounts
 ✅ **ACH transfer authority** between all 3 accounts (internal transfers)
 ✅ **Wire transfer authority** on Main Operating Account
@@ -93,22 +95,23 @@ Opening **3 separate business accounts** for our family's technology company and
 ## DOCUMENTS TO BRING
 
 📄 **Trust Documents:**
-- Trustee Certificate of Authority (to be signed & notarized today)
-- Trust Instrument (Howard Jones Family Ancestral Trust)
+- Trustee Certificate of Authority (signed & notarized)
+- Trust Instrument (Howard Jones Bloodline Ancestral Trust)
 - UCC-1 Filing documentation (Filing ID 14629748)
 
 📄 **LLC Documents:**
-- LLC Operating Agreement
+- LLC Operating Agreement (Amendment No. 1 — Trust as sole member)
 - Georgia LLC Certificate of Organization
-- EIN Letter (EIN 92-3207374)
+- EIN Letter (EIN 41-2718714)
 
 📄 **Banking Documents:**
 - Bank Letter of Instruction
 - Bank Presentation Package ($366M creditor position)
 
 📄 **Personal IDs:**
-- Driver's licenses (Christla & Teara)
-- Social Security numbers
+- Teara Howard — driver's license + Social Security number
+- Joseph Lumpkin Jr. — driver's license + Social Security number
+- Rickey Allan Howard — driver's license (for Grantor Acknowledgment only)
 
 ---
 
@@ -120,7 +123,7 @@ Opening **3 separate business accounts** for our family's technology company and
 
 ### "We need all members/owners to be present."
 
-> "We **are** the authorized representatives. As Co-Trustees, we have full legal authority to open accounts for both the Trust and the LLC. The Trustee Certificate of Authority being notarized today confirms this. Rickey, as Grantor, has no operational authority - this is by design."
+> "We **are** the authorized representatives. As Initial Co-Trustees of the Howard Jones Bloodline Ancestral Trust — the sole member of Odyssey-1 AI LLC — we have full legal authority to open accounts for both entities. Our Trustee Certificate of Authority confirms this. Rickey, as Grantor, has no banking signature authority by design. Christla Howard is a Protected Lifetime Beneficiary and is not a signatory on any account."
 
 ### "This is a lot of accounts for a startup."
 
@@ -145,7 +148,9 @@ Opening **3 separate business accounts** for our family's technology company and
 
 ## EMERGENCY CONTACTS
 
-- **Rickey Howard** (Grantor/Managing Member): [Phone]
+- **Teara Howard** (Co-Trustee): 678-292-3583
+- **Joseph Lumpkin Jr.** (Co-Trustee): 706-207-9869 | fbltransportllc742@gmail.com
+- **Rickey Allan Howard** (Grantor/Managing Member): 706-351-1300 | generalmanager81@gmail.com
 - **Truist Relationship Manager**: [Get name/number during visit]
 
 ---
@@ -173,4 +178,4 @@ Opening **3 separate business accounts** for our family's technology company and
 
 ---
 
-**You've got this. This is your company. This is your Trust. You're in charge. ✊**
+**Teara Howard and Joseph Lumpkin Jr. — you are the Co-Trustees. You have full legal authority. This is the Trust. You're in charge. ✊**

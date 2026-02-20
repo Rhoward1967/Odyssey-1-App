@@ -9,6 +9,28 @@ This Operating Agreement ("Agreement") of ODYSSEY-1 AI LLC (the "Company") is
 entered into and effective as of November 21, 2025 (the "Effective Date"), by
 Rickey Allan Howard, as the sole Member of the Company.
 
+═══════════════════════════════════════════════════════════════════════════════
+                    AMENDMENT NO. 1 — FEBRUARY 19, 2026
+             TRUST OWNERSHIP AND CO-TRUSTEE AUTHORITY
+═══════════════════════════════════════════════════════════════════════════════
+
+Effective February 19, 2026, this Agreement is amended to reflect the
+irrevocable transfer of 100% membership interest in ODYSSEY-1 AI LLC to the
+HOWARD JONES BLOODLINE ANCESTRAL TRUST pursuant to the Assignment and Transfer
+of Intellectual Property executed by Rickey Allan Howard as Grantor.
+
+AMENDMENT SUMMARY:
+  - Sole Member changed from: Rickey Allan Howard (individual)
+  - Sole Member changed to:   Howard Jones Bloodline Ancestral Trust
+  - Trust Co-Trustees:        Teara Howard + Joseph Lumpkin Jr.
+  - Rickey Allan Howard:      Retains designation as Managing Member
+                              for day-to-day operational control
+                              (NON-SIGNATORY on Trust bank accounts)
+
+All provisions of this Agreement remain in effect except as modified herein.
+Where conflict exists between original provisions and this Amendment, the
+Amendment controls.
+
 
 ═══════════════════════════════════════════════════════════════════════════════
                             ARTICLE I - ORGANIZATION
@@ -69,22 +91,36 @@ Rickey Allan Howard, as the sole Member of the Company.
                         ARTICLE II - MEMBER AND OWNERSHIP
 ═══════════════════════════════════════════════════════════════════════════════
 
-2.1  SOLE MEMBER
+2.1  SOLE MEMBER — AMENDED FEBRUARY 19, 2026
      The sole Member of the Company is:
-     
-     Name:      Rickey Allan Howard
-     Address:   595 Macon Hwy, Apt 35
-                Athens, GA 30606
+
+     Name:      Howard Jones Bloodline Ancestral Trust
+     EIN:       41-6850149
+     Date:      January 8, 2026
+     Address:   P.O. Box 80054, Athens, GA 30608
      Ownership: 100%
 
+     Acting through its Initial Co-Trustees:
+       Co-Trustee #1: Teara Howard
+       Co-Trustee #2: Joseph Lumpkin Jr.
+
+     [ORIGINAL — November 21, 2025]
+     Original Member: Rickey Allan Howard (transferred to Trust per
+     Assignment of Intellectual Property, effective February 19, 2026)
+     Rickey Allan Howard retains designation as Managing Member for
+     day-to-day operational management. He is NOT a signatory on Trust
+     bank accounts.
+
 2.2  MEMBERSHIP INTEREST
-     The Member owns 100% of the membership interests in the Company and has
-     full rights to all profits, losses, distributions, and voting rights.
+     The Howard Jones Bloodline Ancestral Trust owns 100% of the membership
+     interests in the Company and has full rights to all profits, losses,
+     distributions, and voting rights, exercised through its Co-Trustees.
 
 2.3  NO TRANSFER WITHOUT CONSENT
-     The Member may not transfer, sell, assign, pledge, or encumber any
-     membership interest without first dissolving the Company or admitting new
-     members in accordance with this Agreement and Georgia law.
+     The membership interest may not be transferred, sold, assigned, pledged,
+     or encumbered without unanimous written consent of both Co-Trustees of the
+     Howard Jones Bloodline Ancestral Trust and, during Grantor's lifetime,
+     the written acknowledgment of Rickey Allan Howard as Grantor.
 
 2.4  CAPITAL CONTRIBUTIONS
      
@@ -124,12 +160,33 @@ Rickey Allan Howard, as the sole Member of the Company.
                       ARTICLE III - MANAGEMENT AND CONTROL
 ═══════════════════════════════════════════════════════════════════════════════
 
-3.1  MEMBER-MANAGED
-     The Company is member-managed. The Member has full and complete authority
-     to manage and control the business and affairs of the Company.
+3.1  MANAGEMENT STRUCTURE — AMENDED FEBRUARY 19, 2026
+     The Company is member-managed by the Howard Jones Bloodline Ancestral
+     Trust, acting through its Co-Trustees (Teara Howard and Joseph Lumpkin
+     Jr.). The Co-Trustees hold ultimate authority over the Company as the
+     sole member.
+
+     MANAGING MEMBER DESIGNATION: The Co-Trustees hereby designate
+     RICKEY ALLAN HOWARD as Managing Member for day-to-day operational
+     management, including but not limited to:
+       - Client relations and service delivery
+       - Hiring and supervising employees and contractors
+       - Executing contracts under $25,000
+       - Managing daily operations of the Odyssey-1 platform
+       - Filing patent applications and managing IP prosecution
+
+     Actions requiring Co-Trustee approval (both Teara Howard AND
+     Joseph Lumpkin Jr. must authorize):
+       - Contracts or obligations exceeding $25,000
+       - Sale, assignment, or licensing of core IP
+       - Opening or closing bank accounts
+       - Distributions to Trust beneficiaries
+       - Amendment of this Operating Agreement
+       - Any action that would materially alter the Trust's ownership
 
 3.2  POWERS OF THE MEMBER
-     The Member has full power and authority to:
+     The Howard Jones Bloodline Ancestral Trust, acting through its
+     Co-Trustees, has full power and authority to:
      
      a) Enter into contracts and agreements on behalf of the Company;
      
@@ -237,11 +294,23 @@ Rickey Allan Howard, as the sole Member of the Company.
      e) Minutes of any meetings or written consents
      f) Contracts, agreements, and other material documents
 
-5.3  BANK ACCOUNTS
-     The Member shall open one or more bank accounts in the Company's name and
-     shall ensure that all Company funds are deposited in such accounts. The
-     Member is authorized to sign checks, make withdrawals, and otherwise
-     transact business on behalf of the Company.
+5.3  BANK ACCOUNTS — AMENDED FEBRUARY 19, 2026
+     The Company shall maintain bank accounts in the Company's name. All
+     Company funds shall be deposited in such accounts. Authorized signatories
+     on all Company bank accounts are:
+
+       AUTHORIZED SIGNATORIES (Trust Co-Trustees):
+         - Teara Howard (Initial Co-Trustee)
+         - Joseph Lumpkin Jr. (Initial Co-Trustee)
+
+       NOT AUTHORIZED AS SIGNATORY:
+         - Rickey Allan Howard (Grantor / Managing Member — non-signatory
+           on bank accounts per Trust third-party wall structure)
+         - Christla L. Howard (Protected Lifetime Beneficiary — no
+           signature authority on any Company or Trust accounts)
+
+     This structure preserves the third-party wall between the Grantor
+     and the Trust's financial assets, providing maximum asset protection.
 
 5.4  SEPARATE FUNDS
      The Company's funds and assets shall be kept separate from the personal
@@ -269,18 +338,37 @@ Rickey Allan Howard, as the sole Member of the Company.
                      ARTICLE VI - DISTRIBUTIONS AND ALLOCATIONS
 ═══════════════════════════════════════════════════════════════════════════════
 
-6.1  DISTRIBUTIONS
-     The Member may, at any time and in the Member's sole discretion, authorize
-     distributions of Company profits or assets. All distributions shall be made
-     to the Member as the sole owner of the Company.
+6.1  DISTRIBUTIONS — AMENDED FEBRUARY 19, 2026
+     The Co-Trustees of the Howard Jones Bloodline Ancestral Trust (Teara
+     Howard and Joseph Lumpkin Jr.) may, acting together, authorize
+     distributions of Company profits or assets. All distributions shall
+     flow to the Howard Jones Bloodline Ancestral Trust as the sole member,
+     and thereafter distributed to Trust beneficiaries at the Co-Trustees'
+     discretion in accordance with the Trust instrument.
+
+     DISTRIBUTION PRIORITY:
+       First:  Taxes and mandatory obligations
+       Second: Christla L. Howard — Protected Lifetime Beneficiary
+               (mandatory distributions per Trust Article III — bills,
+               monthly allowance, and care; NOT discretionary)
+       Third:  Operating reserves and reinvestment
+       Fourth: Remaining distributions to Trust beneficiaries at
+               Co-Trustee discretion
+
+     Rickey Allan Howard may receive compensation as Managing Member via
+     W-2 wages or 1099 compensation for services rendered, separate from
+     Trust distributions.
 
 6.2  NO OBLIGATION TO DISTRIBUTE
-     The Member shall not be obligated to make distributions and may retain
-     profits for working capital, growth, or other business purposes.
+     The Co-Trustees shall not be obligated to make Trust distributions
+     and may retain profits for working capital, growth, or other business
+     purposes, subject to the mandatory distribution obligations for
+     Christla L. Howard as Protected Lifetime Beneficiary.
 
 6.3  ALLOCATION OF PROFITS AND LOSSES
      All profits, losses, credits, and deductions of the Company shall be
-     allocated 100% to the Member.
+     allocated 100% to the Howard Jones Bloodline Ancestral Trust as sole
+     member.
 
 
 ═══════════════════════════════════════════════════════════════════════════════
@@ -499,12 +587,74 @@ Sole Member, ODYSSEY-1 AI LLC
 
 
 ═══════════════════════════════════════════════════════════════════════════════
+          AMENDMENT NO. 1 — EXECUTION AND ACCEPTANCE
+          EFFECTIVE DATE: FEBRUARY 19, 2026
+═══════════════════════════════════════════════════════════════════════════════
+
+This Amendment No. 1 is executed by the authorized parties to reflect the
+transfer of 100% membership interest in ODYSSEY-1 AI LLC to the Howard Jones
+Bloodline Ancestral Trust and the appointment of Co-Trustees as the authorized
+acting member.
+
+
+SOLE MEMBER (TRUST — acting through Co-Trustees):
+
+HOWARD JONES BLOODLINE ANCESTRAL TRUST
+
+Co-Trustee #1:
+________________________________________________     Date: __________________
+Teara Howard
+Initial Co-Trustee, Howard Jones Bloodline Ancestral Trust
+
+
+Co-Trustee #2:
+________________________________________________     Date: __________________
+Joseph Lumpkin Jr.
+Initial Co-Trustee, Howard Jones Bloodline Ancestral Trust
+
+
+GRANTOR ACKNOWLEDGMENT (Non-Signatory Member):
+
+________________________________________________     Date: __________________
+Rickey Allan Howard
+Grantor / Managing Member (Operational), ODYSSEY-1 AI LLC
+[Acknowledges transfer of membership interest to Trust; confirms he holds
+no ownership interest; confirms Teara Howard and Joseph Lumpkin Jr. are
+the authorized signatories as Co-Trustees of the sole member]
+
+
+STATE OF: GEORGIA
+
+COUNTY OF: CLARKE
+
+Before me, a Notary Public, personally appeared Teara Howard and Joseph
+Lumpkin Jr. as Co-Trustees of the Howard Jones Bloodline Ancestral Trust,
+who acknowledged that the foregoing Amendment was freely executed on behalf
+of the Trust as sole member of ODYSSEY-1 AI LLC.
+
+Also personally appeared Rickey Allan Howard, who acknowledged the transfer
+of membership interest and his designation as Managing Member.
+
+[NOTARY SEAL SPACE — Leave 2 inches for notary stamp]
+
+________________________________________________     Date: __________________
+Notary Public Signature
+
+My Commission Expires: _______________________
+
+
+═══════════════════════════════════════════════════════════════════════════════
                               END OF OPERATING AGREEMENT
 ═══════════════════════════════════════════════════════════════════════════════
 
 Document Prepared: November 21, 2025
-Document Version: 1.0
+Document Version: 2.0 (Amendment No. 1 — February 19, 2026)
 
 ODYSSEY-1 AI LLC
 EIN: 41-2718714
 Georgia Control Number: 25218129
+
+SOLE MEMBER (as amended): Howard Jones Bloodline Ancestral Trust
+Trust EIN: 41-6850149
+Co-Trustees: Teara Howard + Joseph Lumpkin Jr.
+Managing Member (Operational): Rickey Allan Howard (non-signatory)

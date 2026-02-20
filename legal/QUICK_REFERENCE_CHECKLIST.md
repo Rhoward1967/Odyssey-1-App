@@ -1,5 +1,6 @@
 # QUICK REFERENCE CHECKLIST - LAMINATE THIS
-**Print this single page and carry it with you through Monday**
+**Print this single page and carry it with you to notarization and bank appointments**
+**Updated: February 19, 2026 — Revised Trustee Structure (Teara Howard + Joseph Lumpkin Jr.)**
 
 ---
 
@@ -19,46 +20,62 @@
 
 ---
 
-## SATURDAY-SUNDAY (OPTIONAL)
+## STEP 1 — PREPARE (Before Scheduling Anything)
 
-- [ ] Review PDF on computer
-- [ ] Verify page count (56+ pages)
-- [ ] Share with Christla if desired
-- [ ] Confirm Monday schedule and contacts
+- [ ] Confirm **Joseph Lumpkin Jr.** availability (required for notarization + bank)
+- [ ] Confirm **Teara Howard** availability (required for notarization + bank)
+- [ ] Confirm **Christla Howard** availability (required for notarization as Co-Grantor ONLY)
+- [ ] Review PDF — verify all Co-Trustee lines show Teara Howard and Joseph Lumpkin Jr.
+- [ ] Verify NO documents still show Christla Howard as Co-Trustee
+- [ ] Schedule Notary Public (Clarke County, Georgia)
 
 ---
 
-## MONDAY MORNING (FEB 10, 8:00 AM)
+## STEP 2 — PRINTER
 
-**PRINTER DELIVERY**
-
-- [ ] Drive to printer location
-- [ ] Have USB drive ready
+- [ ] Drive to printer location with USB drive
 - [ ] Give printer **00_READ_ME_ARCHIVAL_SPECS.txt** FIRST
-- [ ] Say: "Print according to specs. Need 5 complete sets. 24lb bond, blue binding, same-day if possible."
-- [ ] Get confirmation: Pickup time is 4:00 PM
+- [ ] Say: "Print according to specs. Need 5 complete sets. 24lb bond, blue binding."
+- [ ] Get confirmation of pickup time: ________________
 - [ ] Get printer contact: ________________
-- [ ] Leave printer location by 8:30 AM
 
 ---
 
-## MONDAY AFTERNOON (FEB 10, 2:00 PM)
+## STEP 3 — NOTARIZATION CEREMONY
 
-**BANK APPOINTMENT**
+**Who Must Be Present (all four, same time, same place):**
+- [ ] **Rickey Allan Howard** — photo ID — signs as Grantor
+- [ ] **Christla Howard** — photo ID — signs as **Co-Grantor ONLY** (NOT Co-Trustee)
+- [ ] **Teara Howard** — photo ID — signs as Co-Trustee
+- [ ] **Joseph Lumpkin Jr.** — photo ID — signs as Co-Trustee
+- [ ] Two independent witnesses present
+- [ ] Georgia Notary Public present
 
-**Before you go:**
-- [ ] Printed documents in folder (or plan to print at 4 PM)
-- [ ] Rickey's photo ID (driver's license or passport)
-- [ ] Christla's photo ID
+**At notarization:**
+1. All parties sign their correct pages in **blue wet ink**
+2. ⚠️ Christla signs Grantor page + Assignment consent — NO Co-Trustee lines
+3. Teara and Joseph Lumpkin Jr. sign all Co-Trustee lines
+4. Witnesses sign Trust document witness section
+5. Notary verifies all IDs and affixes seals
+6. Collect all notarized originals before leaving
+
+---
+
+## STEP 4 — BANK APPOINTMENT
+**(Teara Howard and Joseph Lumpkin Jr. attend — Rickey and Christla do NOT sign)**
+
+**Before you go (Teara & Joseph):**
+- [ ] Notarized documents in folder
+- [ ] Teara Howard photo ID
+- [ ] Joseph Lumpkin Jr. photo ID
 - [ ] Pocket Reference (3 pages) for bank officer
 - [ ] Phone number of bank officer: ________________
-- [ ] Christla is present and ready to sign
 
 **At the bank:**
-1. Introduce yourself and explain three-account structure
+1. Introduce: "We are Co-Trustees of the Howard Jones Bloodline Ancestral Trust"
 2. Bank opens: Trust Reserve, Expense, Main Operating
-3. Christla and Teara sign Bank Letter (Section X)
-4. Rickey signs Grantor Acknowledgment (Section X)
+3. **Teara Howard and Joseph Lumpkin Jr.** sign Bank Letter (Section X)
+4. Rickey signs Grantor Acknowledgment separately (Section X — non-signatory acknowledgment)
 5. Bank officer signs Section XI acceptance
 6. Get signed copies back
 7. Get account numbers:
@@ -67,40 +84,19 @@
    - Main Operating: ________________
 
 **After bank:**
-- [ ] Confirm accounts opening
+- [ ] Confirm all three accounts open
 - [ ] Confirm Bank Letter signed and returned
-- [ ] Get bank officer contact info for future reference
+- [ ] Get bank officer contact info
 
 ---
 
-## THIS WEEK (FEB 10-14)
-
-**NOTARIZATION CEREMONY**
-
-**Schedule appointment with:**
-- Georgia notary (name): ________________
-- Phone: ________________
-- Date/Time: ________________
-
-**Bring:**
-- [ ] All 3 original signature documents (Trust, Certificate, Assignment)
-- [ ] Rickey's photo ID
-- [ ] Christla's photo ID
-- [ ] One witness (for Trust document - can be friend or family)
-- [ ] This checklist
-
-**Notary will:**
-1. Verify identities
-2. Have you sign all signature pages
-3. Have witness sign (Trust only)
-4. Affix notary seal
-5. Sign and date
+## AFTER EVERYTHING — FILE & STORE
 
 **After notarization:**
-- [ ] Keep originals safe (don't fold or bend)
-- [ ] Make copies for your records
-- [ ] Email copies to yourself
-- [ ] Bring originals to bank for their files
+- [ ] Keep originals safe — do not fold or bend
+- [ ] Scan all notarized documents immediately
+- [ ] Email scanned copies to yourself and all trustees
+- [ ] Bring originals to bank for their records
 
 ---
 
@@ -108,13 +104,13 @@
 
 When you have completed these steps, you will have:
 
-✅ Complete Google Docs PDF created (Friday)
-✅ Documents printed and professionally bound (Monday morning)
-✅ Three bank accounts established (Monday afternoon)
-✅ Bank Letter signed by all parties (Monday afternoon)
-✅ All signature pages notarized (This week)
+✅ Documents printed and professionally bound
+✅ All four parties notarized (Rickey, Christla as Co-Grantor, Teara, Joseph Lumpkin Jr.)
+✅ Three bank accounts established (Teara Howard and Joseph Lumpkin Jr. as signatories)
+✅ Bank Letter signed by all parties
+✅ Christla Howard irrevocably protected as lifetime beneficiary under Trust Article III
 
-Result: Your trust structure is complete. Odyssey-1 AI LLC is protected. The $6.71B IP portfolio is judgment-proof. Rickey is asset-protected.
+Result: Your trust structure is complete. Odyssey-1 AI LLC is protected. The $6.71B IP portfolio is judgment-proof. Christla is financially secured for life. Rickey is asset-protected.
 
 ---
 
@@ -156,14 +152,18 @@ By completing these steps:
 - ✅ Established three-layer UCC-1 judgment-proof structure ($1.05M liens)
 - ✅ Separated personal assets from business liability
 - ✅ Made Rickey non-signatory (preserves third-party wall)
-- ✅ Documented proper succession plan (Kenneth & Joseph)
-- ✅ Established proper banking (Christla & Teara control)
+- ✅ Secured Christla Howard as Protected Lifetime Beneficiary — full care, bills paid, monthly allowance, windfall participation — for life
+- ✅ Documented proper succession: Teara + Joseph Lumpkin Jr. → Ahmad Rashad Barnett + Derrick Williams → Kenneth Howard + Keith Sorrells
+- ✅ Established proper banking (Teara Howard & Joseph Lumpkin Jr. control)
 - ✅ Professional documents ready for any court challenge
 
 **This is real legal protection. Not theoretical. Not defensive. Actual, functional, court-tested asset protection.**
 
 ---
 
-**PRINT THIS PAGE | LAMINATE IT | CARRY IT MONDAY**
+**PRINT THIS PAGE | LAMINATE IT | CARRY IT TO NOTARIZATION AND BANK**
 
-**You are ready. Execute this plan. Done by end of week.**
+**Co-Trustees: Teara Howard + Joseph Lumpkin Jr.**
+**Christla Howard = Co-Grantor at notarization. Protected Beneficiary for life. Does NOT sign bank documents.**
+
+**You are ready. Execute this plan.**

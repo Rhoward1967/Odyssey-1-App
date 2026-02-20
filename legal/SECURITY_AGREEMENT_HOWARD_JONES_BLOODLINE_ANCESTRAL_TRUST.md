@@ -1,6 +1,7 @@
 # SECURITY AGREEMENT
 
 **Date:** January 21, 2026
+**Amended:** February 19, 2026 — Trustee structure updated: Teara Howard + Joseph Lumpkin Jr. as Initial Co-Trustees; Rickey Allan Howard is Grantor only (not Trustee)
 
 **Between:**
 
@@ -9,11 +10,14 @@ Georgia Limited Liability Company
 EIN: [Your EIN]  
 Address: P.O. Box 80054, Athens, GA 30608  
 
-**SECURED PARTY:** Howard Jones Bloodline Ancestral Trust  
-Irrevocable Trust established under Georgia Law  
-Bloodline Trust ID: HOWARD-JONES-DYNASTY-2026  
-Date of Trust: [Trust establishment date]  
-Trustee: Rickey A. Howard  
+**SECURED PARTY:** Howard Jones Bloodline Ancestral Trust
+Irrevocable Trust established under Georgia Law
+Bloodline Trust ID: HOWARD-JONES-DYNASTY-2026
+Date of Trust: January 8, 2026
+EIN: 41-6850149
+Initial Co-Trustee: Teara Howard
+Initial Co-Trustee: Joseph Lumpkin Jr.
+Grantor (non-signatory): Rickey Allan Howard
 Address: P.O. Box 80054, Athens, GA 30608  
 
 ---
@@ -251,9 +255,18 @@ Date: ________________
 
 **SECURED PARTY: Howard Jones Bloodline Ancestral Trust**
 
-By: ________________________________  
-Name: Rickey A. Howard  
-Title: Trustee  
+**Co-Trustee #1:**
+
+By: ________________________________
+Name: Teara Howard
+Title: Initial Co-Trustee, Howard Jones Bloodline Ancestral Trust
+Date: ________________
+
+**Co-Trustee #2:**
+
+By: ________________________________
+Name: Joseph Lumpkin Jr.
+Title: Initial Co-Trustee, Howard Jones Bloodline Ancestral Trust
 Date: ________________
 
 ---
@@ -270,16 +283,33 @@ Date: ________________
 
 **NOTARIZATION**
 
-State of Georgia  
-County of Clarke
+STATE OF GEORGIA
+COUNTY OF CLARKE
 
-The foregoing instrument was acknowledged before me this _____ day of ________, 2026, by Rickey A. Howard, both as Managing Member of Odyssey-1 AI LLC and as Trustee of Howard Jones Bloodline Ancestral Trust.
+The foregoing instrument was acknowledged before me this _____ day of ________, 2026, by:
 
-________________________________  
-Notary Public  
+1. **RICKEY ALLAN HOWARD** — Managing Member, Odyssey-1 AI LLC (Debtor)
+2. **TEARA HOWARD** — Initial Co-Trustee, Howard Jones Bloodline Ancestral Trust (Secured Party)
+3. **JOSEPH LUMPKIN JR.** — Initial Co-Trustee, Howard Jones Bloodline Ancestral Trust (Secured Party)
+
+These individuals are personally known to me, OR have produced the following identification:
+
+**Rickey Allan Howard:**
+ID Type: _____________ Number: ______________
+
+**Teara Howard:**
+ID Type: _____________ Number: ______________
+
+**Joseph Lumpkin Jr.:**
+ID Type: _____________ Number: ______________
+
+I certify that each of the above-named persons personally appeared before me and executed this Security Agreement of his/her own volition, with full knowledge and understanding of the contents hereof.
+
+________________________________
+Notary Public
 My Commission Expires: __________
 
-[Notary Seal]
+[NOTARY SEAL SPACE — Leave 2 inches for notary stamp]
 
 ---
 

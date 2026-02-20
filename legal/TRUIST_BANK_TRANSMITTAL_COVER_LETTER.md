@@ -6,9 +6,10 @@
 
 ---
 
-**TO:** Truist Bank, Athens, Georgia  
-**FROM:** Howard Jones Bloodline Ancestral Trust  
-**DATE:** February 10, 2026  
+**TO:** Truist Bank, Athens, Georgia
+**FROM:** Howard Jones Bloodline Ancestral Trust
+**DATE:** February 10, 2026
+**AMENDED:** February 19, 2026 — Co-Trustee structure updated: Teara Howard + Joseph Lumpkin Jr. (Christla Howard = Protected Lifetime Beneficiary, not Co-Trustee)
 **RE:** Master Consolidated Trust Document Package — Account Setup and Secured Creditor Verification
 
 ---
@@ -26,8 +27,8 @@ This Master Book contains five integrated legal documents:
 1. **Howard Jones Bloodline Ancestral Trust** (Pages 1-96)  
    Complete irrevocable trust instrument with Articles I-XI, full asset schedule, beneficiary structure, and trustee succession language.
 
-2. **Trustee Certificate of Authority** (Pages 97-133)  
-   Banking authorization document certifying Christla Howard and Teara Howard as Co-Trustees with full signature authority. This document references all three UCC-1 filings and establishes the triple-lock asset protection structure.
+2. **Trustee Certificate of Authority** (Pages 97-133)
+   Banking authorization document certifying Teara Howard and Joseph Lumpkin Jr. as Initial Co-Trustees with full signature authority. This document references all three UCC-1 filings and establishes the triple-lock asset protection structure.
 
 3. **Assignment of Intellectual Property to Trust** (Pages 134-168)  
    Complete assignment of all intellectual property (29-patent portfolio, software copyrights, trademarks, trade secrets, domain names) and 100% membership interest in Odyssey-1 AI LLC to the Trust, effective January 26-27, 2026.
@@ -44,29 +45,30 @@ This Master Book contains five integrated legal documents:
 
 ### **Authorized Co-Trustees (Signature Authority)**
 
-✅ **Christla Howard** — Co-Trustee — 762-728-0761  
-✅ **Teara Howard** — Co-Trustee — 678-292-3583  
+✅ **Teara Howard** — Initial Co-Trustee — 678-292-3583
+✅ **Joseph Lumpkin Jr.** — Initial Co-Trustee — [Joseph's phone number]
 
 ✋ **NOT Authorized:** Rickey Allan Howard (Grantor/Secured Creditor) — NO signature authority on bank accounts (intentional third-party wall)
+✋ **NOT Authorized:** Christla L. Howard — Protected Lifetime Beneficiary ONLY — does NOT have signature authority on any Trust or LLC bank accounts
 
 ### **Three Required Accounts (Non-Commingling Mandate)**
 
 **Account #1: TRUST RESERVE ACCOUNT**
 - Purpose: Receives quarterly distributions from Odyssey-1 AI LLC
 - Type: Savings account (interest-bearing)
-- Signatories: Christla Howard, Teara Howard
+- Signatories: Teara Howard (Co-Trustee), Joseph Lumpkin Jr. (Co-Trustee)
 - Activity: Low frequency (quarterly only)
 
 **Account #2: ODYSSEY-1 AI LLC EXPENSE ACCOUNT**
 - Purpose: Pays operational expenses (salaries, utilities, software, hosting)
 - Type: Checking account with debit card
-- Signatories: Christla Howard, Teara Howard (as Co-Trustees of 100% owner)
+- Signatories: Teara Howard (Co-Trustee), Joseph Lumpkin Jr. (Co-Trustee) — as Co-Trustees of 100% owner
 - Activity: Daily operational expenses
 
 **Account #3: ODYSSEY-1 AI LLC MAIN OPERATING ACCOUNT**
 - Purpose: Receives Stripe deposits and customer payments
 - Type: High-volume checking (transfers only, no debit card)
-- Signatories: Christla Howard, Teara Howard (as Co-Trustees of 100% owner)
+- Signatories: Teara Howard (Co-Trustee), Joseph Lumpkin Jr. (Co-Trustee) — as Co-Trustees of 100% owner
 - Activity: Daily customer deposits ($5K-$15K daily average)
 
 **These accounts MUST remain separate and unco mingled.**
@@ -112,9 +114,13 @@ The Trust holds intellectual property valued on a three-tier basis:
 
 **Grantor:** Rickey Allan Howard (Secured Creditor, NOT signatory on bank accounts)
 
-**Co-Trustees:** Christla Howard & Teara Howard (PUBLIC-FACING account signatories)
+**Initial Co-Trustees:** Teara Howard & Joseph Lumpkin Jr. (authorized account signatories)
 
-**First Succession Trustees:** Kenneth Howard & Joseph Lumpkin Jr (Co-Successor Trustees, "One Accord")
+**Protected Lifetime Beneficiary:** Christla L. Howard (NOT a Co-Trustee; NOT a bank signatory; receives mandatory lifetime distributions per Trust Article III)
+
+**First Succession Co-Trustees:** Ahmad Rashad Barnett & Derrick Williams ("One Accord" — must act together)
+
+**Second Succession Co-Trustees:** Kenneth Howard & Keith Sorrells ("One Accord" — must act together)
 
 **Trust Status:** Irrevocable (permanent, no amendments possible)
 
@@ -141,7 +147,7 @@ This entire Master Book (all 209 pages) has been notarized in Clarke County, Geo
 1. **Review This Package** — Confirm you have received all 209 pages
 2. **Verify UCC-1 Filings** — Check GSCCCA portal using Filing IDs (5-minute verification)
 3. **Open Three Accounts** — Per the specifications in the Bank Letter of Instruction (Document 4)
-4. **Confirm Signatories** — Ensure only Christla Howard and Teara Howard are listed as authorized signatories
+4. **Confirm Signatories** — Ensure only Teara Howard and Joseph Lumpkin Jr. are listed as authorized signatories (NOT Rickey Allan Howard, NOT Christla Howard)
 5. **Non-Commingling Audit** — Set up account separation protocols to prevent inadvertent commingling
 
 ---
@@ -153,8 +159,11 @@ P.O. Box 80054
 Athens, Georgia 30608
 
 **Co-Trustees (Account Authority):**
-- Christla Howard: 762-728-0761
 - Teara Howard: 678-292-3583
+- Joseph Lumpkin Jr.: [Joseph's phone number]
+
+**Protected Lifetime Beneficiary (NOT account signatory):**
+- Christla L. Howard: 762-728-0761
 
 **Grantor/Managing Member (Operational/Technical Contact):**
 - Rickey Allan Howard: 706-351-1300
@@ -177,16 +186,18 @@ The Co-Trustees of the Howard Jones Bloodline Ancestral Trust hereby authorize a
 
 **CO-TRUSTEE #1:**
 
-Signature: _________________________________  
-Christla Howard, Co-Trustee  
+Signature: _________________________________
+Teara Howard, Initial Co-Trustee
+Howard Jones Bloodline Ancestral Trust
 Date: _______________
 
 ---
 
 **CO-TRUSTEE #2:**
 
-Signature: _________________________________  
-Teara Howard, Co-Trustee  
+Signature: _________________________________
+Joseph Lumpkin Jr., Initial Co-Trustee
+Howard Jones Bloodline Ancestral Trust
 Date: _______________
 
 ---
@@ -196,10 +207,11 @@ Date: _______________
 I, Rickey Allan Howard, Grantor of the Howard Jones Bloodline Ancestral Trust, acknowledge that:
 
 1. This transmittal and the accompanying Master Book represent my complete trust structure
-2. Christla Howard and Teara Howard are authorized Co-Trustees with exclusive signature authority on all bank accounts
-3. I am intentionally excluded from signature authority to maintain the third-party wall asset protection
-4. I serve as Managing Member of Odyssey-1 AI LLC and retain full operational control, but have no banking signature authority
-5. All information in this transmittal is true and accurate
+2. Teara Howard and Joseph Lumpkin Jr. are the authorized Initial Co-Trustees with exclusive signature authority on all bank accounts
+3. Christla L. Howard is a Protected Lifetime Beneficiary — she has NO signature authority on any Trust or LLC bank accounts
+4. I am intentionally excluded from signature authority to maintain the third-party wall asset protection
+5. I serve as Managing Member of Odyssey-1 AI LLC and retain full operational control, but have no banking signature authority
+6. All information in this transmittal is true and accurate
 
 Signature: _________________________________  
 Rickey Allan Howard, Grantor  
