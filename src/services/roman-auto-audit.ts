@@ -1,9 +1,6 @@
 
 
 import 'dotenv/config';
-console.log('[DEBUG] STRIPE_SECRET_KEY present?', !!process.env.STRIPE_SECRET_KEY);
-console.log('[DEBUG] STRIPE_SECRET_KEY value:', process.env.STRIPE_SECRET_KEY);
-console.log('[DEBUG] CWD:', process.cwd());
 
 /**
  * R.O.M.A.N. Auto-Audit and Learning System
@@ -21,11 +18,7 @@ console.log('[DEBUG] CWD:', process.cwd());
 import { readdir, readFile } from 'fs/promises';
 import { join } from 'path';
 import { sfLogger } from './sovereignFrequencyLogger';
-
-// DEBUG: Print STRIPE_SECRET_KEY and CWD for troubleshooting
-console.log('[DEBUG] STRIPE_SECRET_KEY present?', !!process.env.STRIPE_SECRET_KEY);
-console.log('[DEBUG] STRIPE_SECRET_KEY value:', process.env.STRIPE_SECRET_KEY);
-console.log('[DEBUG] CWD:', process.cwd());
+import Stripe from 'stripe';
 
 import { romanSupabase as supabase } from './romanSupabase';
 
@@ -36,6 +29,51 @@ interface AuditResult {
   summary: string;
   issues?: string[];
   recommendations?: string[];
+}
+
+/**
+ * Audit Stripe connectivity via live API handshake
+ * Tests authentication without revealing the key in any log output
+ */
+export async function auditStripeConnectivity(): Promise<AuditResult> {
+  console.log('💳 Auditing Stripe connectivity...');
+
+  const keyPresent = !!process.env.STRIPE_SECRET_KEY;
+
+  if (!keyPresent) {
+    return {
+      category: 'stripe_connectivity',
+      timestamp: new Date().toISOString(),
+      data: { authenticated: false, mode: null },
+      summary: 'Stripe: NOT CONFIGURED — STRIPE_SECRET_KEY missing',
+      issues: ['❌ STRIPE_SECRET_KEY is not set in environment'],
+    };
+  }
+
+  try {
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2024-11-20.acacia' });
+    const balance = await stripe.balance.retrieve();
+    const mode    = process.env.STRIPE_SECRET_KEY!.startsWith('sk_live') ? 'LIVE' : 'TEST';
+
+    return {
+      category: 'stripe_connectivity',
+      timestamp: new Date().toISOString(),
+      data: {
+        authenticated: true,
+        mode,
+        available_currencies: balance.available.map(b => b.currency.toUpperCase()),
+      },
+      summary: `Stripe Connectivity: [SUCCESS / AUTHENTICATED] — Mode: ${mode}`,
+    };
+  } catch (err: any) {
+    return {
+      category: 'stripe_connectivity',
+      timestamp: new Date().toISOString(),
+      data: { authenticated: false },
+      summary: 'Stripe Connectivity: [FAILED]',
+      issues: [`❌ Stripe API error: ${err.message}`],
+    };
+  }
 }
 
 /**
@@ -352,6 +390,7 @@ export async function runCompleteAudit(): Promise<{
   const results: AuditResult[] = [];
   
   // Run all audits
+  results.push(await auditStripeConnectivity());
   results.push(await auditDatabaseSchema());
   results.push(await auditFileStructure());
   results.push(await auditEnvironmentConfig());

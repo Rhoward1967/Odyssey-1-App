@@ -110,8 +110,8 @@ serve(async (req) => {
 
       case 'checkout.session.completed': {
         const session = event.data.object as Stripe.Checkout.Session;
-        const userId = session.metadata?.userId;
-        const tier = session.metadata?.tier;
+        const userId = session.metadata?.supabase_user_id || session.metadata?.userId;
+        const tier = session.metadata?.tier_name || session.metadata?.tier;
         const industry = session.metadata?.industry;
         const subscriptionId = session.subscription as string;
 

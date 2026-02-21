@@ -15,14 +15,11 @@ import { differenceInDays, format } from 'date-fns';
 interface TrackingRecord {
   id: string;
   entity_name: string;
-  entity_type: string;
   tracking_number: string;
-  mail_date: string;
-  delivery_date: string | null;
-  fcra_deadline: string;
-  response_received: boolean;
-  response_date: string | null;
-  verification_provided: boolean;
+  date_mailed: string;        // actual DB column (was: mail_date)
+  fcra_deadline: string;      // confirmed present in live DB
+  status: string;             // actual DB column: 'sent' | 'delivered' | 'responded'
+  response_received: boolean; // not in live DB yet — treated as falsy until added
   notes: string | null;
 }
 
@@ -64,18 +61,20 @@ export class FCRAMonitoringService {
     const records = await this.getTrackingStatus();
     const now = new Date();
 
+    const hasResponded = (r: TrackingRecord) => r.status === 'responded' || r.response_received;
+
     const total_mailings = records.length;
-    const responses_received = records.filter(r => r.response_received).length;
-    const pending_responses = records.filter(r => !r.response_received).length;
+    const responses_received = records.filter(r => hasResponded(r)).length;
+    const pending_responses = records.filter(r => !hasResponded(r)).length;
 
     const approaching_deadline = records.filter(r => {
-      if (r.response_received) return false;
+      if (hasResponded(r)) return false;
       const daysUntil = differenceInDays(new Date(r.fcra_deadline), now);
       return daysUntil >= 0 && daysUntil <= 7;
     });
 
     const overdue = records.filter(r => {
-      if (r.response_received) return false;
+      if (hasResponded(r)) return false;
       const daysUntil = differenceInDays(new Date(r.fcra_deadline), now);
       return daysUntil < 0;
     });
@@ -140,9 +139,9 @@ export class FCRAMonitoringService {
     const now = new Date();
 
     return records.filter(r => {
-      if (r.response_received) return false;
+      if (r.status === 'responded' || r.response_received) return false;
       const daysUntil = differenceInDays(new Date(r.fcra_deadline), now);
-      return daysUntil < 3; // Critical if less than 3 days or overdue
+      return daysUntil < 3;
     });
   }
 
@@ -150,14 +149,11 @@ export class FCRAMonitoringService {
    * Mark a response as received
    */
   async markResponseReceived(
-    trackingId: string, 
-    verificationProvided: boolean, 
+    trackingId: string,
     notes?: string
   ): Promise<void> {
     const updates: any = {
-      response_received: true,
-      response_date: new Date().toISOString(),
-      verification_provided: verificationProvided,
+      status: 'responded',
     };
 
     if (notes) {

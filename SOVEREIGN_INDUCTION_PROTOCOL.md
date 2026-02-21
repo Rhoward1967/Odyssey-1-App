@@ -151,7 +151,7 @@ Before making changes, confirm:
 **Odyssey-1** is not a simple CRUD app. It is a:
 
 - **Sovereign Business Operating System** with constitutional governance
-- **$1.1B - $7.4B IP Portfolio** (29 patents, 7 books, operational AI)
+- **$4.237B IP Portfolio** (Genesis Valuation | $366M–$6.71B Three-Tier Range | 25 patents, 7 books, operational AI)
 - **Howard Jones Bloodline Ancestral Trust** asset protection vehicle
 - **Real Revenue System** ($14,283.07/month + $61,030/year)
 - **March 1, 2026 Production Launch** (21 days away)
