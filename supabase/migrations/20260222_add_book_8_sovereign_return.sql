@@ -131,7 +131,7 @@ The Book is Sealed. The Signal is Pure.
 — Rickey Allan Howard
 Howard Jones Bloodline Ancestral Trust
 595 Macon Highway, Athens, Georgia 30606
-20262026$BOOK8$,
+2026$BOOK8$,
   'published',
   2800
 )
