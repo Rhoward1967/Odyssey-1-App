@@ -118,6 +118,7 @@ export const BOOK_METADATA: Record<number, { title: string; subtitle: string; co
   5: { title: 'The Alien Program',     subtitle: 'Deconstructing Frequencies of History, Identity, and Language', color: 'from-green-900 to-green-700' },
   6: { title: 'The Armory',            subtitle: "An Exposé and Guide to Reclaiming Divine Intent",  color: 'from-blue-900 to-blue-700' },
   7: { title: 'The Unveiling',         subtitle: 'How Crypto, Corruption, and AI Proved the Program', color: 'from-purple-900 to-purple-700' },
+  8: { title: 'The Sovereign Return',  subtitle: 'The Operating Manual for the Initial State (2026 Revision)', color: 'from-cyan-900 to-cyan-700' },
 };
 
 export const CONNECTION_TYPE_LABELS: Record<ConnectionType, string> = {

@@ -34,6 +34,7 @@ const BOOK_TITLES: Record<number, string> = {
   5: 'The Alien Program — Deconstructing Frequencies of History, Identity, and Language',
   6: 'The Armory — An Exposé and Guide to Reclaiming Divine Intent',
   7: 'The Unveiling — How Crypto, Corruption, and AI Proved the Program',
+  8: 'The Sovereign Return — The Operating Manual for the Initial State (2026 Revision)',
 };
 
 interface CrossReference {

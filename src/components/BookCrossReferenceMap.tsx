@@ -1,15 +1,15 @@
 /**
  * BookCrossReferenceMap — Odyssey-1 Dashboard Component
  * =======================================================
- * Real-time visualization of concept threads across the 7 books
- * of the Sovereign Self Series.
+ * Real-time visualization of concept threads across all 8 books
+ * of the Sovereign Self Series (Books 1-7 + Book 8: The Sovereign Return).
  *
  * FULLY AUTONOMOUS — no manual triggers, no buttons.
  * R.O.M.A.N. analyzes the books on a cron schedule and via DB trigger.
  * This component subscribes to live changes and updates itself.
  *
  * Three views:
- *   1. CONNECTION MATRIX — 7×7 grid showing strength between each book pair
+ *   1. CONNECTION MATRIX — N×N grid showing strength between each book pair
  *   2. CONCEPT THREADS   — List of concepts that run through multiple books
  *   3. BOOK DETAIL       — Select a book, see all its concept connections
  *
@@ -205,7 +205,7 @@ export default function BookCrossReferenceMap() {
   // ─────────────────────────────────────────────────────────────────────────
 
   const matrixMap = buildMatrixMap(matrix);
-  const books     = [1, 2, 3, 4, 5, 6, 7];
+  const books     = Object.keys(BOOK_METADATA).map(Number).sort((a, b) => a - b);
 
   function getCellStrength(a: number, b: number): number {
     if (a === b) return -1;
