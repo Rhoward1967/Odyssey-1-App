@@ -110,25 +110,30 @@ CREATE TRIGGER trg_bcr_updated_at
 -- "The Program concept appears in Books 1, 3, 5, 7 with avg strength 84."
 
 CREATE OR REPLACE VIEW concept_threads AS
+WITH concept_books AS (
+  SELECT concept_tag, book_a_number AS book_number FROM book_cross_references
+  UNION
+  SELECT concept_tag, book_b_number  FROM book_cross_references
+),
+book_lists AS (
+  SELECT concept_tag,
+         ARRAY_AGG(DISTINCT book_number ORDER BY book_number) AS books
+  FROM   concept_books
+  GROUP  BY concept_tag
+)
 SELECT
-  concept_tag,
-  concept_label,
-  concept_category,
-  COUNT(DISTINCT book_a_number)
-    + COUNT(DISTINCT book_b_number)            AS book_count_approx,
-  ARRAY(
-    SELECT DISTINCT unnest(
-      ARRAY_AGG(book_a_number) OVER () ||
-      ARRAY_AGG(book_b_number) OVER ()
-    )
-    ORDER BY 1
-    LIMIT 7
-  )                                            AS appears_in_books,
-  ROUND(AVG(strength), 1)                     AS avg_strength,
+  r.concept_tag,
+  r.concept_label,
+  r.concept_category,
+  COUNT(DISTINCT r.book_a_number)
+    + COUNT(DISTINCT r.book_b_number)          AS book_count_approx,
+  bl.books                                     AS appears_in_books,
+  ROUND(AVG(r.strength), 1)                   AS avg_strength,
   COUNT(*)                                    AS connection_count,
-  MAX(last_analyzed)                          AS last_analyzed
-FROM book_cross_references
-GROUP BY concept_tag, concept_label, concept_category
+  MAX(r.last_analyzed)                        AS last_analyzed
+FROM book_cross_references r
+JOIN book_lists bl ON bl.concept_tag = r.concept_tag
+GROUP BY r.concept_tag, r.concept_label, r.concept_category, bl.books
 ORDER BY avg_strength DESC, connection_count DESC;
 
 
