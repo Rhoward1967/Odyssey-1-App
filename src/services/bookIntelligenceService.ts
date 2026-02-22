@@ -23,7 +23,18 @@ export type IntelligenceCategory =
   | 'legislation'
   | 'finance'
   | 'nature'
-  | 'governance';
+  | 'governance'
+  | 'history'          // Colonial-era through Nixon — the full timeline the books trace
+  | 'ai_digital_age';  // AI used as instrument, blamed when harm results
+
+export type HistoricalEra =
+  | 'colonial'           // 1492–1800s
+  | 'industrial'         // 1800s–1913
+  | 'bretton_woods'      // 1913–1971
+  | 'fiat_era'           // 1971–2008
+  | 'digital_transition' // 2008–2020
+  | 'enclosure'          // 2020–present
+  | 'current';
 
 export type ThreatLevel = 'background' | 'active' | 'critical' | 'new_trap';
 export type TrapStatus  = 'emerging' | 'confirmed' | 'named';
@@ -103,6 +114,18 @@ export const CATEGORY_LABELS: Record<IntelligenceCategory, string> = {
   finance:         'Finance',
   nature:          'Nature / Earth',
   governance:      'Governance',
+  history:         'Historical Record',
+  ai_digital_age:  'AI Accountability',
+};
+
+export const ERA_LABELS: Record<HistoricalEra, string> = {
+  colonial:           '1492–1800s: Colonialism',
+  industrial:         '1800s–1913: Industrial Debt',
+  bretton_woods:      '1913–1971: Bretton Woods Era',
+  fiat_era:           '1971–2008: Fiat & Compound Debt',
+  digital_transition: '2008–2020: Digital Infrastructure Build',
+  enclosure:          '2020–Present: The Enclosure',
+  current:            'Current (2026)',
 };
 
 export const THREAT_LEVEL_LABELS: Record<ThreatLevel, string> = {
@@ -133,6 +156,8 @@ export const CATEGORY_COLORS: Record<IntelligenceCategory, string> = {
   finance:         'bg-emerald-100 text-emerald-800',
   nature:          'bg-teal-100 text-teal-800',
   governance:      'bg-orange-100 text-orange-800',
+  history:         'bg-amber-100 text-amber-900',    // warm — ancient record
+  ai_digital_age:  'bg-violet-100 text-violet-900',  // distinct — the new threat
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -225,4 +250,43 @@ export async function promoteTrapToBook9(patternTag: string): Promise<void> {
     .eq('pattern_tag', patternTag);
 
   if (error) throw new Error(`promoteTrapToBook9 failed: ${error.message}`);
+}
+
+/** Get the full chronological intelligence timeline (colonial → 2026) */
+export async function getIntelligenceTimeline(): Promise<BookIntelligence[]> {
+  const { data, error } = await supabase
+    .from('intelligence_timeline')
+    .select('*');
+
+  if (error) throw new Error(`getIntelligenceTimeline failed: ${error.message}`);
+  return (data || []) as BookIntelligence[];
+}
+
+/** Get all AI accountability / scapegoat watch entries */
+export async function getAIAccountabilityRecord() {
+  const { data, error } = await supabase
+    .from('ai_accountability_record')
+    .select('*');
+
+  if (error) throw new Error(`getAIAccountabilityRecord failed: ${error.message}`);
+  return data || [];
+}
+
+/** Submit an AI scapegoat watch entry */
+export async function submitAIWatchEntry(entry: {
+  event_type:          string;
+  headline:            string;
+  content:             string;
+  source_label?:       string;
+  source_url?:         string;
+  source_date?:        string;
+  responsible_entity?: string;
+  ai_system_named?:    string;
+  actual_designer?:    string;
+}): Promise<void> {
+  const { error } = await supabase
+    .from('ai_scapegoat_watch')
+    .insert(entry);
+
+  if (error) throw new Error(`submitAIWatchEntry failed: ${error.message}`);
 }

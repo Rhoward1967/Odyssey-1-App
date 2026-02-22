@@ -32,11 +32,13 @@ import {
   getActiveTrapAlerts,
   promoteTrapToBook9,
   CATEGORY_LABELS,
+  ERA_LABELS,
   THREAT_LEVEL_LABELS,
   THREAT_LEVEL_COLORS,
   TRAP_STATUS_COLORS,
   CATEGORY_COLORS,
   type IntelligenceCategory,
+  type HistoricalEra,
   type BookIntelligence,
   type TrapAlert,
 } from '@/services/bookIntelligenceService';
@@ -49,6 +51,11 @@ import { BOOK_METADATA } from '@/services/bookCrossReferenceService';
 
 const CATEGORIES: IntelligenceCategory[] = [
   'digital_id', 'cbdc', 'surveillance_ai', 'legislation', 'finance', 'nature', 'governance',
+  'history', 'ai_digital_age',
+];
+
+const ERAS: HistoricalEra[] = [
+  'colonial', 'industrial', 'bretton_woods', 'fiat_era', 'digital_transition', 'enclosure', 'current',
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -97,10 +104,13 @@ function SubmitPanel({ onSuccess }: { onSuccess: (result: any) => void }) {
   const [headline,    setHeadline]    = useState('');
   const [content,     setContent]     = useState('');
   const [category,    setCategory]    = useState<IntelligenceCategory>('governance');
+  const [era,         setEra]         = useState<HistoricalEra>('current');
   const [sourceLabel, setSourceLabel] = useState('');
   const [sourceUrl,   setSourceUrl]   = useState('');
   const [sourceDate,  setSourceDate]  = useState(new Date().toISOString().split('T')[0]);
   const [lastResult,  setLastResult]  = useState<any>(null);
+
+  const isHistorical = category === 'history' || category === 'ai_digital_age';
 
   const mutation = useMutation({
     mutationFn: () => submitIntelligence({
@@ -152,6 +162,24 @@ function SubmitPanel({ onSuccess }: { onSuccess: (result: any) => void }) {
           ))}
         </select>
       </div>
+
+      {/* Era — shown for historical and AI digital age entries */}
+      {isHistorical && (
+        <div>
+          <label className="text-xs text-slate-400 mb-1 block">
+            Era <span className="text-slate-600">— which period of the timeline does this belong to?</span>
+          </label>
+          <select
+            value={era}
+            onChange={e => setEra(e.target.value as HistoricalEra)}
+            className="w-full bg-slate-800 border border-amber-800 text-slate-100 text-sm rounded-md px-3 py-2"
+          >
+            {ERAS.map(e => (
+              <option key={e} value={e}>{ERA_LABELS[e]}</option>
+            ))}
+          </select>
+        </div>
+      )}
 
       <div>
         <label className="text-xs text-slate-400 mb-1 block">Intelligence Content *</label>
