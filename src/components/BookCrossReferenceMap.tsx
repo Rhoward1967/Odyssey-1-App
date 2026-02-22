@@ -23,10 +23,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import {
   Network, BookOpen, ChevronDown, ChevronUp,
-  ArrowRight, Layers, Activity, Clock, Radio,
+  ArrowRight, Layers, Activity, Clock, Radio, Shield,
 } from 'lucide-react';
 import { supabase } from '@/lib/supabaseClient';
 import BookLivingIntelligence from '@/components/BookLivingIntelligence';
+import BookProvenanceExport from '@/components/BookProvenanceExport';
 
 import {
   getCrossReferences,
@@ -47,7 +48,7 @@ import {
 // TYPES
 // ─────────────────────────────────────────────────────────────────────────────
 
-type ViewMode = 'matrix' | 'threads' | 'book' | 'intelligence';
+type ViewMode = 'matrix' | 'threads' | 'book' | 'intelligence' | 'provenance';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // LIVE STATUS INDICATOR
@@ -274,6 +275,7 @@ export default function BookCrossReferenceMap() {
               { id: 'threads',      label: 'Concept Threads',   icon: Layers   },
               { id: 'book',         label: 'Book Detail',       icon: BookOpen },
               { id: 'intelligence', label: 'Intelligence Feed', icon: Radio    },
+              { id: 'provenance',   label: 'Provenance',        icon: Shield   },
             ] as { id: ViewMode; label: string; icon: React.ElementType }[]).map(v => (
               <button
                 key={v.id}
@@ -686,6 +688,13 @@ export default function BookCrossReferenceMap() {
       {view === 'intelligence' && (
         <div className="bg-slate-950 rounded-xl p-4 border border-slate-800">
           <BookLivingIntelligence />
+        </div>
+      )}
+
+      {/* ── VIEW: PROVENANCE ── */}
+      {view === 'provenance' && (
+        <div className="bg-slate-950 rounded-xl p-4 border border-amber-900/40">
+          <BookProvenanceExport />
         </div>
       )}
 
