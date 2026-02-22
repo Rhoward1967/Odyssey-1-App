@@ -11,12 +11,12 @@ interface CertifiedMailTracking {
   entity_name: string;
   entity_type: string;
   tracking_number: string;
-  mail_date: string;
-  delivery_date: string | null;
-  fcra_deadline: string;
+  date_mailed: string;
+  actual_delivery: string | null;
+  response_deadline: string;
   response_received: boolean;
   response_date: string | null;
-  verification_provided: boolean;
+  fcra_compliant: boolean;
   notes: string | null;
   created_at: string;
 }
@@ -35,7 +35,7 @@ export default function FCRAComplianceTracker() {
       const { data, error } = await supabase
         .from('certified_mail_tracking')
         .select('*')
-        .order('fcra_deadline', { ascending: true });
+        .order('response_deadline', { ascending: true });
 
       if (error) throw error;
       setTrackingData(data || []);
@@ -61,7 +61,7 @@ export default function FCRAComplianceTracker() {
   }
 
   function getStatusBadge(item: CertifiedMailTracking) {
-    const daysUntilDeadline = differenceInDays(new Date(item.fcra_deadline), new Date());
+    const daysUntilDeadline = differenceInDays(new Date(item.response_deadline), new Date());
 
     if (item.response_received) {
       return (
@@ -102,7 +102,7 @@ export default function FCRAComplianceTracker() {
     const total = trackingData.length;
     const responded = trackingData.filter(t => t.response_received).length;
     const overdue = trackingData.filter(t => {
-      const daysUntil = differenceInDays(new Date(t.fcra_deadline), new Date());
+      const daysUntil = differenceInDays(new Date(t.response_deadline), new Date());
       return daysUntil < 0 && !t.response_received;
     }).length;
     const pending = total - responded - overdue;
@@ -154,7 +154,7 @@ export default function FCRAComplianceTracker() {
 
           <div className="space-y-4">
             {trackingData.map(item => {
-              const daysUntilDeadline = differenceInDays(new Date(item.fcra_deadline), new Date());
+              const daysUntilDeadline = differenceInDays(new Date(item.response_deadline), new Date());
               
               return (
                 <Card key={item.id} className={`${daysUntilDeadline < 0 && !item.response_received ? 'border-red-500' : ''}`}>
@@ -178,17 +178,17 @@ export default function FCRAComplianceTracker() {
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                       <div>
                         <div className="text-muted-foreground mb-1">Mail Date</div>
-                        <div className="font-medium">{format(new Date(item.mail_date), 'MMM d, yyyy')}</div>
+                        <div className="font-medium">{format(new Date(item.date_mailed), 'MMM d, yyyy')}</div>
                       </div>
                       <div>
                         <div className="text-muted-foreground mb-1">Delivery Date</div>
                         <div className="font-medium">
-                          {item.delivery_date ? format(new Date(item.delivery_date), 'MMM d, yyyy') : 'Pending'}
+                          {item.actual_delivery ? format(new Date(item.actual_delivery), 'MMM d, yyyy') : 'Pending'}
                         </div>
                       </div>
                       <div>
                         <div className="text-muted-foreground mb-1">Response Deadline</div>
-                        <div className="font-medium">{format(new Date(item.fcra_deadline), 'MMM d, yyyy')}</div>
+                        <div className="font-medium">{format(new Date(item.response_deadline), 'MMM d, yyyy')}</div>
                       </div>
                       <div>
                         <div className="text-muted-foreground mb-1">Days Remaining</div>
@@ -237,8 +237,8 @@ export default function FCRAComplianceTracker() {
                         <div className="flex items-center gap-2">
                           <input
                             type="checkbox"
-                            checked={item.verification_provided}
-                            onChange={(e) => updateResponse(item.id, { verification_provided: e.target.checked })}
+                            checked={item.fcra_compliant ?? false}
+                            onChange={(e) => updateResponse(item.id, { fcra_compliant: e.target.checked })}
                             className="h-4 w-4"
                           />
                           <label className="text-sm">
