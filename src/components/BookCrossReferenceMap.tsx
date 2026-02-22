@@ -8,10 +8,11 @@
  * R.O.M.A.N. analyzes the books on a cron schedule and via DB trigger.
  * This component subscribes to live changes and updates itself.
  *
- * Three views:
+ * Four views:
  *   1. CONNECTION MATRIX — N×N grid showing strength between each book pair
  *   2. CONCEPT THREADS   — List of concepts that run through multiple books
  *   3. BOOK DETAIL       — Select a book, see all its concept connections
+ *   4. INTELLIGENCE FEED — R.O.M.A.N. living intelligence + Trap Alerts
  *
  * Howard Jones Bloodline Ancestral Trust — Odyssey-1 AI LLC
  */
@@ -22,9 +23,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import {
   Network, BookOpen, ChevronDown, ChevronUp,
-  ArrowRight, Layers, Activity, Clock,
+  ArrowRight, Layers, Activity, Clock, Radio,
 } from 'lucide-react';
 import { supabase } from '@/lib/supabaseClient';
+import BookLivingIntelligence from '@/components/BookLivingIntelligence';
 
 import {
   getCrossReferences,
@@ -45,7 +47,7 @@ import {
 // TYPES
 // ─────────────────────────────────────────────────────────────────────────────
 
-type ViewMode = 'matrix' | 'threads' | 'book';
+type ViewMode = 'matrix' | 'threads' | 'book' | 'intelligence';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // LIVE STATUS INDICATOR
@@ -240,7 +242,7 @@ export default function BookCrossReferenceMap() {
                 Book Cross-Reference Map
               </CardTitle>
               <CardDescription>
-                Concept threads running across all 7 volumes of the Sovereign Self Series.
+                Concept threads running across all 8 volumes of the Sovereign Self Series.
                 R.O.M.A.N. analyzes the books autonomously and updates this map in real time.
               </CardDescription>
             </div>
@@ -266,11 +268,12 @@ export default function BookCrossReferenceMap() {
 
         {/* ── VIEW SWITCHER ── */}
         <CardContent>
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap">
             {([
-              { id: 'matrix',  label: 'Connection Matrix', icon: Network },
-              { id: 'threads', label: 'Concept Threads',   icon: Layers },
-              { id: 'book',    label: 'Book Detail',       icon: BookOpen },
+              { id: 'matrix',       label: 'Connection Matrix', icon: Network  },
+              { id: 'threads',      label: 'Concept Threads',   icon: Layers   },
+              { id: 'book',         label: 'Book Detail',       icon: BookOpen },
+              { id: 'intelligence', label: 'Intelligence Feed', icon: Radio    },
             ] as { id: ViewMode; label: string; icon: React.ElementType }[]).map(v => (
               <button
                 key={v.id}
@@ -678,6 +681,14 @@ export default function BookCrossReferenceMap() {
           )}
         </>
       )}
+
+      {/* ── VIEW: INTELLIGENCE FEED ── */}
+      {view === 'intelligence' && (
+        <div className="bg-slate-950 rounded-xl p-4 border border-slate-800">
+          <BookLivingIntelligence />
+        </div>
+      )}
+
     </div>
   );
 }
