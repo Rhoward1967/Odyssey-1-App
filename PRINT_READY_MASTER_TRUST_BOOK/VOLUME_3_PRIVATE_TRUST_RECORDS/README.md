@@ -52,12 +52,13 @@
 
 ## VOLUME CONTENTS
 
-**Tab 3.1:** Full Irrevocable Trust Instrument (Howard Jones Family Ancestral Trust complete document)  
-**Tab 3.2:** Asset Schedule A (Gold, silver, vehicles, equipment, intellectual property)  
-**Tab 3.3:** Official Meeting Minutes Log (All Board/Trustee meetings 2025-2026)  
-**Tab 3.4:** Succession & Beneficiary Directives (Bloodline inheritance rules)  
-**Tab 3.5:** Grantor's Private Instructions (Rickey Allan Howard's sovereign directives)  
-**Tab 3.6:** Co-Trustee Acceptance Letters (Christla & Teara fiduciary duty acknowledgments)
+**Tab 3.1:** Full Irrevocable Trust Instrument (Howard Jones Family Ancestral Trust complete document — includes Article VII-B: Digital Asset Control and CERs, added February 25, 2026)
+**Tab 3.2:** Asset Schedule A (Gold, silver, vehicles, equipment, intellectual property, digital infrastructure)
+**Tab 3.3:** Official Meeting Minutes Log (All Board/Trustee meetings 2025-2026)
+**Tab 3.4:** Succession & Beneficiary Directives (Bloodline inheritance rules)
+**Tab 3.5:** Grantor's Private Instructions (Rickey Allan Howard's sovereign directives)
+**Tab 3.6:** Co-Trustee Acceptance Letters (Teara Howard & Joseph Lumpkin Jr. fiduciary duty acknowledgments)
+**Tab 3.7:** Exhibit C — Custodial Agent Acceptance (Christla Howard — Ledger Nano X seed phrase custody acknowledgment, UCC Article 12 / RUFADAA)
 
 ---
 
@@ -94,6 +95,6 @@ As Co-Trustees, you have a **fiduciary duty** to:
 
 ---
 
-**Status:** CONFIDENTIAL - RESTRICTED ACCESS  
-**Date:** February 3, 2026  
+**Status:** CONFIDENTIAL - RESTRICTED ACCESS
+**Date:** February 25, 2026 (Article VII-B added — UCC Article 12 CER / RUFADAA / Split-Authority Model)
 **Security Classification:** PRIVATE TRUST RECORDS

@@ -290,6 +290,7 @@ Serial Number: __________
 | **ARTICLE VI: PROTECTION PROVISIONS** | 16-17 |
 | **ARTICLE VII: IRREVOCABILITY AND ASSET ADDITIONS** | 17 |
 | **ARTICLE VII-A: ENHANCED ASSET PROTECTION PROVISIONS** | 17-18 |
+| **ARTICLE VII-B: DIGITAL ASSET CONTROL AND CONTROLLABLE ELECTRONIC RECORDS** | 17-B |
 | **ARTICLE VIII: GOVERNING LAW** | 18 |
 | **ARTICLE IX: DISPUTE RESOLUTION** | 18 |
 | **ARTICLE X: SEVERABILITY AND REFORMATION** | 18-19 |
@@ -716,6 +717,134 @@ All distributions from the Trust shall be made in the **sole and absolute discre
 **Charging Order as Exclusive Remedy**: The sole remedy available to any creditor against a Beneficiary's interest shall be a charging order against distributions only.
 
 **Intellectual Property Segregation**: All intellectual property held by this Trust (including Odyssey-1-App, R.O.M.A.N. Protocol, Universal Math algorithms, all patents, copyrights, and trademarks) is Trust property and NOT liable for Grantors' or Beneficiaries' personal debts.
+
+---
+
+## ARTICLE VII-B: DIGITAL ASSET CONTROL AND CONTROLLABLE ELECTRONIC RECORDS
+
+### 7B.1 Declaration of Controllable Electronic Records
+
+The Trust hereby declares that all cryptocurrency and digital assets held in the Trust's Ledger Nano X cold storage hardware wallet constitute **Controllable Electronic Records (CERs)** as defined under **O.C.G.A. § 11-12-102**, enacted pursuant to the 2022 Uniform Commercial Code Revisions adopted by the State of Georgia.
+
+**Designated CER Assets** (held on Ledger Nano X hardware wallet, Trust serial number on file):
+- XRP (Ripple) — current holdings and all future XRP accumulated
+- ETH (Ethereum) — current holdings and all future ETH accumulated
+- BTC (Bitcoin) — current holdings and all future BTC accumulated
+- DOGE (Dogecoin) — current holdings and all future DOGE accumulated
+- SOL (Solana) — current holdings and all future SOL accumulated
+- ADA (Cardano) — current holdings and all future ADA accumulated
+- USDC (USD Coin) — current holdings and all future stablecoin holdings
+
+This declaration extends to **all future digital assets** acquired by the Trust or transferred to any Trust-designated custody account, wallet, or exchange platform.
+
+---
+
+### 7B.2 Establishment of Control — Split-Authority Model
+
+The Trust establishes "Control" of its CERs under **O.C.G.A. § 11-12-105** through a **Split-Authority Model** consisting of two custody layers that must operate in concert:
+
+**Layer 1 — Hardware Custody (Co-Trustees):**
+Exclusive physical possession of the Ledger Nano X hardware wallet shall be maintained by the Co-Trustees, Teara Howard and Joseph Lumpkin Jr., acting in One Accord as established in Article II. Upon any trustee succession, physical custody of the hardware device transfers to the incoming Co-Trustees via documented handoff witnessed by at least one adult member of the Howard or Jones bloodline.
+
+**Layer 2 — Master Seed Phrase Custody (Christla Howard, Custodial Agent):**
+The 24-word master seed phrase — the ultimate cryptographic key to all CER assets held by the Trust — is held in Third-Party Custody by **Christla Howard** in her capacity as **Custodial Agent** for the Trust. Christla Howard holds the seed phrase solely on behalf of the Trust. She holds no ownership interest in the CER assets and no claim to the seed phrase beyond her role as Custodial Agent.
+
+**Basis of Control Under O.C.G.A. § 11-12-105(b)(3):** The Trust's "Control" is fully established because the Custodial Agent holds the secondary layer of control and acknowledges — by her acceptance of this role, documented in the Custodial Agent Acceptance attached hereto as **Exhibit C** — that she holds the seed phrase on behalf of the Trust's designated Co-Trustees.
+
+**Two-to-Activate Protocol:** Full manifestation of Control — sufficient to initiate any transfer, sale, or movement of CER assets — requires the simultaneous cooperation of both layers:
+
+1. Physical access to the Ledger Nano X hardware device (Co-Trustees), **AND**
+2. The 24-word master seed phrase (Custodial Agent)
+
+Neither layer alone is sufficient to access or transfer Trust CER assets. No single trustee, creditor, court officer, or third party can execute a transfer without the coordinated cooperation of both layers.
+
+---
+
+### 7B.3 Super-Priority Status
+
+Perfection of the Trust's security interest in CER assets is established **by Control** under O.C.G.A. § 11-12-105 and is **automatically perfected** without the requirement of filing a UCC-1 financing statement.
+
+Under **O.C.G.A. § 11-12-106**, a security interest in a CER perfected by Control holds **priority over** any security interest held by a party that does not have Control, regardless of the time of attachment or the existence of any prior UCC-1 filing.
+
+Accordingly, the Trust's Control-based perfection constitutes **super-priority** over:
+- Any judgment lien against the Grantor or any Beneficiary in their personal capacity
+- Any UCC-1 financing statement filed against the Grantor, Odyssey-1 AI LLC, HJS Services LLC, or any Trust entity
+- Any attachment, levy, garnishment, or execution purporting to reach the CER assets
+- Any claim arising from personal obligations of the Grantor not secured against the CER assets by Control
+
+**Notice to All Parties:** The structural separation of hardware custody (Co-Trustees) and seed phrase custody (Custodial Agent) ensures that no court order, levy, or compelled disclosure directed at any single party can achieve unilateral access to the Trust's CER assets.
+
+---
+
+### 7B.4 RUFADAA Integration
+
+Pursuant to Georgia's Revised Uniform Fiduciary Access to Digital Assets Act (**O.C.G.A. § 53-13-1 et seq.**), the Co-Trustees are granted full fiduciary access to all digital assets held by the Trust, including:
+- All cryptocurrency holdings on the Ledger Nano X and all exchange accounts
+- All digital wallets, custody accounts, and blockchain addresses
+- All software repositories and digital infrastructure assets listed in Section 7B.7
+
+This Trust Agreement constitutes the **estate planning document** authorizing Co-Trustee fiduciary access under O.C.G.A. § 53-13-8, and expressly supersedes any conflicting terms-of-service agreement between any digital platform and the Grantor.
+
+---
+
+### 7B.5 Duties and Limitations of the Custodial Agent
+
+Christla Howard, as Custodial Agent, accepts the following duties:
+
+1. **Safekeeping:** Maintain the 24-word master seed phrase in a secure physical location, stored separately from the Ledger Nano X hardware device
+2. **Non-Disclosure:** Not disclose the seed phrase to any person, entity, court officer, or government agency except as expressly authorized under this Article
+3. **Authorized Recipients Only:** The seed phrase may be released to:
+   - The Co-Trustees, acting in One Accord, for legitimate Trust administration
+   - The First Succession Co-Trustees (Ahmad Rashad Barnett and Derrick Williams) upon activation of succession provisions under Article II, or upon occurrence of an Involuntary Control Event under Section 7B.6
+   - **No other party, under any circumstances**
+4. **No Independent Authority:** The Custodial Agent has no authority to independently initiate, authorize, or approve any transfer of CER assets. Her role is custodial only — she is the keeper of the key, not the controller of the assets
+5. **Succession of Custodial Role:** Upon Christla Howard's death or permanent incapacity, the seed phrase shall transfer to the then-serving Co-Trustees, who shall simultaneously hold both layers of Control. The Co-Trustees may thereafter designate a successor third-party custodian by written instrument
+
+**Protection of Custodial Agent:** Because Christla Howard holds no ownership interest in the CER assets, no creditor, court, or third party pursuing the Trust's assets may properly compel her disclosure of the seed phrase as a mechanism to reach Trust property. She holds the seed phrase in a purely fiduciary capacity; the assets belong to the Trust.
+
+---
+
+### 7B.6 Involuntary Control Event — Mandatory Fiduciary Response
+
+An **Involuntary Control Event** is defined as the occurrence of any of the following:
+
+1. Any legal process, court order, levy, or compelled action that would result in the involuntary transfer of Control of Trust CERs to any party outside the Trust's designated authority chain
+2. Any attempt to compel the Co-Trustees to surrender the hardware device, or to compel the Custodial Agent to disclose the seed phrase, through judicial or non-judicial means
+3. Any attachment, execution, or enforcement action purporting to reach or encumber the CER assets
+4. Any written determination by both Co-Trustees, acting in One Accord and in good faith, that the Trust's uninterrupted Control over its CER assets is materially and imminently threatened
+
+**Upon occurrence of an Involuntary Control Event**, the Co-Trustees are **mandated** — as a non-discretionary fiduciary duty to the beneficiaries under **O.C.G.A. § 53-12-243** (duty to protect trust property) — to immediately invoke the Automatic Transfer provisions of **Article 7A.2** with respect to all CER assets. This action requires no court approval, beneficiary consent, or further documentation beyond the Co-Trustees' written joint determination that an Involuntary Control Event has occurred.
+
+Simultaneously, the Custodial Agent is directed by this Trust instrument to withhold disclosure of the seed phrase to any party other than the First Succession Co-Trustees (Ahmad Rashad Barnett and Derrick Williams). This direction is **self-executing** from the date of this Trust and requires no further notice.
+
+**Fiduciary Basis:** This provision constitutes the Co-Trustees' mandatory discharge of their duty to protect Trust property for the benefit of all beneficiaries — not evasion of lawful process. The Co-Trustees are acting as fiduciaries, not as individuals, and their obligation to the beneficiaries is superior to any demand that would diminish Trust property.
+
+---
+
+### 7B.7 Digital Infrastructure Assets — Senior Priority Schedule
+
+The following digital infrastructure assets are designated **senior priority Trust assets** and are added to Schedule A:
+
+| Asset | Description | Control Method |
+|---|---|---|
+| Ledger Nano X Hardware Wallet | Primary CER control device | Physical custody — Co-Trustees |
+| 24-Word Master Seed Phrase | Ultimate CER access key | Third-party custody — Custodial Agent |
+| GitHub Repository: Odyssey-1-App | All source code, history, derivative works | SSH keys — Co-Trustees |
+| Domain: odyssey-1-ai.com | Primary platform domain | Registrar credentials — Co-Trustees |
+| Supabase Project ID: tvsxloejfsrdganemsmg | Database and edge function infrastructure | Service credentials — Co-Trustees |
+| All Platform API Keys | Anthropic, Stripe, Resend, and all Trust integrations | Secured credentials — Co-Trustees |
+
+---
+
+### 7B.8 Annual Verification of Control
+
+No less than annually, the Co-Trustees shall verify and document:
+1. Physical custody of the Ledger Nano X hardware remains with the Co-Trustees
+2. The Custodial Agent confirms continued possession and security of the seed phrase
+3. All CER asset balances are consistent with Trust records
+4. No unauthorized access, transfer, or breach of Control has occurred
+
+This verification shall be recorded in Trust minutes and constitutes evidence of the Trust's continuous, uninterrupted Control under O.C.G.A. § 11-12-105.
 
 ---
 
