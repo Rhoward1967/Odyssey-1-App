@@ -1,7 +1,7 @@
 // Send urgent report notification to a Discord channel
 import { Client, GatewayIntentBits, Message, Partials } from 'discord.js';
 import dotenv from 'dotenv';
-import { readdir } from 'fs/promises';
+import { readdir, readFile } from 'fs/promises';
 import OpenAI from 'openai';
 import type { ChatCompletionMessageParam } from 'openai/resources/chat/completions';
 import { join } from 'path';
@@ -565,6 +565,22 @@ async function getSystemContext(includeBooks: boolean = false) {
       .select('book_number, title, subtitle, word_count, status')
       .order('book_number', { ascending: true });
     
+    // NEW: Read Official Minutes Log to keep R.O.M.A.N. updated on governance
+    let latestMinutes = '';
+    try {
+      const minutesPath = join(process.cwd(), 'ODYSSEY-1_AI_LLC_Official_Meeting_Minutes_Log.txt');
+      const minutesContent = await readFile(minutesPath, 'utf-8');
+      // Extract the most recent meeting record (split by separator)
+      const records = minutesContent.split(/={10,}/);
+      // Get the last non-empty record
+      const lastRecord = records[records.length - 1].trim() ? records[records.length - 1] : records[records.length - 2];
+      if (lastRecord) {
+          latestMinutes = lastRecord.trim();
+      }
+    } catch (err) {
+      console.warn('⚠️ Could not read minutes log:', err);
+    }
+
     const context: any = {
       tables: tables,
       recentLogs: logs || [],
@@ -572,7 +588,8 @@ async function getSystemContext(includeBooks: boolean = false) {
       governanceChanges: govChanges || [],
       books: booksSummary || [],
       codebaseKnowledge: codebaseKnowledge,  // ⚡ NOW INCLUDED
-      trustContext: trustContext  // ⚡ NOW INCLUDED
+      trustContext: trustContext,  // ⚡ NOW INCLUDED
+      latestMinutes: latestMinutes // ⚡ GOVERNANCE AWARENESS
     };
     
     // Include full book content if requested (for book-related queries)
@@ -1367,6 +1384,11 @@ async function handleDirectMessage(message: Message) {
     enhancedMessage += `\n${systemContext.trustContext}\n`;
     console.log('✅ Trust context injected into message');
   }
+
+  // Inject Latest Minutes Log
+  if (systemContext.latestMinutes) {
+    enhancedMessage += `\n=== LATEST OFFICIAL MINUTES LOG ===\n${systemContext.latestMinutes}\n\n`;
+  }
   
   // Add knowledge search results FIRST (highest priority)
   if (knowledgeResults.length > 0) {
@@ -1769,4 +1791,3 @@ export function startDiscordBot() {
   console.log('✅ Discord token found, logging in...');
   client.login(cleanToken);
 }
-

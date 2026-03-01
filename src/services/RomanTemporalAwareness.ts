@@ -61,11 +61,19 @@ export class RomanTemporalAwareness {
     console.log('   Constitutional Guard: ACTIVE');
 
     // Initial sync
-    await this.synchronizeReality();
+    try {
+      await this.synchronizeReality();
+    } catch (error: any) {
+      console.warn('⚠️ Initial temporal sync failed - proceeding with background retries:', error.message);
+    }
 
     // Start heartbeat (fallback sync every 60 seconds)
     this.syncInterval = setInterval(async () => {
-      await this.synchronizeReality();
+      try {
+        await this.synchronizeReality();
+      } catch (error: any) {
+        console.error('⚠️ Temporal heartbeat failed (will retry):', error.message);
+      }
     }, this.syncIntervalMs);
 
     // Subscribe to real-time temporal pulse notifications

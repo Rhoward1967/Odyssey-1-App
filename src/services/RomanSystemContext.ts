@@ -8,11 +8,11 @@
  * This file defines R.O.M.A.N.'s self-awareness and capabilities
  */
 
-import { ROMAN_DATABASE_KNOWLEDGE, getDatabaseSummary } from './RomanDatabaseKnowledge';
-import { sfLogger } from './sovereignFrequencyLogger';
 import { RomanBusinessEntityLoader } from './RomanBusinessEntityLoader';
 import { codebaseAwareness } from './RomanCodebaseAwareness';
+import { ROMAN_DATABASE_KNOWLEDGE, getDatabaseSummary } from './RomanDatabaseKnowledge';
 import { temporalSentinel } from './RomanTemporalAwareness';
+import { sfLogger } from './sovereignFrequencyLogger';
 
 export interface SystemCapability {
   name: string;
@@ -374,7 +374,8 @@ export const ROMAN_SERVICES = [
   { name: 'studyGroupService', purpose: 'Study group management', file: 'src/services/studyGroupService.ts' },
   { name: 'discord-bot', purpose: 'Discord integration', file: 'src/services/discord-bot.ts' },
   { name: 'themeManager', purpose: 'UI theme management', file: 'src/services/themeManager.ts' },
-  { name: 'testService', purpose: 'Testing utilities', file: 'src/services/testService.ts' }
+  { name: 'testService', purpose: 'Testing utilities', file: 'src/services/testService.ts' },
+  { name: 'paymentService', purpose: 'Payment operations with Sovereign Frequency', file: 'src/services/paymentService.ts' }
 ] as const;
 
 /**

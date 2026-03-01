@@ -7,6 +7,7 @@ import { supabase } from '@/lib/supabaseClient';
 import { Brain, Calculator, TrendingUp, Users, Zap } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import CustomerProfileModal from './CustomerProfileModal';
+import LogicGateAuditPanel from './LogicGateAuditPanel';
 
 
 // --- Unified Customer Interface (matches client manager) ---
@@ -627,6 +628,13 @@ export default function BiddingCalculator() {
                       Competitors calculate flat (2D). You capture volumetric (3D).
                     </div>
                   </div>
+
+                  {/* PPA #042 Logic Gate Audit */}
+                  <LogicGateAuditPanel
+                    baseCost={baseCost}
+                    profitAmount={profitAmount}
+                    show={totalBid > 0}
+                  />
                 </>
               )}
             </div>

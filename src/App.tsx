@@ -43,6 +43,7 @@ import MediaCenter from './pages/MediaCenter';
 import Onboard from './pages/Onboard';
 import Subscribe from './pages/Subscribe';
 import TestCheckout from './pages/TestCheckout';
+import SovereignContractIntake from '@/pages/SovereignContractIntake';
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -258,6 +259,14 @@ function App() {
                           } 
                         />
                         <Route path="calculator" element={<Calculator />} />
+                        <Route
+                          path="contracts/new"
+                          element={
+                            <ErrorBoundary componentName="SovereignContractIntake">
+                              <SovereignContractIntake />
+                            </ErrorBoundary>
+                          }
+                        />
                         <Route 
                           path="workforce" 
                           element={
