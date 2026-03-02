@@ -375,7 +375,6 @@ export const ROMAN_SERVICES = [
   { name: 'discord-bot', purpose: 'Discord integration', file: 'src/services/discord-bot.ts' },
   { name: 'themeManager', purpose: 'UI theme management', file: 'src/services/themeManager.ts' },
   { name: 'testService', purpose: 'Testing utilities', file: 'src/services/testService.ts' },
-  { name: 'paymentService', purpose: 'Payment operations with Sovereign Frequency', file: 'src/services/paymentService.ts' }
 ] as const;
 
 /**

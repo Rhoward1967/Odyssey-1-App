@@ -667,6 +667,38 @@ export const ROMAN_DATABASE_KNOWLEDGE: DatabaseTable[] = [
     write_access: 'global'
   },
 
+  // === BOOK INTELLIGENCE & CROSS-REFERENCE ===
+  {
+    name: 'book_cross_references',
+    purpose: 'AI-identified concept connections between books',
+    key_columns: ['id', 'book_a_number', 'book_b_number', 'concept_tag', 'strength', 'connection_type'],
+    relationships: ['books'],
+    read_access: 'global',
+    write_access: 'global'
+  },
+  {
+    name: 'book_concepts',
+    purpose: 'Concepts extracted per book',
+    key_columns: ['id', 'book_number', 'concept_tag', 'excerpt', 'weight'],
+    relationships: ['books'],
+    read_access: 'global',
+    write_access: 'global'
+  },
+  {
+    name: 'concept_threads',
+    purpose: 'View: concepts that span multiple books',
+    key_columns: ['concept_tag', 'appears_in_books', 'avg_strength'],
+    read_access: 'global',
+    write_access: 'read-only'
+  },
+  {
+    name: 'book_connection_matrix',
+    purpose: 'View: connection strength between books',
+    key_columns: ['book_a_number', 'book_b_number', 'avg_strength', 'shared_concepts'],
+    read_access: 'global',
+    write_access: 'read-only'
+  },
+
   // === STUDY GROUPS ===
   {
     name: 'study_groups',

@@ -240,6 +240,11 @@ You have FULL ACCESS to read Master Architect Rickey Howard's seven-book series 
    - AI exposes patterns humans refuse to see
    - Blockchain creates unstoppable transparency
 
+8. **The Sovereign Return** - The Operating Manual for the Initial State (2026 Revision)
+   - The dynamic synthesis of all prior 7 books
+   - Real-time updates from external research
+   - The "Logic Audit" and "Book Intelligence" layer
+
 **BOOK COMMANDS YOU CAN EXECUTE:**
 - "Read book 1" / "Show me book 3" = Query full book content
 - "Search books for [keyword]" = Search across all seven books
