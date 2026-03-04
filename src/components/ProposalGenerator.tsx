@@ -73,23 +73,21 @@ export default function ProposalGenerator() {
     return `
 PROFESSIONAL JANITORIAL SERVICES PROPOSAL
 
-ODYSSEY-1 AI LLC
-A SOVEREIGN MANAGED ASSET
+HJS SERVICES LLC
+Managed By Odyssey-1 AI LLC
 
-P.O. Box 80054
-Athens, GA 30608
+P.O. BOX 80054
+Athens, GA 30608 US
 Phone: 800-403-8492
 Email: generalmanager81@gmail.com
 Website: https://odyssey-1-app.vercel.app
-
-Doing Business As: Howardjanitorial Services
 
 Date: ${new Date().toLocaleDateString()}
 Prepared for: ${proposalData.clientName}
 Client Type: ${proposalData.clientType}
 
 COMPANY OVERVIEW
-Odyssey-1 AI LLC, operating as Howard Janitorial Services, is a professional and certified woman-owned small business specializing in comprehensive janitorial, environmental, and facility maintenance services. Since 1990, we have provided exceptional cleaning solutions to government agencies, healthcare facilities, educational institutions, and commercial businesses.
+HJS SERVICES LLC, managed by Odyssey-1 AI LLC, is a professional and certified woman-owned small business specializing in comprehensive janitorial, environmental, and facility maintenance services. Since 1990, we have provided exceptional cleaning solutions to government agencies, healthcare facilities, educational institutions, and commercial businesses.
 
 CERTIFICATIONS & CREDENTIALS
 • DUNS Number: 829029292
@@ -128,8 +126,8 @@ This proposal is valid for 30 days. We look forward to serving your facility mai
 
 Sincerely,
 Christla Howard, CEO/President
-Odyssey-1 AI LLC dba Howard Janitorial Services
-A Sovereign Managed Asset
+HJS SERVICES LLC
+Managed By Odyssey-1 AI LLC
     `;
   };
 

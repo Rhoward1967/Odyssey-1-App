@@ -101,10 +101,11 @@ export default function CustomerInvoiceView({ invoiceId }: CustomerInvoiceViewPr
             <div>
               <h3 className="font-semibold text-sm text-gray-600 mb-2">FROM</h3>
               <div className="space-y-1">
-                <p className="font-semibold">Odyssey-1 AI LLC</p>
-                <p className="text-sm text-gray-600">Howard Janitorial Services</p>
-                <p className="text-sm text-gray-600">PO Box 80054</p>
+                <p className="font-semibold">HJS SERVICES LLC</p>
+                <p className="text-sm text-gray-600">Managed By Odyssey-1 AI LLC</p>
+                <p className="text-sm text-gray-600">P.O. BOX 80054</p>
                 <p className="text-sm text-gray-600">Athens, GA 30608</p>
+                <p className="text-sm text-gray-600">US</p>
               </div>
             </div>
 

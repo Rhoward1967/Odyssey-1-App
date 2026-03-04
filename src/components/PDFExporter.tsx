@@ -51,10 +51,10 @@ const PDFExporter: React.FC<PDFExporterProps> = ({ document, bidderInfo }) => {
         </head>
         <body>
           <div class="header">
-            <img src="${window.location.origin}/odyssey-1-logo.png" alt="ODYSSEY-1 AI LLC" class="header-logo" onerror="this.style.display='none'" />
-            <div class="title">ODYSSEY-1 AI LLC</div>
-            <div class="tagline">A SOVEREIGN MANAGED ASSET</div>
-            <div class="subtitle">P.O. Box 80054 • Athens, GA 30608 • 800-403-8492</div>
+            <img src="${window.location.origin}/odyssey-1-logo.png" alt="HJS SERVICES LLC" class="header-logo" onerror="this.style.display='none'" />
+            <div class="title">HJS SERVICES LLC</div>
+            <div class="tagline">Managed By Odyssey-1 AI LLC</div>
+            <div class="subtitle">P.O. BOX 80054 • Athens, GA 30608 • US • 800-403-8492</div>
             <div class="subtitle">${document.title}</div>
             <div class="subtitle">Generated on ${new Date().toLocaleDateString()}</div>
           </div>
@@ -74,7 +74,7 @@ const PDFExporter: React.FC<PDFExporterProps> = ({ document, bidderInfo }) => {
           
           <div class="footer">
             <p>Document ID: ${document.id} | Status: ${document.status.toUpperCase()} | Type: ${document.type.toUpperCase()}</p>
-            <p>ODYSSEY-1 AI LLC | A Sovereign Managed Asset | https://odyssey-1-app.vercel.app</p>
+            <p>HJS SERVICES LLC | Managed By Odyssey-1 AI LLC | https://odyssey-1-app.vercel.app</p>
           </div>
         </body>
       </html>
