@@ -66,12 +66,12 @@ const trustContext = await RomanSystemContext.loadRealTimeTrustContext();
 - **What it does**: Fetches LIVE trust data, never caches
 - **Current data**:
   - Trust: Howard Jones **Bloodline** Ancestral Trust
-  - Valuations: $6.71B optimistic / $950M market / $366M conservative
+  - Valuations: **$4.237 Billion** (Master IP Manifest)
   - UCC-1: $1.05M triple-lock (3 filings)
   - Co-Trustees: Christla Howard (762-728-0761), Teara Howard (678-292-3583)
-  - Patents: 29 total (5 filed + 6 pending + 18 innovations)
+  - Patents & IP Assets: 50+ total (Patents, Designs, Systems, Trade Secrets)
 
-**Verification**: R.O.M.A.N. responds with current $6.71B, NOT stale $5.6B
+**Verification**: R.O.M.A.N. responds with current $4.237B, NOT stale values.
 
 ### 5. ✅ System Knowledge Catalog (DONE)
 - **File**: `src/services/RomanCodebaseAwareness.ts` (650 lines)
@@ -152,8 +152,8 @@ node scripts/start-discord-bot.js
 
 ### Test 1: Current Trust Valuation ✅
 **Send**: "What's my current trust valuation?"
-**Expected**: Mentions "$6.71B optimistic" or "$950M market" or "$366M conservative"
-**Success**: ✅ Uses fresh data (not stale $5.6B)
+**Expected**: Mentions "$4.237 Billion"
+**Success**: ✅ Uses fresh data from the Master IP Manifest
 
 ### Test 2: Westlaw Integration ✅
 **Send**: "Do you know about Westlaw?"

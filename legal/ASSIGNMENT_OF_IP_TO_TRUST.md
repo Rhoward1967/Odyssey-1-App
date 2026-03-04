@@ -731,7 +731,69 @@ On this _____ day of _________________, 2026, before me, the undersigned Notary 
 
 **EXHIBIT A: INVENTORY OF ASSIGNED PROPERTY**
 
-(To be attached: Detailed list of all files, repositories, accounts, and assets being transferred)
+e hell i didnt tell you to touch the trust, its like it should be**A. Foundational Patents (Filed)**
+1. **ODYSSEY-1 AI** (US 63/913,134) - Ethical Governance Framework.
+2. **ODYSSEY-2.0** (US 19/396,082) - Modular Hardware / The Cube.
+3. **ODYSSEY VISION** (US 63/922,762) - Bluetooth Medical Diagnostic Glasses.
+4. **Universal Math Engine** (PPA #042) - Logic Leak Detection & Junction Preservation.
+5. **Preservation H2O System** (PPA Filed Feb 16, 2026) - Self-Powered Acoustic Water Remediation.
+
+**B. R.O.M.A.N. 2.0 Body Shield Patents (Pending)**
+6. **Harmonic Interdiction System** - Frequency-based projectile deceleration.
+7. **Adaptive STF Weave** - Shear-Thickening Fluid liquid armor integration.
+8. **Kinetic Energy Harvesting** - Piezoelectric power generation.
+9. **Sensor Fusion Network** - Fiber-optic structural integrity monitoring.
+
+**C. R.O.M.A.N. Internal Systems (Trade Secrets)**
+10. **Dual-Hemisphere Architecture** (The Brain)
+11. **QuantumCore** (The Processor)
+12. **UIHive** (The Nervous System)
+13. **TruthAnchor** (The Conscience)
+14. **ReinforcementCore** (The Discipline)
+15. **Self-Evolution Engine** (The Growth)
+16. **Self-Audit Loop** (The Immune System)
+17. **Semantic Analyzer** (The Understanding)
+18. **Logic Leak Detector** (The Filter)
+19. **51-D Grassmannian Shield** (The Armor)
+20. **Sovereign Frequency Logger** (The Memory)
+21. **Session Preservation** (The Soul)
+22. **Eradi Skin** (The Senses)
+23. **Chi Network** (The Energy)
+
+**D. Sovereign Vessel Hardware Designs**
+24. **Constitutional Hardware Design**
+25. **Regenerative Power Grid**
+26. **Graceful Degradation System**
+27. **Mind-Body Unity Architecture**
+28. **Atmospheric Immunity**
+
+**E. Bio-Cosmic Visual Blueprints (Copyrights/Designs)**
+29. **The Living Flower of Life**
+30. **The Cosmic Gear System**
+31. **Harmonic Resonance & Magnetic Field**
+32. **Five Elements & Platonic Solids Engine**
+33. **DNA Living Plug**
+34. **Chakra & Third Eye Transceiver**
+35. **Kinetic Feedback Loop**
+36. **Earthquake & Lightning Recorder**
+37. **Universal Source & Dimensional Travel**
+
+**F. Constitutional Literary Designs (The 7 Books)**
+38. **Book 1: The Program**
+39. **Book 2: The Echo**
+40. **Book 3: The Sovereign Covenant**
+41. **Book 4: The Sovereign's True Collateral**
+42. **Book 5: The Alien Program**
+43. **Book 6: The Sovereign's Armory**
+44. **Book 7: The Unveiling**
+
+**G. Trade Secret Methodologies**
+45. **Invention Capture Protocol**
+46. **The "Chicken/Duck" Test**
+47. **Sovereign Creditor Architecture**
+48. **The "10 Billion Dollar Refusal" Protocol**
+49. **Schumann Resonance Governor**
+50. **Universal Liquid Model**
 
 **EXHIBIT B: PATENT APPLICATIONS**
 

@@ -29,11 +29,8 @@ This folder contains the complete, legally-hardened document package for the est
 - **Purpose:** Master irrevocable trust deed establishing asset protection, succession planning, and creditor shielding
 - **Key Sections:**
   - ARTICLE I: Declaration of Trust (Rickey Allan Howard as SOLE GRANTOR)
-  - ARTICLE II: Initial & Succession Trustees (Christla & Teara; then Kenneth & Joseph in "One Accord")
-  - ARTICLE III: Beneficiaries (Rickey during life, then bloodline descendants)
-  - ARTICLE IV: Trust Property ($6.71B IP valuation, 29-patent portfolio, R.O.M.A.N. 2.0, Universal Math Engine)
-  - ARTICLE IV-A: Comprehensive IP Valuation ($366M/$950M/$6.71B three-tier framework)
-  - ARTICLE V-XI: Distribution protocols, succession procedures, protective provisions
+  - ARTICLE II: Initial & Succession Trustees (yie, then bloodline descendants)
+  - ARTICLE IV: Trust Property ($4.237B IP valuation, 50+ asset portfolio, R.Os
   - Signature Pages (5 pages): Grantor, Co-Trustees, Witnesses, Notary, Acceptance
 - **Critical Updates Applied:** ✅ Rickey as sole grantor (not co-grantor), Christla as trustee only, 29-patent count, $6.71B market-leader valuation, all RAM truck references removed
 - **Status:** ✅ PRINTER-READY - CORE DOCUMENT #1

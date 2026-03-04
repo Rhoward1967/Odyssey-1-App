@@ -14,8 +14,7 @@
 | **Trust Status** | Irrevocable (Permanent, No Amendments) |
 | **Governing Law** | State of Georgia, O.C.G.A. Title 53 |
 | **Creation Date** | January 7, 2026 |
-| **IP Asset Value** | **$6,710,000,000 (Optimistic)** |
-| **Conservative Floor** | $366,000,000 |
+| **IP Asset Value** | **$4,237,000,000 (Master IP Manifest)** |
 | **Accounts Needed** | 3 (Non-Commingled) |
 
 ---
@@ -183,7 +182,7 @@ Athens, Georgia 30608
 
 ## WHY THIS MATTERS
 
-This Trust converts a lifetime of innovation into an **institutional-grade asset** protected from personal liability, business judgment, and creditor attacks. The 29-patent portfolio ($6.71B optimistic valuation) is now locked in a legal structure that survives creditors, lawsuits, and even bankruptcy.
+This Trust converts a lifetime of innovation into an **institutional-grade asset** protected from personal liability, business judgment, and creditor attacks. The 50+ asset portfolio ($4.237B valuation) is now locked in a legal structure that survives creditors, lawsuits, and even bankruptcy.
 
 **The bank's role:** Provide the three operational accounts that let the Trust function without ever compromising the asset protection fortress.
 

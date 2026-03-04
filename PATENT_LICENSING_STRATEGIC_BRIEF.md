@@ -31,7 +31,7 @@ Our patent portfolio embeds constitutional governance principles that correct hi
 
 ## II. R.O.M.A.N. PLATFORM DEPENDENCY = RECURRING REVENUE
 
-**Critical Fact:** 90% of our 29 patents require R.O.M.A.N. AI platform to operate.
+**Critical Fact:** 90% of our 50+ IP assets require R.O.M.A.N. AI platform to operate.
 
 **Licensing Structure:**
 - **Tier 1 (Patent License):** $1M-$5M upfront + 3-5% royalties
@@ -66,18 +66,16 @@ Our patent portfolio embeds constitutional governance principles that correct hi
 
 ## IV. PATENT PORTFOLIO VALUATION
 
-| Category | Count | Valuation Range |
-|----------|-------|----------------|
-| USPTO Filed | 5 | $366M - $450M |
-| PPA Pending | 6 | $840M - $1.1B |
-| Innovations (Pre-Filing) | 18 | $2.4B - $5.15B |
-| **TOTAL** | **29** | **$3.6B - $6.7B** |
+| Asset Category | Valuation |
+|----------------|-----------|
+| Universal Math Engine | $1.5 Billion |
+| R.O.M.A.N. 2.0 (Hardware + AI) | $750 Million |
+| Odyssey-1 Platform | $500 Million |
+| Constitutional AI Governance | $350 Million |
+| Literary & Trade Secrets | $1.137 Billion |
+| **TOTAL PORTFOLIO** | **$4.237 Billion** |
 
-**Key Assets:**
-- Modular AR System (63/922,762): $350M
-- Dual-Hemisphere AI (63/913,134): $440M
-- R.O.M.A.N. Platform (trade secret): $1.47B
-- Seven Books (copyright): $327M
+**Source:** Master IP Manifest (Feb 27, 2026)
 
 ---
 

@@ -225,7 +225,7 @@ When approaching IP financing companies, provide:
 
 ❌ **Does NOT create immediate cash** - You still need a willing lender to advance funds against the collateral
 
-❌ **Does NOT discharge existing debts** - Your $128K in consumer debt is unaffected by this filing
+❌ **Does NOT discharge existing debts** - Outstanding personal obligations are unaffected by this filing
 
 ❌ **Does NOT mean banks automatically lend** - You must still apply for IP-backed loans and get approved
 
@@ -270,7 +270,7 @@ When approaching IP financing companies, provide:
 
 ### Month 4: Deploy Capital
 1. Receive funds (wire to Odyssey-1 LLC bank account)
-2. Pay off consumer debt ($128K)
+2. Retire outstanding personal obligations
 3. Fund prototype validation ($50K)
 4. Scale Odyssey-1 marketing ($200-500K)
 5. Reserve working capital ($300K-1M)
