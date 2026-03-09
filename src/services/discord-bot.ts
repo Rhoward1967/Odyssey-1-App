@@ -1321,8 +1321,8 @@ async function handleDirectMessage(message: Message) {
     // Get IP-aware prompt
     const ipPrompt = await generateIPAwareSystemPrompt();
     
-    // Get temporal awareness context (current date, CourtListener status, live capabilities)
-    const temporalContext = RomanSystemContext.getContextForPrompt();
+    // Get full context: identity + live trust data from business_entities
+    const temporalContext = await RomanSystemContext.buildFullSystemContext();
     
     // Combine both: Temporal awareness + IP data
     systemPrompt = `${temporalContext}\n\n${ipPrompt}`;

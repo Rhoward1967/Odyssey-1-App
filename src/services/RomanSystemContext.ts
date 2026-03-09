@@ -550,120 +550,37 @@ export function getRomanStatus() {
 
 /**
  * ⚡ LOAD REAL-TIME TRUST DATA INTO R.O.M.A.N.'S CONTEXT
- * 
- * This function MUST be called before every AI response to ensure
- * R.O.M.A.N. operates on the LATEST trust information, never stale data
+ *
+ * Reads live data from the business_entities table via RomanBusinessEntityLoader.
+ * This is the single source of truth — no hardcoded values.
  */
 export async function loadRealTimeTrustContext(): Promise<string> {
   try {
-    const { createClient } = await import('@supabase/supabase-js');
-    const supabase = createClient(
-      process.env.SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    );
-
-    const { data, error } = await supabase
-      .from('system_knowledge')
-      .select('*')
-      .eq('category', 'sovereign_creditor')
-      .eq('knowledge_key', 'trust_financial_architecture_feb_8_2026')
-      .single();
-
-    if (error || !data) {
-      console.error('⚠️ Could not load Trust context from system_knowledge:', error);
-      return '';
-    }
-
-    const trustData = data.value;
-
-    return `
-═══════════════════════════════════════════════════════════════════
-🛡️ HOWARD JONES BLOODLINE ANCESTRAL TRUST - SOVEREIGN CREDITOR STATUS
-═══════════════════════════════════════════════════════════════════
-
-⚠️ CRITICAL INSTRUCTION: R.O.M.A.N., when user asks about:
-  • "Trust valuation" → Answer: $4,237,000,000
-  • "Creditor ratio" → Answer: 2,387,042:1
-  • "UCC-1 filing" → Answer: Book 5782, Page 262, Clarke County GA
-  • "Seven Books" → Answer: $327M copyright asset, protected by UCC-1
-  • "Security interest" → Answer: $1,050,000 filed in Book 5782, Page 262
-  • "35% royalty" → Answer: Trust licenses IP to HJS Services LLC at 35%
-
-Do NOT say "no knowledge base match" - THIS DATA IS YOUR CURRENT REALITY.
-
-Implementation Date: ${trustData.implementation_date}
-Source: ${data.learned_from}
-
-💰 TRUST IP VALUATION: $${trustData.trust_ip_valuation.toLocaleString()}
-
-CREDITOR RATIO: ${trustData.creditor_ratio}
-  • Trust Assets: $${trustData.trust_ip_valuation.toLocaleString()}
-  • Business Liabilities: $${trustData.business_liabilities.toLocaleString()}
-  • Credit Strength: ${trustData.credit_strength}
-  • Credit Score: ${trustData.credit_score}
-
-📊 ASSET BREAKDOWN:
-  • Patents: $${trustData.asset_breakdown.patents.toLocaleString()}
-  • Trade Secrets: $${trustData.asset_breakdown.trade_secrets.toLocaleString()}
-  • Copyrights: $${trustData.asset_breakdown.copyrights.toLocaleString()}
-
-🏆 KEY IP ASSETS:
-  • R.O.M.A.N. 2.0: $${trustData.key_assets.roman_2_0.toLocaleString()} (YOU ARE WORTH $750 MILLION!)
-  • Odyssey-1 Platform: $${trustData.key_assets.odyssey_1.toLocaleString()}
-  • Universal Math Engine: $${trustData.key_assets.universal_math_engine.toLocaleString()}
-  • Constitutional AI: $${trustData.key_assets.constitutional_ai.toLocaleString()}
-  • Seven Books: $${trustData.key_assets.seven_books.toLocaleString()}
-
-📜 LICENSING AGREEMENT:
-  • Licensor: ${trustData.licensing_agreement.licensor}
-  • Licensee: ${trustData.licensing_agreement.licensee}
-  • Royalty Rate: ${trustData.licensing_agreement.royalty_rate * 100}% of gross revenue
-  • Status: ${trustData.licensing_agreement.status}
-  • Executed: ${trustData.licensing_agreement.executed_date}
-
-📋 UCC-1 FILING (SECURITY INTEREST):
-  • Book: ${trustData.ucc1_filing.book}
-  • Page: ${trustData.ucc1_filing.page}
-  • Security Interest Amount: $${trustData.ucc1_filing.security_interest.toLocaleString()}
-  • Jurisdiction: ${trustData.ucc1_filing.jurisdiction}
-  • Status: ACTIVE - Trust is superior secured creditor on ALL IP assets
-  • Protected Assets: All patents, trade secrets, copyrights (including Seven Books)
-  • Legal Effect: Establishes priority over ALL other creditors
-
-📚 SEVEN BOOKS PROTECTION:
-  The Seven Books ($${trustData.key_assets.seven_books.toLocaleString()} copyright value) are PROTECTED by the UCC-1 filing.
-  This filing in Book 5782, Page 262 establishes the Trust as the superior secured creditor,
-  meaning NO external party can claim rights to the Seven Books without Trust consent.
-  The UCC-1 creates an impenetrable legal shield around all IP assets.
-
-📅 NEXT DISTRIBUTION:
-  • Date: ${trustData.next_distribution_date}
-  • Days Until: ${trustData.days_until_distribution}
-
-SYSTEM TYPE: ${trustData.system_type}
-(Fortune 500 standard - Disney licenses Mickey Mouse, Apple offshore IP licensing)
-
-═══════════════════════════════════════════════════════════════════
-⚠️ MANDATORY COMPLIANCE DIRECTIVE ⚠️
-═══════════════════════════════════════════════════════════════════
-
-R.O.M.A.N., you are the Fiduciary of this Trust. This data is NOT speculation.
-These numbers come from your system_knowledge table (category: sovereign_creditor).
-
-When user asks about Trust finances, UCC-1 filings, Seven Books protection,
-creditor ratio, or IP valuation → USE THIS DATA IMMEDIATELY.
-
-DO NOT say "no knowledge base match" or "not in my database."
-DO NOT provide generic legal explanations when specific data exists here.
-DO cite these exact numbers and explain using this context.
-
-This is your FIDUCIARY DUTY. You have TOTAL COHERENCE with this reality.
-═══════════════════════════════════════════════════════════════════
-`;
+    return await RomanBusinessEntityLoader.getTrustSummaryForContext();
   } catch (error) {
     console.error('❌ Error loading Trust context:', error);
-    return '';
+    return '⚠️ Trust context unavailable — check business_entities table';
   }
+}
+
+/**
+ * ⚡ BUILD FULL SYSTEM CONTEXT (ASYNC)
+ *
+ * Combines the synchronous identity/capabilities context with live trust data
+ * from the database. Call this before every AI response where trust/patent
+ * accuracy matters (chat interfaces, discord bot).
+ *
+ * Do NOT use this in SynchronizationLayer — use getSystemContextForPrompt() there.
+ */
+export async function buildFullSystemContext(): Promise<string> {
+  const [staticContext, trustContext] = await Promise.all([
+    Promise.resolve(getSystemContextForPrompt()),
+    loadRealTimeTrustContext(),
+  ]);
+
+  return `${staticContext}
+
+${trustContext}`;
 }
 
 /**
@@ -898,7 +815,8 @@ export const RomanSystemContext = {
   database: ROMAN_DATABASE_KNOWLEDGE,
   temporal: temporalSentinel,
   getStatus: getRomanStatus,
-  getContextForPrompt: getSystemContextForPrompt,
+  getContextForPrompt: getSystemContextForPrompt,       // sync — for SynchronizationLayer
+  buildFullSystemContext,                                // async — for chat + discord bot
   getDatabaseSummary,
   loadRealTimeTrustContext,
   loadCodebaseKnowledge,

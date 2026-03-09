@@ -27,15 +27,89 @@ interface Alert {
   acknowledged: boolean;
 }
 
+// All provisional patent applications requiring conversion — verified deadlines
+export const ALL_PATENT_DEADLINES: Array<{
+  patent_id: string;
+  patent_name: string;
+  filing_number: string;
+  provisional_date: string;
+  conversion_deadline: string;
+  estimated_value: number;
+  priority: 'MOST CRITICAL' | 'CRITICAL' | 'WARNING';
+}> = [
+  {
+    patent_id: 'roman-ai-utility',
+    patent_name: 'R.O.M.A.N. Autonomous AI System',
+    filing_number: '#63/913,134',
+    provisional_date: '2025-11-07',
+    conversion_deadline: '2026-11-07',
+    estimated_value: 750_000_000,
+    priority: 'MOST CRITICAL',
+  },
+  {
+    patent_id: 'odyssey-vision-ar',
+    patent_name: 'Odyssey Vision AR (Locus Ring + Lumen Core + Neural Gesture)',
+    filing_number: '#63/922,762',
+    provisional_date: '2025-11-21',
+    conversion_deadline: '2026-11-21',
+    estimated_value: 500_000_000,
+    priority: 'CRITICAL',
+  },
+  {
+    patent_id: 'schumann-shoe-sole',
+    patent_name: 'Schumann Resonance Shoe Sole (PPA)',
+    filing_number: 'PPA-2025-12-04',
+    provisional_date: '2025-12-04',
+    conversion_deadline: '2026-12-04',
+    estimated_value: 250_000_000,
+    priority: 'CRITICAL',
+  },
+  {
+    patent_id: 'eradiskin-ezekiels-wheel',
+    patent_name: "EradiSkin + Ezekiel's Wheel (PPA)",
+    filing_number: 'PPA-2025-12-07',
+    provisional_date: '2025-12-07',
+    conversion_deadline: '2026-12-07',
+    estimated_value: 300_000_000,
+    priority: 'CRITICAL',
+  },
+  {
+    patent_id: 'preservation-h2o',
+    patent_name: 'Preservation H2O',
+    filing_number: 'PPA-2026-02-16',
+    provisional_date: '2026-02-16',
+    conversion_deadline: '2027-02-16',
+    estimated_value: 200_000_000,
+    priority: 'WARNING',
+  },
+];
+
 export class PatentDeadlineTracker {
-  
-  // Odyssey 2.0 Utility Patent Deadline
+
+  // Primary patent — R.O.M.A.N. AI (#63/913,134) — MOST CRITICAL
   private readonly PROVISIONAL_FILING_DATE = new Date('2025-11-07T02:09:15-05:00');
   private readonly UTILITY_DEADLINE = new Date('2026-11-07T23:59:59-05:00');
-  private readonly PATENT_VALUE = 1700000000; // $1.7B minimum
+  private readonly PATENT_VALUE = 750_000_000; // $750M (R.O.M.A.N. AI valuation)
 
   /**
-   * Get current deadline status for Odyssey 2.0 utility patent
+   * Get deadline status for ALL patents in the portfolio
+   */
+  getAllPatentDeadlines(): Array<typeof ALL_PATENT_DEADLINES[0] & { days_remaining: number; status: string }> {
+    const now = new Date();
+    return ALL_PATENT_DEADLINES.map(patent => {
+      const deadline = new Date(patent.conversion_deadline + 'T23:59:59-05:00');
+      const days_remaining = Math.floor((deadline.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+      const status = days_remaining < 0 ? 'overdue'
+        : days_remaining <= 7  ? 'urgent'
+        : days_remaining <= 30 ? 'critical'
+        : days_remaining <= 90 ? 'warning'
+        : 'safe';
+      return { ...patent, days_remaining, status };
+    });
+  }
+
+  /**
+   * Get current deadline status for primary patent: R.O.M.A.N. AI (#63/913,134)
    */
   async getOdyssey2DeadlineStatus(): Promise<PatentDeadline> {
     const now = new Date();
@@ -44,8 +118,8 @@ export class PatentDeadlineTracker {
     const alertLevel = this.getAlertLevel(daysRemaining);
 
     return {
-      patent_id: 'odyssey-2-utility',
-      patent_name: 'Odyssey 2.0 Utility Patent (Locus Ring + Lumen Core + Neural Gesture)',
+      patent_id: 'roman-ai-utility',
+      patent_name: 'R.O.M.A.N. Autonomous AI System (#63/913,134)',
       deadline_date: this.UTILITY_DEADLINE.toISOString(),
       days_remaining: daysRemaining,
       status,
