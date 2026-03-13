@@ -121,13 +121,36 @@
     },
     {
       "id": 11,
-      "entity": "TransUnion",
+      "entity": "TransUnion (Consumer Dispute Address)",
       "date_mailed": "2026-02-09",
       "tracking_number": "9589 0710 5270 2244 1697 79",
       "expected_delivery": "2026-02-13",
-      "return_receipt_received": false,
+      "return_receipt_received": true,
+      "return_receipt_status": "RETURNED_TO_SENDER",
+      "return_receipt_note": "Green card returned — Illegible / Unable to Forward. PO Box 2000, Chester PA 19016 is non-functional.",
       "response_deadline": "2026-03-11",
-      "status": "SENT"
+      "status": "RETURNED_NON_DELIVERABLE",
+      "escalation": {
+        "escalated": true,
+        "escalation_date": "2026-03-12",
+        "escalation_actions": [
+          "CFPB complaint filed — Willful Evasion of FCRA Dispute Obligations",
+          "Notice of Fault served to Registered Agent (Prentice-Hall Corporation System, Inc.)"
+        ]
+      }
+    },
+    {
+      "id": 18,
+      "entity": "TransUnion LLC — Registered Agent (Prentice-Hall Corporation System, Inc.)",
+      "address": "251 Little Falls Drive, Wilmington, DE 19808",
+      "date_mailed": "2026-03-12",
+      "tracking_number": "[INSERT TRACKING NUMBER]",
+      "expected_delivery": "2026-03-16",
+      "return_receipt_received": false,
+      "response_deadline": "2026-03-27",
+      "status": "SENT",
+      "purpose": "Notice of Fault — FCRA §611/§616 — Escalation due to non-deliverable dispute address",
+      "document": "legal/FCRA_NOTICE_OF_FAULT_TRANSUNION_REGISTERED_AGENT_MARCH12_2026.md"
     },
     {
       "id": 12,
@@ -191,10 +214,17 @@
     }
   ],
   "summary": {
-    "total_mailings": 17,
+    "total_mailings": 18,
     "sent": 17,
-    "pending_tracking": 0,
-    "campaign_complete": true,
-    "response_deadline": "2026-03-11"
+    "returned_non_deliverable": 1,
+    "pending_tracking": 1,
+    "campaign_complete": false,
+    "original_response_deadline": "2026-03-11",
+    "phase_2_escalations": {
+      "transunion_cfpb_complaint": "2026-03-12",
+      "transunion_registered_agent_notice": "2026-03-12",
+      "transunion_registered_agent_deadline": "2026-03-27"
+    },
+    "notes": "TransUnion original mailing returned non-deliverable. Escalated to CFPB complaint + Notice of Fault to registered agent on 2026-03-12."
   }
 }
