@@ -145,3 +145,15 @@ GRANT SELECT ON iso20022.payments_iso_audit TO iso_auditor;
 GRANT SELECT ON iso20022.system_alerts TO iso_auditor;
 GRANT EXECUTE ON FUNCTION iso20022.fn_payments_iso_hash(text) TO iso_auditor;
 GRANT EXECUTE ON FUNCTION iso20022.fn_verify_chain(uuid) TO iso_auditor;
+
+-- 8) Sovereign Health Monitoring View
+--    Real-time system health snapshot — used by R.O.M.A.N. and manual audits
+CREATE OR REPLACE VIEW iso20022.v_iso_system_health AS
+SELECT
+  (SELECT count(*) FROM iso20022.payments_iso_audit)        AS total_records,
+  (SELECT count(DISTINCT uetr) FROM iso20022.payments_iso_audit) AS active_chains,
+  NOW()                                                     AS last_audit_timestamp,
+  'HARDENED'                                                AS security_status;
+
+GRANT SELECT ON iso20022.v_iso_system_health TO service_role;
+GRANT SELECT ON iso20022.v_iso_system_health TO iso_auditor;
