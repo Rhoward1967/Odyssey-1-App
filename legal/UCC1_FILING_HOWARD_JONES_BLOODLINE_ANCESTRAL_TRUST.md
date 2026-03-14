@@ -75,6 +75,8 @@ ALL ASSETS OF DEBTOR, including but not limited to:
 INTELLECTUAL PROPERTY:
 1. U.S. Patent Application No. 63/913,134 titled "Dual-Hemisphere Artificial Intelligence System with Constitutional Governance Framework" and all continuations, divisionals, and related applications, together with all patents issuing therefrom and all foreign counterparts.
 
+1a. U.S. Patent Application No. 63/991,193 titled "K.A.I.T.S. — Kinetic Armor & Impact Threat Shield" (Bio-Digital Body Protection System, PPA_041, filed February 2026) and all continuations, divisionals, and related applications, together with all patents issuing therefrom and all foreign counterparts.
+
 2. All proprietary software, source code, algorithms, and technical documentation relating to:
    - R.O.M.A.N. 2.0 AI system
    - Odyssey-1 subscription platform

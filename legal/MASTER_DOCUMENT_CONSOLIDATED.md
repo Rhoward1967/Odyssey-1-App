@@ -481,6 +481,8 @@ The following assets are transferred to this Trust:
 
 - **Patent Application (PPA Filed 12/04/2025)**: "SELF-POWERED PIEZOELECTRIC SCHUMANN RESONANCE EMITTER AND GROUNDING APPARATUS FOR FOOTWEAR (The Shoe Sole)"
 
+- **Patent Application # 63/991,193 (PPA_041)**: "K.A.I.T.S. — KINETIC ARMOR & IMPACT THREAT SHIELD" (Bio-Digital Body Protection System) (Filed Feb 2026)
+
 - **Patent Application (PPA #042)**: "UNIVERSAL MATH ENGINE - LOGIC LEAK DETECTION & JUNCTION PRESERVATION" (Filed Feb 27, 2026)
 
 - **Patent Application (PPA Filed Feb 16, 2026)**: "PRESERVATION H2O SYSTEM - SELF-POWERED ACOUSTIC WATER REMEDIATION"
@@ -1437,6 +1439,11 @@ The Assignor hereby assigns to the Trust all of his right, title, and interest i
 5. **Patent Application - PPA** (Filed 12/04/2025)
    - Title: "SELF-POWERED PIEZOELECTRIC SCHUMANN RESONANCE EMITTER AND GROUNDING APPARATUS FOR FOOTWEAR"
    - Common Name: "The Shoe Sole"
+
+6. **Patent Application # 63/991,193 — PPA_041** (Filed February 2026)
+   - Title: "K.A.I.T.S. — KINETIC ARMOR & IMPACT THREAT SHIELD"
+   - Common Name: "K.A.I.T.S. Body Shield"
+   - Description: Bio-Digital Body Protection System — 5th pillar of the Sovereign Self Bio-Digital Model (Nervous System)
 
 **Pending Patent Applications (Awaiting PPA Filing - 6 Applications):**
 

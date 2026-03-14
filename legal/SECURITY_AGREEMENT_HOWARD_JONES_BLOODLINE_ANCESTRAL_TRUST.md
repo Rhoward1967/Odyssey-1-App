@@ -42,12 +42,13 @@ NOW, THEREFORE, in consideration of the mutual covenants and agreements herein, 
 
 1. **Patent Applications (25 Total - 14 Integrated, 11 Development):**
    
-   **FILED USPTO PATENTS (5):**
+   **FILED USPTO PATENTS (6):**
    - #63/913,134 (Provisional): Dual-Hemisphere, Constitutionally-Governed AI and Modular Computing System (Filed 11/07/2025)
    - #19/396,082 (Nonprovisional): Modular Wireless Computing System with Continuous Neural Authentication ("Cordless Cube") (Filed 11/20/2025)
    - #63/922,762 (Provisional): Modular Augmented Reality System with Neural Interface ("ODYSSEY VISION - AR/Optometry") (Filed 11/21/2025)
    - #19/403,956 (Nonprovisional): Harmonic Resonance Grid (HRG) System ("Ambient Grid") (Filed 11/30/2025)
    - PPA Filed 12/04/2025: Self-Powered Piezoelectric Schumann Resonance Emitter ("Shoe Sole")
+   - #63/991,193 (Provisional): K.A.I.T.S. — Kinetic Armor & Impact Threat Shield (Bio-Digital Body Protection System) (Filed 02/2026) [PPA_041]
    
    **PENDING PPA FILING (6):**
    - Sovereign Vessel System: Fully Integrated Autonomic Hardware Platform
