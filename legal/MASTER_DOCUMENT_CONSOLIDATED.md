@@ -483,6 +483,8 @@ The following assets are transferred to this Trust:
 
 - **Patent Application # 63/991,193 (PPA_041)**: "K.A.I.T.S. — KINETIC ARMOR & IMPACT THREAT SHIELD" (Bio-Digital Body Protection System) (Filed Feb 2026)
 
+- **Patent Application PPA_043**: "CONSTITUTIONAL AI TRUST SYSTEM WITH IMMUTABLE SOVEREIGN GOVERNANCE, CRYPTOGRAPHIC CHAIN-OF-CUSTODY LEDGER, AUTONOMOUS DISTRIBUTION ENGINE, AND GRANTOR-SOVEREIGN KILL-SWITCH PROTOCOL" (Filed March 14, 2026)
+
 - **Patent Application (PPA #042)**: "UNIVERSAL MATH ENGINE - LOGIC LEAK DETECTION & JUNCTION PRESERVATION" (Filed Feb 27, 2026)
 
 - **Patent Application (PPA Filed Feb 16, 2026)**: "PRESERVATION H2O SYSTEM - SELF-POWERED ACOUSTIC WATER REMEDIATION"
@@ -1444,6 +1446,11 @@ The Assignor hereby assigns to the Trust all of his right, title, and interest i
    - Title: "K.A.I.T.S. — KINETIC ARMOR & IMPACT THREAT SHIELD"
    - Common Name: "K.A.I.T.S. Body Shield"
    - Description: Bio-Digital Body Protection System — 5th pillar of the Sovereign Self Bio-Digital Model (Nervous System)
+
+7. **Patent Application — PPA_043** (Filed March 14, 2026)
+   - Title: "CONSTITUTIONAL AI TRUST SYSTEM WITH IMMUTABLE SOVEREIGN GOVERNANCE, CRYPTOGRAPHIC CHAIN-OF-CUSTODY LEDGER, AUTONOMOUS DISTRIBUTION ENGINE, AND GRANTOR-SOVEREIGN KILL-SWITCH PROTOCOL"
+   - Common Name: "Constitutional AI Trust"
+   - Description: Three-layer sovereign architecture encoding irrevocable trust into autonomous AI infrastructure with database-level constitutional constraints, ISO 20022 cryptographic chain, dual-lane oracle, and Grantor-Sovereign Kill-Switch Protocol. Solves the AI alignment problem as a mathematical boundary at the infrastructure level.
 
 **Pending Patent Applications (Awaiting PPA Filing - 6 Applications):**
 

@@ -77,6 +77,8 @@ INTELLECTUAL PROPERTY:
 
 1a. U.S. Patent Application No. 63/991,193 titled "K.A.I.T.S. — Kinetic Armor & Impact Threat Shield" (Bio-Digital Body Protection System, PPA_041, filed February 2026) and all continuations, divisionals, and related applications, together with all patents issuing therefrom and all foreign counterparts.
 
+1b. Provisional Patent Application PPA_043 titled "Constitutional AI Trust System with Immutable Sovereign Governance, Cryptographic Chain-of-Custody Ledger, Autonomous Distribution Engine, and Grantor-Sovereign Kill-Switch Protocol" (filed March 14, 2026) and all continuations, divisionals, and related applications, together with all patents issuing therefrom and all foreign counterparts.
+
 2. All proprietary software, source code, algorithms, and technical documentation relating to:
    - R.O.M.A.N. 2.0 AI system
    - Odyssey-1 subscription platform

@@ -49,6 +49,7 @@ NOW, THEREFORE, in consideration of the mutual covenants and agreements herein, 
    - #19/403,956 (Nonprovisional): Harmonic Resonance Grid (HRG) System ("Ambient Grid") (Filed 11/30/2025)
    - PPA Filed 12/04/2025: Self-Powered Piezoelectric Schumann Resonance Emitter ("Shoe Sole")
    - #63/991,193 (Provisional): K.A.I.T.S. — Kinetic Armor & Impact Threat Shield (Bio-Digital Body Protection System) (Filed 02/2026) [PPA_041]
+   - PPA_043 (Filed 03/14/2026): Constitutional AI Trust System with Immutable Sovereign Governance, Cryptographic Chain-of-Custody Ledger, Autonomous Distribution Engine, and Grantor-Sovereign Kill-Switch Protocol
    
    **PENDING PPA FILING (6):**
    - Sovereign Vessel System: Fully Integrated Autonomic Hardware Platform
