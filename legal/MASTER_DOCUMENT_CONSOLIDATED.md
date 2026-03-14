@@ -493,7 +493,7 @@ The following assets are transferred to this Trust:
 - **Project Sky Sovereign**: "QUANTUM AIRSPACE MANAGEMENT SYSTEM"
 
 #### 3. Copyright Registrations
-**Registration Case # 1-15033889051** (Filed 11/06/2025)
+**U.S. Copyright Registration **TXu 2-529-780** (Library of Congress, November 6, 2025)** (Filed 11/06/2025)
 - "Sovereign Self Reclaiming Divine Intent" series (7 books)
 
 #### 4. Software Copyrights
@@ -1033,7 +1033,7 @@ Date: _______________
 ### 1. INTELLECTUAL PROPERTY
 - ODYSSEY-1 Software Platform (AGPL-3.0, 17,000+ lines)
 - R.O.M.A.N. 2.0 AI System (complete specifications, 4 pending patents, $750M pre-prototype valuation)
-- "Sovereign Self Reclaiming Divine Intent" Literary Series (Registration Case # 1-15033889051)
+- "Sovereign Self Reclaiming Divine Intent" Literary Series (U.S. Copyright Registration **TXu 2-529-780** (Library of Congress, November 6, 2025))
 - 5 Filed USPTO Patents, 6 Pending PPAs, 14 Integrated R.O.M.A.N. 2.0 Innovations
 - Trade Secrets: Universal Math algorithms, Constitutional AI framework, GenesisEngine architecture
 - Trademarks: ODYSSEY-1, R.O.M.A.N., THE HIVE, EradiSkin™, QARE, Ezekiel's Wheel, Project Sky Sovereign
@@ -1173,7 +1173,7 @@ This valuation is based on the Master IP Manifest (February 27, 2026) comprising
 **Revenue Flow:**  
 Stripe (Customer Payments) → Main Operating Account → Trust Account + Expense Account
 
-**Banking Accounts to be Opened (Week of February 3, 2026):**
+**Banking Accounts to be Opened (Week of April 14, 2026 — after notarization April 13, 2026):**
 1. **Main Account:** For Stripe deposits and revenue collection
 2. **Trust Account:** At Truist Bank (for secured creditor reserves)
 3. **Expense Account:** At Truist Bank (for operational expenses)
@@ -1389,7 +1389,7 @@ The Assignor hereby assigns to the Trust all of his right, title, and interest i
    - All future versions and adaptations
 
 4. **"Sovereign Self Reclaiming Divine Intent" Literary Series**
-   - Copyright Registration Case # 1-15033889051 (Filed 11/06/2025 via eCO)
+   - Copyright U.S. Copyright Registration **TXu 2-529-780** (Library of Congress, November 6, 2025) (Filed 11/06/2025 via eCO)
    - Book 1: "The Program: The Origin and Architecture of Disconnection"
    - Book 2: "The Echo: Deconstructing the Program's Legacy"
    - Book 3: "The Sovereign Covenant: Architecting a Divinely Aligned Future"
