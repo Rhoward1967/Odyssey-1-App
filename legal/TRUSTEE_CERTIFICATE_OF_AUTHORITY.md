@@ -141,7 +141,7 @@ The Howard Jones Bloodline Ancestral Trust employs a **methodologically sound, t
 1. **Intellectual Property Portfolio**
    - 29 patents (5 filed USPTO, 6 pending PPAs, 18 R.O.M.A.N. 2.0 innovations)
    - Lead Patent: USPTO #63/913,134 (Conversational AI with Blockchain Security)
-   - 7-book copyrighted series (Case #1-15033889051, 105,000+ words)
+   - 7-book copyrighted series — U.S. Copyright Registration **TXu 2-529-780** (Library of Congress, Nov 6, 2025) — 105,000+ words
    - Trade secrets: R.O.M.A.N. Protocol, Frequency Hopping Algorithm
    - Sovereign valuation basis: $250M-$500M (IP portfolio alone)
 

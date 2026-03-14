@@ -83,7 +83,7 @@ INTELLECTUAL PROPERTY:
 
 3. All trade secrets, know-how, and confidential information relating to sacred geometry computational frameworks, wireless power transmission, and AI architecture.
 
-4. All copyrights in literary works including the seven-volume "The Sovereign Self" series and all software documentation.
+4. All copyrights in literary works including the seven-volume "The Sovereign Self" series — federally registered under U.S. Copyright Registration No. TXu 2-529-780 (Library of Congress, November 6, 2025; "Book 1 the Program and 6 Other Unpublished Works") — and all software documentation.
 
 5. All trademarks, service marks, trade names, and logos including ODYSSEY-1, R.O.M.A.N., and HJS Services, together with all goodwill associated therewith.
 

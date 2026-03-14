@@ -8,8 +8,8 @@
 **Date:** February 7, 2026  
 **Timeline (Flexible - Scheduled Around Teara's Union Availability):**
 - **February 10, 2026:** Printer delivery (210-page Master Book printed & bound)
-- **February 17-24, 2026 (TBD):** Notarization ceremony (coordinate with Teara's union schedule - she must be in town)
-- **February 25+ (TBD):** Truist Bank account setup appointment (scheduled after notarization complete and all documents received)
+- **April 13, 2026 (REVISED TARGET):** Notarization ceremony — rescheduled from Feb 17-24 due to delays. Coordinate with Teara's union schedule.
+- **April 14–18, 2026 (TBD):** Truist Bank account setup appointment (scheduled after notarization complete and all documents received)
 
 **Mission:** Open three accounts for Howard Jones Bloodline Ancestral Trust at Truist Bank  
 **Time:** [Insert bank appointment time once scheduled]  

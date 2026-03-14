@@ -5,10 +5,10 @@
 
 **Between:**
 
-**DEBTOR:** Odyssey-1 AI LLC  
-Georgia Limited Liability Company  
-EIN: [Your EIN]  
-Address: P.O. Box 80054, Athens, GA 30608  
+**DEBTOR:** Odyssey-1 AI LLC
+Georgia Limited Liability Company
+EIN: 41-2718714
+Address: P.O. Box 80054, Athens, GA 30608
 
 **SECURED PARTY:** Howard Jones Bloodline Ancestral Trust
 Irrevocable Trust established under Georgia Law
@@ -87,7 +87,7 @@ NOW, THEREFORE, in consideration of the mutual covenants and agreements herein, 
    - Flower of Life integration algorithms
 
 4. **Copyrights:**
-   - Seven (7) book manuscripts in "The Sovereign Self" series
+   - Seven (7) book manuscripts in "The Sovereign Self" series — **U.S. Copyright Registration TXu 2-529-780** (Library of Congress, registered November 6, 2025; "Book 1 the Program and 6 Other Unpublished Works"; includes "The Sovereign Covenant," "True Collateral," "The Alien Program," and 4 additional unpublished works)
    - Software documentation and technical manuals
    - Training materials and educational content
    - All derivative works and translations
