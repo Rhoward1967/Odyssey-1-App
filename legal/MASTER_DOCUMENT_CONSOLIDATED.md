@@ -32,7 +32,7 @@
 
 **TO:** Truist Bank, Athens, Georgia  
 **FROM:** Howard Jones Bloodline Ancestral Trust  
-**DATE:** February 10, 2026  
+**DATE:** April 14, 2026 (revised — original February 10, 2026; delayed pending notarization April 13, 2026)
 **RE:** Master Consolidated Trust Document Package — Account Setup and Secured Creditor Verification
 
 ---
@@ -260,7 +260,7 @@ Serial Number: __________
 
 ✅ Print this entire 210-page Master Book on **24lb-28lb bright white paper**  
 ✅ Ensure this Transmittal Letter appears as **Page 1**  
-✅ Hand-deliver to the Truist Bank manager on **Monday, February 10, 2026**  
+✅ Hand-deliver to the Truist Bank manager — **Target: Week of April 14, 2026** (after notarization April 13, 2026)  
 ✅ Request **explicit confirmation** of account setup and UCC-1 verification  
 ✅ Retain one fully-signed copy for your records
 
