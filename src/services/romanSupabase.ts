@@ -25,8 +25,8 @@ import { createClient } from '@supabase/supabase-js';
 // Service Role Key bypasses Row Level Security
 // This gives R.O.M.A.N. GLOBAL database access
 // Use process.env for Node.js compatibility (Discord bot)
-const supabaseUrl = typeof process !== 'undefined' && process.env?.SUPABASE_URL 
-  ? process.env.SUPABASE_URL 
+const supabaseUrl = typeof process !== 'undefined'
+  ? (process.env?.SUPABASE_URL || process.env?.VITE_SUPABASE_URL)
   : (typeof import.meta !== 'undefined' && import.meta.env?.VITE_SUPABASE_URL);
 
 const supabaseServiceKey = typeof process !== 'undefined' && process.env?.SUPABASE_SERVICE_ROLE_KEY
