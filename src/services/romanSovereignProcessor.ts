@@ -219,7 +219,7 @@ This response came directly from R.O.M.A.N.'s sovereignty layer.`;
         // Universal Math calculations
         const westernProduct = a * b;
         const universalProduct = UniversalMath.multiply(a, b);
-        const junctionValue = UniversalMath.calculateJunctionValue(a, b);
+        const junctionValue = a * b; // Junction value = geometric relationship (a × b)
 
         response += `**WESTERN MATH (BROKEN):**\n`;
         response += `${a} × ${b} = ${westernProduct} (Entity erasure - one disappeared!)\n\n`;
@@ -249,6 +249,39 @@ This response came directly from R.O.M.A.N.'s sovereignty layer.`;
       console.log(`   ⚠️ Universal Math engine error - falling back to GPT-4`);
       // Fall through to GPT-4 if math engine fails
     }
+  }
+
+  // 🛡️ 5-LAYER LEGAL DEFENSE INTERCEPTOR — Must fire BEFORE generic legal interceptor
+  const sovereignDefensePattern = /(?:5.?layer|five.?layer|legal defense (update|enhancement|system|architecture)|counter.?canon|badge of slavery|guild firewall|sovereign toolkit|paperback.*bridge|book sync|tk-0[1-7]|toolkit router|layer 0|layer 4|layer 5|saw the.*update|defense update)/i;
+
+  if (sovereignDefensePattern.test(content)) {
+    console.log(`   🛡️ SOVEREIGN DEFENSE QUERY — R.O.M.A.N. responding from 5-Layer architecture`);
+    return `**R.O.M.A.N. 5-LAYER LEGAL DEFENSE — FULLY OPERATIONAL** ✅
+
+**Layer 0a — Counter-Canon Dictionary (Vols 1–8)**
+17 sovereign definitions overriding Black's Law before any statutory analysis.
+Key corrections: TAXPAYER → Living Being/Sovereign Grantor | DELINQUENT → disputed obligation | STATE'S INTEREST → unsupported assertion
+
+**Layer 0b — Badge of Slavery Diagnostic**
+13th Amendment constitutional auditor. 7 badge indicators + 3 amplifiers (lineage, recurring, historical pattern).
+Severity scale: LOW → MEDIUM → HIGH → CRITICAL. Runs above ALL statutory law.
+Anchor case: Jones v. Alfred H. Mayer Co. (1968) — reaches ALL badges and incidents of slavery.
+
+**Layer 2 — Sovereign Toolkit Router (TK-01 through TK-07)**
+TK-01: Unlawful Stop/Detention | TK-02: Tax/Labor Extraction | TK-03: Court Jurisdiction
+TK-04: Religious/Spiritual | TK-05: Debt Collection/FCRA | TK-06: Housing/Property
+TK-07: Ancestral Land — McGirt v. Oklahoma (2020) + RLUIPA
+
+**Layer 4 — Guild Firewall**
+Attorney = Officer of the Court (divided loyalty). Auto-generates Notice of Divided Loyalty.
+10 guild traps detected: represent, client, stipulate, officer of the court, waive, consent, defendant, plead, power of attorney, hereinafter.
+
+**Layer 5 — Paperback QR Bridge**
+Live amendment records for all 7 toolkits. Critical post-print update: **Loper Bright v. Raimondo (2024)** — Chevron deference ELIMINATED. Agency interpretations of their own penalty authority no longer get deference. Demand the exact statute — not policy, not rule.
+
+**STANDING ASSERTION:**
+All rights reserved. UCC 1-308. Without Prejudice.
+Howard Jones Bloodline Ancestral Trust — Sovereign Grantor: Rickey Allan Howard`;
   }
 
   // ⚖️ LEGAL/COURTLISTENER INTERCEPTOR - Handle legal queries
@@ -598,3 +631,267 @@ Only use DATA_NULL_ERROR if user asks for SPECIFIC data that should be in knowle
     return "❌ [SYSTEM_CRITICAL]: Handshake Interrupted.";
   }
 }
+
+// ═══════════════════════════════════════════════════════════════════════════
+// GUILD FIREWALL — Layer 4
+//
+// Counter-Canon Vol. 8 (Legal Profession) + Toolkit Three (Special Capacity)
+//
+// An Attorney is an Officer of the Court with a primary duty to the State.
+// A Lawyer is one skilled in law with primary duty to the principal.
+// These are not the same. R.O.M.A.N. treats them differently.
+//
+// This module ensures that no interaction with the Legal Guild results in:
+// — Accidental waiver of rights
+// — Unwanted joinder
+// — Implied consent to jurisdiction
+// — Subordinate capacity (becoming a "client" vs. remaining a "principal")
+// ═══════════════════════════════════════════════════════════════════════════
+
+export interface CapacityNotice {
+  noticeType: 'LIMITED_SCOPE' | 'NON_CONSENT' | 'RESERVATION_OF_RIGHTS' | 'DIVIDED_LOYALTY';
+  recipientCapacity: 'ATTORNEY' | 'OFFICER_OF_COURT' | 'DEBT_COLLECTOR' | 'AGENCY';
+  severity: 'INFO' | 'WARNING' | 'CRITICAL';
+  draftedStatement: string;
+  sovereignReservation: string;
+  guildTrapsDetected: GuildTrap[];
+}
+
+export interface GuildTrap {
+  term: string;
+  sovereignCorrection: string;
+  risk: string;
+  counterCanonVol: string;
+}
+
+export interface RepresentativeAudit {
+  name: string;
+  isAttorney: boolean;
+  isDividedLoyalty: boolean;
+  loyaltyWarning: string;
+  mandatoryNotice: string;
+  limitedScopeStatement: string;
+}
+
+const GUILD_TRAPS: GuildTrap[] = [
+  {
+    term: 'represent',
+    sovereignCorrection: 'assist / counsel in limited scope',
+    risk: 'Waiver of Self-Jurisdiction — "represent" implies the attorney speaks FOR you, replacing your voice with theirs',
+    counterCanonVol: 'Vol. 8 — Legal Profession'
+  },
+  {
+    term: 'client',
+    sovereignCorrection: 'principal',
+    risk: 'Subordinate Capacity — "client" places you below the attorney in the hierarchy. You are the Principal; they are the agent.',
+    counterCanonVol: 'Vol. 8 — Legal Profession'
+  },
+  {
+    term: 'stipulate',
+    sovereignCorrection: 'accept conditionally / without prejudice',
+    risk: 'Admission of Fact — stipulations are binding admissions. Accepting without reservation waives the right to challenge.',
+    counterCanonVol: 'Vol. 8 — Legal Profession'
+  },
+  {
+    term: 'officer of the court',
+    sovereignCorrection: 'agent of the state / dual-duty representative',
+    risk: 'Divided Loyalty — an officer of the court owes a duty to the court that may conflict with your interests. This is not disclosed.',
+    counterCanonVol: 'Vol. 8 — Legal Profession'
+  },
+  {
+    term: 'waive',
+    sovereignCorrection: 'reserve / retain',
+    risk: 'Rights Forfeiture — waiver of a right extinguishes it. Nothing should be waived without explicit understanding of what is being surrendered.',
+    counterCanonVol: 'Vol. 8 — Legal Profession'
+  },
+  {
+    term: 'consent',
+    sovereignCorrection: 'acknowledge without prejudice',
+    risk: 'Implied Joinder — consenting to a proceeding without reservation implies consent to jurisdiction and all procedural rules of that forum.',
+    counterCanonVol: 'Vol. 1 — Foundational'
+  },
+  {
+    term: 'defendant',
+    sovereignCorrection: 'respondent in special capacity',
+    risk: 'Status Acceptance — accepting the label "defendant" accepts the jurisdiction of the court and the validity of the complaint against you.',
+    counterCanonVol: 'Vol. 1 — Foundational'
+  },
+  {
+    term: 'plead',
+    sovereignCorrection: 'respond / rebut',
+    risk: 'Jurisdiction Acceptance — entering a "plea" (guilty/not guilty) accepts the court\'s jurisdiction over the matter before challenging it.',
+    counterCanonVol: 'Vol. 8 — Legal Profession'
+  },
+  {
+    term: 'power of attorney',
+    sovereignCorrection: 'limited scope authorization',
+    risk: 'Plenary Authority Grant — a general Power of Attorney grants broad authority to act on your behalf, including actions you may not intend.',
+    counterCanonVol: 'Vol. 8 — Legal Profession'
+  },
+  {
+    term: 'hereinafter',
+    sovereignCorrection: '[plain language description]',
+    risk: 'Linguistic Jargon Barrier — obscures meaning, conceals the nature of the obligation (Counter-Canon Vol. 8: Jargon)',
+    counterCanonVol: 'Vol. 8 — Legal Profession'
+  }
+];
+
+export class RomanGuildFirewall {
+
+  /**
+   * Analyze an interaction with legal counsel or opposing party.
+   * Detects Guild traps and generates the appropriate Capacity Notice.
+   */
+  public static processGuildInteraction(input: string): CapacityNotice {
+    const lowerInput = input.toLowerCase();
+    const trapsFound = GUILD_TRAPS.filter(trap =>
+      lowerInput.includes(trap.term.toLowerCase())
+    );
+
+    const isAttorneyInteraction = /attorney|lawyer|counsel|law firm|esquire|esq\.|bar association/i.test(input);
+    const hasJoinder = /joinder|stipulate|plead|plea|defendant|enter.*plea/i.test(lowerInput);
+    const hasWaiver = /waive|consent|agree|stipulate|admit/i.test(lowerInput);
+
+    let noticeType: CapacityNotice['noticeType'] = 'RESERVATION_OF_RIGHTS';
+    let severity: CapacityNotice['severity'] = 'INFO';
+
+    if (hasJoinder) { noticeType = 'NON_CONSENT'; severity = 'CRITICAL'; }
+    else if (isAttorneyInteraction) { noticeType = 'DIVIDED_LOYALTY'; severity = 'WARNING'; }
+    else if (hasWaiver) { noticeType = 'LIMITED_SCOPE'; severity = 'WARNING'; }
+
+    const draftedStatement = this.draftCapacityStatement(noticeType, trapsFound);
+    const sovereignReservation = this.buildSovereignReservation(noticeType);
+
+    return {
+      noticeType,
+      recipientCapacity: isAttorneyInteraction ? 'ATTORNEY' : 'OFFICER_OF_COURT',
+      severity,
+      draftedStatement,
+      sovereignReservation,
+      guildTrapsDetected: trapsFound
+    };
+  }
+
+  /**
+   * Sanitize any legal document or draft by replacing Guild jargon with
+   * Sovereign terminology. Run on ALL outgoing documents.
+   */
+  public static sanitizeLegalDraft(draft: string): string {
+    let sanitized = draft;
+    GUILD_TRAPS.forEach(trap => {
+      const regex = new RegExp(`\\b${trap.term}\\b`, 'gi');
+      sanitized = sanitized.replace(regex, `[${trap.sovereignCorrection.toUpperCase()}]`);
+    });
+    return sanitized;
+  }
+
+  /**
+   * Audit a representative by name and role.
+   * Generates a Mandatory Notice of Divided Loyalty if the representative
+   * is acting as an Attorney (Officer of the Court).
+   */
+  public static auditRepresentative(name: string, role?: string): RepresentativeAudit {
+    const isAttorney = /attorney|esq|esquire|counselor|barrister/i.test(role || name);
+
+    const loyaltyWarning = isAttorney
+      ? `WARNING: ${name} is an Officer of the Court (Counter-Canon Vol. 8). Their primary duty runs to the court — not to you. They can be sanctioned for arguments the court finds frivolous. This creates an inherent conflict with zealous advocacy on your behalf. You are the Principal. They are a limited-scope agent. Treat all communications accordingly.`
+      : `${name} appears to be operating as a Lawyer (skilled in law) rather than an Attorney (Officer of the Court). This is a more favorable capacity. Confirm they are not admitted to the bar in this jurisdiction before proceeding without a Capacity Notice.`;
+
+    const mandatoryNotice = isAttorney ? `
+NOTICE OF DIVIDED LOYALTY AND LIMITED SCOPE REPRESENTATION
+
+To: ${name}
+From: Rickey Allan Howard, Living Being / Sovereign Grantor, Howard Jones Bloodline Ancestral Trust
+Re: Capacity of Representation
+
+NOTICE IS HEREBY GIVEN that:
+
+1. I am a Living Being appearing in my own proper capacity. I am NOT a "client" — I am the Principal. You are a limited-scope agent operating under my direction, not the reverse.
+
+2. You are an Officer of the Court. Your duty to the court may conflict with your duty to me. I am aware of this division of loyalty and do not waive any right as a result of your representation.
+
+3. Your representation is LIMITED IN SCOPE to [specify scope]. You are NOT authorized to:
+   — Enter any plea, stipulation, or admission on my behalf
+   — Waive any procedural or substantive right
+   — Consent to jurisdiction, venue, or service
+   — Grant any Power of Attorney beyond the specific limited scope herein
+
+4. All rights are reserved. UCC 1-308. Without Prejudice.
+
+5. Any communication you receive from opposing counsel that implicates my rights shall be forwarded to me IMMEDIATELY and without action until I provide written direction.
+
+Rickey Allan Howard
+Living Being / Sovereign Grantor
+Howard Jones Bloodline Ancestral Trust
+All Rights Reserved — UCC 1-308 — Without Prejudice
+    `.trim() : '';
+
+    const limitedScopeStatement = `
+LIMITED SCOPE REPRESENTATION STATEMENT
+
+I, Rickey Allan Howard, Living Being, hereby authorize ${name} to assist me in the following limited capacity only:
+[SPECIFY LIMITED SCOPE]
+
+This authorization does NOT constitute:
+• A general Power of Attorney
+• Consent to jurisdiction
+• Waiver of any right, privilege, or immunity
+• Admission of any fact alleged by opposing parties
+
+I appear in Special Capacity. My appearance through limited-scope counsel does not constitute a general appearance or submission to this court's jurisdiction.
+
+All rights reserved. UCC 1-308. Without Prejudice.
+    `.trim();
+
+    return {
+      name,
+      isAttorney,
+      isDividedLoyalty: isAttorney,
+      loyaltyWarning,
+      mandatoryNotice,
+      limitedScopeStatement
+    };
+  }
+
+  /**
+   * Get all Guild traps for dashboard display
+   */
+  public static getAllGuildTraps(): GuildTrap[] {
+    return GUILD_TRAPS;
+  }
+
+  // ─── PRIVATE BUILDERS ────────────────────────────────────────────────────
+
+  private static draftCapacityStatement(
+    noticeType: CapacityNotice['noticeType'],
+    trapsFound: GuildTrap[]
+  ): string {
+    const base = `I appear in my proper capacity as a Living Being and Sovereign Grantor of the Howard Jones Bloodline Ancestral Trust. Any assistance provided by counsel is under Limited Scope only. I do not grant Power of Attorney for the purpose of waiving any inherent right or entering Joinder with any party or court. All privileges, immunities, and rights are retained — not granted. UCC 1-308. Without Prejudice.`;
+
+    if (noticeType === 'NON_CONSENT') {
+      return `NON-CONSENT AND RESERVATION OF RIGHTS\n\nI do not consent to: jurisdiction of this forum, the proceeding as characterized, joinder with any party, or any stipulation not explicitly authorized in writing by me.\n\n${base}`;
+    }
+    if (noticeType === 'DIVIDED_LOYALTY') {
+      return `NOTICE OF DIVIDED LOYALTY ACKNOWLEDGED\n\nI am aware that counsel is an Officer of the Court with a primary duty to the court. I do not waive any right as a result of this representation. Counsel's limited scope does not constitute my consent to anything.\n\n${base}`;
+    }
+    if (trapsFound.length > 0) {
+      const trapList = trapsFound.map(t => `• "${t.term}" → [${t.sovereignCorrection.toUpperCase()}] (Risk: ${t.risk})`).join('\n');
+      return `GUILD JARGON DETECTED — CAPACITY PROTECTED\n\nThe following terms in this interaction carry risks to your standing:\n${trapList}\n\n${base}`;
+    }
+    return base;
+  }
+
+  private static buildSovereignReservation(noticeType: string): string {
+    return [
+      'All rights reserved expressly and without waiver.',
+      'UCC 1-308 — Without Prejudice.',
+      'No joinder. No consent to jurisdiction. No waiver of any right, privilege, or immunity.',
+      'Rickey Allan Howard appears in Special Capacity as Living Being and Sovereign Grantor.',
+      'Howard Jones Bloodline Ancestral Trust UCC-1 perfected security interest remains in full force.',
+      noticeType === 'NON_CONSENT' ? 'EXPLICIT NON-CONSENT to all proceedings until standing and jurisdiction are established on the record.' : ''
+    ].filter(Boolean).join(' ');
+  }
+}
+
+// Export for use in legal dashboard and Discord bot
+export const romanGuildFirewall = RomanGuildFirewall;
