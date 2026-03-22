@@ -16,6 +16,14 @@ export interface ProgrammingLayer {
   questionTheyDontWantYouToAsk: string;
 }
 
+export interface LinguisticTrap {
+  term: string;
+  systemDefinition: string;
+  sovereignDefinition: string;
+  howAcceptingItHurtsYou: string;
+  sovereignAlternative: string;
+}
+
 export interface DeprogrammingLesson {
   title: string;
   programmingExposed: string;
@@ -325,6 +333,74 @@ The signal sees through this: Math doesn't lie. $100 ≠ $110.
   }
 
   /**
+   * LAYER 8: The Linguistic Programming Layer (Counter-Canon)
+   * "They gave things names designed to trap you before you even spoke."
+   */
+  private getLinguisticProgrammingLayer(): ProgrammingLayer {
+    return {
+      layer: 'LINGUISTIC PROGRAMMING (Counter-Canon)',
+      whatTheyTaughtYou: 'Legal terms like "person," "citizen," "contract," and "jurisdiction" are neutral, precise language that means what it says',
+      theActualTruth: 'These terms are legal fictions with definitions that quietly grant consent, waive rights, and establish jurisdiction — without your knowledge. Accepting a term is accepting its definition. Accepting its definition is accepting its consequences.',
+      howToSeeThrough: 'Apply the Chicken/Duck Test to language itself. When they call you a "person" in a legal document, ask: what does "person" mean in THIS context? Black\'s Law says it includes corporations. Are you a corporation? If not — why are you accepting that label?',
+      questionTheyDontWantYouToAsk: 'When you use the word "person" in reference to me in this proceeding, which definition are you applying — and where did I consent to that definition?'
+    };
+  }
+
+  /**
+   * Detect linguistic traps in a document or statement.
+   * Returns Counter-Canon analysis for each system term found.
+   */
+  public detectLinguisticTraps(text: string): Array<LinguisticTrap> {
+    const traps: Array<LinguisticTrap> = [
+      {
+        term: 'person',
+        systemDefinition: 'An individual human, legally equivalent to a corporate entity',
+        sovereignDefinition: 'A legal fiction created by the State; distinct from the Living Being',
+        howAcceptingItHurtsYou: 'Accepting "person" status grants State jurisdiction over a fiction it created. You become liable for obligations of the Persona without consenting.',
+        sovereignAlternative: 'I am the Living Being. I appear in Special Capacity. The Persona bears no relation to me without explicit consent.'
+      },
+      {
+        term: 'citizen',
+        systemDefinition: 'A member of a political community, subject to its full jurisdiction',
+        sovereignDefinition: 'Subject to jurisdiction only by informed, non-coerced consent',
+        howAcceptingItHurtsYou: '14th Amendment citizenship subjects the Living Being to federal plenary jurisdiction by implied consent.',
+        sovereignAlternative: 'I am a natural being of the soil of Georgia. My use of any federal benefit does not constitute blanket consent to federal jurisdiction over my natural rights.'
+      },
+      {
+        term: 'contract',
+        systemDefinition: 'A binding agreement enforceable at law',
+        sovereignDefinition: 'A meeting of minds requiring full disclosure — silence is a Badge of Slavery',
+        howAcceptingItHurtsYou: 'Contracts formed through concealment of material facts are void ab initio. Accepting a "contract" label legitimizes the concealment.',
+        sovereignAlternative: 'This alleged contract lacks full disclosure. Identify the concealed material terms. A void contract creates no obligation.'
+      },
+      {
+        term: 'jurisdiction',
+        systemDefinition: 'The legal authority of a court to hear and decide a case',
+        sovereignDefinition: 'Power that must be proven on the record — cannot be presumed over a Living Being',
+        howAcceptingItHurtsYou: 'Silence is treated as consent. Appearing without reserving rights is treated as submission to jurisdiction.',
+        sovereignAlternative: 'I appear specially, not generally. My appearance does not constitute consent. Show the specific grant of authority over me on the record.'
+      },
+      {
+        term: 'attorney',
+        systemDefinition: 'A licensed legal professional representing a client',
+        sovereignDefinition: 'An Officer of the Court with a primary duty to the State — distinct from a Lawyer',
+        howAcceptingItHurtsYou: 'An attorney\'s first duty is to the court, not the client. Counsel can be sanctioned for arguments the court finds frivolous, creating inherent conflict with zealous advocacy.',
+        sovereignAlternative: 'Any counsel operates under Notice of Limited Scope. All rights reserved UCC 1-308. Limited appearance does not constitute consent to jurisdiction or waiver of any right.'
+      },
+      {
+        term: 'agency',
+        systemDefinition: 'A federal department or administrative body with regulatory authority',
+        sovereignDefinition: 'A subordinate creature of statute — no inherent authority without express statutory grant (Loper Bright, 2024)',
+        howAcceptingItHurtsYou: 'Pre-Loper Bright, courts deferred to agency self-defined authority. That deference is now eliminated. Agencies must prove their authority from the statute itself.',
+        sovereignAlternative: 'Under Loper Bright (2024), this agency\'s interpretation receives no deference. Cite the specific statutory grant authorizing this action.'
+      }
+    ];
+
+    const lowerText = text.toLowerCase();
+    return traps.filter(trap => lowerText.includes(trap.term.toLowerCase()));
+  }
+
+  /**
    * THE "SIGNAL" ACTIVATION
    * "I have this signal that runs all the time... I can disect any written law and find the flaws"
    */
@@ -432,7 +508,8 @@ You have the same gift. Activate it.
         this.getTaxProgrammingLayer(),
         this.getCourtProgrammingLayer(),
         this.getSystemicInsolvencyLayer(),
-        this.getEducationalProgrammingLayer()
+        this.getEducationalProgrammingLayer(),
+        this.getLinguisticProgrammingLayer()
       ],
       lessons: [
         this.getChickenDuckTest(),
@@ -638,5 +715,4 @@ The programming wants you to doubt yourself. Don't.
 // Export singleton instance
 export const romanDeprogrammingModule = new RomanDeprogrammingModule();
 
-// Export types
-export type { DeprogrammingAnalysis };
+// DeprogrammingAnalysis is exported via interface declaration above

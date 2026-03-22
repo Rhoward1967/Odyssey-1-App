@@ -17,7 +17,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { supabase } from '@/lib/supabaseClient';
 import type { DebtAccount, LegalAnalysis } from '@/services/legalDefenseEngine';
 import { legalDefenseEngine } from '@/services/legalDefenseEngine';
-import { romanLegalService } from '@/services/romanLegalService';
+import { romanLegalService, type ScenarioRouteResult } from '@/services/romanLegalService';
+import { RomanGuildFirewall, type CapacityNotice } from '@/services/romanSovereignProcessor';
 import type { USPSTrackingInfo } from '@/services/uspsTrackingService';
 import { uspsTrackingService } from '@/services/uspsTrackingService';
 import {
@@ -100,6 +101,22 @@ export default function LegalDefenseDashboard() {
   
   // USPS tracking state
   const [trackingInfo, setTrackingInfo] = useState<Map<string, USPSTrackingInfo>>(new Map());
+
+  // Sovereign Toolkit Routing state
+  const [scenarioInput, setScenarioInput] = useState('');
+  const [scenarioResult, setScenarioResult] = useState<ScenarioRouteResult | null>(null);
+
+  // Guild Firewall state
+  const [guildInput, setGuildInput] = useState('');
+  const [guildResult, setGuildResult] = useState<CapacityNotice | null>(null);
+  const [repName, setRepName] = useState('');
+  const [repRole, setRepRole] = useState('');
+
+  // Book Sync (Layer 5 — Paperback QR Bridge) state
+  const [bookSyncToolkitId, setBookSyncToolkitId] = useState('');
+  const [bookSyncContext, setBookSyncContext] = useState('');
+  const [bookSyncResult, setBookSyncResult] = useState<{ record: any; amendmentLetter: string } | null>(null);
+  const [bookSyncLoading, setBookSyncLoading] = useState(false);
 
   // Load accounts from Supabase on mount
   useEffect(() => {
@@ -829,6 +846,9 @@ export default function LegalDefenseDashboard() {
         {/* Main Content */}
         <Tabs defaultValue="accounts" className="space-y-4">
           <TabsList className="bg-slate-800 border-slate-700 flex-wrap h-auto justify-start">
+            <TabsTrigger value="guild">⚖️ Guild Firewall</TabsTrigger>
+            <TabsTrigger value="sovereign">🛡️ Sovereign Toolkit</TabsTrigger>
+            <TabsTrigger value="booksync">📖 Book Sync</TabsTrigger>
             <TabsTrigger value="accounts">Collection Accounts</TabsTrigger>
             <TabsTrigger value="business">Business Debt</TabsTrigger>
             <TabsTrigger value="payment">💰 Payment Plan</TabsTrigger>
@@ -844,6 +864,381 @@ export default function LegalDefenseDashboard() {
           </TabsList>
 
           {/* Accounts Tab */}
+          {/* ── GUILD FIREWALL TAB ────────────────────────────────────── */}
+          <TabsContent value="guild" className="space-y-4">
+            <Card className="bg-gradient-to-br from-slate-900 to-red-950 border-red-800">
+              <CardHeader>
+                <CardTitle className="text-red-300 flex items-center gap-2">
+                  <Shield className="w-5 h-5" /> Guild Firewall — Capacity Protection
+                </CardTitle>
+                <CardDescription className="text-red-200/70">
+                  Detects attorney/officer-of-court interactions that may waive your rights or create unwanted joinder. Generates Capacity Notices and sanitizes legal drafts.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+
+                {/* Shield Status */}
+                <div className="bg-slate-800 border border-slate-600 rounded-lg p-4 flex items-center justify-between">
+                  <span className="text-slate-300 font-semibold">Shield Status: Capacity Protection</span>
+                  <Badge className={guildResult?.severity === 'CRITICAL' ? 'bg-red-600 text-white animate-pulse' : guildResult?.severity === 'WARNING' ? 'bg-amber-600 text-white' : 'bg-green-700 text-white'}>
+                    {guildResult?.severity === 'CRITICAL' ? '🔴 CRITICAL — Divided Loyalty Detected' : guildResult?.severity === 'WARNING' ? '🟡 WARNING — Capacity Notice Recommended' : '🟢 ACTIVE'}
+                  </Badge>
+                </div>
+
+                {/* Guild Interaction Analyzer */}
+                <div className="space-y-2">
+                  <Label className="text-slate-300">Paste Attorney Communication / Legal Document</Label>
+                  <Textarea
+                    className="bg-slate-800 border-slate-600 text-white min-h-[100px]"
+                    placeholder="Paste the letter, email, or document from an attorney or court..."
+                    value={guildInput}
+                    onChange={e => setGuildInput(e.target.value)}
+                  />
+                  <Button
+                    className="bg-red-700 hover:bg-red-800 w-full"
+                    onClick={() => setGuildResult(RomanGuildFirewall.processGuildInteraction(guildInput))}
+                    disabled={!guildInput.trim()}
+                  >
+                    Scan for Guild Traps
+                  </Button>
+                </div>
+
+                {guildResult && (
+                  <div className="space-y-4">
+                    {/* Notice Type */}
+                    <div className="bg-red-900/40 border border-red-700 rounded-lg p-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <h4 className="text-red-300 font-bold">Notice Type: {guildResult.noticeType.replace(/_/g, ' ')}</h4>
+                        <Badge className={guildResult.severity === 'CRITICAL' ? 'bg-red-600' : guildResult.severity === 'WARNING' ? 'bg-amber-600' : 'bg-slate-600'}>{guildResult.severity}</Badge>
+                      </div>
+                      <p className="text-white text-sm leading-relaxed">{guildResult.draftedStatement}</p>
+                    </div>
+
+                    {/* Traps Found */}
+                    {guildResult.guildTrapsDetected.length > 0 && (
+                      <div className="bg-slate-800 border border-slate-600 rounded-lg p-4">
+                        <h4 className="text-amber-300 font-bold mb-3">⚠️ Guild Traps Detected ({guildResult.guildTrapsDetected.length})</h4>
+                        <div className="space-y-3">
+                          {guildResult.guildTrapsDetected.map((trap, i) => (
+                            <div key={i} className="border-l-2 border-amber-600 pl-3">
+                              <div className="flex items-center gap-2 mb-1">
+                                <Badge className="bg-red-800 text-white text-xs">"{trap.term}"</Badge>
+                                <span className="text-slate-400 text-xs">→</span>
+                                <Badge className="bg-green-800 text-white text-xs">{trap.sovereignCorrection}</Badge>
+                              </div>
+                              <p className="text-slate-300 text-xs">{trap.risk}</p>
+                              <p className="text-slate-500 text-xs">{trap.counterCanonVol}</p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Sovereign Reservation */}
+                    <div className="bg-slate-800 border border-slate-600 rounded-lg p-4">
+                      <h4 className="text-slate-300 font-bold mb-2">📜 Sovereign Reservation</h4>
+                      <p className="text-slate-200 text-sm italic">{guildResult.sovereignReservation}</p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Representative Audit */}
+                <div className="border-t border-slate-700 pt-4 space-y-3">
+                  <h4 className="text-slate-300 font-semibold">Attorney / Representative Audit</h4>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="space-y-1">
+                      <Label className="text-slate-400 text-xs">Representative Name</Label>
+                      <input
+                        className="w-full bg-slate-800 border border-slate-600 text-white rounded px-3 py-2 text-sm"
+                        placeholder="John Smith"
+                        value={repName}
+                        onChange={e => setRepName(e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <Label className="text-slate-400 text-xs">Role / Title</Label>
+                      <input
+                        className="w-full bg-slate-800 border border-slate-600 text-white rounded px-3 py-2 text-sm"
+                        placeholder="Attorney, Esq., Counsel..."
+                        value={repRole}
+                        onChange={e => setRepRole(e.target.value)}
+                      />
+                    </div>
+                  </div>
+                  <Button
+                    className="bg-slate-700 hover:bg-slate-600 w-full"
+                    onClick={() => {
+                      const audit = RomanGuildFirewall.auditRepresentative(repName, repRole);
+                      alert(audit.isDividedLoyalty
+                        ? `⚠️ DIVIDED LOYALTY DETECTED\n\n${audit.loyaltyWarning}\n\n---MANDATORY NOTICE---\n${audit.mandatoryNotice}`
+                        : `✅ ${audit.loyaltyWarning}\n\n---LIMITED SCOPE STATEMENT---\n${audit.limitedScopeStatement}`
+                      );
+                    }}
+                    disabled={!repName.trim()}
+                  >
+                    Audit Representative
+                  </Button>
+                </div>
+
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* ── SOVEREIGN TOOLKIT TAB ─────────────────────────────────── */}
+          <TabsContent value="sovereign" className="space-y-4">
+            <Card className="bg-gradient-to-br from-purple-950 to-slate-900 border-purple-700">
+              <CardHeader>
+                <CardTitle className="text-purple-300 flex items-center gap-2">
+                  <Shield className="w-5 h-5" /> Sovereign Toolkit Router
+                </CardTitle>
+                <CardDescription className="text-purple-200/70">
+                  Describe your situation. R.O.M.A.N. routes to the correct Toolkit and identifies Counter-Canon linguistic traps in play.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label className="text-slate-300">Describe Your Situation</Label>
+                  <Textarea
+                    className="bg-slate-800 border-slate-600 text-white min-h-[100px]"
+                    placeholder="e.g. I received an IRS notice about back taxes... / I was pulled over and they want to search my car... / I got a court summons from a debt collector..."
+                    value={scenarioInput}
+                    onChange={e => setScenarioInput(e.target.value)}
+                  />
+                </div>
+                <Button
+                  className="bg-purple-600 hover:bg-purple-700 w-full"
+                  onClick={() => setScenarioResult(romanLegalService.analyzeScenario(scenarioInput))}
+                  disabled={!scenarioInput.trim()}
+                >
+                  Activate Sovereign Toolkit
+                </Button>
+
+                {scenarioResult && (
+                  <div className="space-y-4 mt-4">
+                    {scenarioResult.matched && scenarioResult.toolkit ? (
+                      <>
+                        {/* Active Toolkit Banner */}
+                        <div className="bg-purple-900/60 border border-purple-500 rounded-lg p-4">
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="text-purple-300 text-sm font-mono">{scenarioResult.toolkit.id}</span>
+                            <Badge className="bg-purple-600 text-white">ACTIVE</Badge>
+                          </div>
+                          <h3 className="text-white text-lg font-bold">{scenarioResult.toolkit.title}</h3>
+                          <p className="text-purple-200 text-sm mt-1">Protocol: {scenarioResult.toolkit.core_protocol}</p>
+                          <p className="text-slate-300 text-sm mt-1">Counter-Canon: {scenarioResult.toolkit.counter_canon_volumes.join(', ')}</p>
+                        </div>
+
+                        {/* Immediate Action */}
+                        <div className="bg-amber-900/40 border border-amber-600 rounded-lg p-4">
+                          <h4 className="text-amber-300 font-bold mb-2">⚡ IMMEDIATE ACTION</h4>
+                          <p className="text-white text-sm leading-relaxed">{scenarioResult.immediateAction}</p>
+                        </div>
+
+                        {/* Primary Defense */}
+                        <div className="bg-green-900/40 border border-green-600 rounded-lg p-4">
+                          <h4 className="text-green-300 font-bold mb-2">⚖️ PRIMARY DEFENSE</h4>
+                          <p className="text-white text-sm leading-relaxed">{scenarioResult.toolkit.primary_defense}</p>
+                        </div>
+
+                        {/* Linguistic Warning */}
+                        <div className={`border rounded-lg p-4 ${scenarioResult.counterCanonWordsInPlay.length > 0 ? 'bg-red-900/40 border-red-600' : 'bg-slate-800 border-slate-600'}`}>
+                          <h4 className={`font-bold mb-2 ${scenarioResult.counterCanonWordsInPlay.length > 0 ? 'text-red-300' : 'text-slate-300'}`}>
+                            🔍 Linguistic Trap Scan
+                          </h4>
+                          <p className="text-white text-sm">{scenarioResult.linguisticWarning}</p>
+                          {scenarioResult.counterCanonWordsInPlay.length > 0 && (
+                            <div className="flex flex-wrap gap-2 mt-2">
+                              {scenarioResult.counterCanonWordsInPlay.map(word => (
+                                <Badge key={word} className="bg-red-700 text-white text-xs">{word}</Badge>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Standing Assertion */}
+                        <div className="bg-slate-800 border border-slate-600 rounded-lg p-4">
+                          <h4 className="text-slate-300 font-bold mb-2">📜 Standing Assertion</h4>
+                          <p className="text-slate-200 text-sm italic leading-relaxed">"{scenarioResult.standingAssertion}"</p>
+                        </div>
+                      </>
+                    ) : (
+                      <div className="bg-slate-800 border border-slate-600 rounded-lg p-4">
+                        <p className="text-slate-300">{scenarioResult.immediateAction}</p>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* ═══════════════════════════════════════════════════════════════
+              LAYER 5 — PAPERBACK QR BRIDGE / BOOK SYNC
+              Links physical Sovereign Self Series books (QR codes) to live
+              case law amendments post-print. Active Amendment Record system.
+              ═══════════════════════════════════════════════════════════════ */}
+          <TabsContent value="booksync" className="space-y-4">
+            <Card className="bg-gradient-to-br from-amber-950 to-slate-900 border-amber-700">
+              <CardHeader>
+                <CardTitle className="text-amber-300 flex items-center gap-2">
+                  <FileText className="w-5 h-5" /> Paperback QR Bridge — Active Amendment Records
+                </CardTitle>
+                <CardDescription className="text-amber-200/70">
+                  Your physical books are living documents. Scan QR codes or select a Toolkit to retrieve post-print case law updates and generate a Letter of Amendment.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+
+                {/* 7-Toolkit Summary Grid */}
+                <div>
+                  <h4 className="text-amber-300 font-semibold mb-3 text-sm uppercase tracking-wide">All 7 Sovereign Toolkits — Amendment Status</h4>
+                  <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                    {romanLegalService.getBookSyncSummary().map((entry: any) => (
+                      <button
+                        key={entry.toolkitId}
+                        className="text-left bg-slate-800 hover:bg-amber-900/40 border border-slate-600 hover:border-amber-600 rounded-lg p-3 transition-colors"
+                        onClick={() => setBookSyncToolkitId(entry.toolkitId)}
+                      >
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-amber-400 font-mono text-xs">{entry.toolkitId}</span>
+                          <Badge className={entry.criticalUpdateCount > 0 ? 'bg-red-700 text-white text-xs' : 'bg-slate-600 text-slate-300 text-xs'}>
+                            {entry.criticalUpdateCount > 0 ? `${entry.criticalUpdateCount} CRITICAL` : 'current'}
+                          </Badge>
+                        </div>
+                        <p className="text-white text-sm font-medium">{entry.toolkitTitle}</p>
+                        <p className="text-slate-400 text-xs mt-1">
+                          {entry.highUrgencyCases} high-urgency case{entry.highUrgencyCases !== 1 ? 's' : ''}
+                          {entry.hasStatutoryUpdates ? ' · statutory updates' : ''}
+                        </p>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Amendment Record Lookup */}
+                <div className="border-t border-amber-800 pt-4 space-y-3">
+                  <h4 className="text-amber-300 font-semibold text-sm uppercase tracking-wide">Generate Letter of Amendment</h4>
+                  <div className="space-y-2">
+                    <Label className="text-slate-300">Toolkit ID (e.g. TK-01)</Label>
+                    <Input
+                      className="bg-slate-800 border-slate-600 text-white"
+                      placeholder="TK-01 through TK-07"
+                      value={bookSyncToolkitId}
+                      onChange={e => setBookSyncToolkitId(e.target.value.toUpperCase())}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-slate-300">Your Situation (optional — personalizes the letter)</Label>
+                    <Textarea
+                      className="bg-slate-800 border-slate-600 text-white min-h-[80px]"
+                      placeholder="Describe your current matter so R.O.M.A.N. can tailor the amendment letter to your case..."
+                      value={bookSyncContext}
+                      onChange={e => setBookSyncContext(e.target.value)}
+                    />
+                  </div>
+                  <Button
+                    className="bg-amber-600 hover:bg-amber-700 w-full"
+                    disabled={!bookSyncToolkitId.trim() || bookSyncLoading}
+                    onClick={async () => {
+                      setBookSyncLoading(true);
+                      setBookSyncResult(null);
+                      const result = await romanLegalService.getAmendmentRecord(
+                        bookSyncToolkitId.trim(),
+                        bookSyncContext.trim() || undefined
+                      );
+                      setBookSyncResult(result);
+                      setBookSyncLoading(false);
+                    }}
+                  >
+                    {bookSyncLoading ? 'Fetching Amendments...' : 'Retrieve Amendment Record'}
+                  </Button>
+                </div>
+
+                {/* Amendment Record Results */}
+                {bookSyncResult && (
+                  <div className="space-y-4 border-t border-amber-800 pt-4">
+                    {bookSyncResult.record ? (
+                      <>
+                        {/* Record Header */}
+                        <div className="bg-amber-900/40 border border-amber-600 rounded-lg p-4">
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="text-amber-300 font-mono text-sm">{bookSyncResult.record.toolkitId}</span>
+                            {bookSyncResult.record.criticalUpdates?.length > 0 && (
+                              <Badge className="bg-red-700 text-white">{bookSyncResult.record.criticalUpdates.length} CRITICAL</Badge>
+                            )}
+                          </div>
+                          <h3 className="text-white font-bold">{bookSyncResult.record.toolkitTitle}</h3>
+                          <p className="text-slate-400 text-xs mt-1">Last Synced: {bookSyncResult.record.lastUpdated} · Print v{bookSyncResult.record.printVersion} → Live v{bookSyncResult.record.liveVersion}</p>
+                          {bookSyncResult.record.criticalUpdates?.length > 0 && (
+                            <ul className="mt-2 space-y-1">
+                              {bookSyncResult.record.criticalUpdates.map((u: string, i: number) => (
+                                <li key={i} className="text-red-300 text-xs">⚠ {u}</li>
+                              ))}
+                            </ul>
+                          )}
+                        </div>
+
+                        {/* Recent Case Law */}
+                        {bookSyncResult.record.recentCaseLaw?.length > 0 && (
+                          <div className="space-y-2">
+                            <h4 className="text-amber-300 font-semibold text-sm">Post-Print Case Law Updates</h4>
+                            {bookSyncResult.record.recentCaseLaw.map((c: any, i: number) => (
+                              <div key={i} className={`rounded-lg p-3 border ${c.urgency === 'CRITICAL' ? 'bg-red-900/30 border-red-700' : c.urgency === 'HIGH' ? 'bg-orange-900/30 border-orange-700' : 'bg-slate-800 border-slate-600'}`}>
+                                <div className="flex items-center gap-2 mb-1">
+                                  <Badge className={c.urgency === 'CRITICAL' ? 'bg-red-700 text-white text-xs' : c.urgency === 'HIGH' ? 'bg-orange-600 text-white text-xs' : 'bg-slate-600 text-slate-300 text-xs'}>
+                                    {c.urgency}
+                                  </Badge>
+                                  <span className="text-white text-sm font-medium">{c.case}</span>
+                                  <span className="text-slate-400 text-xs">({c.decided})</span>
+                                </div>
+                                <p className="text-slate-300 text-sm">{c.impact}</p>
+                                <p className="text-amber-200 text-xs mt-1 font-mono">{c.citation} · {c.court}</p>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+
+                        {/* Amendment Letter */}
+                        <div className="space-y-2">
+                          <h4 className="text-amber-300 font-semibold text-sm">Letter of Amendment</h4>
+                          <div className="bg-slate-900 border border-slate-600 rounded-lg p-4">
+                            <pre className="text-slate-200 text-xs leading-relaxed whitespace-pre-wrap font-mono">
+                              {bookSyncResult.amendmentLetter}
+                            </pre>
+                          </div>
+                          <Button
+                            variant="outline"
+                            className="border-amber-700 text-amber-300 hover:bg-amber-900/30 w-full"
+                            onClick={() => {
+                              const blob = new Blob([bookSyncResult.amendmentLetter], { type: 'text/plain' });
+                              const url = URL.createObjectURL(blob);
+                              const a = document.createElement('a');
+                              a.href = url;
+                              a.download = `Amendment_Letter_${bookSyncToolkitId}_${new Date().toISOString().split('T')[0]}.txt`;
+                              a.click();
+                              URL.revokeObjectURL(url);
+                            }}
+                          >
+                            <Download className="w-4 h-4 mr-2" />
+                            Download Amendment Letter
+                          </Button>
+                        </div>
+                      </>
+                    ) : (
+                      <Alert className="bg-red-900 border-red-700">
+                        <AlertTriangle className="h-4 w-4" />
+                        <AlertTitle className="text-white">Toolkit Not Found</AlertTitle>
+                        <AlertDescription className="text-red-200">
+                          No amendment record found for "{bookSyncToolkitId}". Use TK-01 through TK-07.
+                        </AlertDescription>
+                      </Alert>
+                    )}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
           <TabsContent value="accounts" className="space-y-4">{accounts.length === 0 ? (
               <Card className="bg-slate-800 border-slate-700">
                 <CardContent className="p-12 text-center">

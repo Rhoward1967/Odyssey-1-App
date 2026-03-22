@@ -24,6 +24,7 @@ import type { DebtAccount } from './legalDefenseEngine';
 import { romanAdvancedFraudDetection, type FraudDetectionResult } from './romanAdvancedFraudDetection';
 import { romanDeprogrammingModule, type DeprogrammingAnalysis } from './romanDeprogrammingModule';
 import { romanBlacksLawFraud } from './romanBlacksLawFraud';
+import { RomanPaperbackApi, type AmendmentRecord } from './romanPaperbackApi';
 
 // Constitutional AI Validation Prompt (embedded in all R.O.M.A.N. operations)
 const CONSTITUTIONAL_GUARDRAILS = `
@@ -114,6 +115,125 @@ interface ResponseStrategy {
   nextSteps: string[];
   urgency: 'LOW' | 'MEDIUM' | 'HIGH';
 }
+
+// ═══════════════════════════════════════════════════════════════════════════
+// SOVEREIGN TOOLKIT REGISTRY — Seven-Module Strategic Routing
+//
+// Maps real-world user scenarios to the specific Sovereign Self Toolkit
+// and Counter-Canon linguistic layer that governs the response.
+//
+// Architecture: analyzeScenario() runs BEFORE any debt/legal analysis.
+// Standing is established first. Strategy follows standing.
+// ═══════════════════════════════════════════════════════════════════════════
+
+export interface SovereignToolkit {
+  id: string;
+  title: string;
+  triggers: string[];
+  logic_bridge: string;
+  core_protocol: string;
+  primary_defense: string;
+  counter_canon_volumes: string[];
+  immediate_action: string;
+  standing_assertion: string;
+}
+
+export interface ScenarioRouteResult {
+  matched: boolean;
+  toolkit: SovereignToolkit | null;
+  triggersMatched: string[];
+  immediateAction: string;
+  counterCanonWordsInPlay: string[];
+  linguisticWarning: string;
+  standingAssertion: string;
+}
+
+export const SOVEREIGN_TOOLKIT_REGISTRY: Record<string, SovereignToolkit> = {
+
+  TOOLKIT_01_DETENTION: {
+    id: 'TK-01',
+    title: 'Unlawful Stop and Detention',
+    triggers: ['police', 'officer', 'traffic stop', 'detained', 'detention', 'search', 'arrest', 'warrant', 'pulled over', 'stop and frisk', 'pat down'],
+    logic_bridge: 'Vol_3_Enforcement',
+    core_protocol: 'The 5 Golden Rules + Invoke Standing Out Loud',
+    primary_defense: 'Non-Consent to Search; Demand Probable Cause of a specific victim-based crime. Absent a victim, there is no crime.',
+    counter_canon_volumes: ['Vol. 3 — Enforcement'],
+    immediate_action: 'State clearly and calmly: "Am I being detained or am I free to go?" Do not answer questions. Do not consent to search. Invoke your right to remain silent and to counsel.',
+    standing_assertion: 'I am a Living Being. I do not consent to any search of my person or vessel. If you have probable cause of a specific victim-based crime, state it on the record. Absent a victim, there is no jurisdiction.'
+  },
+
+  TOOLKIT_02_TAX_LABOR: {
+    id: 'TK-02',
+    title: 'Tax Dispute and Labor Extraction',
+    triggers: ['irs', 'tax', 'levy', 'lien', 'garnishment', 'wages', 'employer', 'labor', 'w-2', '1099', 'audit', 'collection notice', 'tax debt', 'back taxes'],
+    logic_bridge: 'Vol_2_Transactional',
+    core_protocol: 'Post-Loper Bright Agency Challenge + RFRA Substantial Burden Analysis',
+    primary_defense: 'Challenge agency authority post-Loper Bright. Assert RFRA substantial burden where applicable. 13th Amendment Anti-Extraction argument for systemic wage seizure.',
+    counter_canon_volumes: ['Vol. 2 — Transactional', 'Vol. 7 — Administrative'],
+    immediate_action: 'Do not ignore IRS notices — respond in writing within 30 days. Request CDP (Collection Due Process) hearing if levy is threatened. Do NOT call the IRS — communicate in writing only.',
+    standing_assertion: 'Under Loper Bright Enterprises v. Raimondo (2024), this agency\'s interpretation of its own authority receives no judicial deference. Cite the specific statutory grant authorizing this action. All rights reserved UCC 1-308.'
+  },
+
+  TOOLKIT_03_JURISDICTION: {
+    id: 'TK-03',
+    title: 'Court Jurisdiction Challenge',
+    triggers: ['summons', 'court date', 'judge', 'hearing', 'lawsuit', 'complaint', 'served', 'default judgment', 'civil suit', 'small claims', 'sued', 'judgment'],
+    logic_bridge: 'Vol_2_Transactional',
+    core_protocol: 'Special Appearance in Proper Capacity — Never General Appearance',
+    primary_defense: 'Challenge Subject Matter and Personal Jurisdiction. Demand proof of authority on the record. Appear specially — not generally.',
+    counter_canon_volumes: ['Vol. 1 — Foundational', 'Vol. 2 — Transactional'],
+    immediate_action: 'File a Special Appearance (not a General Appearance). State: "I appear specially, not generally, to challenge this court\'s jurisdiction over my person. My appearance does not constitute consent to this court\'s jurisdiction." Do NOT answer the merits first.',
+    standing_assertion: 'Jurisdiction is a fact that must be proven on the record — it cannot be presumed over a Living Being. I challenge both subject matter jurisdiction and personal jurisdiction. Silence is not consent.'
+  },
+
+  TOOLKIT_04_SPIRITUAL: {
+    id: 'TK-04',
+    title: 'Religious Belief Exemption Claims',
+    triggers: ['mandate', 'vaccine', 'vaccination', 'medical', 'licensing', 'religious exemption', 'conscience', 'sincerely held', 'accommodation', 'faith', 'belief', 'ministry'],
+    logic_bridge: 'Vol_5_Spiritual',
+    core_protocol: 'The Sincerity Standard Assertion — RFRA Substantial Burden Framework',
+    primary_defense: 'Assert Substantial Burden under RFRA (42 USC § 2000bb). Force State to demonstrate Compelling Interest AND Least Restrictive Means. State cannot audit truth of belief — only sincerity.',
+    counter_canon_volumes: ['Vol. 5 — Spiritual'],
+    immediate_action: 'File written religious exemption request citing RFRA and First Amendment Free Exercise. Document the sincerity of the belief (not its truth). State the specific substantial burden the mandate imposes on practice.',
+    standing_assertion: 'Under RFRA (42 USC § 2000bb-1), the government must demonstrate a compelling interest and use the least restrictive means before substantially burdening sincere religious practice. That burden is on the government — not on me. The State has no authority to audit whether my belief is theologically correct.'
+  },
+
+  TOOLKIT_05_ECONOMIC: {
+    id: 'TK-05',
+    title: 'Economic Rights Assertion',
+    triggers: ['debt collector', 'collection', 'credit report', 'credit bureau', 'credit score', 'banking', 'discrimination', 'fdcpa', 'fcra', 'charged off', 'collections', 'credit card', 'debt'],
+    logic_bridge: 'Vol_6_Equity',
+    core_protocol: '13th Amendment Badge of Slavery Audit + FDCPA/FCRA Statutory Violations',
+    primary_defense: 'Assert ECOA (Equal Credit Opportunity Act) and Fair Housing Act protections. Run Badge of Slavery Diagnostic on systemic extraction patterns. Pursue FDCPA/FCRA statutory damages.',
+    counter_canon_volumes: ['Vol. 6 — Equity', 'Vol. 2 — Transactional'],
+    immediate_action: 'Send written debt validation demand within 30 days of first contact (15 USC § 1692g). Dispute inaccurate credit report entries (15 USC § 1681). Document ALL collector communications — each violation is $100-$1,000 in statutory damages.',
+    standing_assertion: 'The systematic extraction being applied here constitutes a badge of slavery under the 13th Amendment. Under Jones v. Alfred H. Mayer Co. (1968), the 13th Amendment reaches all badges and incidents of slavery. This court has equity jurisdiction to grant relief.'
+  },
+
+  TOOLKIT_06_HOUSING: {
+    id: 'TK-06',
+    title: 'Housing Discrimination and Property Rights',
+    triggers: ['eviction', 'foreclosure', 'landlord', 'rent', 'tenant', 'fair housing', 'dispossessory', 'unlawful detainer', 'mortgage', 'housing', 'lease'],
+    logic_bridge: 'Vol_4_Land',
+    core_protocol: 'Shelter as a Sacred Right Protocol + Fair Housing Act Invocation',
+    primary_defense: 'Invoke Fair Housing Act (42 USC § 3601). Challenge foreclosure for lack of consideration (void contract). Assert ancestral heirship as prior claim to paper title.',
+    counter_canon_volumes: ['Vol. 4 — Land', 'Vol. 2 — Transactional'],
+    immediate_action: 'Answer the dispossessory within 7 days in Georgia (do NOT ignore). Assert all defenses in writing. File Fair Housing complaint if discrimination is present. Challenge standing of foreclosing party to prove chain of title.',
+    standing_assertion: 'My claim to this land is grounded in the right to shelter — a right predating paper title systems. Fair Housing Act (42 USC § 3601) protects against discriminatory displacement. Chain of title must be proven — it cannot be assumed.'
+  },
+
+  TOOLKIT_07_ANCESTRAL: {
+    id: 'TK-07',
+    title: 'Ancestral Land and Cultural Rights',
+    triggers: ['property tax', 'zoning', 'land seizure', 'eminent domain', 'indigenous', 'heritage', 'sacred', 'ancestral', 'cultural', 'tribal', 'cherokee', 'piedmont', 'athens', 'clarke county'],
+    logic_bridge: 'Vol_4_Land_Sacred',
+    core_protocol: 'International Human Rights Framework (UNDRIP) + Ultra Vires Challenge',
+    primary_defense: 'Invoke UN Declaration on the Rights of Indigenous Peoples (UNDRIP). Challenge State authority as ultra vires over ancestral land. Assert Bio-Cosmic connection to land as ecclesiastical matter under Free Exercise Clause.',
+    counter_canon_volumes: ['Vol. 4 — Land', 'Vol. 7 — Administrative'],
+    immediate_action: 'Document ancestral connection to land with historical evidence. File for religious land use protections under RLUIPA (42 USC § 2000cc). Challenge the ultra vires nature of the specific regulatory action.',
+    standing_assertion: 'The Treaty of New Echota (1835) was signed by an unauthorized faction, opposed by principal chief John Ross and the majority of the Cherokee Nation. It was fraud dressed as law. This land, at the foot of the Blue Ridge on Precambrian granite, carries ancestral heirship predating the state title system. Paper title records my interest — it did not create it.'
+  }
+};
 
 class RomanLegalService {
   /**
@@ -709,6 +829,110 @@ OUTPUT JSON:
    */
   getBlacksLawMapping(fraudType: string) {
     return romanBlacksLawFraud.mapFraudToBlacksLaw(fraudType);
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // SOVEREIGN TOOLKIT ROUTING — Layer 2
+  //
+  // analyzeScenario() is the entry point for all user scenarios.
+  // It runs BEFORE any statutory analysis.
+  // Standing is established first. Strategy follows standing.
+  // ═══════════════════════════════════════════════════════════════════════
+
+  /**
+   * Analyze a user-described scenario and route to the correct Toolkit.
+   * Performs fuzzy trigger matching across all 7 Sovereign Toolkits.
+   * Returns the active toolkit, Counter-Canon words in play, and
+   * the immediate first action the user must take.
+   */
+  analyzeScenario(input: string): ScenarioRouteResult {
+    const lowerInput = input.toLowerCase();
+    let bestMatch: SovereignToolkit | null = null;
+    let bestMatchCount = 0;
+    let bestTriggersMatched: string[] = [];
+
+    // Score each toolkit by trigger matches
+    for (const toolkit of Object.values(SOVEREIGN_TOOLKIT_REGISTRY)) {
+      const matched = toolkit.triggers.filter(trigger =>
+        lowerInput.includes(trigger.toLowerCase())
+      );
+      if (matched.length > bestMatchCount) {
+        bestMatchCount = matched.length;
+        bestMatch = toolkit;
+        bestTriggersMatched = matched;
+      }
+    }
+
+    if (!bestMatch || bestMatchCount === 0) {
+      return {
+        matched: false,
+        toolkit: null,
+        triggersMatched: [],
+        immediateAction: 'Describe your situation in more detail so R.O.M.A.N. can route to the correct Sovereign Toolkit.',
+        counterCanonWordsInPlay: [],
+        linguisticWarning: 'No toolkit matched. Describe the specific type of situation: detention, tax, court, religious, debt, housing, or land.',
+        standingAssertion: 'All rights reserved. UCC 1-308. Without Prejudice.'
+      };
+    }
+
+    // Detect Counter-Canon linguistic traps in the user's input
+    const traps = romanBlacksLawFraud.detectLinguisticTraps(input);
+    const counterCanonWordsInPlay = traps.trapsFound.map(t => t.term);
+
+    const linguisticWarning = traps.trapCount > 0
+      ? `⚠️ LINGUISTIC TRAPS DETECTED in your description: [${counterCanonWordsInPlay.join(', ')}]. These terms carry system definitions that may harm your standing. R.O.M.A.N. has flagged them — see Counter-Canon responses before filing any document using these terms.`
+      : '✅ No linguistic traps detected in your scenario description.';
+
+    return {
+      matched: true,
+      toolkit: bestMatch,
+      triggersMatched: bestTriggersMatched,
+      immediateAction: bestMatch.immediate_action,
+      counterCanonWordsInPlay,
+      linguisticWarning,
+      standingAssertion: bestMatch.standing_assertion
+    };
+  }
+
+  /**
+   * Get a specific toolkit by ID (TK-01 through TK-07)
+   */
+  getToolkitById(id: string): SovereignToolkit | null {
+    return Object.values(SOVEREIGN_TOOLKIT_REGISTRY).find(t => t.id === id) || null;
+  }
+
+  /**
+   * Get all toolkit summaries for dashboard display
+   */
+  getAllToolkits(): Array<{ id: string; title: string; triggerCount: number }> {
+    return Object.values(SOVEREIGN_TOOLKIT_REGISTRY).map(t => ({
+      id: t.id,
+      title: t.title,
+      triggerCount: t.triggers.length
+    }));
+  }
+
+  /**
+   * Layer 5 — Paperback QR Bridge
+   * Retrieve live amendment record for a toolkit and optionally draft a Letter of Amendment.
+   * Links physical book QR codes to the live case law update database.
+   */
+  async getAmendmentRecord(toolkitId: string, userContext?: string): Promise<{
+    record: AmendmentRecord | null;
+    amendmentLetter: string;
+  }> {
+    const [record, amendmentLetter] = await Promise.all([
+      RomanPaperbackApi.getLiveUpdate(toolkitId).catch(() => null),
+      RomanPaperbackApi.draftAmendmentLetter(toolkitId, userContext).catch(() => 'Amendment letter unavailable — check CourtListener connection.')
+    ]);
+    return { record, amendmentLetter };
+  }
+
+  /**
+   * Layer 5 — Book Sync summary: all 7 toolkits with update status
+   */
+  getBookSyncSummary() {
+    return RomanPaperbackApi.getBookSyncSummary();
   }
 }
 

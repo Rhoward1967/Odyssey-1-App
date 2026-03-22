@@ -82,6 +82,15 @@ export const ALL_PATENT_DEADLINES: Array<{
     estimated_value: 200_000_000,
     priority: 'WARNING',
   },
+  {
+    patent_id: 'constitutional-ai-trust',
+    patent_name: 'Constitutional AI Trust System with Immutable Sovereign Governance (PPA_043)',
+    filing_number: '64/005,820',
+    provisional_date: '2026-03-14',
+    conversion_deadline: '2027-03-14',
+    estimated_value: 500_000_000,
+    priority: 'CRITICAL',
+  },
 ];
 
 export class PatentDeadlineTracker {

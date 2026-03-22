@@ -1,14 +1,23 @@
 /**
  * Legal Defense Engine - Consumer Protection Suite
- * 
+ *
  * Uses ACTUAL federal consumer protection laws:
  * - FDCPA (15 USC §1692) - Fair Debt Collection Practices Act
  * - FCRA (15 USC §1681) - Fair Credit Reporting Act
  * - TILA (15 USC §1601) - Truth in Lending Act
  * - Georgia Statute of Limitations (O.C.G.A. §9-3-24, §9-3-25)
- * 
- * This is NOT sovereign citizen theory - these are court-enforced laws.
+ *
+ * LAYER 0 — CONSTITUTIONAL AUDITOR (runs first):
+ * - 13th Amendment Badge of Slavery Diagnostic
+ * - Jones v. Alfred H. Mayer Co. (1968) — all badges and incidents of slavery
+ * - Bailey v. Alabama (1911) — peonage / debt bondage = involuntary servitude
+ * - Counter-Canon Vol. 6 — Equity: Badge / Remedy
+ *
+ * Architecture: Badge of Slavery Diagnostic runs above all statutory analysis.
+ * Constitutional arguments supersede consumer protection arguments.
  */
+
+import { RomanBadgeOfSlaveryDiagnostic, type DiagnosticResult } from './romanBadgeOfSlaveryDiagnostic';
 
 export interface DebtAccount {
   creditor: string;
@@ -582,6 +591,58 @@ CERTIFIED MAIL - RETURN RECEIPT REQUESTED
 Date received = Date cease & desist takes effect
 Any contact after = FDCPA violation
 `;
+  }
+}
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // LAYER 0: CONSTITUTIONAL AUDITOR
+  // Runs above all statutory analysis. Constitutional injury supersedes
+  // consumer protection violation.
+  // ═══════════════════════════════════════════════════════════════════════
+
+  /**
+   * Run the 13th Amendment Badge of Slavery Diagnostic on a debt account.
+   * Call this FIRST — before any FDCPA/FCRA/TILA analysis.
+   * If a badge is detected at HIGH or CRITICAL severity, the constitutional
+   * argument leads the defense strategy.
+   */
+  runBadgeDiagnostic(account: DebtAccount, additionalContext?: string): DiagnosticResult {
+    const description = [
+      `Creditor: ${account.creditor}`,
+      `Original amount: $${account.originalAmount}`,
+      `Current amount: $${account.currentAmount}`,
+      account.collectionAgency ? `Collection agency: ${account.collectionAgency}` : '',
+      additionalContext || ''
+    ].filter(Boolean).join('. ');
+
+    return RomanBadgeOfSlaveryDiagnostic.analyzeExtraction({
+      description,
+      extractingParty: account.collectionAgency || account.creditor,
+      amount: account.currentAmount,
+      isRecurring: false,
+      affectedLineage: false,
+      historicalPattern: account.currentAmount > account.originalAmount * 2
+    });
+  }
+
+  /**
+   * Generate a full Badge of Slavery diagnostic report for a debt account.
+   */
+  generateBadgeDiagnosticReport(account: DebtAccount, additionalContext?: string): string {
+    return RomanBadgeOfSlaveryDiagnostic.generateReport({
+      description: [
+        `Creditor: ${account.creditor}`,
+        `Original amount: $${account.originalAmount}`,
+        `Current amount: $${account.currentAmount}`,
+        account.collectionAgency ? `Collection agency: ${account.collectionAgency}` : '',
+        additionalContext || ''
+      ].filter(Boolean).join('. '),
+      extractingParty: account.collectionAgency || account.creditor,
+      amount: account.currentAmount,
+      isRecurring: false,
+      affectedLineage: false,
+      historicalPattern: account.currentAmount > account.originalAmount * 2
+    });
   }
 }
 
