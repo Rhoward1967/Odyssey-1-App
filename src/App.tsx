@@ -44,6 +44,7 @@ import Onboard from './pages/Onboard';
 import Subscribe from './pages/Subscribe';
 import TestCheckout from './pages/TestCheckout';
 import SovereignContractIntake from '@/pages/SovereignContractIntake';
+import OSCWalletDashboard from '@/components/OSCWalletDashboard';
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -318,7 +319,15 @@ function App() {
                         <Route path="user-manual" element={<UserManual />} />
                         <Route path="media-center" element={<MediaCenter />} />
                         <Route path="test-checkout" element={<TestCheckout />} />
-                        
+                        <Route
+                          path="osc-wallet"
+                          element={
+                            <ErrorBoundary componentName="OSCWallet">
+                              <OSCWalletDashboard />
+                            </ErrorBoundary>
+                          }
+                        />
+
                         {/* Catch-all for invalid /app/* routes */}
                         <Route path="*" element={<NotFound />} />
                       </Route>
