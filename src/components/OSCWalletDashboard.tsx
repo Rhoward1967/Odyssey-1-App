@@ -27,6 +27,8 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import OSCAdminGrantPanel from '@/components/OSCAdminGrantPanel';
+import { supabase } from '@/lib/supabaseClient';
 
 // ============================================================
 // TYPES
@@ -407,7 +409,11 @@ function TransactionLog({ transactions }: { transactions: OscTransaction[] }) {
 // MAIN DASHBOARD
 // ============================================================
 
+const OSC_ADMIN_USER_ID = import.meta.env.VITE_OSC_ADMIN_USER_ID || '';
+
 export function OSCWalletDashboard({ userId }: DashboardProps) {
+  const isAdmin = userId === OSC_ADMIN_USER_ID;
+
   const { data: balance = 0, refetch: refetchBalance } = useQuery({
     queryKey: ['osc-balance', userId],
     queryFn: () => getBalance(userId),
@@ -467,6 +473,13 @@ export function OSCWalletDashboard({ userId }: DashboardProps) {
         <div className="lg:col-span-3">
           <TransactionLog transactions={transactions} />
         </div>
+
+        {/* Row 4 — Admin only */}
+        {isAdmin && (
+          <div className="lg:col-span-3 flex justify-start">
+            <OSCAdminGrantPanel />
+          </div>
+        )}
       </div>
 
       {/* Footer */}
