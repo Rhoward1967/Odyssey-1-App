@@ -291,12 +291,44 @@ function ExchangeHub({ userId, onAcquired }: { userId: string; onAcquired: () =>
             </div>
             <Button
               className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold"
-              onClick={() => {
-                // Payment processing would connect to Stripe/crypto bridge here
-                alert(`Payment bridge integration pending.\nQuote ID: ${quote.quoteId}\nAmount: ${quote.oscAmount} OSC`);
+              onClick={async () => {
+                if (currency === 'USD') {
+                  setLoading(true);
+                  try {
+                    const { data: { session } } = await import('@/lib/supabaseClient')
+                      .then(m => m.supabase.auth.getSession());
+                    const token = session?.access_token;
+                    if (!token) throw new Error('Not authenticated');
+
+                    const res = await fetch(
+                      `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/osc-checkout`,
+                      {
+                        method: 'POST',
+                        headers: {
+                          'Content-Type': 'application/json',
+                          'Authorization': `Bearer ${token}`,
+                        },
+                        body: JSON.stringify({ usdAmount: parseFloat(amount) }),
+                      }
+                    );
+                    const data = await res.json();
+                    if (data.sessionUrl) {
+                      window.location.href = data.sessionUrl;
+                    } else {
+                      throw new Error(data.error || 'Checkout failed');
+                    }
+                  } catch (err) {
+                    alert(`Checkout error: ${err}`);
+                  } finally {
+                    setLoading(false);
+                  }
+                } else {
+                  // Crypto bridge — address generation pending XPUB setup
+                  alert(`Crypto bridge coming soon.\nQuote locked: ${quote.oscAmount} OSC for ${quote.currencyAmount} ${currency}\nQuote ID: ${quote.quoteId}`);
+                }
               }}
             >
-              Confirm — Acquire {formatOsc(quote.oscAmount)} OSC
+              {loading ? 'Redirecting...' : `Confirm — Acquire ${formatOsc(quote.oscAmount)} OSC`}
             </Button>
           </div>
         ) : (
