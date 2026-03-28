@@ -413,6 +413,84 @@ CONSECUTIVE DISCLAIMER YEARS: ${alert.report.isDisclaimerOfOpinion ? 'THIS IS A 
 
     console.log('[GAO→Book8] Historical seed complete.');
   }
+
+  // ─────────────────────────────────────────────
+  // WRITE GENIUS ACT ANALYSIS TO BOOK 8
+  // Documents the digital extension of insolvency
+  // Cross-referenced to Book 5 (The Digital Cage)
+  // ─────────────────────────────────────────────
+
+  async writeGENIUSActAppendix(): Promise<boolean> {
+    const appendixContent = `
+The Guiding and Establishing National Innovation for U.S. Stablecoins Act — known as the GENIUS Act — presents itself as a framework for digital monetary innovation. It is, in the language of The Sovereign Return, the insolvency wearing a new interface.
+
+The Act requires private issuers of "payment stablecoins" to back their digital instruments 1:1 with U.S. Treasury bills, notes, bonds, and Federal Reserve deposits. Every one of these permitted assets is an instrument of sovereign debt — the same sovereign whose own Government Accountability Office has issued a Disclaimer of Opinion on its financial statements for twenty-nine consecutive years. The same sovereign whose Consolidated Financial Statements for Fiscal Year 2025 disclose a negative net position of $41.72 trillion. The same sovereign whose total obligations, when off-balance-sheet items are included, exceed $136.2 trillion against $6.06 trillion in reported assets.
+
+The GENIUS Act does not solve the insolvency problem. It delegates it. It instructs private companies to purchase the debt of an unauditable sovereign and call that purchase a "reserve." It then instructs citizens to use the resulting digital instruments to settle debts. The chain of obligation runs from citizen to private issuer to Treasury to Federal Reserve and back again — a closed loop with no productive asset at its center, only the compounding promise of a government that cannot certify its own accounts.
+
+Article I, Section 10 of the Constitution is direct: no State shall make any Thing but gold and silver Coin a Tender in Payment of Debts. The GENIUS Act authorizes state-chartered entities to issue payment instruments for debt settlement. Those instruments are backed by Treasury debt, not gold or silver. The constitutional violation is not a matter of interpretation — it is a matter of arithmetic. Debt is not gold. A digital receipt for debt is not silver. The GENIUS Act is constitutionally void on its face as a tender law.
+
+Section 11 of the Act provides what it calls "first priority" for stablecoin holders in the event of issuer insolvency. Legal analysis reveals the operational reality: stablecoin holders rank fifth in liquidation priority, behind bankruptcy professionals, repo lenders, margin lenders, and regulatory claimants. The reserves — Treasury instruments — are subject to value decline if the sovereign's financial condition deteriorates further. If the reserves are frozen or devalued, the bankruptcy proceeding's own administrative costs consume what remains before any holder receives a distribution.
+
+The Act tells the public they are first in line. The law of insolvency puts them last among those who matter.
+
+The Howard Jones Bloodline Ancestral Trust identified this pattern and formally placed it on the public record in Clarke County, Georgia (Filing ID: 15152515) prior to the GENIUS Act's implementation. The Trust's position — that all obligations denominated in the currency of an admitted insolvent sovereign are subject to the Failure of Consideration defense under O.C.G.A. § 13-3-40 — applies with equal force to stablecoins backed by that same sovereign's debt instruments. The medium has changed. The mathematics have not.
+
+The GENIUS Act is the latest chapter in a thirty-year institutional effort to migrate the obligations of an insolvent monetary system onto successively new ledgers — from gold to Federal Reserve Notes to digital. Each migration preserves the essential structure: the citizen holds the instrument, the government holds the asset, and the distance between the citizen's claim and any real value grows with each generation. The Sovereign Return documents this pattern not as speculation but as a matter of dated, official, public record — a record the government itself has authored, year by year, in its own financial statements and its own audit findings.
+
+The GENIUS Act is the insolvency's latest address. The debt has not moved. Only the interface has changed.
+    `.trim();
+
+    try {
+      const { error } = await supabase
+        .from('book_appendices')
+        .insert({
+          book_number:   BOOK_8,
+          concept_tag:   'genius-act-insolvency-extension',
+          appendix_date: '2026-03-28',
+          headline:      'GENIUS Act — The Digital Extension of Sovereign Insolvency',
+          content:       appendixContent,
+        });
+
+      if (error) {
+        console.error('[GAO→Book8] GENIUS Act appendix insert error:', error);
+        return false;
+      }
+
+      // Also write to book_intelligence for cross-reference with Book 5 (The Digital Cage)
+      const { error: intelError } = await supabase
+        .from('book_intelligence')
+        .insert({
+          headline:        'GENIUS Act — Stablecoin Reserves Backed by Insolvent Treasury',
+          content:         'The GENIUS Act mandates 1:1 stablecoin backing with U.S. Treasury instruments — debt of a sovereign with a documented negative $41.72T net position and 29 consecutive GAO Disclaimers of Opinion. Violates Article I Section 10 (Gold/Silver only), delegates monetary power to private issuers, and Section 11 hides holder subordination behind false "first priority" language.',
+          source_label:    'Howard Jones Bloodline Ancestral Trust — Legal Analysis',
+          source_url:      'https://www.congress.gov/bill/119th-congress/senate-bill/394',
+          source_date:     '2026-03-28',
+          category:        'finance',
+          status:          'analyzed',
+          mapped_books:    [BOOK_8, 5],   // Book 8: Sovereign Return + Book 5: Digital Cage
+          mapped_concepts: [
+            'genius-act', 'stablecoin-insolvency', 'article-i-section-10',
+            'failure-of-consideration', 'insolvency-doctrine', 'digital-dollar',
+            'treasury-insolvency', 'disclaimer-of-opinion'
+          ],
+          threat_level:    'critical',
+          submitted_by:    'roman_daemon',
+          ai_analysis:     'GENIUS Act creates digital instruments backed by Treasury debt of an admitted insolvent sovereign. Violates Art. I Sec. 10 constitutional money clause. Section 11 misrepresents holder priority. Extends the Failure of Consideration doctrine (O.C.G.A. § 13-3-40) into digital monetary instruments. Clarke County Filing ID 15152515 predates implementation — constructive notice established.',
+        });
+
+      if (intelError) {
+        console.error('[GAO→Book8] GENIUS Act intelligence insert error:', intelError);
+      }
+
+      console.log('[GAO→Book8] GENIUS Act appendix written to Book 8.');
+      return true;
+
+    } catch (err) {
+      console.error('[GAO→Book8] writeGENIUSActAppendix error:', err);
+      return false;
+    }
+  }
 }
 
 // ─────────────────────────────────────────────
