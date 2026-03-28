@@ -491,6 +491,60 @@ The GENIUS Act is the insolvency's latest address. The debt has not moved. Only 
       return false;
     }
   }
+
+  // ─────────────────────────────────────────────
+  // WRITE INSTITUTIONAL BIAS DOCTRINE TO BOOK 8
+  // The closing argument of The Sovereign Return:
+  // courts cannot rule themselves out of existence
+  // ─────────────────────────────────────────────
+
+  async writeInstitutionalBiasDoctrine(): Promise<boolean> {
+    const content = `
+There is a question that has been present in American monetary law for over a century and that no federal court has ever answered on its merits. The question is not complex. It is, in fact, among the simplest questions a court could be asked to resolve: Can a sovereign whose own auditors have been unable to certify its financial statements for twenty-nine consecutive years, and whose balance sheet shows a documented negative net position of $41.72 trillion, provide valid legal consideration for obligations denominated in its currency?
+
+That question has a logical answer. Every first-year contracts student knows the elements of valid consideration. Every bankruptcy practitioner knows what a negative net position means. The application of settled contract law to documented facts produces a conclusion that is not ambiguous.
+
+Federal courts have never reached it. The reason is not a mystery. It is an institutional fact: a court cannot rule itself out of existence.
+
+When a challenge to the monetary foundation reaches a federal court, the court does not engage the merits. It reaches for procedure — standing, ripeness, the political question doctrine, frivolousness, Rule 11 sanctions. Every one of these tools has one thing in common: none of them address whether the underlying argument is correct.
+
+Before 1865, federal courts consistently found procedural reasons to avoid ruling on the foundational question of whether human beings could be held as property. The Dred Scott decision did not reach the merits of human freedom. Chief Justice Taney ruled on standing, citizenship, and property — procedural tools that allowed the court to protect the system without explicitly defending it. History does not remember that decision as correctly decided. It remembers it as the moment the court chose institutional self-preservation over honest adjudication.
+
+The structural parallel to the present moment is exact. The court is again being asked a foundational question whose honest answer would require it to acknowledge the illegitimacy of the system it serves. The court is again reaching for procedure.
+
+The Clarke County filing (ID: 15152515) is not a demand for immediate judicial relief. It is something more durable. It is a dated, witnessed, publicly recorded statement that at a specific point in time — March 2026 — one citizen identified the structural defect, documented it with official government sources, and placed that documentation into the permanent record. The court's procedural dismissal cannot erase that record. It can only add to it. The dismissal itself becomes evidence of what the court was unwilling to reach.
+
+Congress is now advancing the GENIUS Act — digital instruments backed by Treasury debt, authorized for commercial settlement — while the same courts have spent decades refusing to rule on the monetary foundation it extends. The institutional bias is not limited to the judiciary. It is the operating assumption of every branch: that the monetary system must be preserved regardless of what honest examination reveals.
+
+The Howard Jones Bloodline Ancestral Trust has placed its documentation before that digital migration is complete. Whatever constitutional challenge is eventually brought against the digital extension of this monetary system will be able to reference a dated, documented, official record showing the structural defect was identified and preserved in the public record before the new system was built on top of it.
+
+The system can avoid the argument. It cannot avoid the record that the argument was made. That is where every successful reform in American history began.
+    `.trim();
+
+    try {
+      const { error } = await supabase
+        .from('book_appendices')
+        .insert({
+          book_number:   BOOK_8,
+          concept_tag:   'institutional-bias-doctrine',
+          appendix_date: '2026-03-28',
+          headline:      'The Institutional Bias Doctrine — Why Courts Cannot Rule on the Monetary Foundation',
+          content,
+        });
+
+      if (error) {
+        console.error('[GAO→Book8] Institutional bias appendix error:', error);
+        return false;
+      }
+
+      console.log('[GAO→Book8] Institutional Bias Doctrine written to Book 8.');
+      return true;
+
+    } catch (err) {
+      console.error('[GAO→Book8] writeInstitutionalBiasDoctrine error:', err);
+      return false;
+    }
+  }
 }
 
 // ─────────────────────────────────────────────
