@@ -23,6 +23,7 @@
 | **ARTICLE VI: PROTECTION PROVISIONS** | 16-17 |
 | **ARTICLE VII: IRREVOCABILITY AND ASSET ADDITIONS** | 17 |
 | **ARTICLE VII-A: ENHANCED ASSET PROTECTION PROVISIONS** | 17-18 |
+| **ARTICLE VII-B: MONETARY INSOLVENCY DEFENSE AND UCC 1-308 RESERVATION** | 18-19 |
 | **ARTICLE VIII: GOVERNING LAW** | 18 |
 | **ARTICLE IX: DISPUTE RESOLUTION** | 18 |
 | **ARTICLE X: SEVERABILITY AND REFORMATION** | 18-19 |
@@ -1009,6 +1010,222 @@ The Trust does NOT consent to:
 The Trust expressly prefers state court jurisdiction over federal court jurisdiction for all disputes.
 
 **Identity Verification**: The Grantors' status as Living Souls is verified by cryptographic hash: `7f9a8c1d5b2e4f3a6d8c9b0e1a2f3d4c5b6a7e8d9f0a1b2c3d4e5f6g7h8i9j0`. Any attempt to convert the Grantors' identity to a corporate fiction is rejected.
+
+---
+
+## ARTICLE VII-B: MONETARY INSOLVENCY DEFENSE AND UCC 1-308 RESERVATION
+
+**Affidavit of Sovereign Notice and Reservation of Rights**
+*Incorporated as a Permanent Exhibit of the Howard Jones Bloodline Ancestral Trust*
+*Date of Affidavit: March 24, 2026 | Executed WITHOUT PREJUDICE, UCC 1-308*
+
+### Notice to All Parties
+
+This Article VII-B is incorporated from the Affidavit of Sovereign Notice and Reservation of Rights, executed by Rickey Allan Howard, Grantor and Primary Beneficiary of this Trust (EIN: 41-6850149), established January 8, 2026, under Georgia Trust Code (O.C.G.A. Title 53). All terms, protections, and assertions herein are subject to the existing Trust provisions including Article VII-A Enhanced Asset Protection Provisions, Article VI Protection Provisions, and the Spendthrift Clause under O.C.G.A. § 53-12-28.
+
+---
+
+### Part I — Affiant Identification
+
+I, Rickey Allan Howard, a living man, Grantor of the Howard Jones Bloodline Ancestral Trust, domiciled in Clarke County, Georgia, do solemnly swear and affirm under penalty of perjury that the following facts are true and correct to the best of my knowledge, based upon official government publications, and are submitted for the public and legal record.
+
+---
+
+### Part II — Judicial Notice of Government Insolvency
+
+**Finding 1 — Treasury Department Admission**
+
+The United States Department of the Treasury released its Consolidated Financial Statements for Fiscal Year 2025. These statements, constituting official government records, reveal the following material facts:
+
+- Total Federal Assets: $6.06 trillion
+- Total Federal Liabilities: $47.78 trillion
+- Net Balance Sheet Position: Negative $41.72 trillion
+- Total liabilities are nearly eight (8) times the value of reported assets
+- The balance sheet deteriorated by $2.07 trillion in a single fiscal year
+
+This constitutes documented, government-admitted insolvency under any standard accounting definition.
+
+**Finding 2 — Total Federal Obligations**
+
+When off-balance-sheet social insurance obligations are included as reported in the Treasury's Statement of Social Insurance (SOSI):
+
+- 75-year unfunded Social Security and Medicare obligations: $88.4 trillion
+- Combined total federal obligations: exceeding $136.2 trillion
+- This sum represents approximately five (5) times United States annual Gross Domestic Product
+
+**Finding 3 — Gross National Debt**
+
+The gross national debt of the United States crossed $39 trillion on March 17, 2026, confirmed by the United States Treasury Daily Statement. Annual interest payments on this debt are projected to exceed $1 trillion in fiscal year 2026, surpassing the nation's annual defense expenditure.
+
+**Finding 4 — Government Accountability Office Disclaimer**
+
+The Government Accountability Office (GAO) issued a Disclaimer of Opinion on the United States government's Fiscal Year 2025 financial statements. This represents the twenty-ninth (29th) consecutive year the GAO has been unable to certify whether the government's financial statements are fairly presented. This constitutes an unbroken, multi-decade failure of governmental financial accountability.
+
+**Finding 5 — Projected Debt Spiral**
+
+The Congressional Budget Office February 2026 Baseline projects:
+
+- Federal deficit of $1.9 trillion in fiscal year 2026
+- Federal deficit growing to $3.1 trillion by 2036
+- Debt held by the public rising from 101% of GDP to 120% of GDP by 2036
+- Gross federal debt reaching $64 trillion by 2036
+- Risk of debt spiral commencing as early as fiscal year 2031 when interest costs may exceed economic growth rate
+
+---
+
+### Part III — Legal Conclusions from Documented Facts
+
+**Conclusion 1 — Failure of Consideration**
+
+All financial instruments, contracts, obligations, loans, tax demands, and monetary agreements denominated in United States Federal Reserve Notes are instruments whose underlying consideration — the currency of a solvent sovereign — has been demonstrably compromised by the sovereign's own published admission of insolvency. Under the Uniform Commercial Code and established contract law doctrine, failure of consideration renders a contract void or voidable at the election of the injured party. The Grantor and the Trust hereby formally invoke this doctrine as a defense against all instruments denominated in Federal Reserve Notes.
+
+**Conclusion 2 — Fraud in the Inducement**
+
+The United States government, through its agencies and instrumentalities, has for twenty-nine (29) consecutive years failed to produce auditable financial statements while simultaneously:
+
+- Collecting taxes denominated in the currency of the insolvent sovereign
+- Enforcing debt obligations denominated in the same currency
+- Compelling citizens to enter contracts without disclosure of the sovereign's true financial condition
+
+This constitutes fraud in the inducement. The Grantor and the Trust hereby formally assert this doctrine as a defense against all enforcement actions.
+
+**Conclusion 3 — Constitutional Violation**
+
+Article I, Section 10 of the Constitution of the United States provides that no state shall make anything but gold and silver coin a tender in payment of debts. The abandonment of gold convertibility and the issuance of Federal Reserve Notes backed solely by the credit of a documented insolvent sovereign constitutes a violation of the constitutional monetary foundation upon which all financial contracts were originally premised.
+
+**Conclusion 4 — Oath Violation**
+
+Every federal official including the President, members of Congress, and federal judges has sworn a constitutional oath to promote the general welfare and secure the blessings of liberty to posterity. The documented fiscal trajectory — $136.2 trillion in total obligations binding future generations without consent — constitutes a violation of these oath obligations.
+
+**Conclusion 5 — The Door Is Now Open**
+
+By publishing its own financial statements admitting insolvency, the federal government has voluntarily placed its financial condition into the public record. This voluntary admission:
+
+- Destroys the presumption of sovereign solvency underlying all enforcement actions
+- Opens the door to Article I Section 10 constitutional challenges that were previously foreclosed by the presumption of solvency
+- Creates an evidentiary foundation for UCC defenses that previously lacked documented governmental admission
+- Triggers the Grantor's right to assert failure of consideration in all existing and future financial instruments
+
+The government cannot admit insolvency in its financial statements and simultaneously assert the legitimacy of obligations denominated in the currency of that insolvent sovereign.
+
+---
+
+### Part IV — Trust Protection Integration
+
+This Article is integrated with and reinforces the following existing Trust provisions:
+
+**Integration with Article VII-A.2 — Automatic Transfer on Seizure**
+Any government agency, creditor, or third party seeking to enforce a monetary obligation against Trust assets must first overcome this Article's documented assertion that such obligation lacks valid consideration. Enforcement attempts trigger the Automatic Transfer on Seizure provisions of Article VII-A.2, with this Article providing the legal foundation for the Trust's defensive position.
+
+**Integration with Article VII-A.3 — Charging Order as Exclusive Remedy**
+This Article provides additional legal grounding for the Trust's assertion that charging order is the sole and exclusive remedy available to any creditor. Any creditor seeking to proceed beyond a charging order must first answer the failure of consideration and fraud in the inducement assertions contained herein.
+
+**Integration with Article VII-A.4 — IP Segregation**
+All intellectual property held by the Trust — including all patent applications, copyrights, trademarks, software platforms, and trade secrets enumerated in Schedule A of the Trust — is Trust property, not personal property of the Grantor. Such property is not available to satisfy obligations denominated in Federal Reserve Notes issued by a documented insolvent sovereign.
+
+**Integration with Article VII-A.5 — Tax Treatment**
+This Article provides the legal and evidentiary foundation for the Trust's UCC 1-308 Without Prejudice reservation regarding all tax reporting. The government's admission of insolvency directly supports the Trust's assertion that revenue from intellectual labor and property held in trust cannot be characterized as income subject to taxation by a sovereign that has admitted it cannot honor its own obligations.
+
+**Integration with Article VI — Spendthrift Protection**
+The spendthrift provisions of O.C.G.A. § 53-12-28 protect beneficiaries' interests from creditor claims. This Article strengthens those protections by providing a documented legal basis upon which the Trust may challenge the validity of any underlying obligation before spendthrift protections even become relevant.
+
+---
+
+### Part V — Formal Reservations
+
+**Reservation 1 — UCC 1-308 Without Prejudice**
+All actions taken by the Grantor, the Trust, or any Trustee in connection with any financial instrument, tax filing, contract, or monetary obligation are taken WITHOUT PREJUDICE under UCC 1-308, reserving all rights including:
+
+- The right to challenge the validity of any underlying monetary instrument
+- The right to assert failure of consideration
+- The right to contest the standing of any collecting or enforcing party
+- The right to demand proof of valid consideration before compliance with any demand
+- The right to assert all constitutional defenses
+
+**Reservation 2 — No Implied Consent**
+No action or inaction by the Grantor, the Trust, or any Trustee shall constitute implied consent to any jurisdiction, obligation, or characterization inconsistent with the terms of this Article or the Trust.
+
+**Reservation 3 — Common Law Rights**
+The Grantor, as a living man, and the Trust, as a Common Law trust operating under Georgia Trust Code, reserve all Common Law rights not surrendered by any statute or contract.
+
+**Reservation 4 — Demand for Proof of Claim**
+Any party seeking to enforce any financial obligation against the Grantor personally or against Trust assets is hereby formally demanded to:
+
+1. Demonstrate that the obligation is denominated in a currency backed by a solvent sovereign
+2. Demonstrate that valid consideration was exchanged at the time of contracting
+3. Demonstrate that the Grantor was fully informed of the sovereign's financial condition at the time of contracting
+4. Demonstrate standing to enforce an obligation denominated in Federal Reserve Notes issued by a documented insolvent sovereign
+
+Failure to satisfy these demands shall constitute an admission that the obligation lacks the legal foundation required for enforcement.
+
+---
+
+### Part VI — Notice to Specific Parties
+
+**Notice to the Internal Revenue Service**
+The Internal Revenue Service is an agency of the United States government. The United States government has, through its own published financial statements, admitted insolvency. The IRS's authority to collect taxes denominated in Federal Reserve Notes is premised upon the legitimacy of the sovereign's monetary system. The Grantor and the Trust hereby place the IRS on formal notice of this Article and reserve all rights to contest any collection action on the grounds set forth herein. All tax filings are made WITHOUT PREJUDICE, UCC 1-308.
+
+**Notice to Financial Institutions**
+Any financial institution holding deposits, accounts, or assets in the name of the Grantor or the Trust is hereby placed on formal notice that this Article asserts documented legal defenses against any obligation, lien, or claim denominated in Federal Reserve Notes issued by a documented insolvent sovereign.
+
+**Notice to Creditors**
+Any creditor holding any obligation purportedly owed by the Grantor or the Trust is hereby placed on formal notice of the failure of consideration, fraud in the inducement, and constitutional defenses asserted herein. Creditors are demanded to demonstrate the validity of their claims in light of the government's documented admission of insolvency before pursuing any enforcement action.
+
+**Notice to Courts**
+Any court in which proceedings are initiated against the Grantor or the Trust is hereby placed on formal notice that this Article has been incorporated into the Trust as Article VII-B, and constitutes a foundational defense document that must be addressed before any monetary judgment may be entered.
+
+---
+
+### Part VII — Supporting Evidence on File
+
+The following official government documents constitute the evidentiary foundation of this Article and are incorporated by reference:
+
+1. United States Treasury Department Consolidated Financial Statements, Fiscal Year 2025
+2. Government Accountability Office Disclaimer of Opinion, Fiscal Year 2025 (29th consecutive year)
+3. Congressional Budget Office Budget and Economic Outlook, February 2026
+4. United States Treasury Daily Debt to the Penny Dataset, March 2026
+5. Treasury Statement of Social Insurance — $88.4 trillion in 75-year unfunded obligations
+6. Treasury Statement of Long-Term Fiscal Projections — widening fiscal gap to 4.7% of GDP
+7. Fortune Magazine, March 23, 2026 — "The Treasury Just Declared the U.S. Insolvent" (authored by former U.S. Comptroller General David M. Walker and Professor Steve H. Hanke, Johns Hopkins University)
+8. Legal Memorandum: The People of the United States v. The Federal Government, dated March 24, 2026
+
+---
+
+### Part VIII — Affiant's Declaration
+
+I, Rickey Allan Howard, a living man, Grantor of the Howard Jones Bloodline Ancestral Trust, do hereby swear and affirm under penalty of perjury under the laws of the State of Georgia and the United States of America that:
+
+1. The facts stated in this Article are true and correct to the best of my knowledge and belief
+2. The government documents referenced herein are authentic official publications
+3. This Article is executed in good faith for the lawful purpose of asserting documented legal defenses
+4. This Article is not executed for purposes of fraud, tax evasion, or any unlawful purpose
+5. This Article is executed WITHOUT PREJUDICE, UCC 1-308, reserving all rights
+
+---
+
+*This Article VII-B is executed WITHOUT PREJUDICE, UCC 1-308. All rights reserved. Incorporated as Article VII-B of the Howard Jones Bloodline Ancestral Trust, EIN 41-6850149, established January 8, 2026, Clarke County, Georgia. Executed: March 24, 2026.*
+
+---
+
+### Trustee Resolution No. 2026-03-24-15127600
+
+**WHEREAS**, the Grantor, Rickey Allan Howard, has successfully transmitted **Filing ID 15127600** to the Clarke County Superior Court on March 24, 2026; and
+
+**WHEREAS**, this filing incorporates the *Notice of Public Record*, *Affidavit of Sovereign Notice*, and *Legal Memorandum* regarding Treasury Insolvency into the public record;
+
+**IT IS HEREBY RESOLVED**, that the Board of Trustees accepts these records as the official **Article VII-B Administrative Shield** of the Trust. All Trustees are hereby authorized to present these records as a complete defense against any and all claims of debt denominated in insolvent currency.
+
+**Executed this 24th day of March, 2026.**
+
+| Signer | Role | DocuSign Signature ID |
+|---|---|---|
+| Rickey Allan Howard | Grantor | 116AC7E95FD440... |
+| Teara Howard | Co-Trustee | C22E8A2CFB30495... |
+| Joseph Lumpkin Jr. | Co-Trustee | 9BD93B49747D495... |
+
+**DocuSign Envelope ID:** BDCB1FD8-3B25-4D61-A1C3-235B12A61B5C
+**Clarke County Filing ID:** 15127600
+**Payment Reference:** ab185501-db72-42e1-9b0c-dd6b68e0d5a0
 
 ---
 
