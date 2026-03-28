@@ -5,8 +5,8 @@
 
 | Field | Detail |
 |---|---|
-| **Document Reference** | HJBAT-CITI-2751-CHALLENGE-032826 |
-| **Date of Execution** | March 28, 2026 |
+| **Document Reference** | HJBAT-CITI-2751-CHALLENGE-033026-REV1 |
+| **Date of Execution** | March 30, 2026 |
 | **Executed By** | Rickey Allan Howard, Grantor-Trustee |
 | **On Behalf Of** | Howard Jones Bloodline Ancestral Trust, EIN: 41-6850149 |
 | **Execution** | WITHOUT PREJUDICE — UCC 1-308 — ALL RIGHTS RESERVED |
@@ -140,8 +140,9 @@ The Constitution of the United States, **Article I, Section 10**, provides that 
 
 **Under HJR-192 (June 5, 1933)**, Congress acknowledged that gold clause obligations could be discharged in Federal Reserve Notes. The corollary is that where the Federal Reserve Note itself is the product of an insolvent sovereign, the instrument of discharge is itself constitutionally defective.
 
-### 4.6 — Citibank's Own Position as a Fractional Reserve Institution
-As a national bank, Citibank, N.A. extends credit through fractional reserve multiplication — not from pre-existing reserves of lawful money. The "consideration" Citibank extended was a bookkeeping entry created at the moment of account activation, not a transfer of pre-existing wealth. This Court, in *First National Bank of Montgomery v. Jerome Daly* (1968), and related authorities have established that the extension of credit created from nothing does not constitute adequate consideration for a binding obligation. Citibank must demonstrate it suffered actual loss equal to the amount it now claims.
+### 4.6 — Citibank's Own Reserve Structure and the Insolvency Connection
+
+As a national bank, Citibank, N.A. holds United States Treasury instruments as Tier 1 capital reserves under federal regulatory requirements. Those instruments are the same class of instruments designated as "permitted assets" under the pending GENIUS Act stablecoin framework (S. 394, 119th Congress). The Howard Jones Bloodline Ancestral Trust has formally documented, as a matter of public record predating the GENIUS Act's implementation, that obligations denominated in the currency of a documented insolvent sovereign — and backed by that sovereign's debt instruments — are subject to the Failure of Consideration defense under O.C.G.A. § 13-3-40. This position applies with equal force to Citibank's own Tier 1 reserve structure: the "consideration" underlying Account 2751 is ultimately collateralized by Treasury instruments issued by a sovereign whose own auditors have been unable to certify its financial statements for twenty-nine consecutive years. Citibank must demonstrate it suffered actual, verifiable loss — backed by lawful consideration — equal to the amount it now claims.
 
 ---
 
@@ -228,7 +229,7 @@ EIN: 41-6850149
 Athens, Georgia 30606
 rhoward@hjsservices.us
 
-*Date: March 28, 2026*
+*Date: March 30, 2026*
 
 ---
 
