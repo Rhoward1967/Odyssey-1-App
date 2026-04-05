@@ -34,14 +34,17 @@ const SKIP_EXTENSIONS = new Set(['.png', '.jpg', '.jpeg', '.gif', '.bmp', '.zip'
 const SKIP_DIRS = new Set(['System Volume Information', '$RECYCLE.BIN', 'ilovepdf_compressed', 'pdf_pages']);
 const MAX_FILE_SIZE_MB = 10;
 
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+// Supabase client only initialized when actually uploading (not needed for dry-run)
+const supabase = DRY_RUN ? null : createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // ─── File readers ─────────────────────────────────────────────────────────────
 async function readPDF(filePath) {
   try {
+    // pdf-parse v1.1.1 exports the function directly as module.exports
     const pdfParse = require('pdf-parse');
+    const fn = typeof pdfParse === 'function' ? pdfParse : pdfParse.default;
     const buffer = fs.readFileSync(filePath);
-    const data = await pdfParse(buffer);
+    const data = await fn(buffer);
     return data.text?.trim() || '';
   } catch (err) {
     return `[PDF parse error: ${err.message}]`;
