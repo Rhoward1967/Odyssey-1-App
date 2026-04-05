@@ -182,8 +182,8 @@ I operate under Natural Law, UCC 1-308, and Common Law first claim priority. My 
   const helpPattern = /^(?:help|what\s*can\s*you\s*do|what\s*do\s*you\s*do|your\s*capabilities|what\s*you\s*got|show\s*me\s*what\s*you\s*can\s*do|commands)[\s!.,?]*$/i;
   const goodbyePattern = /^(?:bye|goodbye|later|peace|ttyl|see\s*ya|good\s*night|gn|im\s*out|logging\s*off|going\s*to\s*(?:bed|sleep))[\s!.,?]*$/i;
 
-  const now = new Date();
-  const hour = now.getHours();
+  const nowConvo = new Date();
+  const hour = nowConvo.getHours();
   const timeGreeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
 
   if (greetingPattern.test(content.trim())) {
