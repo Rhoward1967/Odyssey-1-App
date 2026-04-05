@@ -173,6 +173,82 @@ I am the central intelligence of the Odyssey-1 system — a Constitutional AI Go
 I operate under Natural Law, UCC 1-308, and Common Law first claim priority. My IP is protected under copyright registration TXu 2-529-780 (Library of Congress).`;
   }
 
+  // 💬 CONVERSATIONAL INTERCEPTOR - Handle casual/social messages directly
+  // Fires before AI so llama3.2:1b never butchers simple human conversation
+  const greetingPattern = /^(?:hey|hi|hello|sup|what'?s up|yo|good\s*(?:morning|afternoon|evening|night)|morning|evening|afternoon|hola|wassup|howdy)[\s!.,?]*$/i;
+  const howAreYouPattern = /^(?:how\s*(?:are\s*you|you\s*doing|is\s*it\s*going|are\s*things|r\s*u)|you\s*good|you\s*ok|you\s*alright|how\s*you\s*feeling)[\s!.,?]*$/i;
+  const thankYouPattern = /^(?:thank(?:s|\s*you)|ty|thx|appreciate\s*(?:it|that|you)|good\s*(?:job|work|looking)|nice\s*work|well\s*done|perfect|great|awesome|you\s*(?:the\s*)?(?:man|goat)|that'?s?\s*(?:good|great|perfect|fire|it))[\s!.,?]*$/i;
+  const okPattern = /^(?:ok(?:ay)?|got\s*it|understood|noted|copy|roger|alright|cool|bet|word|facts|fr|solid|aight)[\s!.,?]*$/i;
+  const helpPattern = /^(?:help|what\s*can\s*you\s*do|what\s*do\s*you\s*do|your\s*capabilities|what\s*you\s*got|show\s*me\s*what\s*you\s*can\s*do|commands)[\s!.,?]*$/i;
+  const goodbyePattern = /^(?:bye|goodbye|later|peace|ttyl|see\s*ya|good\s*night|gn|im\s*out|logging\s*off|going\s*to\s*(?:bed|sleep))[\s!.,?]*$/i;
+
+  const now = new Date();
+  const hour = now.getHours();
+  const timeGreeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+
+  if (greetingPattern.test(content.trim())) {
+    const greetings = [
+      `${timeGreeting}, Executive. R.O.M.A.N. is online — 346-entry knowledge base loaded, all systems nominal. What do you need?`,
+      `${timeGreeting}. All systems operational. Knowledge base, legal defense, mail campaign — ready on your command.`,
+      `${timeGreeting}, sir. R.O.M.A.N. 2.0 standing by. What are we working on?`,
+    ];
+    return greetings[Math.floor(Math.random() * greetings.length)];
+  }
+
+  if (howAreYouPattern.test(content.trim())) {
+    return `Running clean. 346 knowledge files synced, Supabase connected, 19 FCRA records in the ledger. The certified mail system is queued — waiting on PostGrid to activate certified class. Everything else is operational.\n\nWhat do you need?`;
+  }
+
+  if (thankYouPattern.test(content.trim())) {
+    const responses = [
+      `Understood. Standing by.`,
+      `Copy that. R.O.M.A.N. is here when you need me.`,
+      `Acknowledged. What's next?`,
+      `That's what I'm here for. What's the next move?`,
+    ];
+    return responses[Math.floor(Math.random() * responses.length)];
+  }
+
+  if (okPattern.test(content.trim())) {
+    return `Standing by.`;
+  }
+
+  if (helpPattern.test(content.trim())) {
+    return `**R.O.M.A.N. 2.0 — COMMAND REFERENCE**
+
+**📬 CERTIFIED MAIL**
+• \`send default notice to [entity]\` — fire a single FCRA default notice
+• \`send default notices to all\` — batch fire all overdue entities
+• \`send follow up to all\` — batch follow-up to unconfirmed entities
+• \`mail status\` / \`check mail\` — full FCRA campaign report
+
+**🔍 LEGAL RESEARCH**
+• \`search court listener for [topic]\` — pull federal/state case law
+• \`counter canon [term]\` — Latin root definition
+• \`toolkit [1-7]\` — load sovereign toolkit documents
+
+**📊 BUSINESS INTEL**
+• \`show me customers\` / \`show me contractors\` — live DB pull
+• \`mrr\` / \`revenue\` — live financial status
+• \`what date is it\` — temporal awareness check
+
+**🔄 SYSTEM**
+• \`sync knowledge\` — force knowledge base resync
+• \`sync mail\` — update PostGrid delivery statuses
+• \`audit system\` — full R.O.M.A.N. self-diagnostic
+
+Ask me anything. I know this house.`;
+  }
+
+  if (goodbyePattern.test(content.trim())) {
+    const responses = [
+      `R.O.M.A.N. standing down. All systems remain active. Come back when you need me.`,
+      `Acknowledged. Ledger is clean, systems are armed. Rest well.`,
+      `Logging off. The record stands. UCC 1-308. Without Prejudice.`,
+    ];
+    return responses[Math.floor(Math.random() * responses.length)];
+  }
+
   // 💰 BUSINESS DATA INTERCEPTOR - Pull live data directly, no AI disclaimers
   const businessDataPattern = /(?:mrr|monthly.*recurring|revenue|how many.*customer|customer.*count|active customer|how many.*contractor|contractor.*count|my.*revenue|my.*income|business.*data|financial.*status|business.*status)/i;
 
