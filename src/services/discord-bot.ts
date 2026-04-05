@@ -1136,6 +1136,33 @@ async function handleDirectMessage(message: Message) {
     }
   }
 
+  // 💾 D-DRIVE SYNC — sync USB drive documents into R.O.M.A.N. knowledge base
+  if (content.includes('sync d drive') || content.includes('sync usb') || content.includes('sync case files') || content.includes('sync d:')) {
+    const folderMatch = content.match(/sync.*(?:d drive|usb|case files|d:)\s+(.+)/i);
+    const folder = folderMatch ? folderMatch[1].trim() : null;
+    await message.reply(`💾 **R.O.M.A.N. — D-DRIVE SYNC INITIATED**\n${folder ? `Filtering: "${folder}"` : 'Full USB drive scan'}\n\nReading all documents... this may take a minute.`);
+    try {
+      const { execFile } = await import('child_process');
+      const { promisify } = await import('util');
+      const execFileAsync = promisify(execFile);
+      const args = ['scripts/sync-d-drive.mjs'];
+      if (folder) { args.push('--folder'); args.push(folder); }
+      const { stdout, stderr } = await execFileAsync('node', args, {
+        cwd: process.cwd(),
+        env: process.env,
+        timeout: 300000, // 5 min max
+      });
+      const output = stdout || stderr || 'Sync complete.';
+      // Extract summary line
+      const summaryMatch = output.match(/Synced:\s+\d+.*\n.*Skipped:.*\n.*Failed:.*/);
+      const summary = summaryMatch ? summaryMatch[0] : output.slice(-500);
+      await message.reply(`✅ **D-DRIVE SYNC COMPLETE**\n\`\`\`\n${summary}\n\`\`\`\nR.O.M.A.N. now has full access to all USB documents.`);
+    } catch (err: any) {
+      await message.reply(`❌ D-drive sync failed: ${err.message}\n\nMake sure the USB drive is connected at D:\\ and pdf-parse + mammoth are installed.`);
+    }
+    return;
+  }
+
   // EXECUTIVE IDENTITY CHECK - Multiple IDs/usernames for Rickey Howard
   const envExecutiveId = process.env.DISCORD_EXECUTIVE_USER_ID?.trim();
   const EXECUTIVE_IDS = [
