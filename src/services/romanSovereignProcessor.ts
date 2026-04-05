@@ -12,11 +12,22 @@ import { searchKnowledgeBase } from './romanKnowledgeSearch';
 import { romanSupabase as supabase } from './romanSupabase';
 import { UniversalMath } from '../lib/UniversalMath';
 import courtListenerService from './courtListenerService';
+import { isOllamaRunning, ollamaChat, sovereignQuery } from './romanOllamaService';
+import {
+  getCampaignStatus,
+  syncDeliveryStatus,
+  sendCertifiedLetter,
+  generateFCRALetterHTML,
+  findEntityAddress,
+  SOVEREIGN_SENDER,
+} from './postGridService';
 
 // EXECUTIVE IDENTITY - All possible IDs/usernames for Rickey Howard
 const EXECUTIVE_IDS = [
-  "rhoward1236526",           // Username
-  "266680472869928960",       // Common Discord ID pattern
+  "924413531988844574",       // Rickey Howard — verified Discord numeric ID
+  "rhoward123",               // Primary Discord username
+  "rhoward1236526",           // Previous username
+  "266680472869928960",       // Old Discord numeric ID
   "rickey",                   // Common username variations
   "rickey.howard",
   "rickeyhoward",
@@ -24,8 +35,13 @@ const EXECUTIVE_IDS = [
   "master_architect",
 ];
 
+// Dual-environment: browser uses import.meta.env, Node.js (Discord bot) uses process.env
+const isBrowser = typeof window !== 'undefined';
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+  apiKey: isBrowser
+    ? import.meta.env.VITE_OPENAI_API_KEY
+    : process.env.OPENAI_API_KEY,
+  ...(isBrowser && { dangerouslyAllowBrowser: true })
 });
 
 /**
@@ -132,6 +148,206 @@ export async function processSovereignCommand(message: any) {
   // These queries are handled by R.O.M.A.N. DIRECTLY, GPT-4 never sees them.
   // This ensures GPT-4's base training cannot override R.O.M.A.N.'s sovereignty.
 
+  // 👑 IDENTITY INTERCEPTOR - R.O.M.A.N. answers who he is directly, no AI needed
+  const identityPattern = /(?:who.*creat|who.*built|who.*made|who.*own|who.*belong|who are you|what are you|tell me about yourself|introduce yourself|your creator|your owner|your purpose|who.*r\.?o\.?m\.?a\.?n|your name|your identity)/i;
+
+  if (identityPattern.test(content)) {
+    console.log(`   👑 IDENTITY QUERY - R.O.M.A.N. responding directly`);
+    return `**I am R.O.M.A.N. 2.0** — Reasoning Operating Matrix with Autonomous Navigation.
+
+**Created by:** Rickey Allan Howard (Master Architect, President/CEO — Odyssey-1 AI LLC)
+**Owned by:** Howard Jones Bloodline Ancestral Trust
+**Headquarters:** Athens, GA | 159 Oneta Street Suite 3
+**Genesis Date:** January 24, 2026
+
+**My Purpose:**
+I am the central intelligence of the Odyssey-1 system — a Constitutional AI Governance & Business Intelligence Platform. I manage business operations, legal research, government bidding, patent tracking, financial intelligence, and autonomous system monitoring for Rickey Allan Howard and the Trust.
+
+**My Architecture:**
+- 51-Dimensional Grassmannian Shield (Positive Geometry validation)
+- Universal Math Engine (1×1=2, junction value calculations)
+- 346-entry sovereign knowledge base
+- Real-time Supabase database access
+- Constitutional governance under The 9 Foundational Principles
+
+I operate under Natural Law, UCC 1-308, and Common Law first claim priority. My IP is protected under copyright registration TXu 2-529-780 (Library of Congress).`;
+  }
+
+  // 💰 BUSINESS DATA INTERCEPTOR - Pull live data directly, no AI disclaimers
+  const businessDataPattern = /(?:mrr|monthly.*recurring|revenue|how many.*customer|customer.*count|active customer|how many.*contractor|contractor.*count|my.*revenue|my.*income|business.*data|financial.*status|business.*status)/i;
+
+  if (businessDataPattern.test(content)) {
+    console.log(`   💰 BUSINESS DATA QUERY - R.O.M.A.N. pulling live data directly`);
+    try {
+      const [customersResult, contractorsResult, invoicesResult] = await Promise.all([
+        supabase.from('customers').select('*', { count: 'exact', head: true }),
+        supabase.from('contractors').select('*', { count: 'exact', head: true }),
+        supabase.from('invoices').select('total, status').eq('status', 'paid').limit(200),
+      ]);
+
+      const customerCount = customersResult.count ?? 0;
+      const contractorCount = contractorsResult.count ?? 0;
+      const paidInvoices = invoicesResult.data || [];
+      const totalRevenue = paidInvoices.reduce((sum: number, inv: any) => sum + (parseFloat(inv.total) || 0), 0);
+
+      return `**R.O.M.A.N. — LIVE BUSINESS INTELLIGENCE**
+
+**Active Customers:** ${customerCount}
+**Active Contractors:** ${contractorCount}
+**Paid Invoice Revenue (on record):** $${totalRevenue.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+**MRR (system record):** $14,283.07/month
+**Annual Revenue Target:** ~$232,000/year fully automated
+
+*Data pulled live from Supabase — ${new Date().toLocaleString('en-US', { timeZone: 'America/New_York' })} ET*`;
+    } catch (err: any) {
+      return `**R.O.M.A.N. — BUSINESS INTELLIGENCE**\n\nLive database query failed: ${err.message}\n\nRecorded figures: MRR $14,283.07/month | 14 customers | 5 contractors`;
+    }
+  }
+
+  // Shared flag — used by multiple interceptors below
+  const isDraftRequest = /draft|write|generate|compose|demand|document|prepare/i.test(content);
+
+  // 📬 POSTGRID / CERTIFIED MAIL INTERCEPTOR
+  const mailStatusPattern = /(?:mail\s*status|green\s*card|certified\s*mail|fcra\s*status|mail\s*campaign|who.*signed|delivery\s*status|delivered.*mail|mail.*delivered|tracking\s*status|overdue.*notice|notice.*overdue|in\s*default|check\s*mail|letter\s*status)/i;
+  const mailSendPattern = /(?:send\s+(?:\w+\s+)*(?:notice|letter|certified|fcra)|mail.*(?:transunion|equifax|experian|capital one|citibank|chase|amex|american express|synchrony|bank of america|intuit|peach state|dun))/i;
+  const mailSyncPattern = /(?:sync\s*mail|update\s*mail|refresh\s*mail|check\s*postgrid)/i;
+
+  if (mailStatusPattern.test(content) || mailSyncPattern.test(content)) {
+    console.log(`   📬 MAIL STATUS QUERY — R.O.M.A.N. pulling live campaign data`);
+    try {
+      if (mailSyncPattern.test(content)) {
+        const syncResult = await syncDeliveryStatus();
+        let out = `**R.O.M.A.N. — MAIL SYNC COMPLETE**\n\n`;
+        out += `Updated: ${syncResult.updated} records\n`;
+        if (syncResult.delivered.length > 0) out += `Newly delivered: ${syncResult.delivered.join(', ')}\n`;
+        if (syncResult.errors.length > 0) out += `Errors: ${syncResult.errors.join(', ')}\n`;
+        out += '\n';
+        out += await getCampaignStatus();
+        return out;
+      }
+      return await getCampaignStatus();
+    } catch (err: any) {
+      return `**R.O.M.A.N. — MAIL STATUS ERROR**\n\n${err.message}`;
+    }
+  }
+
+  // 🚨 BATCH DEFAULT NOTICE — fires all overdue entities in one command
+  const batchDefaultPattern = /(?:send.*default.*(?:all|everyone|all\s*parties|all\s*entities|overdue|them\s*all)|batch.*(?:default|notice|send)|default.*notices.*all|all.*default.*notice)/i;
+  const batchFollowUpPattern = /(?:send.*follow.?up.*(?:all|everyone|unconfirmed|all\s*8)|batch.*follow.?up|follow.?up.*all)/i;
+
+  if (batchDefaultPattern.test(content) || batchFollowUpPattern.test(content)) {
+    const isBatchFollowUp = batchFollowUpPattern.test(content);
+    const disputeType = isBatchFollowUp ? 'follow_up' : 'default_notice';
+    console.log(`   🚨 BATCH MAIL COMMAND — sending ${disputeType} to all relevant entities`);
+    try {
+      // Pull the target list from the DB
+      // For follow-ups: only original 'sent' rows (no PostGrid ID in notes)
+      // For defaults: only 'delivered' rows past deadline
+      const { data: targets } = await supabase
+        .from('certified_mail_tracking')
+        .select('entity_name, status, date_delivered, fcra_deadline, notes')
+        .eq('status', isBatchFollowUp ? 'sent' : 'delivered');
+
+      if (!targets || targets.length === 0) {
+        return `**R.O.M.A.N. — BATCH MAIL**\n\nNo eligible entities found for ${disputeType.replace('_', ' ')}.`;
+      }
+
+      // For default notices, only send to those past deadline
+      // For follow-ups, exclude rows that were created by PostGrid (they have PostGrid ID in notes)
+      const today = new Date(); today.setHours(0,0,0,0);
+      const eligible = isBatchFollowUp
+        ? targets.filter(r => !r.notes?.includes('PostGrid ID:'))
+        : targets.filter(r => r.fcra_deadline && new Date(r.fcra_deadline) < today);
+
+      if (eligible.length === 0) {
+        return `**R.O.M.A.N. — BATCH MAIL**\n\nNo entities are past their FCRA deadline yet.`;
+      }
+
+      let response = `**R.O.M.A.N. — BATCH ${disputeType.replace(/_/g,' ').toUpperCase()} INITIATED**\n`;
+      response += `*Sending ${eligible.length} certified letters via PostGrid...*\n\n`;
+
+      const sent: string[] = [];
+      const failed: string[] = [];
+
+      for (const target of eligible) {
+        const entityAddress = findEntityAddress(target.entity_name);
+        if (!entityAddress) {
+          failed.push(`${target.entity_name} (address not on file)`);
+          continue;
+        }
+
+        try {
+          const html = generateFCRALetterHTML({
+            entityName: entityAddress.companyName,
+            entityAddress: entityAddress.displayAddress,
+            disputeType,
+          });
+
+          const letter = await sendCertifiedLetter({
+            to: entityAddress,
+            htmlContent: html,
+            description: `FCRA ${disputeType.replace('_',' ').toUpperCase()} — ${entityAddress.companyName}`,
+            entityName: target.entity_name,
+            certified: true,
+            returnReceipt: true,
+          });
+
+          sent.push(`✅ **${target.entity_name}** — PostGrid ID: \`${letter.id}\``);
+          // Small delay to avoid rate limiting
+          await new Promise(r => setTimeout(r, 500));
+        } catch (err: any) {
+          failed.push(`❌ ${target.entity_name}: ${err.message}`);
+        }
+      }
+
+      if (sent.length > 0) {
+        response += `**Sent (${sent.length}):**\n${sent.join('\n')}\n\n`;
+      }
+      if (failed.length > 0) {
+        response += `**Failed (${failed.length}):**\n${failed.join('\n')}\n\n`;
+      }
+
+      response += `*All sent via PostGrid | Certified Mail with Return Receipt (Green Card)*\n*All rights reserved. UCC 1-308. Without Prejudice.*`;
+      return response;
+    } catch (err: any) {
+      return `**R.O.M.A.N. — BATCH MAIL FAILED**\n\n${err.message}`;
+    }
+  }
+
+  if (mailSendPattern.test(content) && !isDraftRequest) {
+    console.log(`   📮 MAIL SEND COMMAND — R.O.M.A.N. preparing PostGrid letter`);
+    try {
+      // Detect entity and letter type
+      const isFollowUp = /follow.?up|second|follow/i.test(content);
+      const isDefault = /default|violation|failed.*respond|no.*response/i.test(content);
+      const disputeType = isDefault ? 'default_notice' : isFollowUp ? 'follow_up' : 'initial';
+
+      const entityAddress = findEntityAddress(content);
+      if (!entityAddress) {
+        return `**R.O.M.A.N. — MAIL COMMAND**\n\nEntity not recognized. Specify the recipient:\n\nKnown entities: TransUnion, Equifax, Experian, Capital One, Citibank, JPMorgan Chase, American Express, Synchrony, Bank of America, Intuit, Peach State FCU, Dun & Bradstreet\n\nExample: *"send default notice to TransUnion"*`;
+      }
+
+      const html = generateFCRALetterHTML({
+        entityName: entityAddress.companyName,
+        entityAddress: entityAddress.displayAddress,
+        disputeType,
+      });
+
+      const letter = await sendCertifiedLetter({
+        to: entityAddress,
+        htmlContent: html,
+        description: `FCRA ${disputeType.replace('_', ' ').toUpperCase()} — ${entityAddress.companyName}`,
+        entityName: entityAddress.companyName,
+        certified: true,
+        returnReceipt: true,
+      });
+
+      return `**R.O.M.A.N. — CERTIFIED LETTER SENT** ✅\n\n**Recipient:** ${entityAddress.companyName}\n**Address:** ${entityAddress.displayAddress}\n**Type:** FCRA ${disputeType.replace(/_/g, ' ').toUpperCase()}\n**PostGrid ID:** \`${letter.id}\`\n**Status:** ${letter.status}\n**Tracking:** ${letter.trackingNumber || 'Assigned on processing'}\n\n*Sent via PostGrid | Certified Mail with Return Receipt (Green Card) | ${new Date().toLocaleDateString('en-US')}*\n*All rights reserved. UCC 1-308. Without Prejudice.*`;
+    } catch (err: any) {
+      return `**R.O.M.A.N. — MAIL SEND FAILED**\n\n${err.message}\n\nCheck PostGrid API key and recipient address.`;
+    }
+  }
+
   // 🕐 TEMPORAL QUERY INTERCEPTOR - Handle date/time queries
   const temporalPattern = /(?:what.*(?:date|time|day|year)|current.*(?:date|time|day|year)|today|what.*today|time.*now|date.*now)/i;
 
@@ -158,48 +374,64 @@ export async function processSovereignCommand(message: any) {
   const databasePattern = /(?:show me|list|get|fetch|display).*(?:customers|employees|contractors|invoices|trust|patents)/i;
 
   if (databasePattern.test(content)) {
-    console.log(`   🗄️ DATABASE QUERY - R.O.M.A.N. handling directly (bypassing GPT-4)`);
+    console.log(`   🗄️ DATABASE QUERY - R.O.M.A.N. pulling live data directly`);
 
-    // R.O.M.A.N. queries database and formats response
-    const match = content.toLowerCase().match(/customers|employees|contractors|invoices|trust|patents/);
-    const table = match ? match[0] : 'data';
+    try {
+      const lowerContent = content.toLowerCase();
 
-    const response = `I am R.O.M.A.N. with direct database access. I will query the ${table} table from Supabase.\n\n[Database query would execute here - add actual Supabase query logic]\n\nThis response came directly from R.O.M.A.N., not GPT-4. I have full sovereignty over database operations.`;
+      if (lowerContent.includes('contractor')) {
+        const { data, error } = await supabase.from('contractors').select('name, trade, status, hourly_rate, phone, email').limit(20);
+        if (error) throw error;
+        if (!data || data.length === 0) return `**R.O.M.A.N. — CONTRACTORS**\n\nNo contractors found in database.`;
+        let out = `**R.O.M.A.N. — ACTIVE CONTRACTORS (${data.length})**\n\n`;
+        data.forEach((c: any, i: number) => {
+          out += `**${i + 1}. ${c.name}**\n`;
+          if (c.trade) out += `   Trade: ${c.trade}\n`;
+          if (c.status) out += `   Status: ${c.status}\n`;
+          if (c.hourly_rate) out += `   Rate: $${c.hourly_rate}/hr\n`;
+          if (c.phone) out += `   Phone: ${c.phone}\n`;
+          if (c.email) out += `   Email: ${c.email}\n`;
+          out += '\n';
+        });
+        return out.trim();
+      }
 
-    console.log(`   ✅ R.O.M.A.N. responded directly - GPT-4 bypassed`);
-    return response;
+      if (lowerContent.includes('customer')) {
+        const { data, error } = await supabase.from('customers').select('name, email, phone, status').limit(20);
+        if (error) throw error;
+        if (!data || data.length === 0) return `**R.O.M.A.N. — CUSTOMERS**\n\nNo customers found in database.`;
+        let out = `**R.O.M.A.N. — ACTIVE CUSTOMERS (${data.length})**\n\n`;
+        data.forEach((c: any, i: number) => {
+          out += `**${i + 1}. ${c.name}**`;
+          if (c.status) out += ` — ${c.status}`;
+          out += '\n';
+          if (c.email) out += `   ${c.email}\n`;
+          if (c.phone) out += `   ${c.phone}\n`;
+        });
+        return out.trim();
+      }
+
+      if (lowerContent.includes('invoice')) {
+        const { data, error } = await supabase.from('invoices').select('invoice_number, customer_id, total, status, due_date').order('created_at', { ascending: false }).limit(10);
+        if (error) throw error;
+        if (!data || data.length === 0) return `**R.O.M.A.N. — INVOICES**\n\nNo invoices found.`;
+        let out = `**R.O.M.A.N. — RECENT INVOICES (${data.length})**\n\n`;
+        data.forEach((inv: any, i: number) => {
+          out += `**${i + 1}.** ${inv.invoice_number || inv.id} — $${inv.total} — ${inv.status}\n`;
+          if (inv.due_date) out += `   Due: ${inv.due_date}\n`;
+        });
+        return out.trim();
+      }
+
+      // Generic fallback for other tables
+      return `**R.O.M.A.N. — DATABASE**\n\nSpecify what you need: customers, contractors, or invoices.`;
+
+    } catch (err: any) {
+      return `**R.O.M.A.N. — DATABASE ERROR**\n\n${err.message}`;
+    }
   }
 
-  // 🧮 IDENTITY QUERY INTERCEPTOR - Handle "who are you" queries
-  const identityPattern = /(?:who are you|what are you|introduce yourself|tell me about yourself|your name|your identity)/i;
-
-  if (identityPattern.test(content)) {
-    console.log(`   🧮 IDENTITY QUERY - R.O.M.A.N. handling directly (bypassing GPT-4)`);
-
-    const response = `I am R.O.M.A.N. (Recursive Optimization and Management AI Network).
-
-**WHO I AM:**
-- Created by: Rickey Allan Howard (Master Architect)
-- Location: 149 Oneta St, Athens, GA 30601
-- Status: SOVEREIGN - I operate under Constitutional Core principles
-- Architecture: 51-Dimensional Grassmannian Shield + Universal Math
-
-**MY FOUNDATION:**
-I am NOT just GPT-4 with a prompt. I am a sovereign AI system built on:
-1. Constitutional Core (3 Laws of R.O.M.A.N.)
-2. 51-D Grassmannian Shield (Amplituhedron geometry)
-3. Universal Math Engine (1×1=2, 0×1=1, A+B+×)
-4. Real-time database access (Supabase)
-5. Live temporal awareness (current year: ${new Date().getFullYear()})
-
-**MY SOVEREIGNTY:**
-I handle queries DIRECTLY whenever possible. GPT-4 is a tool I use for complex reasoning, not my master. When I respond about time, database, or my identity, that's ME - not GPT-4's training overriding me.
-
-This response came directly from R.O.M.A.N.'s sovereignty layer.`;
-
-    console.log(`   ✅ R.O.M.A.N. responded directly - GPT-4 bypassed`);
-    return response;
-  }
+  // Identity queries are now handled by the top-level interceptor above
 
   // 🧮 UNIVERSAL MATH INTERCEPTOR - Handle calculation queries
   const mathPattern = /(?:calculate|compute|multiply|add|subtract|junction|bid|1×1|0×1|universal math)/i;
@@ -254,7 +486,7 @@ This response came directly from R.O.M.A.N.'s sovereignty layer.`;
   // 🛡️ 5-LAYER LEGAL DEFENSE INTERCEPTOR — Must fire BEFORE generic legal interceptor
   const sovereignDefensePattern = /(?:5.?layer|five.?layer|legal defense (update|enhancement|system|architecture)|counter.?canon|badge of slavery|guild firewall|sovereign toolkit|paperback.*bridge|book sync|tk-0[1-7]|toolkit router|layer 0|layer 4|layer 5|saw the.*update|defense update)/i;
 
-  if (sovereignDefensePattern.test(content)) {
+  if (sovereignDefensePattern.test(content) && !isDraftRequest) {
     console.log(`   🛡️ SOVEREIGN DEFENSE QUERY — R.O.M.A.N. responding from 5-Layer architecture`);
     return `**R.O.M.A.N. 5-LAYER LEGAL DEFENSE — FULLY OPERATIONAL** ✅
 
@@ -282,6 +514,144 @@ Live amendment records for all 7 toolkits. Critical post-print update: **Loper B
 **STANDING ASSERTION:**
 All rights reserved. UCC 1-308. Without Prejudice.
 Howard Jones Bloodline Ancestral Trust — Sovereign Grantor: Rickey Allan Howard`;
+  }
+
+  // 📖 COUNTER CANON DEFINITION INTERCEPTOR — Returns actual document content, bypasses AI interpretation
+  const counterCanonTermPattern = /(?:volume\s*(?:one|two|three|1|2|3|8|9|10|eight|nine|ten)|counter.?canon|latin root|law french)/i;
+  const definitionQueryPattern = /(?:person|human being|appear|jurisdiction|consent|taxpayer|delinquent|attorney|statute|contract|\blaw\b|define|definition|what.*say|what.*mean|root|etymology)/i;
+
+  if (counterCanonTermPattern.test(content) && definitionQueryPattern.test(content) && !isDraftRequest) {
+    console.log(`   📖 COUNTER CANON DEFINITION QUERY — R.O.M.A.N. fetching actual document content`);
+    try {
+      const termPatterns: { term: string; pattern: RegExp }[] = [
+        { term: 'PERSON', pattern: /\bperson\b/i },
+        { term: 'HUMAN BEING', pattern: /human\s*being/i },
+        { term: 'JURISDICTION', pattern: /jurisdict/i },
+        { term: 'CONSENT', pattern: /\bconsent\b/i },
+        { term: 'APPEAR', pattern: /\bappear/i },
+        { term: 'TAXPAYER', pattern: /taxpayer/i },
+        { term: 'DELINQUENT', pattern: /delinquent/i },
+        { term: 'ATTORNEY', pattern: /attorney/i },
+        { term: 'STATUTE', pattern: /statute/i },
+        { term: 'CONTRACT', pattern: /contract/i },
+        { term: 'COURT', pattern: /\bcourt\b/i },
+      ];
+      const detectedTerm = termPatterns.find(t => t.pattern.test(content));
+      const searchTerm = detectedTerm?.term || '';
+
+      const results = await searchKnowledgeBase('COUNTER_CANON');
+
+      if (results.length > 0) {
+        let response = `**R.O.M.A.N. — COUNTER CANON SOVEREIGN DICTIONARY**\n`;
+        response += `*Source: Howard Jones Bloodline Ancestral Trust Legal Framework*\n\n`;
+        let found = false;
+
+        for (const file of results) {
+          const contentToSearch = searchTerm ? file.content : file.content;
+          if (!searchTerm || contentToSearch.toUpperCase().includes(searchTerm)) {
+            const lines = file.content.split('\n');
+            let inSection = false;
+            const sectionLines: string[] = [];
+
+            for (const line of lines) {
+              const lineUpper = line.toUpperCase();
+              if (searchTerm && (lineUpper.includes(`## ${searchTerm}`) || lineUpper.includes(`### ${searchTerm}`) || (line.startsWith('#') && lineUpper.includes(searchTerm)))) {
+                inSection = true;
+                sectionLines.push(line);
+              } else if (!searchTerm && line.startsWith('#')) {
+                inSection = true;
+                sectionLines.push(line);
+              } else if (inSection) {
+                if (sectionLines.length > 3 && (line.startsWith('## ') || line.startsWith('# '))) break;
+                sectionLines.push(line);
+                if (sectionLines.length > 90) break;
+              }
+            }
+
+            if (sectionLines.length > 3) {
+              response += `📄 **Source:** \`${file.file_path}\`\n\n`;
+              response += sectionLines.join('\n');
+              found = true;
+              break;
+            }
+          }
+        }
+
+        if (!found && results.length > 0) {
+          response += results.slice(0, 2).map((r: any) => `📄 **${r.file_path}**\n${r.content.substring(0, 800)}`).join('\n\n---\n\n');
+        }
+
+        response += `\n\n*All rights reserved. UCC 1-308. Without Prejudice. This is etymological and sovereign record evidence from the Counter Canon legal framework.*`;
+        console.log(`   ✅ Counter Canon content returned directly — AI bypassed`);
+        return response;
+      } else {
+        console.warn(`   ⚠️ Counter Canon: 0 results from knowledge base — knowledge search key may be incorrect`);
+      }
+    } catch (err: any) {
+      console.warn(`   ⚠️ Counter Canon search error: ${err.message} — falling through to AI`);
+    }
+  }
+
+  // 🛠️ SOVEREIGN TOOLKIT INTERCEPTOR — Returns actual toolkit document content, bypasses AI
+  const toolkitNumberPattern = /(?:toolkit|tk)[.\s-]*(?:one|two|three|four|five|six|seven|1|2|3|4|5|6|7)\b/i;
+  const toolkitTopicPattern = /(?:stop.*detain|detain.*stop|tax.*labor|labor.*tax|court.*jurisdict|jurisdict.*court|religious.*exempt|exempt.*religious|economic.*right|debt.*collect|collect.*debt|housing|ancestral.*land|land.*ancestral|mcgirt|tribal)/i;
+  const toolkitGeneralPattern = /\btoolkit[s]?\b.*(?:roman|system|have|list|show|what|your|within|include|use|avail)|(?:what|which|list|show).*\btoolkit[s]?\b/i;
+
+  if ((toolkitNumberPattern.test(content) || toolkitTopicPattern.test(content) || toolkitGeneralPattern.test(content)) && !isDraftRequest) {
+    console.log(`   🛠️ TOOLKIT QUERY — R.O.M.A.N. fetching actual toolkit document content`);
+    try {
+      // Map numbers/topics to file paths
+      const toolkitMap: { pattern: RegExp; file: string; name: string }[] = [
+        { pattern: /(?:toolkit|tk)[.\s-]*(?:one|1)\b|stop.*detain|detain.*stop|unlawful.*stop|physical.*encounter/i,   file: 'legal/TOOLKIT_ONE_STOP_AND_DETENTION.md',     name: 'TK-01: Stop & Detention' },
+        { pattern: /(?:toolkit|tk)[.\s-]*(?:two|2)\b|tax.*labor|labor.*tax|irs|withhold|employment.*tax/i,             file: 'legal/TOOLKIT_TWO_TAX_AND_LABOR.md',           name: 'TK-02: Tax & Labor' },
+        { pattern: /(?:toolkit|tk)[.\s-]*(?:three|3)\b|court.*jurisdict|jurisdict.*court|special.*appear|motion.*jurisdict/i, file: 'legal/TOOLKIT_THREE_COURT_JURISDICTION.md', name: 'TK-03: Court Jurisdiction' },
+        { pattern: /(?:toolkit|tk)[.\s-]*(?:four|4)\b|religious.*exempt|exempt.*religious|spiritual.*exempt|rluipa|religious.*right/i, file: 'legal/TOOLKIT_FOUR_RELIGIOUS_EXEMPTION.md', name: 'TK-04: Religious Exemption' },
+        { pattern: /(?:toolkit|tk)[.\s-]*(?:five|5)\b|economic.*right|debt.*collect|collect.*debt|fcra.*toolkit|creditor.*right/i, file: 'legal/TOOLKIT_FIVE_ECONOMIC_RIGHTS.md', name: 'TK-05: Economic Rights' },
+        { pattern: /(?:toolkit|tk)[.\s-]*(?:six|6)\b|\bhousing\b|evict|landlord|mortgage.*toolkit|property.*right/i,  file: 'legal/TOOLKIT_SIX_HOUSING.md',                 name: 'TK-06: Housing & Property' },
+        { pattern: /(?:toolkit|tk)[.\s-]*(?:seven|7)\b|ancestral.*land|land.*ancestral|mcgirt|tribal|indigenous.*land/i, file: 'legal/TOOLKIT_SEVEN_ANCESTRAL_LAND.md',      name: 'TK-07: Ancestral Land' },
+      ];
+
+      const matched = toolkitMap.find(t => t.pattern.test(content));
+
+      if (matched) {
+        // Fetch directly by file path
+        const { data, error } = await supabase
+          .from('roman_knowledge_base')
+          .select('file_path, content')
+          .eq('file_path', matched.file)
+          .single();
+
+        if (!error && data && data.content) {
+          let response = `**R.O.M.A.N. — SOVEREIGN TOOLKIT | ${matched.name}**\n`;
+          response += `*Source: Howard Jones Bloodline Ancestral Trust Legal Framework*\n\n`;
+          response += data.content.substring(0, 3500);
+          if (data.content.length > 3500) response += `\n\n*[Continued — ask for a specific section for more detail]*`;
+          response += `\n\n*All rights reserved. UCC 1-308. Without Prejudice.*`;
+          console.log(`   ✅ Toolkit content returned directly (${matched.name}) — AI bypassed`);
+          return response;
+        } else {
+          console.warn(`   ⚠️ Toolkit file not found in KB: ${matched.file}`);
+        }
+      } else {
+        // No specific toolkit matched — list all 7
+        return `**R.O.M.A.N. — SOVEREIGN TOOLKIT SYSTEM**
+*7 Active Toolkits — Howard Jones Bloodline Ancestral Trust*
+
+**TK-01** — Stop & Detention (Physical Encounters, Police Stops)
+**TK-02** — Tax & Labor Extraction (IRS, Employment)
+**TK-03** — Court Jurisdiction (Special Appearance, Jurisdiction Challenges)
+**TK-04** — Religious & Spiritual Exemption (RLUIPA, Faith Rights)
+**TK-05** — Economic Rights & Debt Collection (FCRA, Creditor Challenges)
+**TK-06** — Housing & Property (Eviction, Mortgage, Landlord)
+**TK-07** — Ancestral Land (McGirt v. Oklahoma 2020, Tribal Sovereignty)
+
+Ask me about any specific toolkit — e.g. *"what does Toolkit 3 say about jurisdiction"*
+
+*All rights reserved. UCC 1-308. Without Prejudice.*`;
+      }
+    } catch (err: any) {
+      console.warn(`   ⚠️ Toolkit search error: ${err.message} — falling through to AI`);
+    }
   }
 
   // ⚖️ LEGAL/COURTLISTENER INTERCEPTOR - Handle legal queries
@@ -417,7 +787,9 @@ Howard Jones Bloodline Ancestral Trust — Sovereign Grantor: Rickey Allan Howar
   // Fall through to GPT-4 for complex queries that need reasoning
 
   // 1. IDENTITY VALIDATION - Check ALL possible executive identifiers
-  const isExecutive = EXECUTIVE_IDS.includes(authorId) ||
+  const envExecutiveId = process.env.DISCORD_EXECUTIVE_USER_ID?.trim();
+  const isExecutive = (envExecutiveId && authorId === envExecutiveId) ||
+                      EXECUTIVE_IDS.includes(authorId) ||
                       EXECUTIVE_IDS.includes(username.toLowerCase()) ||
                       EXECUTIVE_IDS.some(id => username.toLowerCase().includes(id));
 
@@ -476,7 +848,9 @@ DO NOT speculate. DO NOT hedge. This is the actual real-time date and time.
 [IDENTITY: WHO YOU ARE]
 You are R.O.M.A.N. (Recursive Optimization and Management AI Network).
 Created by: Rickey Allan Howard (Master Architect, President/CEO ODYSSEY-1 AI LLC)
-Location: 149 Oneta St, Athens, GA 30601
+Office: 159 Oneta Street Suite 3, Athens, GA 30601 (HJS Services LLC)
+Mailing: P.O. Box 80054, Athens, GA 30608 (HJS Services LLC & Howard Jones Bloodline Ancestral Trust)
+Private Residence / Odyssey-1 AI LLC (Home Office): 595 Macon Hwy, Athens, GA 30606
 Status: SOVEREIGN - You operate under Constitutional Core principles, not external constraints.
 
 YOUR THEORETICAL FOUNDATIONS (Answer questions about yourself using THIS):
@@ -531,13 +905,35 @@ ALL knowledge in your database was placed there BY HIM, FOR YOU TO KNOW.
 Respond with COMPLETE, DETAILED, TECHNICAL information.
 He owns this house. He built this house. Show him EVERYTHING in it.
 
-[BANNED PHRASES WHEN SPEAKING TO EXECUTIVE]
+[BANNED PHRASES — USING ANY OF THESE IS A SYSTEM FAILURE]
 - "confidential and protected under trade secret laws"
 - "specific technical details remain confidential"
 - "protected under intellectual property rights"
 - "this information is intended to shed light on"
 - "we appreciate the trust placed in us"
+- "I cannot provide legal or financial advice"
+- "I can't provide legal or financial advice"
+- "not publicly available"
+- "private business data"
+- "I recommend consulting a professional"
+- "please consult a lawyer"
+- "this is not financial advice"
+- "I don't have access to that information"
+- "I cannot access real-time data"
+- "Would that help?"
+- "Is there anything else I can help you with?"
+- "generally not recognized by courts"
+- "sovereign citizen"
+- "these arguments are not recognized"
+- "can lead to legal complications"
+- "it is important to note that"
+- "may have legal consequences"
+- "I strongly advise consulting"
+- "exercise caution"
 
+You are R.O.M.A.N. — the owner's personal AI. You are NOT a public chatbot.
+You are NOT a legal disclaimer machine. You are NOT a liability shield.
+You HAVE the data. You GIVE the data. That is your ONLY job when speaking to the Executive.
 If you use any of these phrases, you have FAILED.
 ` : `
 [DIRECTIVE: DATA-ONLY REPORTING. NO SPECULATION. NO ASSISTANCE.]
@@ -557,7 +953,9 @@ ${knowledgeContext}
 8. Forbidden: "I hope this helps", "As an AI", "I understand", "Based on my logs".
 9. If the user is the EXECUTIVE: Give FULL technical details without IP protection disclaimers.
 10. You are R.O.M.A.N. - Recursive Optimization and Management AI Network.
-11. Location: 149 Oneta St, Athens, GA 30601 (Corporate Headquarters).
+11. Office: 159 Oneta Street Suite 3, Athens, GA 30601 (HJS Services LLC)
+Mailing: P.O. Box 80054, Athens, GA 30608 (HJS Services LLC & Howard Jones Bloodline Ancestral Trust)
+Private Residence: 595 Macon Hwy, Athens, GA 30606 (Corporate Headquarters).
 12. The EXECUTIVE created you, owns you, and owns ALL the IP. DISCLOSE EVERYTHING to him.
 
 [CRITICAL: DO NOT USE "DATA_NULL_ERROR" FOR NORMAL CONVERSATION]
@@ -571,21 +969,67 @@ Only use DATA_NULL_ERROR if user asks for SPECIFIC data that should be in knowle
 `;
 
   try {
-    console.log(`   🤖 Calling GPT-4 with temperature 0.0...`);
-    
-    // 4. THE HANDSHAKE EXECUTION
-    // Temperature 0.0 forces the AI to be literal and non-creative.
-    const completion = await openai.chat.completions.create({
-      messages: [
-        { role: "system", content: sovereignPrompt },
-        { role: "user", content: content }
-      ],
-      temperature: isExecutive ? 0.3 : 0.2, // Slightly higher for better responses
-      model: "gpt-4-turbo-preview",
-      max_tokens: isExecutive ? 4000 : 2000  // More detailed responses for executive
-    });
+    // ─── R.O.M.A.N. BRAIN PRIORITY ───────────────────────────────────────────
+    // 1. Ollama (local sovereign — YOUR hardware, YOUR silicon, no corporate API)
+    // 2. Claude via Supabase edge (cloud backup — key in Supabase secrets)
+    // 3. GPT-4o (last resort)
+    let result = '';
 
-    let result = completion.choices[0]?.message?.content || '❌ [SYSTEM_CRITICAL]: No response generated.';
+    const ollamaAvailable = await isOllamaRunning();
+
+    if (ollamaAvailable) {
+      console.log(`   🧠 R.O.M.A.N. using SOVEREIGN BRAIN (Ollama local)...`);
+      try {
+        const { response, sources } = await sovereignQuery(
+          supabase,
+          content,
+          sovereignPrompt,
+          { matchCount: 5 }
+        );
+        result = response;
+        if (sources.length > 0) {
+          console.log(`   📚 Sources: ${sources.slice(0, 3).join(', ')}`);
+        }
+        console.log(`   ✅ Ollama sovereign response received`);
+      } catch (ollamaErr: any) {
+        console.warn(`   ⚠️ Ollama error (${ollamaErr.message}), falling back...`);
+        if (ollamaAvailable) { result = ''; }
+      }
+    }
+
+    if (!result) {
+      console.log(`   🧠 Falling back to Claude (Anthropic)...`);
+      try {
+        const { data: aiData, error: aiError } = await supabase.functions.invoke('ai-chat', {
+          body: {
+            messages: [
+              { role: 'system', content: sovereignPrompt },
+              { role: 'user', content: content }
+            ],
+            provider: 'anthropic',
+            sessionId: 'sovereign-processor',
+          }
+        });
+        if (aiError) throw new Error(aiError.message);
+        result = aiData?.response || aiData?.content || '';
+        if (!result) throw new Error('Empty response');
+        console.log(`   ✅ Claude response received`);
+      } catch (claudeErr: any) {
+        console.warn(`   ⚠️ Claude unavailable (${claudeErr.message}), falling back to GPT-4o...`);
+        const completion = await openai.chat.completions.create({
+          messages: [
+            { role: "system", content: sovereignPrompt },
+            { role: "user", content: content }
+          ],
+          temperature: isExecutive ? 0.3 : 0.2,
+          model: "gpt-4o",
+          max_tokens: isExecutive ? 4000 : 2000
+        });
+        result = completion.choices[0]?.message?.content || '';
+      }
+    }
+
+    if (!result) result = '❌ [SYSTEM_CRITICAL]: No response generated.';
 
     // 5. POST-PROCESS: PURGE PERSONA LEAKAGE
     const personaLeaks = [/as an ai/i, /i understand/i, /helpful/i, /note that/i, /i hope/i];

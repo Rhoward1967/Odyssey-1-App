@@ -26,6 +26,7 @@ import {
 } from './roman-auto-audit';
 import { RomanAutonomyIntegration } from './RomanAutonomyIntegration';
 import { romanFCRAMonitor } from './romanFCRAMonitor';
+import { runKnowledgeSync, formatSyncReport, getTrackedFileCount } from './romanKnowledgeSync';
 import { generateIPAwareSystemPrompt } from './romanIPAwarePrompt';
 import { searchKnowledgeBase } from './romanKnowledgeSearch';
 import { processSovereignCommand } from './romanSovereignProcessor';
@@ -68,8 +69,8 @@ console.log('DEBUG DISCORD BOT TOKEN:', process.env.DISCORD_BOT_TOKEN ? process.
 console.log('DEBUG OPENAI KEY:', process.env.OPENAI_API_KEY ? process.env.OPENAI_API_KEY.substring(0, 8) + '...' : 'undefined');
 
 // Read and validate IMMEDIATELY after dotenv loads
-const SUPABASE_URL = process.env.SUPABASE_URL?.trim();
-const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
+const SUPABASE_URL = (process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL)?.trim();
+const SUPABASE_KEY = (process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_SERVICE_ROLE_KEY)?.trim();
 
 console.log('🔍 Environment check:');
 console.log('  SUPABASE_URL:', SUPABASE_URL);
@@ -251,6 +252,10 @@ You have FULL ACCESS to read Master Architect Rickey Howard's seven-book series 
 - "List all books" = Show complete seven-book series metadata
 - "Quote from The Program" = Extract specific passages
 - "What does book 5 say about..." = Answer from book content
+
+**KNOWLEDGE SYNC COMMANDS:**
+- "sync knowledge" / "update knowledge" / "knowledge sync" = Run immediate full knowledge sync (checksum-based, only uploads changed files)
+- Knowledge auto-syncs on startup and daily at 3AM — you always have current information
 
 **FCRA COMPLIANCE MONITORING COMMANDS:**
 - "fcra status" / "certified mail" = Quick status of all 17 certified mailings
@@ -921,6 +926,67 @@ client.on('clientReady', async () => {
     } catch (err: any) {
       console.error('❌ FCRA Monitor initialization failed:', err.message);
     }
+
+    // ─── AUTONOMOUS KNOWLEDGE SYNC ────────────────────────────────────────
+    // R.O.M.A.N. must always operate on current information.
+    // Startup: sync files modified in the last 14 days.
+    // Daily at 3AM: full incremental sync (checksum-based, only uploads changes).
+    try {
+      const statusChannelId = process.env.DISCORD_FCRA_ALERT_CHANNEL || process.env.DISCORD_STATUS_CHANNEL;
+
+      // Helper: post sync summary to Discord channel
+      const postSyncSummary = async (report: string) => {
+        if (!statusChannelId) return;
+        try {
+          const ch = await client.channels.fetch(statusChannelId);
+          if (ch && 'isTextBased' in ch && ch.isTextBased()) {
+            const chunks = report.match(/[\s\S]{1,1900}/g) || [];
+            for (const chunk of chunks) await (ch as any).send(chunk);
+          }
+        } catch { /* channel post errors are non-fatal */ }
+      };
+
+      console.log(`[KnowledgeSync] Startup sync — tracking ${getTrackedFileCount()} files...`);
+      const startupResult = await runKnowledgeSync('startup');
+      console.log(`[KnowledgeSync] Startup complete — ${startupResult.synced} synced, ${startupResult.skipped} unchanged`);
+
+      // Only post to Discord if something actually changed
+      if (startupResult.synced > 0 || startupResult.failed > 0) {
+        await postSyncSummary(formatSyncReport(startupResult, 'Startup'));
+      }
+
+      // Schedule full daily sync — runs once per day at ~3AM local time
+      const scheduleNextDailySync = () => {
+        const now = new Date();
+        const next3AM = new Date(now);
+        next3AM.setHours(3, 0, 0, 0);
+        if (next3AM <= now) next3AM.setDate(next3AM.getDate() + 1);
+        const msUntil3AM = next3AM.getTime() - now.getTime();
+
+        setTimeout(async () => {
+          console.log('[KnowledgeSync] Running daily full sync...');
+          try {
+            const dailyResult = await runKnowledgeSync('full');
+            console.log(`[KnowledgeSync] Daily sync complete — ${dailyResult.synced} synced`);
+            await postSyncSummary(formatSyncReport(dailyResult, 'Daily 3AM'));
+          } catch (err: any) {
+            console.error('[KnowledgeSync] Daily sync failed:', err.message);
+          }
+          // Re-schedule for the next day
+          scheduleNextDailySync();
+        }, msUntil3AM);
+
+        const hoursUntil = (msUntil3AM / 1000 / 60 / 60).toFixed(1);
+        console.log(`[KnowledgeSync] Next full sync scheduled in ${hoursUntil}h (daily at 3AM)`);
+      };
+
+      scheduleNextDailySync();
+      console.log(`✅ R.O.M.A.N. Knowledge Sync: ACTIVE — ${getTrackedFileCount()} files tracked`);
+
+    } catch (err: any) {
+      console.error('❌ Knowledge Sync initialization failed:', err.message);
+    }
+
   } else {
     console.error('❌ Skipping identity initialization due to database connection failure');
   }
@@ -988,8 +1054,93 @@ async function handleDirectMessage(message: Message) {
     return;
   }
   
+  // COMMAND CHECKS — run before executive routing so slash-style commands always work
+  const content = message.content.toLowerCase().trim();
+
+  if (content.includes('ollama status') || content.includes('brain status') || content.includes('sovereign brain')) {
+    const { getOllamaStatus } = await import('./romanOllamaService');
+    const status = await getOllamaStatus();
+    const lines = [
+      `**R.O.M.A.N. Sovereign Brain Status**`,
+      ``,
+      `**Ollama Running:** ${status.running ? '✅ ONLINE' : '❌ OFFLINE'}`,
+      `**Base URL:** \`${status.base_url}\``,
+      `**Inference Model (${process.env.OLLAMA_MODEL || 'llama3'}):** ${status.sovereign_model_ready ? '✅ Ready' : '⚠️ Not downloaded'}`,
+      `**Embed Model (${process.env.OLLAMA_EMBED_MODEL || 'nomic-embed-text'}):** ${status.embed_model_ready ? '✅ Ready' : '⚠️ Not downloaded'}`,
+      `**Available Models:** ${status.models.length > 0 ? status.models.join(', ') : 'None'}`,
+      ``,
+      status.running
+        ? `*R.O.M.A.N. is operating on SOVEREIGN hardware. No corporate API required.*`
+        : `*Ollama offline — falling back to Claude/GPT. Run \`ollama serve\` on F: drive to activate sovereign brain.*`,
+    ];
+    await message.reply(lines.join('\n'));
+    return;
+  }
+
+  if (content.includes('seed vault') || content.includes('ingest vault') || content.includes('embed knowledge')) {
+    await message.reply(`🧠 **Seeding Sovereign Vault** — embedding all knowledge base entries into vector store...\nThis will take several minutes. I'll report back when done.`);
+    try {
+      const { bulkIngestKnowledgeBase, isOllamaRunning } = await import('./romanOllamaService');
+      const ollamaUp = await isOllamaRunning();
+      if (!ollamaUp) {
+        await message.reply('❌ Ollama is offline. Run `ollama serve` first, then retry.');
+        return;
+      }
+      const result = await bulkIngestKnowledgeBase(supabase);
+      await message.reply(
+        `✅ **Sovereign Vault Seeded**\n` +
+        `**Success:** ${result.success} entries embedded\n` +
+        `**Failed:** ${result.failed} entries\n\n` +
+        `R.O.M.A.N. now has full semantic search over his knowledge base.`
+      );
+      return;
+    } catch (err: any) {
+      await message.reply(`❌ Vault seeding failed: ${err.message}`);
+      return;
+    }
+  }
+
+  if (content === 'fcra status' || content === 'certified mail' || content === 'check mailings') {
+    try {
+      const status = await romanFCRAMonitor.getQuickStatus();
+      await message.reply(status);
+      return;
+    } catch (err: any) {
+      await message.reply(`❌ FCRA status check failed: ${err.message}`);
+      return;
+    }
+  }
+
+  if (content === 'fcra check' || content === 'run fcra' || content === 'check deadlines') {
+    await message.reply('🔍 Running full FCRA compliance check...');
+    try {
+      await romanFCRAMonitor.performDailyCheck();
+      const status = await romanFCRAMonitor.getQuickStatus();
+      await message.reply('✅ **FCRA Check Complete**\n\n' + status);
+      return;
+    } catch (err: any) {
+      await message.reply(`❌ FCRA check failed: ${err.message}`);
+      return;
+    }
+  }
+
+  if (content.includes('sync knowledge') || content.includes('update knowledge') || content.includes('sync files') || content.includes('knowledge sync')) {
+    await message.reply(`🔄 Running full knowledge sync — scanning ${getTrackedFileCount()} files for changes...`);
+    try {
+      const result = await runKnowledgeSync('full');
+      await message.reply(formatSyncReport(result, 'Manual'));
+      return;
+    } catch (err: any) {
+      await message.reply(`❌ Knowledge sync failed: ${err.message}`);
+      return;
+    }
+  }
+
   // EXECUTIVE IDENTITY CHECK - Multiple IDs/usernames for Rickey Howard
+  const envExecutiveId = process.env.DISCORD_EXECUTIVE_USER_ID?.trim();
   const EXECUTIVE_IDS = [
+    "924413531988844574",   // Rickey Howard — verified Discord numeric ID
+    "rhoward123",           // Primary Discord username
     "rhoward1236526",
     "266680472869928960",
     "rickey",
@@ -998,9 +1149,10 @@ async function handleDirectMessage(message: Message) {
     "rhoward",
     "master_architect",
   ];
-  
+
   const username = message.author.username.toLowerCase();
-  const isExecutive = EXECUTIVE_IDS.includes(userId) || 
+  const isExecutive = (envExecutiveId && userId === envExecutiveId) ||
+                      EXECUTIVE_IDS.includes(userId) ||
                       EXECUTIVE_IDS.includes(username) ||
                       EXECUTIVE_IDS.some(id => username.includes(id));
   
@@ -1035,8 +1187,6 @@ async function handleDirectMessage(message: Message) {
   }
   
   // Check for audit commands FIRST
-  const content = message.content.toLowerCase().trim();
-  
   if (content.includes('audit system') || content.includes('run audit') || content.includes('system audit')) {
     await message.reply('🔍 Running complete system audit... This may take a moment.');
     try {
@@ -1356,19 +1506,25 @@ async function handleDirectMessage(message: Message) {
   
   // SEARCH KNOWLEDGE BASE for relevant context BEFORE answering
   const messageWords = message.content.toLowerCase().split(/\s+/);
-  const keywords = messageWords.filter(w => w.length > 3); // Words longer than 3 chars
-  
+  const stopWords = new Set(['what', 'tell', 'about', 'know', 'does', 'have', 'that', 'this', 'with', 'from', 'your', 'more', 'will', 'been', 'also', 'into', 'then', 'than', 'some', 'like', 'just', 'over', 'such', 'when', 'them', 'they', 'here', 'give', 'show', 'help']);
+  const keywords = messageWords.filter(w => w.length > 3 && !stopWords.has(w));
+
+  // Build a de-duped result set across top 5 keywords
+  const seenPaths = new Set<string>();
   let knowledgeResults: any[] = [];
   if (keywords.length > 0) {
-    // Search for most relevant keyword (longest word first)
     const sortedKeywords = keywords.sort((a, b) => b.length - a.length);
-    for (const keyword of sortedKeywords.slice(0, 3)) { // Check top 3 keywords
+    for (const keyword of sortedKeywords.slice(0, 5)) {
       const results = await searchKnowledgeBase(keyword);
-      if (results.length > 0) {
-        knowledgeResults = results;
-        console.log(`🔍 Found ${results.length} knowledge entries for "${keyword}"`);
-        break;
+      for (const r of results) {
+        if (!seenPaths.has(r.file_path)) {
+          seenPaths.add(r.file_path);
+          knowledgeResults.push(r);
+        }
       }
+    }
+    if (knowledgeResults.length > 0) {
+      console.log(`🔍 Found ${knowledgeResults.length} unique knowledge entries across top keywords`);
     }
   }
   
@@ -1398,12 +1554,14 @@ async function handleDirectMessage(message: Message) {
   // Add knowledge search results FIRST (highest priority)
   if (knowledgeResults.length > 0) {
     enhancedMessage += `\n=== KNOWLEDGE BASE SEARCH RESULTS (${knowledgeResults.length} files) ===\n`;
-    knowledgeResults.slice(0, 5).forEach((result: any) => {
-      enhancedMessage += `📄 ${result.file_path}\n`;
-      const preview = result.content.substring(0, 500);
-      enhancedMessage += `${preview}...\n\n`;
+    enhancedMessage += `INSTRUCTION: Use this data as your PRIMARY source. Do NOT give generic definitions. Answer specifically from these files.\n\n`;
+    knowledgeResults.slice(0, 6).forEach((result: any) => {
+      enhancedMessage += `📄 FILE: ${result.file_path}\n`;
+      // 2500 chars per file — enough to actually understand the content
+      const preview = result.content.substring(0, 2500);
+      enhancedMessage += `${preview}\n---\n\n`;
     });
-    enhancedMessage += `[USE THIS DATA - DO NOT SPECULATE]\n\n`;
+    enhancedMessage += `[END KNOWLEDGE BASE — ANSWER FROM ABOVE DATA ONLY, NOT FROM GENERAL KNOWLEDGE]\n\n`;
   }
   
   // Add execution result FIRST if it happened
@@ -1646,16 +1804,37 @@ You diagnose and prescribe fixes. The execution happens through proper channels.
       }
     }
     
-    // If not a command, use GPT-4 for conversation
-    console.log('🔄 Calling OpenAI GPT-4-Turbo with system context...');
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4-turbo-preview", // 128k context window - handles books + self-sustainability plan
-      messages: history,
-      temperature: 0.7,
-    });
+    // R.O.M.A.N. primary brain: Claude (Anthropic) via Supabase edge function
+    // Anthropic API key lives in Supabase secrets — not local .env
+    // Fallback: OpenAI if edge function unavailable
+    let response = '';
 
-    const response = completion.choices[0]?.message?.content || 'I apologize, I could not generate a response.';
-    console.log(`✅ GPT-4 response: ${response.substring(0, 100)}...`);
+    console.log('🧠 R.O.M.A.N. calling primary brain: Claude (Anthropic) via ai-chat edge function...');
+    try {
+      const { data: aiData, error: aiError } = await supabase.functions.invoke('ai-chat', {
+        body: {
+          messages: history,
+          provider: 'anthropic',
+          sessionId: userId,
+        }
+      });
+
+      if (aiError) throw new Error(aiError.message);
+      response = aiData?.response || aiData?.content || '';
+      if (!response) throw new Error('Empty response from Claude');
+      console.log(`✅ Claude (Anthropic) response: ${response.substring(0, 100)}...`);
+    } catch (claudeErr: any) {
+      console.warn(`⚠️ Claude unavailable (${claudeErr.message}), falling back to GPT-4o...`);
+      const completion = await openai.chat.completions.create({
+        model: "gpt-4o",
+        messages: history,
+        temperature: 0.7,
+      });
+      response = completion.choices[0]?.message?.content || 'I apologize, I could not generate a response.';
+      console.log(`✅ GPT-4o fallback response: ${response.substring(0, 100)}...`);
+    }
+
+    if (!response) response = 'I apologize, I could not generate a response.';
     
     history.push({ role: "assistant", content: response });
     
