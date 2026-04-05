@@ -50,6 +50,11 @@ export default defineConfig(({ mode }) => ({
       }
     }
   },
+  define: {
+    // Polyfill process.env for browser — Node-style env access in browser context
+    'process.env': {},
+    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
+  },
   optimizeDeps: {
     exclude: ['discord.js', 'zlib-sync', 'bufferutil', 'utf-8-validate']
   },

@@ -592,7 +592,6 @@ Date received = Date cease & desist takes effect
 Any contact after = FDCPA violation
 `;
   }
-}
 
   // ═══════════════════════════════════════════════════════════════════════
   // LAYER 0: CONSTITUTIONAL AUDITOR

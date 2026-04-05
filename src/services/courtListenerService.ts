@@ -19,7 +19,7 @@ import { supabase } from '@/lib/supabaseClient';
 
 // Free Law Project API Configuration
 const COURTLISTENER_API_BASE = 'https://www.courtlistener.com/api/rest/v3';
-const COURTLISTENER_API_KEY = process.env.COURTLISTENER_API_KEY || '';
+const COURTLISTENER_API_KEY = import.meta.env.VITE_COURTLISTENER_API_KEY || '';
 
 interface CourtListenerSearchParams {
   query: string;

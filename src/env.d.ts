@@ -11,6 +11,7 @@ interface ImportMetaEnv {
   readonly VITE_SAM_GOV_API_KEY?: string
   readonly VITE_ARXIV_API_KEY?: string
   readonly VITE_GITHUB_API_KEY?: string
+  readonly VITE_OSC_ADMIN_USER_ID?: string
 }
 
 interface ImportMeta {

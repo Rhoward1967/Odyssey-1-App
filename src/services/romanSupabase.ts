@@ -24,14 +24,15 @@ import { createClient } from '@supabase/supabase-js';
 
 // Service Role Key bypasses Row Level Security
 // This gives R.O.M.A.N. GLOBAL database access
-// Use process.env for Node.js compatibility (Discord bot)
-const supabaseUrl = typeof process !== 'undefined'
-  ? (process.env?.SUPABASE_URL || process.env?.VITE_SUPABASE_URL)
-  : (typeof import.meta !== 'undefined' && import.meta.env?.VITE_SUPABASE_URL);
+// Use import.meta.env for browser (Vite), process.env for Node.js (Discord bot)
+const isBrowser = typeof window !== 'undefined';
+const supabaseUrl = isBrowser
+  ? import.meta.env.VITE_SUPABASE_URL
+  : (process.env?.SUPABASE_URL || process.env?.VITE_SUPABASE_URL);
 
-const supabaseServiceKey = typeof process !== 'undefined' && process.env?.SUPABASE_SERVICE_ROLE_KEY
-  ? process.env.SUPABASE_SERVICE_ROLE_KEY
-  : (typeof import.meta !== 'undefined' && import.meta.env?.VITE_SUPABASE_SERVICE_ROLE_KEY);
+const supabaseServiceKey = isBrowser
+  ? (import.meta.env.VITE_SUPABASE_SERVICE_ROLE_KEY || null)
+  : (process.env?.SUPABASE_SERVICE_ROLE_KEY || process.env?.VITE_SUPABASE_SERVICE_ROLE_KEY || null);
 
 if (!supabaseUrl) {
   throw new Error('[R.O.M.A.N.] Missing SUPABASE_URL/VITE_SUPABASE_URL - cannot initialize');
@@ -48,7 +49,7 @@ if (!supabaseServiceKey) {
  */
 export const romanSupabase = createClient(
   supabaseUrl!,
-  supabaseServiceKey || (typeof process !== 'undefined' && process.env?.SUPABASE_ANON_KEY) || (typeof import.meta !== 'undefined' && import.meta.env?.VITE_SUPABASE_ANON_KEY)!,
+  supabaseServiceKey || (isBrowser ? import.meta.env.VITE_SUPABASE_ANON_KEY : (process.env?.SUPABASE_ANON_KEY || process.env?.VITE_SUPABASE_ANON_KEY))!,
   {
     auth: {
       autoRefreshToken: false,

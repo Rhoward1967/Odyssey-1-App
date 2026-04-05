@@ -391,3 +391,25 @@ Document Version: 1.0
 For USPTO Use Only:
 Reel: _______ Frame: _______
 Recorded: _______________
+
+═══════════════════════════════════════════════════════════════════════════════
+                         RECORDATION CONFIRMATION — ON FILE
+═══════════════════════════════════════════════════════════════════════════════
+
+CONFIRMATION NUMBER:    1360
+STATUS:                 RECORDED — Assignment to ODYSSEY-1 AI LLC confirmed
+SOURCE:                 ODYSSEY-1 AI LLC Official Meeting Minutes, January 17, 2026
+                        (Meeting: Morning Session — Patent Filing Confirmation)
+APPLICATIONS COVERED:   63/913,134 (PPA — Dual-Hemisphere Constitutional AI)
+                        19/396,082 (Utility — Modular Wireless Computing System)
+EFFECTIVE DATE:         As of filing date (December 2, 2025 / November 20, 2025)
+FOREIGN FILING LICENSE: GRANTED — effective December 2, 2025, under 35 U.S.C. 184
+
+NOTE ON REEL/FRAME: Reel/Frame numbers are issued by the USPTO Assignment Branch
+upon processing. To retrieve the official Reel/Frame number, search the USPTO
+Patent Assignment database at: https://assignment.uspto.gov
+Query by Application Number: 63/913,134 or 19/396,082, Assignee: ODYSSEY-1 AI LLC.
+
+SUBSEQUENT ASSIGNMENT: Patent application 63/913,134 was subsequently reassigned
+from ODYSSEY-1 AI LLC to Howard Jones Bloodline Ancestral Trust (EIN: 41-6850149)
+by Assignment of Interest prepared March 22, 2026. See legal/ASSIGNMENT_OF_INTEREST_63913134.md.

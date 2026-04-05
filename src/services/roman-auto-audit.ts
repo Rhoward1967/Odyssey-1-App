@@ -51,7 +51,7 @@ export async function auditStripeConnectivity(): Promise<AuditResult> {
   }
 
   try {
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2024-11-20.acacia' });
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2026-01-28.clover' });
     const balance = await stripe.balance.retrieve();
     const mode    = process.env.STRIPE_SECRET_KEY!.startsWith('sk_live') ? 'LIVE' : 'TEST';
 
@@ -205,7 +205,7 @@ export async function auditEnvironmentConfig(): Promise<AuditResult> {
   const requiredVars = [
     'VITE_SUPABASE_URL',
     'VITE_SUPABASE_ANON_KEY',
-    'SUPABASE_SERVICE_ROLE_KEY',
+    'VITE_SUPABASE_SERVICE_ROLE_KEY',
     'OPENAI_API_KEY',
     'DISCORD_BOT_TOKEN',
     'STRIPE_SECRET_KEY'
