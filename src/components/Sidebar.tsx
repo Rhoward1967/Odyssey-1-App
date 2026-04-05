@@ -14,7 +14,8 @@ import {
   Settings,
   TrendingUp,
   Tv,
-  Users
+  Users,
+  Coins
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
@@ -28,6 +29,7 @@ const menuItems = [
   { icon: Receipt, label: 'Invoicing', href: '/app/invoicing' },
   { icon: ClipboardList, label: 'Bids', href: '/app/bids' },
   { icon: ListChecks, label: 'Catalog', href: '/app/catalog' },
+  { icon: Coins, label: 'OSC Wallet', href: '/app/osc-wallet' },
   { icon: Scale, label: 'Legal Defense', href: '/app/legal-defense' },
   { icon: BookOpen, label: 'Handbook', href: '/app/handbook' },
   { icon: Settings, label: 'Admin Center', href: '/app/admin' },
