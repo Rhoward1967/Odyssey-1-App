@@ -425,9 +425,10 @@ Ask me anything. I know this house.`;
   }
 
   // 🕐 TEMPORAL QUERY INTERCEPTOR - Handle date/time queries
-  const temporalPattern = /(?:what.*(?:date|time|day|year)|current.*(?:date|time|day|year)|today|what.*today|time.*now|date.*now)/i;
+  // Must ask specifically about date/time — "how is it going today" should NOT trigger this
+  const temporalPattern = /(?:what.*(?:date|time|day|year)|current.*(?:date|time|day|year)|what.*today|time.*now|date.*now|what day|what time|what year)/i;
 
-  if (temporalPattern.test(content)) {
+  if (temporalPattern.test(content) && !/how.*(?:going|doing|are you|you doing)/i.test(content)) {
     console.log(`   ⏰ TEMPORAL QUERY - R.O.M.A.N. handling directly (bypassing GPT-4)`);
 
     const now = new Date();
