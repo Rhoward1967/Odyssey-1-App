@@ -17,6 +17,9 @@ import fs from 'fs';
 import path from 'path';
 import { createClient } from '@supabase/supabase-js';
 import { createRequire } from 'module';
+import { config } from 'dotenv';
+
+config(); // load .env before reading process.env
 
 const require = createRequire(import.meta.url);
 
@@ -30,7 +33,7 @@ const FOLDER_FILTER = (() => {
   return idx !== -1 ? process.argv[idx + 1]?.toLowerCase() : null;
 })();
 
-const SKIP_EXTENSIONS = new Set(['.png', '.jpg', '.jpeg', '.gif', '.bmp', '.zip', '.rar', '.7z', '.exe', '.dll', '.sys', '.lnk']);
+const SKIP_EXTENSIONS = new Set(['.png', '.jpg', '.jpeg', '.gif', '.bmp', '.zip', '.rar', '.7z', '.exe', '.dll', '.sys', '.lnk', '.mp3', '.wav', '.flac', '.m4a', '.aac', '.ogg']);
 const SKIP_DIRS = new Set(['System Volume Information', '$RECYCLE.BIN', 'ilovepdf_compressed', 'pdf_pages']);
 const MAX_FILE_SIZE_MB = 60;  // Raised — Chase, Equifax, Citi case files are 14-54MB. Supabase entry still caps at 100k chars.
 
