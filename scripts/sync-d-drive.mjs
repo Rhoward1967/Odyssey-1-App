@@ -32,7 +32,7 @@ const FOLDER_FILTER = (() => {
 
 const SKIP_EXTENSIONS = new Set(['.png', '.jpg', '.jpeg', '.gif', '.bmp', '.zip', '.rar', '.7z', '.exe', '.dll', '.sys', '.lnk']);
 const SKIP_DIRS = new Set(['System Volume Information', '$RECYCLE.BIN', 'ilovepdf_compressed', 'pdf_pages']);
-const MAX_FILE_SIZE_MB = 10;
+const MAX_FILE_SIZE_MB = 60;  // Raised — Chase, Equifax, Citi case files are 14-54MB. Supabase entry still caps at 100k chars.
 
 // Supabase client only initialized when actually uploading (not needed for dry-run)
 const supabase = DRY_RUN ? null : createClient(SUPABASE_URL, SUPABASE_KEY);

@@ -1130,6 +1130,25 @@ async function handleDirectMessage(message: Message) {
     }
   }
 
+  // ─── SYNC MANIFEST ───────────────────────────────────────────────────────────
+  if (content.includes('sync manifest') || content.includes('manifest update') || content.includes('update manifest') || content.includes('manifest status') || content.includes('show manifest')) {
+    const { updateSyncManifest, getManifestDiscordSummary } = await import('./romanSyncManifest');
+
+    if (content.includes('manifest status') || content.includes('show manifest')) {
+      const summary = await getManifestDiscordSummary();
+      await message.reply(summary);
+      return;
+    }
+
+    await message.reply('📋 Updating Sync Manifest from live data...');
+    const result = await updateSyncManifest();
+    await message.reply(result.success
+      ? `✅ **Sync Manifest Updated**\n\`\`\`\n${result.message}\n\`\`\`\n*Saved to \`docs/ROMAN_SYNC_MANIFEST.md\` + knowledge base. Any AI reading it is now synchronized.*`
+      : `❌ ${result.message}`
+    );
+    return;
+  }
+
   if (content.includes('sync knowledge') || content.includes('update knowledge') || content.includes('sync files') || content.includes('knowledge sync')) {
     await message.reply(`🔄 Running full knowledge sync — scanning ${getTrackedFileCount()} files for changes...`);
     try {
