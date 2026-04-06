@@ -225,6 +225,7 @@ const KNOWLEDGE_FILES: string[] = [
   'src/services/openai.ts',
   'src/services/oscCreditSystem.ts',
   'src/services/oscOracle.ts',
+  'src/services/luluPublishingService.ts',
   'src/services/postGridService.ts',
   'src/services/patentDeadlineTracker.ts',
   'src/services/patentDrawingGenerator.ts',

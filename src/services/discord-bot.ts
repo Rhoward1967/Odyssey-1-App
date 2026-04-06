@@ -253,6 +253,12 @@ You have FULL ACCESS to read Master Architect Rickey Howard's seven-book series 
 - "Quote from The Program" = Extract specific passages
 - "What does book 5 say about..." = Answer from book content
 
+**SOVEREIGN PUBLISHING COMMANDS:**
+- "publishing status" = Show all Lulu print jobs and distribution submissions
+- "publish help" = Full publishing workflow guide
+- "estimate book [#] [interior_url] [cover_url]" = Cost estimate before committing (no charge)
+- "publish book [#] [interior_url] [cover_url]" = Submit print job to Lulu xPress (ships to Trust address)
+
 **KNOWLEDGE SYNC COMMANDS:**
 - "sync knowledge" / "update knowledge" / "knowledge sync" = Run immediate full knowledge sync (checksum-based, only uploads changed files)
 - Knowledge auto-syncs on startup and daily at 3AM — you always have current information
@@ -1161,6 +1167,108 @@ async function handleDirectMessage(message: Message) {
       await message.reply(`❌ D-drive sync failed: ${err.message}\n\nMake sure the USB drive is connected at D:\\ and pdf-parse + mammoth are installed.`);
     }
     return;
+  }
+
+  // ─── SOVEREIGN PUBLISHING COMMANDS ──────────────────────────────────────────
+  // "publishing status"         → show recent print jobs
+  // "estimate book 1"           → cost estimate (dry run, no charge)
+  // "publish book 1 [url] [url]" → submit print job to Lulu
+  // "publish help"              → explain the publishing workflow
+
+  if (content.includes('publish') || content.includes('publishing') || content.includes('lulu')) {
+    const { publishSovereignBook, estimatePrintCost, getPrintJobStatus, LULU_PACKAGES, formatPublishStatus } =
+      await import('./luluPublishingService');
+    const { romanSupabase } = await import('./romanSupabase');
+
+    // publishing status — show recent jobs
+    if (content.includes('publishing status') || content.includes('publish status') || content.includes('lulu status')) {
+      const { data: jobs } = await romanSupabase
+        .from('sovereign_publications')
+        .select('book_title, job_type, status, quantity, lulu_job_id, created_at')
+        .order('created_at', { ascending: false })
+        .limit(10);
+
+      if (!jobs || jobs.length === 0) {
+        await message.reply(`📚 **Sovereign Publishing — No jobs yet**\n\nUse \`publish book [number] [interior_pdf_url] [cover_pdf_url]\` to submit your first title to Lulu xPress.\n\nAll 8 books of the Sovereign Self Series are standing by.`);
+      } else {
+        const lines = jobs.map(j =>
+          `• **${j.book_title}** | ${j.job_type} | ${j.status} | ${j.quantity ? `${j.quantity} copies` : ''} | ${new Date(j.created_at).toLocaleDateString()}`
+        );
+        await message.reply(`📚 **Sovereign Publishing — Recent Jobs**\n\n${lines.join('\n')}\n\n*Howard Jones Bloodline Ancestral Trust — UCC 1-308*`);
+      }
+      return;
+    }
+
+    // publish help
+    if (content.includes('publish help') || content.includes('publishing help') || content.includes('lulu help')) {
+      await message.reply(
+        `📚 **R.O.M.A.N. Sovereign Publishing**\n\n` +
+        `**Commands:**\n` +
+        `\`publishing status\` — show all print jobs\n` +
+        `\`estimate book [#]\` — get price estimate (no charge)\n` +
+        `\`publish book [#] [interior_url] [cover_url]\` — submit print job\n\n` +
+        `**Workflow:**\n` +
+        `1. Upload your manuscript PDF + cover PDF to Supabase Storage\n` +
+        `2. Copy the public URLs\n` +
+        `3. Run \`estimate book 1 [url] [url]\` to check cost\n` +
+        `4. Run \`publish book 1 [url] [url]\` to print author copies\n\n` +
+        `**Formats available:**\n` +
+        `• 6×9 trade paperback (standard)\n` +
+        `• 8.5×11 legal format\n` +
+        `• 5×8 pocket size\n\n` +
+        `*Lulu xPress distributes to Amazon, B&N, Ingram, and 40,000+ retailers worldwide.*`
+      );
+      return;
+    }
+
+    // estimate book [number]
+    const estimateMatch = content.match(/estimate\s+book\s+(\d+)/i);
+    if (estimateMatch) {
+      const bookNum = parseInt(estimateMatch[1]);
+      const urlMatches = content.match(/https?:\/\/\S+/g) || [];
+      const interiorUrl = urlMatches[0];
+      const coverUrl    = urlMatches[1];
+
+      if (!interiorUrl || !coverUrl) {
+        await message.reply(`📋 To estimate Book ${bookNum}:\n\`estimate book ${bookNum} [interior_pdf_url] [cover_pdf_url]\`\n\nUpload both PDFs to Supabase Storage first and paste the public URLs.`);
+        return;
+      }
+
+      await message.reply(`📊 Getting cost estimate for Book ${bookNum}...`);
+      const result = await publishSovereignBook(bookNum, interiorUrl, coverUrl, { dryRun: true });
+      await message.reply(result.success
+        ? `📊 **${result.summary}**\n\nUse \`publish book ${bookNum} [interior_url] [cover_url]\` to proceed.`
+        : `❌ ${result.summary}`
+      );
+      return;
+    }
+
+    // publish book [number] [interior_url] [cover_url]
+    const publishMatch = content.match(/publish\s+book\s+(\d+)/i);
+    if (publishMatch) {
+      const bookNum  = parseInt(publishMatch[1]);
+      const urlMatches = content.match(/https?:\/\/\S+/g) || [];
+      const interiorUrl = urlMatches[0];
+      const coverUrl    = urlMatches[1];
+
+      if (!interiorUrl || !coverUrl) {
+        await message.reply(
+          `📚 To publish Book ${bookNum}, provide both PDF URLs:\n` +
+          `\`publish book ${bookNum} [interior_pdf_url] [cover_pdf_url]\`\n\n` +
+          `Need the cost first? Run:\n` +
+          `\`estimate book ${bookNum} [interior_url] [cover_url]\``
+        );
+        return;
+      }
+
+      await message.reply(`📚 **Submitting Book ${bookNum} to Lulu xPress...**\nChecking cost estimate first...`);
+      const result = await publishSovereignBook(bookNum, interiorUrl, coverUrl, { quantity: 1 });
+      await message.reply(result.success
+        ? `✅ **${result.summary}**\n\n*Lulu will email ${process.env.PUBLISHING_EMAIL || 'generalmanager81@gmail.com'} when printing is complete.*`
+        : `❌ ${result.summary}`
+      );
+      return;
+    }
   }
 
   // EXECUTIVE IDENTITY CHECK - Multiple IDs/usernames for Rickey Howard
