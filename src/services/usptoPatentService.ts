@@ -21,8 +21,26 @@ import { supabase } from '@/lib/supabaseClient';
 
 // ─── Config ───────────────────────────────────────────────────────────────────
 
-const USPTO_BASE   = 'https://developer.uspto.gov/ds-api';
-const PEDS_BASE    = 'https://ped.uspto.gov/api';
+// USPTO Open Data Portal (MyODP) — Rickey Howard's API key
+// Key: syfiadfmelcfvkqncofonsrxtmkase (active as of April 6, 2026)
+// Weekly limits: 1.2M Patent File Wrapper docs, 5M metadata retrievals
+//
+// AUTH NOTE: api.uspto.gov uses AWS Cognito + API Key.
+// Full API queries require an Authorization JWT from a MyODP browser session.
+// The API key (X-Api-Key) is a rate-limiter — it works alongside the JWT.
+//
+// PROVISIONAL NOTE: Applications beginning with "63" are provisional —
+// they are PRIVATE by federal law and will NOT appear in any PEDS query.
+// #63/913,134 will first become searchable after:
+//   1. Non-provisional is filed (Nov 7, 2026)
+//   2. USPTO publishes it (typically 18 months later = ~May 2028)
+//
+// PRACTICAL USE:
+//   - NOW:        Prior art searches, countdown, MPEP guidance
+//   - NOV 2026+:  Monitor examiner assignment, office actions, responses
+//   - MAY 2028+:  Full public file wrapper access via API
+
+const ODP_BASE      = 'https://api.uspto.gov';
 const USPTO_API_KEY = (typeof process !== 'undefined' ? process.env.USPTO_API_KEY : null) || '';
 
 // Primary patent we're protecting
@@ -89,57 +107,114 @@ export interface ClaimDraftGuide {
   notes: string;
 }
 
-// ─── Patent Examination Data System (PEDS) ───────────────────────────────────
+// ─── Patent Examination Data System (PEDS) via MyODP ────────────────────────
 
 /**
- * Fetch application status from USPTO PEDS API
- * Works without API key for public data
+ * Fetch application status from USPTO Patent File Wrapper API (MyODP)
+ * Uses Rickey Howard's API key: syfiadfmelcfvkqncofonsrxtmkase
+ * Rate: 1.2M file wrapper docs/week, 5M metadata/week
+ *
+ * Provisionals (#63xxxxxx) are NOT publicly accessible in PEDS —
+ * they are private records until converted to non-provisional.
+ * We return local known data for #63/913,134.
  */
 export async function getPatentStatus(applicationNumber: string): Promise<PatentStatus | null> {
   const clean = applicationNumber.replace(/[^0-9]/g, '');
 
+  // Try MyODP Patent File Wrapper API first
   try {
+    // MyODP: Patent Examination Data — metadata endpoint
     const res = await fetch(
-      `${PEDS_BASE}/queries/application;statusCode=00&queryString=appNumber%3A${clean}`,
+      `${ODP_BASE}/api/patent/peds/v2/applications/${clean}`,
       {
         headers: {
           'Accept':    'application/json',
-          'X-Api-Key': USPTO_API_KEY || 'anonymous',
+          'X-Api-Key': USPTO_API_KEY,
         },
       }
     );
 
-    if (!res.ok) {
-      // PEDS returns 404 for provisionals — they're not searchable by the public
-      if (res.status === 404) {
-        return buildProvisionalStatus(applicationNumber);
+    if (res.ok) {
+      const data = await res.json();
+      const app  = data?.results?.[0] || data;
+
+      if (app && app.applicationNumberText) {
+        return {
+          applicationNumber: clean,
+          title:             app.inventionTitle || PRIMARY_PATENT.title,
+          status:            app.applicationStatusDescriptionText || 'Provisional Filed',
+          filingDate:        app.filingDate || PRIMARY_PATENT.provisionalDate,
+          inventors:         (app.inventorBag || []).map((i: any) => `${i.firstName} ${i.lastName}`.trim()),
+          attorneys:         (app.patentPractitionerBag || []).map((a: any) => a.practitionerName || ''),
+          groupArtUnit:      app.groupArtUnitNumber || '2128',
+          examinerName:      app.primaryExaminer?.examinerName || 'Not yet assigned',
+          latestTransaction: app.lastModifiedDate || PRIMARY_PATENT.provisionalDate,
+          transactions:      (app.prosecutionHistoryDataBag || []).slice(0, 10).map((t: any) => ({
+            date:        t.recordedDate || '',
+            code:        t.codeDescriptionText || '',
+            description: t.codeDescriptionText || '',
+          })),
+        };
       }
-      throw new Error(`USPTO PEDS returned ${res.status}`);
     }
 
-    const data = await res.json();
-    const app  = data?.queryResults?.searchResponse?.response?.docs?.[0];
-    if (!app) return buildProvisionalStatus(applicationNumber);
-
-    return {
-      applicationNumber: clean,
-      title:            app.inventionTitle || PRIMARY_PATENT.title,
-      status:           app.appStatus || 'Provisional Filed',
-      filingDate:       app.filingDate || PRIMARY_PATENT.provisionalDate,
-      inventors:        app.inventorNameArrayText || [PRIMARY_PATENT.inventorOfRecord],
-      attorneys:        app.patentCenterDocumentBag || [],
-      groupArtUnit:     app.groupArtUnitNumber || '2128',
-      examinerName:     app.primaryExaminerName || 'Not yet assigned',
-      latestTransaction: app.latestPublicationDate || PRIMARY_PATENT.provisionalDate,
-      transactions:     [],
-    };
+    // Fall through to fallback for provisionals (404 expected)
   } catch (err) {
-    // Fallback: return known local data for the primary patent
-    if (clean === PRIMARY_PATENT.applicationNumber) {
-      return buildProvisionalStatus(applicationNumber);
-    }
-    console.error('[USPTO] getPatentStatus error:', err);
-    return null;
+    console.error('[USPTO] MyODP API error:', err);
+  }
+
+  // Fallback: return known local record for our primary provisional
+  if (clean === PRIMARY_PATENT.applicationNumber || clean.startsWith('63')) {
+    return buildProvisionalStatus(applicationNumber);
+  }
+
+  return null;
+}
+
+/**
+ * Search USPTO for any patent by keyword, inventor, or application number
+ * Uses MyODP metadata search (5M retrievals/week)
+ */
+export async function searchPatents(query: string, limit = 10): Promise<any[]> {
+  try {
+    const res = await fetch(
+      `${ODP_BASE}/api/patent/peds/v2/applications?query=${encodeURIComponent(query)}&limit=${limit}`,
+      {
+        headers: {
+          'Accept':    'application/json',
+          'X-Api-Key': USPTO_API_KEY,
+        },
+      }
+    );
+    if (!res.ok) return [];
+    const data = await res.json();
+    return data?.results || [];
+  } catch {
+    return [];
+  }
+}
+
+/**
+ * Get all documents in a patent's file wrapper
+ * Uses MyODP Patent File Wrapper (1.2M docs/week)
+ */
+export async function getFileWrapperDocuments(applicationNumber: string): Promise<any[]> {
+  const clean = applicationNumber.replace(/[^0-9]/g, '');
+  try {
+    const res = await fetch(
+      `${ODP_BASE}/api/patent/peds/v2/applications/${clean}/documents`,
+      {
+        headers: {
+          'Accept':    'application/json',
+          'X-Api-Key': USPTO_API_KEY,
+        },
+      }
+    );
+    if (!res.ok) return [];
+    const data = await res.json();
+    return data?.results || data?.documents || [];
+  } catch {
+    return [];
   }
 }
 
@@ -167,28 +242,33 @@ function buildProvisionalStatus(applicationNumber: string): PatentStatus {
 // ─── Assignment Recordation ───────────────────────────────────────────────────
 
 /**
- * Pull assignment records from USPTO Open Data
- * Confirms Trust ownership on record
+ * Pull assignment records from USPTO MyODP
+ * Confirms Howard Jones Bloodline Ancestral Trust ownership on record
  */
 export async function getPatentAssignments(applicationNumber: string): Promise<PatentAssignment[]> {
   const clean = applicationNumber.replace(/[^0-9]/g, '');
 
   try {
     const res = await fetch(
-      `${USPTO_BASE}/patent/assignments/search?query=appl_id:${clean}`,
-      { headers: { 'Accept': 'application/json' } }
+      `${ODP_BASE}/api/patent/peds/v2/applications/${clean}/assignments`,
+      {
+        headers: {
+          'Accept':    'application/json',
+          'X-Api-Key': USPTO_API_KEY,
+        },
+      }
     );
 
     if (!res.ok) return [];
 
     const data = await res.json();
-    const assignments = data?.results?.assignments || [];
+    const assignments = data?.results || data?.assignments || [];
 
     return assignments.map((a: any) => ({
       applicationNumber: clean,
-      assignee:         a.assignees?.[0]?.name || '',
-      assignor:         a.assignors?.[0]?.name || '',
-      executionDate:    a.assignors?.[0]?.executionDate || '',
+      assignee:         a.assigneeName || a.assignees?.[0]?.name || '',
+      assignor:         a.assignorName || a.assignors?.[0]?.name || '',
+      executionDate:    a.executionDate || a.assignors?.[0]?.executionDate || '',
       recordedDate:     a.recordDate || '',
       conveyanceText:   a.conveyanceText || '',
     }));
