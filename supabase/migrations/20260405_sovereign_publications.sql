@@ -55,8 +55,7 @@ SELECT
   sp.created_at,
   sp.updated_at,
   b.book_number,
-  b.subtitle,
-  b.description
+  b.subtitle
 FROM sovereign_publications sp
 LEFT JOIN books b ON b.title = sp.book_title
 ORDER BY sp.created_at DESC;
