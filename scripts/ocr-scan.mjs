@@ -21,11 +21,18 @@
 
 import fs from 'fs';
 import path from 'path';
+import { execFile } from 'child_process';
+import { promisify } from 'util';
 import { createClient } from '@supabase/supabase-js';
 import { createRequire } from 'module';
 import { config } from 'dotenv';
 
 config();
+
+const execFileAsync = promisify(execFile);
+
+// ImageMagick path — installed via winget
+const MAGICK = 'C:\\Program Files\\ImageMagick-7.1.2-Q16-HDRI\\magick.exe';
 
 const require = createRequire(import.meta.url);
 
@@ -110,65 +117,59 @@ async function ocrPngFolder(folderPath, label) {
   return pages.join('\n\n--- PAGE BREAK ---\n\n');
 }
 
-// ─── OCR a scanned PDF via pdfjs-dist ────────────────────────────────────────
+// ─── OCR a scanned PDF via node-poppler (pdftoppm) ───────────────────────────
 
 async function ocrPdf(filePath) {
-  // Dynamically import pdfjs-dist (ESM)
-  const pdfjsLib = await import('pdfjs-dist/legacy/build/pdf.mjs').catch(() => null);
-  if (!pdfjsLib) {
-    return { text: '', error: 'pdfjs-dist not available' };
-  }
+  const { Poppler } = require('node-poppler');
+  const poppler = new Poppler();
+  const tmpDir  = process.env.TEMP || 'C:\\Temp';
+  const tmpBase = path.join(tmpDir, 'roman_ocr');
 
-  // Disable worker for Node.js
-  pdfjsLib.GlobalWorkerOptions = pdfjsLib.GlobalWorkerOptions || {};
-  pdfjsLib.GlobalWorkerOptions.workerSrc = '';
+  console.log(`   📄 rendering pages via Poppler (pdftoppm)`);
 
   try {
-    const data      = new Uint8Array(fs.readFileSync(filePath));
-    const loadingTask = pdfjsLib.getDocument({ data, useWorkerFetch: false, isEvalSupported: false, useSystemFonts: true });
-    const pdf       = await loadingTask.promise;
-    const numPages  = pdf.numPages;
-
-    console.log(`   📄 ${numPages} pages in PDF`);
-
-    const { createCanvas } = await import('canvas').catch(() => ({ createCanvas: null }));
-    if (!createCanvas) {
-      return { text: '', error: 'canvas package not available — install with: npm install canvas' };
-    }
-
-    const pages = [];
-    for (let i = 1; i <= Math.min(numPages, 30); i++) {  // cap at 30 pages per doc
-      process.stdout.write(`      Page ${i}/${Math.min(numPages, 30)} ... `);
-      try {
-        const page     = await pdf.getPage(i);
-        const viewport = page.getViewport({ scale: 2.0 });  // 2x scale for better OCR
-        const canvas   = createCanvas(viewport.width, viewport.height);
-        const context  = canvas.getContext('2d');
-
-        await page.render({ canvasContext: context, viewport }).promise;
-
-        const imageBuffer = canvas.toBuffer('image/png');
-        const tmpPath     = path.join(process.env.TEMP || 'C:\\Temp', `ocr_page_${i}.png`);
-        fs.writeFileSync(tmpPath, imageBuffer);
-
-        const text = await ocrImage(tmpPath);
-        fs.unlinkSync(tmpPath);  // cleanup
-
-        if (text.length > 20) {
-          pages.push(text);
-          console.log(`✅ (${text.length} chars)`);
-        } else {
-          console.log(`skipped (blank)`);
-        }
-      } catch (err) {
-        console.log(`❌ ${err.message}`);
-      }
-    }
-
-    return { text: pages.join('\n\n--- PAGE BREAK ---\n\n'), error: null };
+    // Convert all pages to PNG at 200 DPI — good balance of speed and OCR quality
+    await poppler.pdfToPpm(filePath, tmpBase, {
+      pngFile:     true,
+      resolutionXYAxis: 200,
+      firstPageToConvert: 1,
+      lastPageToConvert:  30,
+    });
   } catch (err) {
-    return { text: '', error: err.message };
+    return { text: '', error: `Poppler render failed: ${err.message}` };
   }
+
+  // Find all generated PNG files
+  const pngFiles = fs.readdirSync(tmpDir)
+    .filter(f => f.startsWith('roman_ocr') && f.endsWith('.png'))
+    .sort()
+    .map(f => path.join(tmpDir, f));
+
+  if (pngFiles.length === 0) {
+    return { text: '', error: 'No pages rendered' };
+  }
+
+  console.log(`   📄 ${pngFiles.length} pages rendered`);
+
+  const pages = [];
+  for (let i = 0; i < pngFiles.length; i++) {
+    process.stdout.write(`      Page ${i + 1}/${pngFiles.length} ... `);
+    try {
+      const text = await ocrImage(pngFiles[i]);
+      fs.unlinkSync(pngFiles[i]);
+      if (text.length > 20) {
+        pages.push(text);
+        console.log(`✅ (${text.length} chars)`);
+      } else {
+        console.log(`skipped (blank)`);
+      }
+    } catch (err) {
+      if (fs.existsSync(pngFiles[i])) fs.unlinkSync(pngFiles[i]);
+      console.log(`❌ ${err.message?.slice(0, 80)}`);
+    }
+  }
+
+  return { text: pages.join('\n\n--- PAGE BREAK ---\n\n'), error: null };
 }
 
 // ─── Upload to knowledge base ─────────────────────────────────────────────────
@@ -250,7 +251,7 @@ async function main() {
     console.log('\n📂 STEP 2: Scanned PDF files\n');
 
     const pdfsToProcess = FILE_FILTER
-      ? SCANNED_PDFS.filter(f => f.toLowerCase().includes(FILE_FILTER))
+      ? SCANNED_PDFS.filter(f => f.toLowerCase() === FILE_FILTER || f.toLowerCase().startsWith(FILE_FILTER))
       : SCANNED_PDFS;
 
     for (const fileName of pdfsToProcess) {
