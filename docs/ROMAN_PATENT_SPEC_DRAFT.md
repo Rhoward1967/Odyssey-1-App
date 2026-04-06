@@ -388,7 +388,178 @@ a self-repair module configured to autonomously detect deviations from said gove
 a learning engine configured to record operational patterns, assign performance grades to command executions, and update behavioral models based on accumulated operational data; and
 a knowledge synchronization module configured to maintain a synchronized representation of the system's complete operational knowledge in a queryable database.
 
-*(Claims 2-7: see usptoPatentService.ts — ROMAN_PATENT_CLAIMS section)*
+**Claim 2.** The system of claim 1, wherein the constitutional governance engine stores the plurality of governance principles as JSON structured data and enforces said principles by hashing a canonical representation of said principles using SHA-256 and comparing a stored hash value against a recalculated hash value at each operational cycle.
+
+**Claim 3.** The system of claim 1, wherein the self-monitoring module calculates the memory utilization ceiling by multiplying total available system memory by a constitutional ratio derived from dividing a target operating frequency in Hertz by one hundred, said target operating frequency being a Schumann resonance baseline constant of 7.83 Hz, such that the memory utilization ceiling equals 78.3 percent of total available system memory.
+
+**Claim 4.** The system of claim 1, wherein the learning engine assigns a numeric performance grade between zero and one hundred to each command execution event, stores said grades in a persistent record, and advances the system through a plurality of defined proficiency levels based on cumulative grade thresholds, said plurality of proficiency levels comprising, in ascending order: NOVICE, APPRENTICE, COMPETENT, PROFICIENT, and EXPERT.
+
+**Claim 5.** A method for autonomous governance of an artificial intelligence system, comprising:
+storing a plurality of immutable governance constraints as structured records in a persistent database, each constraint associated with a priority level and a verification hash;
+continuously monitoring a plurality of operational metrics of the artificial intelligence system during execution;
+detecting, by a processor, a deviation between one or more monitored metrics and one or more governance constraints;
+in response to detecting said deviation, autonomously executing a corrective action sequence without requiring human authorization; and
+recording each detected deviation and corresponding corrective action in an append-only audit log.
+
+**Claim 6.** The method of claim 5, wherein storing the plurality of immutable governance constraints comprises computing a SHA-256 cryptographic hash of a canonical JSON serialization of said constraints and storing said hash in a designated integrity field, and wherein detecting a deviation comprises recomputing said hash at each monitoring cycle and comparing the recomputed hash to the stored hash.
+
+**Claim 7.** A non-transitory computer-readable medium storing instructions that, when executed by a processor, cause the processor to:
+maintain a constitutional knowledge base comprising a first data store mapping governance rules to enforcement actions and a second data store comprising an indexed corpus of operational knowledge synchronized with a file system;
+process natural language commands by parsing said commands through a multi-stage pipeline comprising intent extraction, entity recognition, constitutional validation, and response generation stages;
+generate responses calibrated to a detected proficiency level of a requesting user based on historical interaction data; and
+autonomously schedule and execute maintenance tasks based on detected system conditions without receiving explicit human commands for each individual task.
+
+**Claim 8.** The system of claim 1, wherein the self-repair module, upon detecting a constitutional hash mismatch, executes an enforcement action sequence comprising: suspending processing of incoming commands; writing a timestamped breach record to a persistent audit table; reloading governance principles from a verified data source; recomputing the verification hash from the reloaded principles; and resuming command processing only after verification that the recomputed hash matches an expected reference value.
+
+**Claim 9.** The system of claim 1, wherein the self-monitoring module monitors a plurality of operational metrics comprising: memory utilization as a percentage of total available random-access memory; command response latency in milliseconds; elapsed time since the most recent knowledge synchronization operation; active error rate within a defined time window; and current performance grade as maintained by the learning engine.
+
+**Claim 10.** The system of claim 1, wherein the knowledge synchronization module performs incremental synchronization by: computing a SHA-256 checksum of each tracked file's current content; comparing each computed checksum against a stored reference checksum; transmitting to the queryable database only files whose computed checksums differ from their stored reference checksums; and updating the stored reference checksums upon successful transmission.
+
+**Claim 11.** The system of claim 10, wherein the knowledge synchronization module executes the incremental synchronization on a schedule comprising: a startup synchronization covering files modified within a preceding fourteen-day window; a full incremental synchronization at a fixed daily time; and an on-demand synchronization triggered by operator command.
+
+**Claim 12.** The system of claim 1, wherein the learning engine computes the performance grade for each command execution event as a weighted sum comprising: an outcome component weighted at sixty percent, wherein said outcome component equals one hundred for a successful outcome, sixty for a partial outcome, and zero for a failed outcome; a latency component weighted at twenty percent, derived from a ratio of actual response time to a target response time; and a feedback component weighted at twenty percent, derived from an explicit operator-provided rating where available or a neutral default value where no operator feedback is provided.
+
+**Claim 13.** The system of claim 1, wherein the natural language command processing comprises a constitutional validation stage that evaluates parsed command intent against stored governance principles and rejects commands that would require the system to misrepresent its operational identity, exceed its authorized operational scope, or modify governance principles without operator authorization.
+
+**Claim 14.** The method of claim 5, wherein the corrective action sequence is selected from a pre-approved action library, said library mapping each deviation type to at least one corrective action, wherein the deviation types comprise: memory excess, constitutional integrity breach, response latency excess, knowledge base staleness, and elevated error rate.
+
+**Claim 15.** The method of claim 5, further comprising:
+executing the corrective action sequence within a bounded execution time enforced by a watchdog timer;
+re-evaluating the monitored metrics following execution of the corrective action sequence;
+classifying the corrective action as successful, partial, or failed based on whether the re-evaluated metrics satisfy the governance constraints; and
+escalating to an operator notification channel only when the corrective action is classified as failed on at least two consecutive attempts.
+
+**Claim 16.** The non-transitory computer-readable medium of claim 7, wherein processing natural language commands further comprises classifying each command into one of a plurality of intent classes comprising: system state query, knowledge base query, administrative configuration command, legal and regulatory research query, financial operations query, and autonomous multi-step task execution.
+
+**Claim 17.** The non-transitory computer-readable medium of claim 7, wherein maintaining the constitutional knowledge base further comprises: computing a cryptographic hash of stored governance rules at each operational cycle; comparing the computed hash to a stored reference hash; and upon detecting a mismatch, suspending command processing and executing a governance restoration procedure before resuming normal operation.
+
+**Claim 18.** The system of claim 3, wherein the Schumann resonance baseline constant of 7.83 Hz is stored as an immutable governance parameter in the persistent database and is subject to the same cryptographic hash verification applied to all governance constraints, such that unauthorized modification of said constant triggers the corrective action sequence.
+
+**Claim 19.** The system of claim 4, wherein the proficiency levels govern response generation behavior such that responses generated at higher proficiency levels contain greater technical specificity, more precise domain terminology, and reduced reliance on general fallback responses compared to responses generated at lower proficiency levels.
+
+**Claim 20.** The system of claim 1, wherein the persistent database implements row-level security policies that deny write access to governance principle records from any database role other than a designated human operator role, and wherein the system's operational service role is explicitly excluded from said write access, ensuring that the autonomous operation of the system cannot modify its own governance constraints.
+
+---
+
+## FORMAL DRAWING ELEMENT REFERENCE LIST
+
+*(Provide this list to patent draftsman along with the specification. All figures must be in black ink, no grayscale, on 8.5" × 11" sheets with 1" top/right margins and 1.5" bottom/left margins. Number all elements as referenced below.)*
+
+### FIG. 1 — System Architecture Block Diagram
+
+```
+100  Autonomous Constitutional Governance System (overall system boundary box)
+110  Constitutional Governance Engine (block, upper left)
+120  Self-Monitoring Module (block, upper center)
+130  Self-Repair Module (block, upper right)
+140  Learning Engine (block, lower left)
+150  Knowledge Synchronization Module (block, lower right)
+160  Shared Database Layer (horizontal bar, center, connecting all components)
+161  governance_principles table (labeled within 160)
+162  roman_knowledge_base table (labeled within 160)
+163  roman_audit_log table (labeled within 160)
+164  learning_events table (labeled within 160)
+165  system_config table (labeled within 160)
+170  External Interface Layer (block, far right)
+171  Discord Messaging API (labeled within 170)
+172  Large Language Model API (labeled within 170)
+115  Bus connection: 110 ↔ 160 (double-headed arrow)
+125  Bus connection: 120 ↔ 160 (double-headed arrow)
+135  Bus connection: 130 ↔ 160 (double-headed arrow)
+145  Bus connection: 140 ↔ 160 (double-headed arrow)
+155  Bus connection: 150 ↔ 160 (double-headed arrow)
+175  Bus connection: 160 ↔ 170 (double-headed arrow)
+180  Repair trigger signal: 120 → 130 (single arrow, labeled "deviation detected")
+185  Grade signal: 140 → 160 (single arrow, labeled "event grade")
+```
+
+### FIG. 2 — Constitutional Governance Engine Data Flow
+
+```
+200  Governance Engine boundary (dashed box enclosing 111-114)
+111  Principle Data Store (database cylinder icon)
+112  Hash Computation Module (process box)
+113  Hash Comparison Module (diamond decision box)
+114  Enforcement Action Dispatcher (process box)
+201  Constitutional Breach Event (label on path from 113 → 114)
+202  Reference Hash Storage (database cylinder, separate from 111)
+210  "Load Principles" arrow: 111 → 112
+211  "Compute SHA-256" label on process box 112
+212  "Store/Retrieve Hash" arrow: 112 ↔ 202
+213  "Compare" arrow: 112 → 113
+214  "EQUAL: Integrity Confirmed" path: 113 → exit (label: "normal operation")
+215  "NOT EQUAL: Breach" path: 113 → 201 → 114
+216  Enforcement Action 1: "Suspend Commands" (box below 114)
+217  Enforcement Action 2: "Log Breach" (box below 216)
+218  Enforcement Action 3: "Restore Principles" (box below 217, arrow back to 111)
+219  Enforcement Action 4: "Recompute Hash" (box below 218, arrow to 112)
+220  Enforcement Action 5: "Notify Operator" (box below 219)
+221  Enforcement Action 6: "Resume Operation" (box below 220)
+```
+
+### FIG. 3 — Self-Monitoring and Self-Repair Loop Flowchart
+
+```
+300  Start (oval)
+301  "Collect Metrics" (process box: memory, latency, hash, sync age, error rate)
+302  "Compare to Governance Baselines" (process box)
+303  "Violations Detected?" (diamond)
+304  "Log Clean Cycle / Update Timestamp" (process box, YES=no path from 303)
+305  "Invoke Self-Repair Module" (process box, YES path from 303)
+310  "Deviation Analysis — Classify Type and Severity" (process box)
+315  "Action Selection — Query repair_action_library" (process box)
+320  "Authorized Execution — Execute Action within Time Limit" (process box)
+325  "Verification — Re-collect Affected Metrics" (process box)
+326  "Repair Successful?" (diamond)
+327  "Log SUCCESSFUL Repair" (process box, YES path)
+328  "Log PARTIAL/FAILED Repair" (process box, NO path)
+329  "Consecutive Failures ≥ 2?" (diamond)
+330  "Escalate to Operator" (process box, YES path from 329)
+331  Return to 300 (arrow from 304, 327, 328 to start of next cycle)
+335  Watchdog Timer (label on boundary of 320, indicating execution time limit)
+```
+
+### FIG. 4 — Learning Engine State Diagram
+
+```
+400  Learning Engine State Machine (boundary box)
+401  NOVICE State (rounded rectangle): "0 events | Grade: any"
+402  APPRENTICE State (rounded rectangle): "≥50 events | Grade avg ≥65.0"
+403  COMPETENT State (rounded rectangle): "≥200 events | Grade avg ≥75.0"
+404  PROFICIENT State (rounded rectangle): "≥500 events | Grade avg ≥85.0"
+405  EXPERT State (rounded rectangle): "≥1000 events | Grade avg ≥92.0"
+410  Transition arrow 401 → 402 (labeled "50 events + avg ≥65")
+411  Transition arrow 402 → 403 (labeled "200 events + avg ≥75")
+412  Transition arrow 403 → 404 (labeled "500 events + avg ≥85")
+413  Transition arrow 404 → 405 (labeled "1000 events + avg ≥92")
+420  Grade Formula Box (separate inset box):
+       "GRADE = (OUTCOME × 0.60) + (LATENCY × 0.20) + (FEEDBACK × 0.20)"
+421  "Event Record" arrow entering 401 from left (labeled "command execution")
+422  "Grade Stored" arrow from any state to 163 (database cylinder, roman_audit_log)
+423  "Response Depth" arrow from states to output (labeled "governs response specificity")
+```
+
+### FIG. 5 — Knowledge Synchronization Module
+
+```
+500  Knowledge Synchronization Module boundary (dashed box)
+501  File System (folder icon, left side): "~340 tracked files"
+502  File Manifest (table icon): "file_path | stored_checksum | last_sync"
+503  Checksum Comparator (process box)
+504  Content Extractor (process box): "reads file, truncates to 100,000 chars"
+505  Supabase Database (database cylinder, right side): "roman_knowledge_base"
+506  Sync Scheduler (clock icon): "Startup | 3AM Daily | On-Demand"
+510  "Traverse Manifest" arrow: 502 → 503
+511  "Compute SHA-256" arrow: 501 → 503 (labeled "current file checksum")
+512  "Compare checksums" label on 503
+513  "NO CHANGE" path: 503 → skip (dashed arrow, labeled "skip file")
+514  "CHANGED" path: 503 → 504 (solid arrow)
+515  "Extract Content" arrow: 504 reads from 501
+516  "UPSERT" arrow: 504 → 505 (labeled "ON CONFLICT file_path DO UPDATE")
+517  "Update Checksum" arrow: 505 → 502 (labeled "store new SHA-256")
+518  "Sync Trigger" arrow: 506 → 510 (labeled "schedule fires")
+519  "Sync Report" arrow: 505 → 171 (to Discord, labeled "files changed / errors")
+```
 
 ---
 
