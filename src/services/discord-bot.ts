@@ -1378,6 +1378,135 @@ async function handleDirectMessage(message: Message) {
     }
   }
 
+  // ─── USPTO / PATENT COMMANDS ─────────────────────────────────────────────────
+  // "patent countdown"    → days to #63/913,134 conversion deadline
+  // "patent status"       → USPTO PEDS lookup
+  // "patent strategy"     → full 5-phase filing plan
+  // "patent claims"       → R.O.M.A.N. claim drafts
+  // "patent load mpep"    → load MPEP rules into knowledge base
+  // "mpep [section]"      → look up a specific MPEP rule
+  // "patent help"         → overview of all patent commands
+
+  if (content.includes('patent') || content.startsWith('mpep')) {
+    const {
+      formatPatentCountdown,
+      formatPatentStrategy,
+      formatPatentClaims,
+      formatMpepLookup,
+      loadMpepIntoKnowledgeBase,
+      getPatentStatus,
+      PRIMARY_PATENT,
+    } = await import('./usptoPatentService');
+
+    // patent countdown
+    if (content.includes('patent countdown') || content.includes('days left') || content.includes('november 7')) {
+      await message.reply(formatPatentCountdown());
+      return;
+    }
+
+    // patent claims
+    if (content.includes('patent claims') || content.includes('patent claim')) {
+      await message.reply(formatPatentClaims());
+      return;
+    }
+
+    // patent strategy
+    if (content.includes('patent strategy') || content.includes('filing strategy') || content.includes('filing plan')) {
+      await message.reply(formatPatentStrategy());
+      return;
+    }
+
+    // patent status — USPTO PEDS lookup
+    if (content.includes('patent status') || content.includes('patent lookup')) {
+      await message.reply(`🔍 **Checking USPTO PEDS for #${PRIMARY_PATENT.serialFormatted}...**`);
+      try {
+        const status = await getPatentStatus(PRIMARY_PATENT.applicationNumber);
+        if (status) {
+          await message.reply(
+            `**⚖️ USPTO Patent Status — #${PRIMARY_PATENT.serialFormatted}**\n` +
+            `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+            `📋 **Title:** ${status.title}\n` +
+            `📅 **Status:** ${status.status}\n` +
+            `📆 **Filed:** ${status.filingDate}\n` +
+            `👤 **Inventor:** ${status.inventors.join(', ')}\n` +
+            `🏛️ **Art Unit:** ${status.groupArtUnit}\n` +
+            `📎 **Examiner:** ${status.examinerName}\n\n` +
+            `_Provisional applications are not publicly searchable — data from local record._`
+          );
+        } else {
+          await message.reply(`❌ USPTO PEDS returned no data for #${PRIMARY_PATENT.serialFormatted}. Provisional applications are not publicly searchable until converted.`);
+        }
+      } catch (err: any) {
+        await message.reply(`❌ USPTO lookup error: ${err.message}`);
+      }
+      return;
+    }
+
+    // patent load mpep — load MPEP rules into R.O.M.A.N. knowledge base
+    if (content.includes('load mpep') || content.includes('patent knowledge') || content.includes('load patent')) {
+      await message.reply(`📚 **Loading MPEP rules into R.O.M.A.N. knowledge base...**`);
+      try {
+        const result = await loadMpepIntoKnowledgeBase();
+        if (result.errors.length === 0) {
+          await message.reply(
+            `✅ **MPEP Loaded — ${result.loaded} sections**\n\n` +
+            `R.O.M.A.N. now knows:\n` +
+            `• MPEP 201.04 — Provisional conversion rules\n` +
+            `• MPEP 2106 — § 101 Alice Corp analysis\n` +
+            `• MPEP 2111 — Broadest reasonable interpretation\n` +
+            `• MPEP 2163 — Written description requirement\n` +
+            `• MPEP 602 — Inventorship (Rickey Allan Howard as inventor)\n` +
+            `• MPEP 700 — Office action response deadlines\n` +
+            `• MPEP 1800 — PCT international filing\n` +
+            `• 35 U.S.C. § 41 — Micro-entity 80% fee reduction\n\n` +
+            `Type \`mpep [section]\` to look up any rule.`
+          );
+        } else {
+          await message.reply(`⚠️ Loaded ${result.loaded}/${result.loaded + result.errors.length} sections.\nErrors: ${result.errors.join(', ')}`);
+        }
+      } catch (err: any) {
+        await message.reply(`❌ MPEP load failed: ${err.message}`);
+      }
+      return;
+    }
+
+    // mpep [section] — look up a rule
+    const mpepMatch = content.match(/^mpep\s+(.+)/i) || content.match(/mpep\s+([\d.]+|provisional|101|112|alice|inventorship|fee|pct)/i);
+    if (mpepMatch || content.includes('mpep ')) {
+      const query = mpepMatch ? mpepMatch[1].trim() : content.replace(/.*mpep\s+/i, '').trim();
+      await message.reply(formatMpepLookup(query));
+      return;
+    }
+
+    // patent help
+    if (content.includes('patent help') || content.includes('patent commands') || content === 'patent') {
+      const cd = (() => {
+        const deadline = new Date('2026-11-07');
+        return Math.ceil((deadline.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
+      })();
+      await message.reply(
+        `**⚖️ R.O.M.A.N. PATENT COMMANDS**\n` +
+        `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+        `🔴 **${cd} days** to #63/913,134 conversion (Nov 7, 2026)\n\n` +
+        `**Countdown & Status:**\n` +
+        `\`patent countdown\` — days to conversion deadline\n` +
+        `\`patent status\` — USPTO PEDS lookup\n\n` +
+        `**Filing Preparation:**\n` +
+        `\`patent strategy\` — full 5-phase filing plan\n` +
+        `\`patent claims\` — 7 USPTO-compliant claim drafts\n\n` +
+        `**Patent Law Research:**\n` +
+        `\`patent load mpep\` — load MPEP rules into R.O.M.A.N.\n` +
+        `\`mpep 2106\` — § 101 Alice Corp analysis\n` +
+        `\`mpep 201\` — provisional application rules\n` +
+        `\`mpep 602\` — inventorship requirements\n` +
+        `\`mpep 1800\` — PCT international filing\n` +
+        `\`mpep fees\` — micro-entity 80% fee reduction\n\n` +
+        `*Patent #63/913,134 — Howard Jones Bloodline Ancestral Trust*`
+      );
+      return;
+    }
+  }
+
   // EXECUTIVE IDENTITY CHECK - Multiple IDs/usernames for Rickey Howard
   const envExecutiveId = process.env.DISCORD_EXECUTIVE_USER_ID?.trim();
   const EXECUTIVE_IDS = [

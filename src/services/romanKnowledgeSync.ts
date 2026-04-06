@@ -228,6 +228,7 @@ const KNOWLEDGE_FILES: string[] = [
   'src/services/luluPublishingService.ts',
   'src/services/sovereignMusicService.ts',
   'src/services/romanSyncManifest.ts',
+  'src/services/usptoPatentService.ts',
   'docs/ROMAN_SYNC_MANIFEST.md',
   'src/services/postGridService.ts',
   'src/services/patentDeadlineTracker.ts',
