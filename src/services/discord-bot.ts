@@ -1161,6 +1161,94 @@ async function handleDirectMessage(message: Message) {
     }
   }
 
+  // ─── SOVEREIGN MUSIC COMMANDS ─────────────────────────────────────────────────
+  // "music status"            → full catalog dashboard
+  // "music catalog"           → same
+  // "add track [title]"       → add a track by title
+  // "add tracks [...]"        → bulk add multiple tracks
+  // "radio playlist"          → show live radio queue
+  // "search music [keyword]"  → find tracks by keyword
+
+  if (
+    content.includes('music status') || content.includes('music catalog') ||
+    content.includes('add track') || content.includes('add song') ||
+    content.includes('radio playlist') || content.includes('search music') ||
+    content.includes('search song') || (content.includes('track') && content.includes('add'))
+  ) {
+    const {
+      formatMusicStatus, addTrack, addTracks, getRadioPlaylist, searchTracks, formatTrackAdded
+    } = await import('./sovereignMusicService');
+
+    // music status / catalog
+    if (content.includes('music status') || content.includes('music catalog')) {
+      const status = await formatMusicStatus();
+      await message.reply(status);
+      return;
+    }
+
+    // radio playlist
+    if (content.includes('radio playlist')) {
+      const playlist = await getRadioPlaylist();
+      if (playlist.length === 0) {
+        await message.reply(`📻 **Sovereign Radio Playlist**\n\nNo tracks live yet. Upload audio files and mark them live to start the broadcast node.`);
+      } else {
+        const lines = playlist.map((t, i) =>
+          `${i + 1}. ${t.title}${t.theme ? ` — ${t.theme}` : ''}${t.frequency_hz ? ` (${t.frequency_hz}Hz)` : ''}`
+        );
+        await message.reply(`📻 **Sovereign Radio Playlist — ${playlist.length} tracks**\n\n${lines.join('\n')}\n\n*Believing Self Creations | ASCAP*`);
+      }
+      return;
+    }
+
+    // search music [keyword]
+    if (content.includes('search music') || content.includes('search song')) {
+      const kwMatch = content.match(/search\s+(?:music|song|track)\s+(.+)/i);
+      const keyword = kwMatch?.[1]?.trim();
+      if (!keyword) {
+        await message.reply(`Search usage: \`search music [keyword]\``);
+        return;
+      }
+      const results = await searchTracks(keyword);
+      if (results.length === 0) {
+        await message.reply(`🔍 No tracks found matching "${keyword}"`);
+      } else {
+        const lines = results.map(t => `• ${t.title}${t.theme ? ` (${t.theme})` : ''} — ${t.upload_status}`);
+        await message.reply(`🔍 **Music Search: "${keyword}"** — ${results.length} result(s)\n\n${lines.join('\n')}`);
+      }
+      return;
+    }
+
+    // add track [title] — quick single add
+    const addMatch = content.match(/add\s+(?:track|song)\s+"([^"]+)"/i) ||
+                     content.match(/add\s+(?:track|song)\s+(.+)/i);
+    if (addMatch) {
+      const title = addMatch[1].trim();
+      const themeMatch    = content.match(/theme[:\s]+(\w+)/i);
+      const freqMatch     = content.match(/(\d{3,4})\s*hz/i);
+      const albumMatch    = content.match(/album[:\s]+"([^"]+)"/i);
+      const ascapMatch    = content.match(/ascap[:\s]+(\S+)/i);
+      const yearMatch     = content.match(/(\d{4})/);
+
+      const track = {
+        title,
+        theme:          themeMatch?.[1]  || undefined,
+        frequency_hz:   freqMatch   ? parseInt(freqMatch[1])  : undefined,
+        album:          albumMatch?.[1]  || undefined,
+        ascap_id:       ascapMatch?.[1]  || undefined,
+        copyright_year: yearMatch   ? parseInt(yearMatch[1])  : new Date().getFullYear(),
+        upload_status:  'pending' as const,
+      };
+
+      const result = await addTrack(track);
+      if (result.success) {
+        await message.reply(formatTrackAdded(track));
+      } else {
+        await message.reply(`❌ Could not add track: ${result.error}`);
+      }
+      return;
+    }
+  }
+
   // 💾 D-DRIVE SYNC — sync USB drive documents into R.O.M.A.N. knowledge base
   if (content.includes('sync d drive') || content.includes('sync usb') || content.includes('sync case files') || content.includes('sync d:')) {
     const folderMatch = content.match(/sync.*(?:d drive|usb|case files|d:)\s+(.+)/i);

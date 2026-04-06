@@ -226,6 +226,7 @@ const KNOWLEDGE_FILES: string[] = [
   'src/services/oscCreditSystem.ts',
   'src/services/oscOracle.ts',
   'src/services/luluPublishingService.ts',
+  'src/services/sovereignMusicService.ts',
   'src/services/romanSyncManifest.ts',
   'docs/ROMAN_SYNC_MANIFEST.md',
   'src/services/postGridService.ts',
