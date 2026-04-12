@@ -1,5 +1,5 @@
 // Service Worker for caching static assets
-const CACHE_VERSION = 'odyssey-v2-2024-12-30'; // Update this when deploying
+const CACHE_VERSION = 'odyssey-v3-2026-04-12'; // Updated: fix SPA route caching
 const STATIC_CACHE = `static-${CACHE_VERSION}`;
 const DYNAMIC_CACHE = `dynamic-${CACHE_VERSION}`;
 
@@ -38,16 +38,20 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
-  
-  // NEVER cache HTML pages or API calls
+
+  // NEVER cache HTML pages, navigation requests, or API calls
+  // Navigation requests = SPA routes like /app, /app/trading, /login, etc.
+  const isNavigation = request.mode === 'navigate';
+  const isHtml = url.pathname.endsWith('.html') || url.pathname === '/';
+  const isApi = url.hostname.includes('supabase') || url.hostname.includes('vercel');
+
   if (
     request.method !== 'GET' ||
-    url.pathname.endsWith('.html') ||
-    url.pathname === '/' ||
-    url.hostname.includes('supabase') ||
-    url.hostname.includes('vercel')
+    isNavigation ||
+    isHtml ||
+    isApi
   ) {
-    // Network only for HTML and API
+    // Network only for all navigation and API
     event.respondWith(fetch(request));
     return;
   }
