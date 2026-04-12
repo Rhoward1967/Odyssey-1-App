@@ -55,11 +55,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const value = { user, loading };
 
-  // We show a loading indicator while the initial session is being fetched.
-  if (loading) {
-    return <div>Loading authentication...</div>;
-  }
-
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
