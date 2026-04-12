@@ -63,67 +63,69 @@ const App = () => {
         <HowardJanitorial />
       ) : (
         // Main Odyssey-1 Infrastructure
-        <AuthProvider>
-          <QueryClientProvider client={queryClient}>
-            <APIProvider>
-              <FundingProvider>
-                <PositionLotsProvider>
-                  <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-                    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-slate-100">
-                      <Routes>
-                        {/* Public Routes */}
-                        <Route path="/" element={<PublicHomePage />} />
-                        <Route path="/subscribe" element={<Subscribe />} />
-                        <Route path="/onboard" element={<Onboard />} />
-                        <Route path="/login" element={<LoginPage />} />
-                        <Route path="/onboarding/contractor/:token" element={<ContractorOnboarding />} />
+        <>
+          <AuthProvider>
+            <QueryClientProvider client={queryClient}>
+              <APIProvider>
+                <FundingProvider>
+                  <PositionLotsProvider>
+                    <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+                      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-slate-100">
+                        <Routes>
+                          {/* Public Routes */}
+                          <Route path="/" element={<PublicHomePage />} />
+                          <Route path="/subscribe" element={<Subscribe />} />
+                          <Route path="/onboard" element={<Onboard />} />
+                          <Route path="/login" element={<LoginPage />} />
+                          <Route path="/onboarding/contractor/:token" element={<ContractorOnboarding />} />
 
-                        {/* Protected Routes */}
-                        <Route element={<ProtectedRoute />}>
-                          <Route path="/app" element={<AppLayout />}>
-                            <Route index element={<Index />} />
-                            <Route path="profile" element={<Profile />} />
-                            <Route path="subscription" element={<Subscription />} />
-                            
-                            <Route path="admin" element={<Admin />} />
-                            <Route path="apex" element={<ApexDashboard />} />
-                            
-                            {/* Wallet with Safety Check for Auth State */}
-                            <Route path="osc-wallet" element={<OSCWalletRoute />} />
-                            
-                            <Route path="workforce" element={<WorkforceDashboard />} />
-                            <Route path="invoicing" element={<Invoicing />} />
-                            <Route path="contractors" element={<ContractorManager />} />
-                            <Route path="bids" element={<BidsList />} />
-                            <Route path="mel" element={<Mel />} />
-                            <Route path="catalog" element={<CatalogManager />} />
-                            <Route path="trading" element={<Trading />} />
-                            <Route path="calculator" element={<Calculator />} />
-                            <Route path="contracts/new" element={<SovereignContractIntake />} />
-                            <Route path="legal-defense" element={<LegalDefenseDashboard />} />
-                            <Route path="handbook" element={<Handbook />} />
-                            <Route path="user-manual" element={<UserManual />} />
-                            <Route path="media-center" element={<MediaCenter />} />
-                            <Route path="test-checkout" element={<TestCheckout />} />
+                          {/* Protected Routes */}
+                          <Route element={<ProtectedRoute />}>
+                            <Route path="/app" element={<AppLayout />}>
+                              <Route index element={<Index />} />
+                              <Route path="profile" element={<Profile />} />
+                              <Route path="subscription" element={<Subscription />} />
 
-                            <Route path="admin/observability" element={<SystemObservabilityDashboard />} />
-                            <Route path="admin/ai-intelligence" element={<AIIntelligenceLiveFeed />} />
-                            <Route path="admin/evolution" element={<SystemEvolutionTracker />} />
-                            <Route path="scanner" element={<SovereignScanner />} />
+                              <Route path="admin" element={<Admin />} />
+                              <Route path="apex" element={<ApexDashboard />} />
+
+                              {/* Wallet with Safety Check for Auth State */}
+                              <Route path="osc-wallet" element={<OSCWalletRoute />} />
+
+                              <Route path="workforce" element={<WorkforceDashboard />} />
+                              <Route path="invoicing" element={<Invoicing />} />
+                              <Route path="contractors" element={<ContractorManager />} />
+                              <Route path="bids" element={<BidsList />} />
+                              <Route path="mel" element={<Mel />} />
+                              <Route path="catalog" element={<CatalogManager />} />
+                              <Route path="trading" element={<Trading />} />
+                              <Route path="calculator" element={<Calculator />} />
+                              <Route path="contracts/new" element={<SovereignContractIntake />} />
+                              <Route path="legal-defense" element={<LegalDefenseDashboard />} />
+                              <Route path="handbook" element={<Handbook />} />
+                              <Route path="user-manual" element={<UserManual />} />
+                              <Route path="media-center" element={<MediaCenter />} />
+                              <Route path="test-checkout" element={<TestCheckout />} />
+
+                              <Route path="admin/observability" element={<SystemObservabilityDashboard />} />
+                              <Route path="admin/ai-intelligence" element={<AIIntelligenceLiveFeed />} />
+                              <Route path="admin/evolution" element={<SystemEvolutionTracker />} />
+                              <Route path="scanner" element={<SovereignScanner />} />
+                            </Route>
                           </Route>
-                        </Route>
 
-                        <Route path="*" element={<NotFound />} />
-                      </Routes>
-                    </div>
-                  </BrowserRouter>
-                </PositionLotsProvider>
-              </FundingProvider>
-            </APIProvider>
-          </QueryClientProvider>
+                          <Route path="*" element={<NotFound />} />
+                        </Routes>
+                      </div>
+                    </BrowserRouter>
+                  </PositionLotsProvider>
+                </FundingProvider>
+              </APIProvider>
+            </QueryClientProvider>
+          </AuthProvider>
           <Analytics />
           <SpeedInsights />
-        </AuthProvider>
+        </>
       )}
     </ErrorBoundary>
   );
