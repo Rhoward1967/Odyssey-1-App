@@ -19,7 +19,9 @@ export default function LoginPage() {
         email: email,
         options: {
           // This is where the user will be redirected after clicking the magic link
-          emailRedirectTo: `${window.location.origin}/app`,
+          emailRedirectTo: import.meta.env.VITE_APP_URL
+            ? `${import.meta.env.VITE_APP_URL}/app`
+            : `${window.location.origin}/app`,
         },
       });
 
