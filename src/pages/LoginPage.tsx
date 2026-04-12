@@ -19,7 +19,7 @@ export default function LoginPage() {
         email: email,
         options: {
           // This is where the user will be redirected after clicking the magic link
-          emailRedirectTo: window.location.origin,
+          emailRedirectTo: `${window.location.origin}/app`,
         },
       });
 
