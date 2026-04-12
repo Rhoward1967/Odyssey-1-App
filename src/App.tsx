@@ -46,6 +46,7 @@ import SystemObservabilityDashboard from "./components/SystemObservabilityDashbo
 import AIIntelligenceLiveFeed from "./components/AIIntelligenceLiveFeed";
 import SystemEvolutionTracker from "./components/SystemEvolutionTracker";
 import HowardJanitorial from "./pages/HowardJanitorial";
+import SovereignScanner from "./pages/SovereignScanner";
 
 const queryClient = new QueryClient();
 
@@ -108,6 +109,7 @@ const App = () => {
                             <Route path="admin/observability" element={<SystemObservabilityDashboard />} />
                             <Route path="admin/ai-intelligence" element={<AIIntelligenceLiveFeed />} />
                             <Route path="admin/evolution" element={<SystemEvolutionTracker />} />
+                            <Route path="scanner" element={<SovereignScanner />} />
                           </Route>
                         </Route>
 

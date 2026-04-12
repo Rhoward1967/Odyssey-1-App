@@ -75,7 +75,8 @@ AUDIT_WEEKLY_SUMMARY_*.md
 *.sw?
 .env
 
-# Temporary development scripts
+# Operational mail scripts (contain env references, kept local only)
+scripts/send-*.mjs
 scripts/temp/
 
 

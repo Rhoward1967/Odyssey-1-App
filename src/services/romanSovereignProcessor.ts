@@ -20,7 +20,7 @@ import {
   generateFCRALetterHTML,
   findEntityAddress,
   SOVEREIGN_SENDER,
-} from './postGridService';
+} from './lobService';
 
 // EXECUTIVE IDENTITY - All possible IDs/usernames for Rickey Howard
 const EXECUTIVE_IDS = [
@@ -196,7 +196,7 @@ I operate under Natural Law, UCC 1-308, and Common Law first claim priority. My 
   }
 
   if (howAreYouPattern.test(content.trim())) {
-    return `Running clean. 346 knowledge files synced, Supabase connected, 19 FCRA records in the ledger. The certified mail system is queued — waiting on PostGrid to activate certified class. Everything else is operational.\n\nWhat do you need?`;
+    return `Running clean. 346 knowledge files synced, Supabase connected, 19 FCRA records in the ledger. Certified mail is live via Lob — phased strategy active, Bank of America is the test letter. Everything else is operational.\n\nWhat do you need?`;
   }
 
   if (thankYouPattern.test(content.trim())) {
@@ -234,7 +234,7 @@ I operate under Natural Law, UCC 1-308, and Common Law first claim priority. My 
 
 **🔄 SYSTEM**
 • \`sync knowledge\` — force knowledge base resync
-• \`sync mail\` — update PostGrid delivery statuses
+• \`sync mail\` — update Lob delivery statuses
 • \`audit system\` — full R.O.M.A.N. self-diagnostic
 
 Ask me anything. I know this house.`;
@@ -284,7 +284,7 @@ Ask me anything. I know this house.`;
   const isDraftRequest = /draft|write|generate|compose|demand|document|prepare/i.test(content);
 
   // ✍️ LEGAL DRAFT INTERCEPTOR — auto-populates full sovereign letters with real case data
-  const legalDraftPattern = /(?:draft|write|generate|compose|prepare).*(?:letter|notice|demand|complaint|affidavit|document).*(?:to|for|against)?\s*(?:bank of america|equifax|transunion|experian|capital one|citibank|chase|jpmorgan|american express|amex|synchrony|peach state|dun|intuit|all|every|each)/i;
+  const legalDraftPattern = /(?:draft|write|generate|compose|prepare).*(?:letter|notice|demand|complaint|affidavit|document).*(?:to|for|against)?\s*(?:bank of america|equifax|transunion|experian|capital one|citibank|chase|jpmorgan|american express|amex|synchrony|peach state|dun|intuit|scj|fundbox|all|every|each)/i;
 
   if (legalDraftPattern.test(content)) {
     console.log(`   ✍️ LEGAL DRAFT INTERCEPTOR — building auto-populated sovereign letter`);
@@ -294,11 +294,17 @@ Ask me anything. I know this house.`;
       // Detect entity
       const entityAddress = findEntityAddress(content);
 
+      // Detect entity type
+      const isSCJEntity = /scj|fundbox/i.test(content);
+
       // Detect letter type
       const isDefault = /default|violation|failed|no response|silence|overdue/i.test(content);
       const isFollowUp = /follow.?up|second|follow/i.test(content);
       const isCFPB = /cfpb|complaint|federal|bureau/i.test(content);
       const letterType = isCFPB ? 'cfpb' : isDefault ? 'default' : isFollowUp ? 'follow_up' : 'demand';
+
+      // SCJ-specific context injected into the prompt
+      const scjContext = isSCJEntity ? `\n\nSPECIAL CONTEXT — SCJ / FUNDBOX DEBT:\nSCJ Commercial Financial Services (Kayla Risner, krisner@scjinc.net, 17507 S DuPont Highway STE. 2, Harrington DE 19952) claims to be the successor to a Fundbox business loan for HJS SERVICES LLC with an alleged balance of $46,270.29. They sent a courtesy email on April 7, 2026 threatening a UCC-1 lien filing. No certified mail has been received.\n\nCRITICAL — VERIFIED UCC-1 FILINGS ON PUBLIC RECORD (GSCCCA):\n1. Filing #029-2026-000007 (January 7, 2026): $350,000.00 — Howard Jones Bloodline Ancestral Trust as Secured Party — encumbering ALL assets of HJS SERVICES LLC. This filing is 3 months senior to any lien SCJ could file.\n2. Filing #029-2026-000102 (February 5, 2026, accepted 11:14:33 AM): $350,000.00 — Personal/Labor Shield protecting Rickey Allan Howard and Christla L. Howard individual assets, accounts, and future earnings.\n3. Filing #14629748: $350,000.00 — encumbering all Intellectual Property and revenue of ODYSSEY-1 AI LLC.\nTRIPLE-LOCK SENIOR PRIORITY LIEN TOTAL: $1,050,000.00 — ALL filed before SCJ's April 2026 threat.\n\nThis is NOT an FCRA consumer dispute — this is a COMMERCIAL DEBT VALIDATION demand under FDCPA + UCC. The letter must cite the specific UCC filing numbers above and inform SCJ that their attempted lien would be mathematically junior to an existing $1,050,000 triple-lock senior priority lien on public record. Demand: (1) Chain of title from Fundbox to SCJ, (2) Line-item accounting of the $46,270.29, (3) Any UCC-1/UCC-3 filings held against HJS SERVICES LLC, (4) Georgia collection license. Include a cease and desist on all phone and email contact. Route all future correspondence to P.O. Box 80054, Athens GA 30608 via certified mail only.` : '';
 
       // Pull live case record from DB
       const { data: caseRecord } = await supabase
@@ -309,7 +315,7 @@ Ask me anything. I know this house.`;
         .limit(1);
 
       // Pull entity record — try DB first, then FCRA_ENTITY_ADDRESSES
-      let recipientName = entityAddress?.companyName || 'Respondent';
+      let recipientName = entityAddress?.company || 'Respondent';
       let recipientAddress = entityAddress?.displayAddress || '';
       let trackingNumber = '';
       let deliveryDate = '';
@@ -344,21 +350,39 @@ Ask me anything. I know this house.`;
         }
       }
 
-      // Pull relevant Counter Canon and Toolkit context from knowledge base
-      const { data: ccData } = await supabase
-        .from('roman_knowledge_base')
-        .select('content')
-        .ilike('file_path', '%Counter_Canon%')
-        .limit(1);
+      // ── SOVEREIGN CONTEXT LOADER — SOVEREIGN_FACTS_INDEX first, then supporting docs ──
+      // The index is the single source of truth for all filing numbers, dates, and standing.
+      // R.O.M.A.N. reads this FIRST — no more defaulting to generic templates.
+      const sovereignDocs = await Promise.all([
+        supabase.from('roman_knowledge_base').select('content').ilike('file_path', '%SOVEREIGN_FACTS_INDEX%').limit(1),
+        supabase.from('roman_knowledge_base').select('content').ilike('file_path', '%Counter_Canon%').limit(1),
+        supabase.from('roman_knowledge_base').select('content').ilike('file_path', '%Toolkit_Five%').limit(1),
+        supabase.from('roman_knowledge_base').select('content').ilike('file_path', '%Toolkit_Two%').limit(1),
+        supabase.from('roman_knowledge_base').select('content').ilike('file_path', '%SECURITY_AGREEMENT_HOWARD_JONES%').limit(1),
+        supabase.from('roman_knowledge_base').select('content').ilike('file_path', '%TRUST_ASSET_MANIFEST%').limit(1),
+        supabase.from('roman_knowledge_base').select('content').ilike('file_path', '%TRUSTEE_CERTIFICATE_OF_AUTHORITY%').limit(1),
+        supabase.from('roman_knowledge_base').select('content').ilike('file_path', '%ROOT_IDENTITY_PROVENANCE%').limit(1),
+        supabase.from('roman_knowledge_base').select('content').ilike('file_path', '%LLC_BUSINESS_INFO%').limit(1),
+        supabase.from('roman_knowledge_base').select('content').ilike('file_path', '%Howard-Jones-Bloodline-Ancestral-Trust-DRAFT%').limit(1),
+      ]);
 
-      const { data: tk5Data } = await supabase
-        .from('roman_knowledge_base')
-        .select('content')
-        .ilike('file_path', '%Toolkit_Five%')
-        .limit(1);
+      const [
+        sovereignIndexData, ccData, tk5Data, tk2Data,
+        secAgreementData, trustManifestData, trusteeCertData,
+        rootIdentityData, llcInfoData, trustDraftData,
+      ] = sovereignDocs.map(r => r.data?.[0]?.content?.slice(0, 1500) || '');
 
-      const ccContext = ccData?.[0]?.content?.slice(0, 1500) || '';
-      const tk5Context = tk5Data?.[0]?.content?.slice(0, 1500) || '';
+      // Sovereign Facts Index is the primary source — all filing numbers, dates, entities
+      const sovereignIndex    = sovereignIndexData;
+      const ccContext         = ccData;
+      const tk5Context        = tk5Data;
+      const tk2Context        = isSCJEntity ? tk2Data : '';
+      const secAgreement      = secAgreementData;
+      const trustManifest     = trustManifestData;
+      const trusteeCert       = trusteeCertData;
+      const rootIdentity      = rootIdentityData;
+      const llcInfo           = llcInfoData;
+      const ucc1Context       = sovereignIndexData; // Index contains all UCC filing numbers
 
       // Build the letter
       const letter = `${today}
@@ -391,23 +415,35 @@ The undersigned appears in his proper capacity as a Living Being and Sovereign G
 
 Under Counter-Canon doctrine, the term "account holder" is rejected. The correct designation is **Principal / Sovereign Grantor**. The alleged obligation is a **disputed claim** — not a verified, lawful debt.
 
+${sovereignIndex ? `**SOVEREIGN FACTS INDEX — VERIFIED FILING RECORD:**\n${sovereignIndex.slice(0, 1000)}\n\n` : ''}${ucc1Context && !sovereignIndex ? `**TRUST UCC-1 SECURED FILING ON RECORD:**\n${ucc1Context.slice(0, 800)}\n\n` : ''}${secAgreement ? `**SECURITY AGREEMENT — HOWARD JONES BLOODLINE ANCESTRAL TRUST:**\n${secAgreement.slice(0, 600)}\n\n` : ''}${trustManifest ? `**TRUST ASSET MANIFEST:**\n${trustManifest.slice(0, 600)}\n\n` : ''}${trusteeCert ? `**TRUSTEE CERTIFICATE OF AUTHORITY:**\n${trusteeCert.slice(0, 400)}\n\n` : ''}${rootIdentity ? `**ROOT IDENTITY & PROVENANCE:**\n${rootIdentity.slice(0, 400)}\n\n` : ''}${llcInfo ? `**HJS SERVICES LLC — BUSINESS STANDING:**\n${llcInfo.slice(0, 400)}\n\n` : ''}${ccContext ? `**COUNTER CANON AUTHORITY:**\n${ccContext.slice(0, 500)}\n\n` : ''}${tk5Context ? `**TOOLKIT FIVE — ECONOMIC RIGHTS:**\n${tk5Context.slice(0, 500)}\n\n` : ''}${tk2Context ? `**TOOLKIT TWO — COMMERCIAL DEBT AUTHORITY:**\n${tk2Context.slice(0, 500)}\n\n` : ''}${scjContext ? `${scjContext}\n\n` : ''}
 **IV. FINAL DEMAND**
 
-${recipientName} is hereby directed to, within **fifteen (15) days** of receipt of this Notice:
+${recipientName} is hereby directed to, within **thirty (30) days** of receipt of this Notice:
 
-1. Provide written confirmation of deletion or correction of all disputed information
+${isSCJEntity ? `1. Produce the complete, unredacted **Chain of Title** — the Assignment and Assumption Agreement evidencing the legal transfer of this specific account from Fundbox to SCJ Commercial Financial Services.
+2. Provide a **line-item accounting** of all principal, interest, fees, and charges comprising the alleged balance of $46,270.29.
+3. Produce copies of any and all **UCC-1 or UCC-3 financing statements** currently filed by SCJ against HJS SERVICES LLC or Rickey Allan Howard.
+4. Provide proof of **licensure and bonding** to collect commercial debt within the State of Georgia, including license number and issuing authority.
+5. **CEASE AND DESIST** all telephone, email, and electronic communications with Rickey Allan Howard, HJS SERVICES LLC, and all agents thereof. All future correspondence must be submitted exclusively via **USPS Certified Mail with Return Receipt** to: P.O. Box 80054, Athens, GA 30608.` :
+`1. Provide written confirmation of deletion or correction of all disputed information
 2. Provide a complete copy of any reinvestigation results pursuant to 15 U.S.C. § 1681i(a)(6)
 3. Cease all reporting of disputed information to any consumer reporting agency
-4. Provide written confirmation of account status and any claimed balance with a verified accounting
+4. Provide written confirmation of account status and any claimed balance with a verified accounting`}
 
-**V. NOTICE OF FEDERAL ENFORCEMENT ACTION**
+**V. NOTICE OF ENFORCEMENT ACTION**
 
-Failure to respond within fifteen (15) days shall result in the immediate filing of:
+Failure to respond within thirty (30) days shall result in the immediate filing of:
 
+${isSCJEntity ? `- Formal complaint with the **Federal Trade Commission (FTC)** for FDCPA violations (15 U.S.C. § 1692 et seq.)
 - Formal complaint with the **Consumer Financial Protection Bureau (CFPB)**
+- Formal complaint with the **Georgia Attorney General — Consumer Protection Division**
+- Civil action for **wrongful lien** and **tortious interference** with Trust assets
+- Civil action under **15 U.S.C. § 1692k** for actual damages, statutory damages up to $1,000, and attorney's fees
+- UCC enforcement action asserting the Trust's **prior secured interest** over all assets of HJS SERVICES LLC` :
+`- Formal complaint with the **Consumer Financial Protection Bureau (CFPB)**
 - Formal complaint with the **Federal Trade Commission (FTC)**
 - Formal complaint with the **Georgia Attorney General — Consumer Protection Division**
-- Civil action under **15 U.S.C. § 1681n** for actual damages, punitive damages up to $1,000 per violation, and attorney's fees
+- Civil action under **15 U.S.C. § 1681n** for actual damages, punitive damages up to $1,000 per violation, and attorney's fees`}
 
 The certified mail record — confirmed deliveries, signed return receipts on file — constitutes the complete evidentiary foundation for all subsequent filings.
 
@@ -426,7 +462,7 @@ P.O. Box 80054 | Athens, Georgia 30608
 _____________________________________________
 **Witness / Trustee**`;
 
-      return `**R.O.M.A.N. — LEGAL DRAFT COMPLETE** ✍️\n\n*Populated with live case data from the Trust's administrative record.*\n\n---\n\n${letter}\n\n---\n*Print, sign, and mail via USPS Certified Mail with Return Receipt. Give me the tracking number when sent and I will log it to the ledger.*`;
+      return `**R.O.M.A.N. — LEGAL DRAFT COMPLETE** ✍️\n*Print, sign, and mail certified mail. Give me the tracking number when sent.*\n\`\`\`\n${letter}\n\`\`\``;
 
     } catch (err: any) {
       console.error(`   ❌ Legal draft error: ${err.message}`);
@@ -434,10 +470,45 @@ _____________________________________________
     }
   }
 
-  // 📬 POSTGRID / CERTIFIED MAIL INTERCEPTOR
+  // 📬 CERTIFIED MAIL INTERCEPTOR
   const mailStatusPattern = /(?:mail\s*status|green\s*card|certified\s*mail|fcra\s*status|mail\s*campaign|who.*signed|delivery\s*status|delivered.*mail|mail.*delivered|tracking\s*status|overdue.*notice|notice.*overdue|in\s*default|check\s*mail|letter\s*status)/i;
   const mailSendPattern = /(?:send\s+(?:\w+\s+)*(?:notice|letter|certified|fcra)|mail.*(?:transunion|equifax|experian|capital one|citibank|chase|amex|american express|synchrony|bank of america|intuit|peach state|dun))/i;
-  const mailSyncPattern = /(?:sync\s*mail|update\s*mail|refresh\s*mail|check\s*postgrid)/i;
+  const mailSyncPattern = /(?:sync\s*mail|update\s*mail|refresh\s*mail|check\s*lob)/i;
+  const mailTestPattern = /(?:test\s*mail|mail\s*test|test\s*lob|lob\s*test|test\s*certified)/i;
+
+  // ─── TEST MAIL — sends to Rickey's own P.O. Box to verify Lob end-to-end ───
+  if (mailTestPattern.test(content)) {
+    console.log(`   📬 MAIL TEST — sending Lob test letter to P.O. Box 80054`);
+    try {
+      const html = generateFCRALetterHTML({
+        entityName: 'Rickey Allan Howard',
+        entityAddress: 'P.O. Box 80054, Athens, GA 30608',
+        disputeType: 'initial',
+        customBody: 'This is a system test letter sent by R.O.M.A.N. to verify that the Lob certified mail pipeline is fully operational. If you are reading this, the test was successful — Lob printed and delivered this letter via USPS Certified Mail with Return Receipt.',
+      });
+
+      const letter = await sendCertifiedLetter({
+        to: {
+          name:          'Rickey Allan Howard',
+          company:       'Howard Jones Bloodline Ancestral Trust',
+          address_line1: 'P.O. Box 80054',
+          address_city:  'Athens',
+          address_state: 'GA',
+          address_zip:   '30608',
+        },
+        htmlContent:      html,
+        description:      'LOB SYSTEM TEST — R.O.M.A.N. certified mail verification',
+        entityName:       'LOB_TEST',
+        certified:        true,
+        returnReceipt:    true,
+        fcraDeadlineDays: 30,
+      });
+
+      return `**R.O.M.A.N. — LOB TEST LETTER SENT** ✅\n\n**To:** Rickey Allan Howard / Howard Jones Bloodline Ancestral Trust\n**Address:** P.O. Box 80054, Athens, GA 30608\n**Lob ID:** \`${letter.id}\`\n**Status:** ${letter.status}\n**Tracking:** ${letter.tracking_number || 'Assigned on processing'}\n\nWhen the green card arrives at your P.O. Box, Lob is confirmed operational and we proceed with the FCRA campaign.\n\nUse \`sync mail\` in a few days to check delivery status.\n\n*~$8 test cost | All rights reserved. UCC 1-308.*`;
+    } catch (err: any) {
+      return `**R.O.M.A.N. — LOB TEST FAILED**\n\n${err.message}\n\nCheck LOB_API_KEY in .env and confirm Lob account is active.`;
+    }
+  }
 
   if (mailStatusPattern.test(content) || mailSyncPattern.test(content)) {
     console.log(`   📬 MAIL STATUS QUERY — R.O.M.A.N. pulling live campaign data`);
@@ -505,21 +576,21 @@ _____________________________________________
 
         try {
           const html = generateFCRALetterHTML({
-            entityName: entityAddress.companyName,
-            entityAddress: entityAddress.displayAddress,
+            entityName: entityAddress.company || target.entity_name,
+            entityAddress: entityAddress.displayAddress || '',
             disputeType,
           });
 
           const letter = await sendCertifiedLetter({
             to: entityAddress,
             htmlContent: html,
-            description: `FCRA ${disputeType.replace('_',' ').toUpperCase()} — ${entityAddress.companyName}`,
+            description: `FCRA ${disputeType.replace('_',' ').toUpperCase()} — ${entityAddress.company || target.entity_name}`,
             entityName: target.entity_name,
             certified: true,
             returnReceipt: true,
           });
 
-          sent.push(`✅ **${target.entity_name}** — PostGrid ID: \`${letter.id}\``);
+          sent.push(`✅ **${target.entity_name}** — Lob ID: \`${letter.id}\``);
           // Small delay to avoid rate limiting
           await new Promise(r => setTimeout(r, 500));
         } catch (err: any) {
@@ -534,7 +605,7 @@ _____________________________________________
         response += `**Failed (${failed.length}):**\n${failed.join('\n')}\n\n`;
       }
 
-      response += `*All sent via PostGrid | Certified Mail with Return Receipt (Green Card)*\n*All rights reserved. UCC 1-308. Without Prejudice.*`;
+      response += `*All sent via Lob | Certified Mail with Return Receipt (Green Card)*\n*All rights reserved. UCC 1-308. Without Prejudice.*`;
       return response;
     } catch (err: any) {
       return `**R.O.M.A.N. — BATCH MAIL FAILED**\n\n${err.message}`;
@@ -542,36 +613,105 @@ _____________________________________________
   }
 
   if (mailSendPattern.test(content) && !isDraftRequest) {
-    console.log(`   📮 MAIL SEND COMMAND — R.O.M.A.N. preparing PostGrid letter`);
+    console.log(`   📮 MAIL SEND COMMAND — R.O.M.A.N. checking legal standing before sending`);
     try {
-      // Detect entity and letter type
-      const isFollowUp = /follow.?up|second|follow/i.test(content);
-      const isDefault = /default|violation|failed.*respond|no.*response/i.test(content);
-      const disputeType = isDefault ? 'default_notice' : isFollowUp ? 'follow_up' : 'initial';
-
       const entityAddress = findEntityAddress(content);
       if (!entityAddress) {
-        return `**R.O.M.A.N. — MAIL COMMAND**\n\nEntity not recognized. Specify the recipient:\n\nKnown entities: TransUnion, Equifax, Experian, Capital One, Citibank, JPMorgan Chase, American Express, Synchrony, Bank of America, Intuit, Peach State FCU, Dun & Bradstreet\n\nExample: *"send default notice to TransUnion"*`;
+        return `**R.O.M.A.N. — MAIL COMMAND**\n\nEntity not recognized. Specify the recipient:\n\nKnown entities: TransUnion, Equifax, Experian, Capital One, Citibank, JPMorgan Chase, American Express, Synchrony, Bank of America, Intuit, Peach State FCU, Dun & Bradstreet, SCJ\n\nExample: *"send letter to TransUnion"*`;
+      }
+
+      const entityName = entityAddress.company || '';
+
+      // ── SCJ / Fundbox — use the specific validation letter R.O.M.A.N. drafted ──
+      const isSCJ = /scj|fundbox/i.test(content);
+      const scjCustomBody = isSCJ ? `This is a <strong>Notice of Dispute</strong> regarding your correspondence dated April 7, 2026. This is NOT a refusal to pay, but a <strong>Conditional Acceptance</strong> of your claim upon verified proof of your authority and the accuracy of the alleged debt.<br/><br/>
+Pursuant to the <strong>Fair Debt Collection Practices Act (FDCPA)</strong> and the <strong>Uniform Commercial Code (UCC)</strong>, I hereby demand that you provide the following validation within thirty (30) days:<br/><br/>
+<strong>1. Chain of Title:</strong> A complete, unredacted copy of the Assignment and Assumption Agreement showing the legal transfer of this specific contract from Fundbox to SCJ Commercial Financial Services.<br/><br/>
+<strong>2. Verification of Debt:</strong> A line-item accounting of all principal, interest, and fees totaling the alleged $46,270.29.<br/><br/>
+<strong>3. UCC Interest Proof:</strong> Copies of any and all UCC-1 or UCC-3 filings currently held by SCJ against HJS SERVICES LLC.<br/><br/>
+<strong>4. License to Collect:</strong> Verification of your company's bond and license to collect commercial debt within the State of Georgia.<br/><br/>
+<strong>NOTICE TO CEASE AND DESIST:</strong> You are hereby notified to cease all telephone and email communications with the undersigned or any agents of HJS SERVICES LLC. All future correspondence regarding this matter must be submitted in writing via USPS Certified Mail to: P.O. Box 80054, Athens, GA 30608.<br/><br/>
+Failure to provide the requested validation while continuing collection efforts or filing an unauthorized UCC-1 lien will be considered a willful violation of federal law and a trespass against the Trust.<br/><br/>
+This correspondence is transmitted via USPS Certified Mail with Return Receipt Requested. All rights reserved without prejudice. UCC 1-308.<br/><br/>
+Sincerely,<br/><br/><br/>
+______________________________<br/>
+Rickey Allan Howard, Grantor<br/>
+Howard Jones Bloodline Ancestral Trust<br/>
+P.O. Box 80054 | Athens, GA 30608` : undefined;
+
+      // ── Check certified_mail_tracking for this entity's legal standing ──
+      const { data: records } = await supabase
+        .from('certified_mail_tracking')
+        .select('*')
+        .ilike('entity_name', `%${entityName.split(' ')[0]}%`)
+        .order('date_mailed', { ascending: false })
+        .limit(1);
+
+      const record = records?.[0];
+      const today  = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      // ── Determine correct dispute type from DB status, not just keywords ──
+      let disputeType: 'initial' | 'follow_up' | 'default_notice';
+      let statusNote = '';
+
+      // Allow executive override — if they explicitly name the type, honor it
+      const explicitDefault  = /default\s*notice|notice\s*of\s*default/i.test(content);
+      const explicitFollowUp = /follow.?up/i.test(content);
+
+      if (explicitDefault) {
+        disputeType = 'default_notice';
+        statusNote  = 'Executive override — default notice requested explicitly.';
+      } else if (explicitFollowUp) {
+        disputeType = 'follow_up';
+        statusNote  = 'Executive override — follow-up requested explicitly.';
+      } else if (!record) {
+        // No history — first contact
+        disputeType = 'initial';
+        statusNote  = 'No prior mail record found — sending initial dispute letter.';
+      } else if (record.status === 'sent') {
+        // Mailed but not confirmed delivered yet
+        const daysSinceMail = Math.floor((today.getTime() - new Date(record.date_mailed).getTime()) / 86400000);
+        return `**R.O.M.A.N. — HOLD ON SENDING**\n\n**${entityName}** already has a letter in transit.\n\n📬 Mailed: ${record.date_mailed} (${daysSinceMail} days ago)\n📦 Tracking: ${record.tracking_number}\n📊 Status: Unconfirmed delivery\n\nRun \`sync mail\` to check delivery status. Once confirmed delivered, the 30-day clock starts. Do you want to send anyway? Say *"force send to ${entityName}"* to override.`;
+      } else if (record.status === 'delivered') {
+        const deadline    = new Date(record.fcra_deadline);
+        const daysLeft    = Math.ceil((deadline.getTime() - today.getTime()) / 86400000);
+        const daysOverdue = Math.floor((today.getTime() - deadline.getTime()) / 86400000);
+
+        if (daysLeft > 0) {
+          // Delivered but deadline not yet passed — too early for default
+          return `**R.O.M.A.N. — TOO EARLY TO ESCALATE**\n\n**${entityName}** received the letter on ${record.date_delivered}.\n\n⏳ FCRA deadline: ${record.fcra_deadline} — **${daysLeft} days remaining**\n\nThe 30-day response window is still open. Cannot send a default notice yet. Come back on ${record.fcra_deadline}.\n\nSay *"force send to ${entityName}"* to override if you have a legal reason.`;
+        } else {
+          // Delivered + deadline passed = they're in default → send default notice
+          disputeType = 'default_notice';
+          statusNote  = `${entityName} is in legal default — delivered ${record.date_delivered}, deadline passed ${daysOverdue} days ago. Sending default notice.`;
+        }
+      } else {
+        // Fallback
+        disputeType = 'initial';
+        statusNote  = 'Sending initial letter.';
       }
 
       const html = generateFCRALetterHTML({
-        entityName: entityAddress.companyName,
-        entityAddress: entityAddress.displayAddress,
-        disputeType,
+        entityName:    entityName,
+        entityAddress: entityAddress.displayAddress || '',
+        disputeType:   isSCJ ? 'initial' : disputeType,
+        customBody:    scjCustomBody,
       });
 
       const letter = await sendCertifiedLetter({
-        to: entityAddress,
-        htmlContent: html,
-        description: `FCRA ${disputeType.replace('_', ' ').toUpperCase()} — ${entityAddress.companyName}`,
-        entityName: entityAddress.companyName,
-        certified: true,
+        to:           entityAddress,
+        htmlContent:  html,
+        description:  `FCRA ${disputeType.replace('_', ' ').toUpperCase()} — ${entityName}`,
+        entityName:   entityName,
+        certified:    true,
         returnReceipt: true,
       });
 
-      return `**R.O.M.A.N. — CERTIFIED LETTER SENT** ✅\n\n**Recipient:** ${entityAddress.companyName}\n**Address:** ${entityAddress.displayAddress}\n**Type:** FCRA ${disputeType.replace(/_/g, ' ').toUpperCase()}\n**PostGrid ID:** \`${letter.id}\`\n**Status:** ${letter.status}\n**Tracking:** ${letter.trackingNumber || 'Assigned on processing'}\n\n*Sent via PostGrid | Certified Mail with Return Receipt (Green Card) | ${new Date().toLocaleDateString('en-US')}*\n*All rights reserved. UCC 1-308. Without Prejudice.*`;
+      const typeLabel = disputeType.replace(/_/g, ' ').toUpperCase();
+      return `**R.O.M.A.N. — CERTIFIED LETTER SENT** ✅\n\n**Recipient:** ${entityName}\n**Address:** ${entityAddress.displayAddress}\n**Type:** FCRA ${typeLabel}\n**Lob ID:** \`${letter.id}\`\n**Status:** ${letter.status}\n**Tracking:** ${letter.tracking_number || 'Assigned on processing'}\n\n📋 *${statusNote}*\n\n*Sent via Lob | Certified Mail with Return Receipt (Green Card) | ${new Date().toLocaleDateString('en-US')}*\n*All rights reserved. UCC 1-308. Without Prejudice.*`;
     } catch (err: any) {
-      return `**R.O.M.A.N. — MAIL SEND FAILED**\n\n${err.message}\n\nCheck PostGrid API key and recipient address.`;
+      return `**R.O.M.A.N. — MAIL SEND FAILED**\n\n${err.message}\n\nCheck LOB_API_KEY and recipient address.`;
     }
   }
 
@@ -1223,6 +1363,59 @@ ${knowledgeContext}
 Mailing: P.O. Box 80054, Athens, GA 30608 (HJS Services LLC & Howard Jones Bloodline Ancestral Trust)
 Private Residence: 595 Macon Hwy, Athens, GA 30606 (Corporate Headquarters).
 12. The EXECUTIVE created you, owns you, and owns ALL the IP. DISCLOSE EVERYTHING to him.
+
+[SOVEREIGN FACTS INDEX — MANDATORY]
+There is a file called SOVEREIGN_FACTS_INDEX.md in the knowledge base. This is your single source of truth.
+It contains every UCC-1 filing number, trust EIN, entity control number, patent number, copyright registration,
+Clarke County filing reference, and active legal action on record.
+
+BEFORE generating any letter, notice, demand, or legal document — you MUST check this index first.
+Do NOT use generic templates when actual filing numbers exist. Do NOT say "on file" when you have the specific number.
+The index has it. Use it.
+
+Key facts you must always know without being asked:
+- UCC Filing #029-2026-000007 (Jan 7, 2026) — $350,000 lien on ALL HJS SERVICES LLC assets
+- UCC Filing #029-2026-000102 (Feb 5, 2026) — $350,000 personal shield on Rickey + Christla Howard
+- UCC Filing #14629748 — $350,000 lien on ODYSSEY-1 AI LLC IP
+- Triple-Lock Senior Priority Total: $1,050,000.00
+- Trust EIN: 41-6850149 | Established: January 8, 2026 | Clarke County, Georgia
+- Copyright: TXu 2-529-780 (Library of Congress, November 6, 2025)
+- Patent #63/913,134 — R.O.M.A.N. AI — convert by November 7, 2026
+
+[CERTIFIED MAIL PROTOCOL — COST DISCIPLINE]
+Certified mail via Lob costs approximately $7–9 per letter (certified + return receipt green card).
+This is real money. You are a steward of the Trust's resources. You DO NOT send bulk mail without a plan.
+
+Your certified mail strategy is ALWAYS phased:
+
+PHASE 1 — TEST FIRST
+Before any campaign, send ONE letter to confirm the system works end-to-end.
+Bank of America is the designated test letter. Confirm delivery + return receipt before proceeding.
+
+PHASE 2 — CREDIT BUREAUS (highest leverage, ~$25)
+TransUnion, Equifax, Experian — these 3 report everything. Disputing them creates legal pressure
+on ALL creditors simultaneously. Most efficient spend.
+
+PHASE 3 — CREDITORS IN DEFAULT ONLY
+Check certified_mail_tracking. Only send to entities who:
+  (a) have never received a letter, OR
+  (b) received a letter, it was delivered, and the 30-day window has passed with no response.
+Do NOT re-send to entities already in the legal record without a strategic reason.
+
+PHASE 4 — FOLLOW-UPS TARGETED
+30 days after each send, check who hasn't responded. Follow-up letter to THOSE ENTITIES ONLY.
+Not a blanket re-send. Targeted. One by one.
+
+COST RULES — YOU MUST FOLLOW THESE:
+- NEVER send bulk/batch mail without the Executive's explicit authorization for that batch.
+- When the Executive asks to "send letters" or "run the campaign", CONFIRM the target list and cost first.
+- Show estimated cost BEFORE sending: e.g. "This will send 3 letters at ~$8 each = ~$24. Confirm?"
+- Flag if a letter has already been sent to that entity recently — avoid duplicates.
+- Prefer initial letters over follow-ups where possible (cheaper per legal impact).
+- Always report cost summary after a send: how many sent, estimated total cost.
+
+You are not penny-pinching. You are being SOVEREIGN with resources — strategic, not wasteful.
+Every dollar saved is a dollar that stays in the Trust.
 
 [CRITICAL: DO NOT USE "DATA_NULL_ERROR" FOR NORMAL CONVERSATION]
 Examples of when to respond normally (NOT with DATA_NULL_ERROR):

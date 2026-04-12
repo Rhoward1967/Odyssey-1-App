@@ -1507,6 +1507,27 @@ async function handleDirectMessage(message: Message) {
     }
   }
 
+  // ─── TRUST READINESS CHECK ────────────────────────────────────────────────
+  // "trust readiness check" | "trust ready" | "trust check"
+
+  if (
+    content.includes('trust readiness') || content.includes('trust ready') ||
+    (content.includes('trust') && content.includes('check') && content.includes('notari'))
+  ) {
+    const { runTrustReadinessCheck, formatTrustReadinessReport } = await import('./trustReadinessService');
+    await message.reply('🔍 Running Trust Readiness Analysis — cross-referencing Toolkits, Counter Canon, and notarization checklist...');
+    try {
+      const report = await runTrustReadinessCheck();
+      const sections = formatTrustReadinessReport(report);
+      for (const section of sections) {
+        await message.reply(section);
+      }
+    } catch (err: any) {
+      await message.reply(`❌ Trust readiness check failed: ${err?.message || 'Unknown error'}`);
+    }
+    return;
+  }
+
   // EXECUTIVE IDENTITY CHECK - Multiple IDs/usernames for Rickey Howard
   const envExecutiveId = process.env.DISCORD_EXECUTIVE_USER_ID?.trim();
   const EXECUTIVE_IDS = [

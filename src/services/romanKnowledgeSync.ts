@@ -89,6 +89,9 @@ const KNOWLEDGE_FILES: string[] = [
   'legal/THREE_TIER_VALUATION_FRAMEWORK.md',
   'patents/PPA_01_ROMAN_2.0_Wearable_Defense_System.md',
 
+  // === SOVEREIGN FACTS INDEX — ALWAYS FIRST ===
+  'legal/SOVEREIGN_FACTS_INDEX.md',
+
   // === TRUST / LEGAL / CORPORATE ===
   'legal/ASSIGNMENT_OF_IP_TO_TRUST.md',
   'legal/ASSIGNMENT_OF_INTEREST_63913134.md',
@@ -232,6 +235,9 @@ const KNOWLEDGE_FILES: string[] = [
   'docs/ROMAN_PATENT_SPEC_DRAFT.md',
   'docs/ROMAN_SYNC_MANIFEST.md',
   'src/services/postGridService.ts',
+  'src/services/lobService.ts',
+  'src/services/sovereignCouponEngine.ts',
+  'src/pages/SovereignScanner.tsx',
   'src/services/patentDeadlineTracker.ts',
   'src/services/patentDrawingGenerator.ts',
   'src/services/patentFilingPackage.ts',
