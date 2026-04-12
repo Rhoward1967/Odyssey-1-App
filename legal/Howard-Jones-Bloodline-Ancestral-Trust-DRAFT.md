@@ -1001,7 +1001,7 @@ The Grantors and Trustees declare the following tax characterization:
 
 **Asset Protection Scope**: Trust assets shall not be subject to the personal debts or obligations of any Grantor, Trustee, or Beneficiary in their individual capacity, consistent with the spendthrift provisions of this Trust and O.C.G.A. § 53-12-28. The Trustees shall assert this protection vigorously in any proceeding in which Trust assets are threatened.
 
-**Grantors' Standing**: The Grantors execute this Trust as living natural persons holding full legal capacity under Georgia law. All rights reserved without prejudice. UCC 1-308.
+**Grantors' Standing**: The Grantors execute this Trust as living natural persons holding full legal capacity under Georgia law, under Georgia Trust Code O.C.G.A. Title 53, with all rights reserved as further set forth in Article VII-B hereof.
 
 ---
 
