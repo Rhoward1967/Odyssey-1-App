@@ -7,16 +7,7 @@
  * 64 files synced - query them ALL when asked questions.
  */
 
-import { createClient } from '@supabase/supabase-js';
-
-const isBrowser = typeof window !== 'undefined';
-const supabaseUrl = isBrowser
-  ? import.meta.env.VITE_SUPABASE_URL
-  : (process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL)!;
-const supabaseKey = isBrowser
-  ? import.meta.env.VITE_SUPABASE_ANON_KEY
-  : (process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_ANON_KEY)!;
-const supabase = createClient(supabaseUrl, supabaseKey);
+import { supabase } from '@/lib/supabaseClient';
 
 export interface KnowledgeSearchResult {
   file_path: string;
