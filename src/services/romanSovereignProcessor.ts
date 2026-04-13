@@ -36,12 +36,19 @@ const EXECUTIVE_IDS = [
 
 // Dual-environment: browser uses import.meta.env, Node.js (Discord bot) uses process.env
 const isBrowser = typeof window !== 'undefined';
-const openai = new OpenAI({
-  apiKey: isBrowser
-    ? import.meta.env.VITE_OPENAI_API_KEY
-    : process.env.OPENAI_API_KEY,
-  ...(isBrowser && { dangerouslyAllowBrowser: true })
-});
+// Lazy client — only instantiated when first used (avoids module-level crash when key is absent)
+let _openai: OpenAI | null = null;
+function getOpenAI(): OpenAI {
+  if (!_openai) {
+    _openai = new OpenAI({
+      apiKey: isBrowser
+        ? import.meta.env.VITE_OPENAI_API_KEY
+        : process.env.OPENAI_API_KEY,
+      ...(isBrowser && { dangerouslyAllowBrowser: true })
+    });
+  }
+  return _openai;
+}
 
 /**
  * Sovereign Search - Query the 64-file knowledge base
@@ -435,7 +442,7 @@ ${knowledgeContext}
 `;
 
   try {
-    const completion = await openai.chat.completions.create({
+    const completion = await getOpenAI().chat.completions.create({
       messages: [
         { role: "system", content: sovereignPrompt },
         { role: "user", content: content }
