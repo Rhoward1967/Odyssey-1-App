@@ -10,7 +10,7 @@
   ],
   "headers": [
     {
-      "source": "/assets/js/:path*",
+      "source": "/assets/(.*)\\.js",
       "headers": [
         {
           "key": "Content-Type",
@@ -23,7 +23,7 @@
       ]
     },
     {
-      "source": "/assets/css/:path*",
+      "source": "/assets/(.*)\\.css",
       "headers": [
         {
           "key": "Content-Type",
@@ -36,7 +36,7 @@
       ]
     },
     {
-      "source": "/assets/:path*",
+      "source": "/assets/(.*)",
       "headers": [
         {
           "key": "Cache-Control",
