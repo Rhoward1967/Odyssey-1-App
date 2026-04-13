@@ -17,17 +17,7 @@
  * UCC 1-308 | All Rights Reserved
  */
 
-import { createClient } from '@supabase/supabase-js';
-
-const supabaseUrl = (typeof window !== 'undefined'
-  ? import.meta.env?.VITE_SUPABASE_URL
-  : process.env.VITE_SUPABASE_URL) as string;
-
-const supabaseKey = (typeof window !== 'undefined'
-  ? import.meta.env?.VITE_SUPABASE_ANON_KEY
-  : process.env.VITE_SUPABASE_ANON_KEY) as string;
-
-const supabase = createClient(supabaseUrl, supabaseKey);
+import { supabase } from '@/lib/supabaseClient';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
