@@ -63,11 +63,9 @@ export default defineConfig(({ mode }) => ({
       external: ['discord.js'],
       output: {
         manualChunks: (id) => {
-          // Aggressive code splitting for optimal caching
+          // Keep React + all React-dependent packages in ONE vendor chunk
+          // to prevent cross-chunk React undefined errors (MetaMask SES issue)
           if (id.includes('node_modules')) {
-            if (id.includes('react') || id.includes('react-dom')) {
-              return 'react-vendor';
-            }
             if (id.includes('lucide-react')) {
               return 'icons';
             }
@@ -77,15 +75,7 @@ export default defineConfig(({ mode }) => ({
             if (id.includes('@supabase')) {
               return 'supabase';
             }
-            if (id.includes('@radix-ui') || id.includes('shadcn')) {
-              return 'ui-components';
-            }
-            return 'vendor';
-          }
-          // Split pages for route-based lazy loading
-          if (id.includes('/pages/')) {
-            const pageName = id.split('/pages/')[1].split('.')[0];
-            return `page-${pageName.toLowerCase()}`;
+            return 'vendor'; // React, ReactDOM, react-router, everything else together
           }
         },
         // Optimize asset file names
