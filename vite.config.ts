@@ -62,22 +62,6 @@ export default defineConfig(({ mode }) => ({
     rollupOptions: {
       external: ['discord.js'],
       output: {
-        manualChunks: (id) => {
-          // Keep React + all React-dependent packages in ONE vendor chunk
-          // to prevent cross-chunk React undefined errors (MetaMask SES issue)
-          if (id.includes('node_modules')) {
-            if (id.includes('lucide-react')) {
-              return 'icons';
-            }
-            if (id.includes('recharts') || id.includes('d3')) {
-              return 'charts';
-            }
-            if (id.includes('@supabase')) {
-              return 'supabase';
-            }
-            return 'vendor'; // React, ReactDOM, react-router, everything else together
-          }
-        },
         // Optimize asset file names
         chunkFileNames: 'assets/js/[name]-[hash].js',
         entryFileNames: 'assets/js/[name]-[hash].js',
