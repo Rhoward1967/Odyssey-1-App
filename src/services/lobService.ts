@@ -12,11 +12,7 @@
  * © 2026 Rickey Allan Howard / Howard Jones Bloodline Ancestral Trust
  */
 
-import { createClient } from '@supabase/supabase-js';
-
-const supabaseUrl = (process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL)!;
-const supabaseKey = (process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_SERVICE_ROLE_KEY)!;
-const supabase = createClient(supabaseUrl, supabaseKey);
+import { supabase } from '@/lib/supabaseClient';
 
 const LOB_API_KEY = process.env.LOB_API_KEY!;
 const LOB_BASE    = 'https://api.lob.com/v1';
