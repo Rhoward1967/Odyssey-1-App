@@ -884,6 +884,30 @@ client.on('clientReady', async () => {
   if (connected) {
     // Initialize identity on first startup
     await initializeRomanIdentity();
+
+    // 🎵 HANDSHAKE ANTHEM — announce boot track
+    try {
+      const statusChannelId = process.env.DISCORD_FCRA_ALERT_CHANNEL || process.env.DISCORD_STATUS_CHANNEL;
+      if (statusChannelId) {
+        const { data: anthem } = await romanSupabase
+          .from('sovereign_music')
+          .select('title, storage_url, frequency_hz, notes')
+          .eq('spiritual_theme', 'handshake_anthem')
+          .eq('upload_status', 'live')
+          .single();
+
+        if (anthem?.storage_url) {
+          const ch = await client.channels.fetch(statusChannelId);
+          if (ch && 'isTextBased' in ch && ch.isTextBased()) {
+            await (ch as any).send(
+              `🤝 **R.O.M.A.N. HANDSHAKE COMPLETE** — System online.\n` +
+              `🎵 **${anthem.title}** | ${anthem.frequency_hz}Hz Sovereign Frequency\n` +
+              `${anthem.storage_url}`
+            );
+          }
+        }
+      }
+    } catch { /* non-fatal */ }
     
     // Run initial audit on startup
     console.log('🔍 Running initial system audit...');
