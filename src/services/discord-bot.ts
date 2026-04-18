@@ -85,6 +85,7 @@ if (!SUPABASE_URL || !SUPABASE_KEY || SUPABASE_KEY.length < 100) {
 
 // Use R.O.M.A.N.'s shared service role client
 import { romanSupabase as supabase } from './romanSupabase';
+import { romanSelfRepair } from './RomanSelfRepair';
 
 console.log('✅ Supabase client initialized with service role');
 
@@ -931,6 +932,14 @@ client.on('clientReady', async () => {
     
     console.log('⏰ Auto-audit scheduled: Running every 6 hours');
 
+    // 🛡️ ACTIVATE SELF-REPAIR IMMUNE SYSTEM
+    try {
+      romanSelfRepair.activate();
+      console.log('🛡️ R.O.M.A.N. Self-Repair immune system ONLINE');
+    } catch (err: any) {
+      console.error('❌ Self-repair activation failed:', err.message);
+    }
+
     // Initialize FCRA compliance monitor
     try {
       romanFCRAMonitor.initialize(client, process.env.DISCORD_FCRA_ALERT_CHANNEL);
@@ -1170,6 +1179,100 @@ async function handleDirectMessage(message: Message) {
       ? `✅ **Sync Manifest Updated**\n\`\`\`\n${result.message}\n\`\`\`\n*Saved to \`docs/ROMAN_SYNC_MANIFEST.md\` + knowledge base. Any AI reading it is now synchronized.*`
       : `❌ ${result.message}`
     );
+    return;
+  }
+
+  // ─── SYNC JUDGEMENT COMMAND ───────────────────────────────────────────────
+  // "sync judgement" → re-extract docx from D:\ and update knowledge base
+  if (content.includes('sync judgement') || content.includes('update judgement') || content.includes('sync v24') || content.includes('sync v25')) {
+    await message.reply(`📄 Syncing Judgement of No Legal Accountability — extracting latest version from D:\\...`);
+    try {
+      const { createRequire } = await import('module');
+      const require = createRequire(import.meta.url);
+      const mammoth = require('mammoth');
+      const { writeFileSync } = await import('fs');
+      const { createHash } = await import('crypto');
+      const { resolve } = await import('path');
+
+      const DOCX_PATH   = 'D:\\Judgement_of_No_Legal_Accountability_v24-1.docx';
+      const SAVE_PATH   = resolve('legal/Judgement_of_No_Legal_Accountability_v24-1.md');
+      const KB_FILE_KEY = 'legal/Judgement_of_No_Legal_Accountability_v24-1.md';
+
+      const result = await mammoth.extractRawText({ path: DOCX_PATH });
+      const rawText = result.value;
+      if (!rawText || rawText.trim().length < 100) throw new Error('Extraction failed or document empty');
+
+      const content_md = `# Judgement of No Legal Accountability v24-1\n**Classification:** Legal Research | Sovereign Reference | Living Document\n**R.O.M.A.N. Tag:** legal_drafting | sovereign_notice | fcra_response | truth_standard\n**Source:** Primary research document — 1787–2026 pattern analysis\n\n---\n\n${rawText}`;
+
+      writeFileSync(SAVE_PATH, content_md, 'utf8');
+
+      const checksum = createHash('md5').update(content_md).digest('hex');
+      const { data: existing } = await romanSupabase.from('roman_knowledge_base').select('id, content').eq('file_path', KB_FILE_KEY).single();
+
+      if (existing) {
+        const existingChecksum = createHash('md5').update(existing.content).digest('hex');
+        if (existingChecksum === checksum) {
+          await message.reply(`✅ Judgement is already current — no changes detected.`);
+          return;
+        }
+        await romanSupabase.from('roman_knowledge_base').update({ content: content_md, created_at: new Date().toISOString() }).eq('file_path', KB_FILE_KEY);
+      } else {
+        await romanSupabase.from('roman_knowledge_base').insert({ file_path: KB_FILE_KEY, content: content_md, created_at: new Date().toISOString() });
+      }
+
+      await message.reply(`✅ Judgement of No Legal Accountability synced — ${rawText.length.toLocaleString()} characters indexed.\n🏛️ Tagged for: legal_drafting | sovereign_notice | fcra_response`);
+      return;
+    } catch (err: any) {
+      await message.reply(`❌ Judgement sync failed: ${err.message}`);
+      return;
+    }
+  }
+
+  // ─── SELF-REPAIR COMMANDS ──────────────────────────────────────────────────
+  if (content.includes('repair status') || content.includes('immune status')) {
+    const status = romanSelfRepair.isRunning()
+      ? '✅ **ONLINE** — All three repair handlers active'
+      : '🔴 **OFFLINE** — Immune system not running';
+    await message.reply(
+      `🛡️ **R.O.M.A.N. Self-Repair Immune System**\n${status}\n\n` +
+      `• **ConnectionWatchdog** — Supabase reconnect (30s probe, exponential backoff)\n` +
+      `• **QueueClearanceProtocol** — Zombie task detection (60s threshold)\n` +
+      `• **EdgeFunctionHeartbeat** — Critical function health (45s ping, cold-boot at 3 misses)\n\n` +
+      `Type \`repair diagnostic\` to run a live check.`
+    );
+    return;
+  }
+
+  if (content.includes('repair diagnostic') || content.includes('immune diagnostic')) {
+    await message.reply('🔬 Running self-repair diagnostic across all three handlers...');
+    try {
+      const result = await romanSelfRepair.runDiagnostic();
+      const dbStatus = result.database ? '✅ Connected' : '❌ DISCONNECTED';
+      const queueStatus = result.queueZombies === 0 ? '✅ Clear' : `⚠️ ${result.queueZombies} tasks in queue`;
+      const edgeLines = Object.entries(result.edgeFunctions)
+        .map(([fn, alive]) => `  • \`${fn}\`: ${alive ? '✅' : '❌'}`)
+        .join('\n');
+      await message.reply(
+        `🛡️ **Self-Repair Diagnostic Complete**\n\n` +
+        `**Database:** ${dbStatus}\n` +
+        `**Task Queue:** ${queueStatus}\n` +
+        `**Edge Functions:**\n${edgeLines}`
+      );
+    } catch (err: any) {
+      await message.reply(`❌ Diagnostic failed: ${err.message}`);
+    }
+    return;
+  }
+
+  if (content.includes('repair activate') || content.includes('immune activate')) {
+    romanSelfRepair.activate();
+    await message.reply('🛡️ Self-Repair immune system activated — all three handlers running.');
+    return;
+  }
+
+  if (content.includes('repair deactivate') || content.includes('immune deactivate')) {
+    romanSelfRepair.deactivate();
+    await message.reply('🔴 Self-Repair immune system deactivated.');
     return;
   }
 
