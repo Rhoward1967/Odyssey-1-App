@@ -47,6 +47,7 @@ import AIIntelligenceLiveFeed from "./components/AIIntelligenceLiveFeed";
 import SystemEvolutionTracker from "./components/SystemEvolutionTracker";
 import HowardJanitorial from "./pages/HowardJanitorial";
 import SovereignScanner from "./pages/SovereignScanner";
+import DiscordBotDashboard from "./pages/DiscordBotDashboard";
 
 const queryClient = new QueryClient();
 
@@ -102,6 +103,7 @@ const App = () => {
                               <Route path="admin/ai-intelligence" element={<AIIntelligenceLiveFeed />} />
                               <Route path="admin/evolution" element={<SystemEvolutionTracker />} />
                               <Route path="scanner" element={<SovereignScanner />} />
+                              <Route path="discord-bot" element={<DiscordBotDashboard />} />
                             </Route>
                           </Route>
 

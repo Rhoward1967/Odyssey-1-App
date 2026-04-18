@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button';
 import { supabase } from '@/lib/supabaseClient';
 import {
   BookOpen,
+  Bot,
   Calculator,
   ClipboardList,
   CreditCard,
@@ -11,6 +12,7 @@ import {
   LogOut,
   Receipt,
   Scale,
+  ScanBarcode,
   Settings,
   TrendingUp,
   Tv,
@@ -31,6 +33,8 @@ const menuItems = [
   { icon: ListChecks, label: 'Catalog', href: '/app/catalog' },
   { icon: Coins, label: 'OSC Wallet', href: '/app/osc-wallet' },
   { icon: Scale, label: 'Legal Defense', href: '/app/legal-defense' },
+  { icon: ScanBarcode, label: 'Sovereign Scanner', href: '/app/scanner' },
+  { icon: Bot, label: 'Discord Bot', href: '/app/discord-bot' },
   { icon: BookOpen, label: 'Handbook', href: '/app/handbook' },
   { icon: Settings, label: 'Admin Center', href: '/app/admin' },
   { icon: FileText, label: 'Manual', href: '/app/user-manual' },
