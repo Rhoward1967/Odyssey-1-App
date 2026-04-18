@@ -48,6 +48,8 @@ import SystemEvolutionTracker from "./components/SystemEvolutionTracker";
 import HowardJanitorial from "./pages/HowardJanitorial";
 import SovereignScanner from "./pages/SovereignScanner";
 import DiscordBotDashboard from "./pages/DiscordBotDashboard";
+import SovereignBooks from "./pages/SovereignBooks";
+import MusicDistribution from "./pages/MusicDistribution";
 
 const queryClient = new QueryClient();
 
@@ -104,6 +106,8 @@ const App = () => {
                               <Route path="admin/evolution" element={<SystemEvolutionTracker />} />
                               <Route path="scanner" element={<SovereignScanner />} />
                               <Route path="discord-bot" element={<DiscordBotDashboard />} />
+                              <Route path="sovereign-books" element={<SovereignBooks />} />
+                              <Route path="music" element={<MusicDistribution />} />
                             </Route>
                           </Route>
 
