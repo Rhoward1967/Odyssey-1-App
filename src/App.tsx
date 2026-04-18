@@ -50,6 +50,7 @@ import SovereignScanner from "./pages/SovereignScanner";
 import DiscordBotDashboard from "./pages/DiscordBotDashboard";
 import SovereignBooks from "./pages/SovereignBooks";
 import MusicDistribution from "./pages/MusicDistribution";
+import RomanChat from "./pages/RomanChat";
 
 const queryClient = new QueryClient();
 
@@ -108,6 +109,7 @@ const App = () => {
                               <Route path="discord-bot" element={<DiscordBotDashboard />} />
                               <Route path="sovereign-books" element={<SovereignBooks />} />
                               <Route path="music" element={<MusicDistribution />} />
+                              <Route path="roman" element={<RomanChat />} />
                             </Route>
                           </Route>
 

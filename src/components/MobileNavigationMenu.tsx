@@ -37,6 +37,7 @@ const MobileNavigationMenu: React.FC = () => {
   const navigate = useNavigate();
 
   const navItems = [
+    { path: '/app/roman', label: 'R.O.M.A.N. Chat', icon: Bot },
     { path: '/app/apex', label: 'Apex Dashboard', icon: Home },
     { path: '/app/trading', label: 'Trading', icon: BarChart3 },
     { path: '/app/calculator', label: 'Calculator', icon: Monitor },

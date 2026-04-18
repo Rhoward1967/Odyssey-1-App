@@ -24,6 +24,7 @@ import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 const menuItems = [
+  { icon: Bot, label: 'R.O.M.A.N. Chat', href: '/app/roman' },
   { icon: Gauge, label: 'Apex Dashboard', href: '/app/apex' },
   { icon: TrendingUp, label: 'Trading', href: '/app/trading' },
   { icon: Tv, label: 'Media Center', href: '/app/media-center' },
