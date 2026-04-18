@@ -1,4 +1,3 @@
-import { supabase } from '@/lib/supabaseClient';
 import { Mic, MicOff, Send, Volume2, VolumeX, Bot, User } from 'lucide-react';
 import { useEffect, useRef, useState, useCallback } from 'react';
 
@@ -55,20 +54,25 @@ export default function RomanChat() {
     setVoiceState('thinking');
 
     try {
-      const { data, error: fnError } = await supabase.functions.invoke('anthropic-chat', {
-        body: {
+      const fnUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/anthropic-chat`;
+      const fnRes = await fetch(fnUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+        },
+        body: JSON.stringify({
           message: text,
           chatHistory: chatHistoryRef.current.slice(-10),
-        },
+        }),
       });
 
-      // Extract real error from function body when possible
-      if (fnError) {
-        const detail = (fnError as any)?.context?.error || (fnError as any)?.context?.message || fnError.message;
-        throw new Error(detail);
+      const payload = await fnRes.json();
+      if (!fnRes.ok || payload.error) {
+        throw new Error(payload.error || `HTTP ${fnRes.status}: ${fnRes.statusText}`);
       }
-      if (data?.error) throw new Error(data.error);
-      const response: string = data?.response ?? 'The audit trail returned no response.';
+      const response: string = payload?.response ?? 'The audit trail returned no response.';
 
       addMessage('roman', response);
       chatHistoryRef.current = [...chatHistoryRef.current, { type: 'assistant', message: response }];
@@ -88,13 +92,19 @@ export default function RomanChat() {
   async function speakResponse(text: string) {
     setVoiceState('speaking');
     try {
-      const { data, error: fnError } = await supabase.functions.invoke('roman-tts', {
-        body: { text },
+      const fnUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/roman-tts`;
+      const ttsRes = await fetch(fnUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+        },
+        body: JSON.stringify({ text }),
       });
 
-      if (fnError) throw new Error(fnError.message);
-
-      // data is an ArrayBuffer from the edge function
+      if (!ttsRes.ok) throw new Error(`TTS ${ttsRes.status}`);
+      const data = await ttsRes.arrayBuffer();
       const blob = new Blob([data], { type: 'audio/mpeg' });
       const url  = URL.createObjectURL(blob);
 
