@@ -84,7 +84,7 @@ if (!SUPABASE_URL || !SUPABASE_KEY || SUPABASE_KEY.length < 100) {
 }
 
 // Use R.O.M.A.N.'s shared service role client
-import { romanSupabase as supabase } from './romanSupabase';
+import { romanSupabase, romanSupabase as supabase } from './romanSupabase';
 import { romanSelfRepair } from './RomanSelfRepair';
 
 console.log('✅ Supabase client initialized with service role');
