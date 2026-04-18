@@ -24,6 +24,11 @@ enabled = true
 verify_jwt = false
 entrypoint = "./functions/create-checkout-session/index.ts"
 
+[functions.create-payment-link]
+enabled = true
+verify_jwt = false
+entrypoint = "./functions/create-payment-link/index.ts"
+
 [functions.discord-bot]
 enabled = true
 verify_jwt = false

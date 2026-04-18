@@ -122,9 +122,26 @@ export default function RomanChat() {
       audio.onerror = () => setVoiceState('idle');
       await audio.play();
     } catch {
-      // TTS failed non-fatally — just show text
-      setVoiceState('idle');
+      // OpenAI TTS failed — fall back to browser speechSynthesis
+      speakBrowser(text);
     }
+  }
+
+  function speakBrowser(text: string) {
+    if (!window.speechSynthesis) { setVoiceState('idle'); return; }
+    window.speechSynthesis.cancel();
+    const clean = text.replace(/[*#`|►•▪]/g, '').replace(/\n+/g, ' ').slice(0, 600);
+    const utt = new SpeechSynthesisUtterance(clean);
+    utt.rate = 0.92;
+    utt.pitch = 0.85;
+    // Prefer a deeper voice if available
+    const voices = window.speechSynthesis.getVoices();
+    const deep = voices.find(v => /david|mark|guy|male/i.test(v.name)) ?? voices[0];
+    if (deep) utt.voice = deep;
+    utt.onend  = () => setVoiceState('idle');
+    utt.onerror = () => setVoiceState('idle');
+    setVoiceState('speaking');
+    window.speechSynthesis.speak(utt);
   }
 
   // ─── Mic / Speech Recognition ────────────────────────────────────────────────
@@ -164,10 +181,11 @@ export default function RomanChat() {
   }
 
   function stopSpeaking() {
+    window.speechSynthesis?.cancel();
     if (audioRef.current) {
       audioRef.current.pause();
-      setVoiceState('idle');
     }
+    setVoiceState('idle');
   }
 
   function handleKeyDown(e: React.KeyboardEvent) {
