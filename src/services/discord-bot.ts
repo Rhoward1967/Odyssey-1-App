@@ -86,6 +86,7 @@ if (!SUPABASE_URL || !SUPABASE_KEY || SUPABASE_KEY.length < 100) {
 // Use R.O.M.A.N.'s shared service role client
 import { romanSupabase, romanSupabase as supabase } from './romanSupabase';
 import { romanSelfRepair } from './RomanSelfRepair';
+import { romanVoice } from './RomanVoice';
 
 console.log('✅ Supabase client initialized with service role');
 
@@ -976,6 +977,26 @@ client.on('clientReady', async () => {
       console.error('❌ Self-repair activation failed:', err.message);
     }
 
+    // 🎙️ WIRE VOICE TRANSCRIPTION → MESSAGE HANDLER
+    romanVoice.setTranscriptionHandler(async (userId, guildId, text) => {
+      // Find the guild and a suitable text channel to echo the transcription
+      const guild = client.guilds.cache.get(guildId);
+      if (!guild) return;
+      // Route transcription through the DM handler by building a synthetic message object
+      const member = await guild.members.fetch(userId).catch(() => null);
+      if (!member) return;
+      // Send to the bot's status channel so the conversation is visible in text too
+      const statusChannelId = process.env.DISCORD_STATUS_CHANNEL || process.env.DISCORD_FCRA_ALERT_CHANNEL;
+      if (statusChannelId) {
+        const ch = client.channels.cache.get(statusChannelId);
+        if (ch && 'send' in ch) {
+          await (ch as any).send(`🎙️ **${member.displayName} [voice]:** ${text}`);
+        }
+      }
+      console.log(`[R.O.M.A.N. Voice] Transcribed from ${userId}: "${text}"`);
+    });
+    console.log('🎙️ Voice transcription handler wired');
+
     // Initialize FCRA compliance monitor
     try {
       romanFCRAMonitor.initialize(client, process.env.DISCORD_FCRA_ALERT_CHANNEL);
@@ -1262,6 +1283,46 @@ async function handleDirectMessage(message: Message) {
       await message.reply(`❌ Judgement sync failed: ${err.message}`);
       return;
     }
+  }
+
+  // ─── VOICE COMMANDS ───────────────────────────────────────────────────────
+  if (content === 'roman join' || content === 'voice on' || content === 'join voice') {
+    const member = (message as any).member;
+    const voiceChannel = member?.voice?.channel;
+    if (!voiceChannel) {
+      await message.reply('The documented record shows you are not in a voice channel. Join one first, then call me in.');
+      return;
+    }
+    try {
+      await romanVoice.join(voiceChannel);
+      await message.reply(`🎙️ Voice channel joined — **${voiceChannel.name}**.\nI will speak every response via OpenAI TTS. Say anything and I will hear you via Whisper.\nType \`roman leave\` to stand down.`);
+    } catch (err: any) {
+      await message.reply(`❌ Could not join voice channel: ${err.message}`);
+    }
+    return;
+  }
+
+  if (content === 'roman leave' || content === 'voice off' || content === 'leave voice') {
+    const guildId = (message as any).guildId;
+    if (!guildId || !romanVoice.isActive(guildId)) {
+      await message.reply('The audit trail confirms I am not currently in a voice channel.');
+      return;
+    }
+    await romanVoice.leave(guildId);
+    await message.reply('🔇 Voice channel vacated. Sovereign Immune System remains active in text mode.');
+    return;
+  }
+
+  if (content === 'voice status') {
+    const guildId = (message as any).guildId;
+    const active = guildId && romanVoice.isActive(guildId);
+    const channelId = guildId ? romanVoice.getChannelId(guildId) : null;
+    await message.reply(
+      active
+        ? `🎙️ **Voice Mode: ACTIVE**\nChannel: <#${channelId}>\nTTS: OpenAI \`onyx\` voice | STT: Whisper-1\nType \`roman leave\` to stand down.`
+        : `🔇 **Voice Mode: OFFLINE**\nJoin a voice channel and type \`roman join\` to activate.`
+    );
+    return;
   }
 
   // ─── SELF-REPAIR COMMANDS ──────────────────────────────────────────────────
@@ -2437,7 +2498,13 @@ You diagnose and prescribe fixes. The execution happens through proper channels.
       }
     }
     console.log('✅ Reply sent successfully!');
-    
+
+    // If R.O.M.A.N. is in a voice channel in this guild, speak the response
+    const guildId = (message as any).guildId;
+    if (guildId && romanVoice.isActive(guildId)) {
+      romanVoice.speak(response, guildId).catch(() => {/* non-fatal */});
+    }
+
     // Log successful interaction
     await logSystemEvent('discord_response', 'Successfully responded to user message', 'info', { userId, responseLength: response.length });
     
