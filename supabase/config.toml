@@ -1,3 +1,13 @@
+[functions.anthropic-chat]
+enabled = true
+verify_jwt = false
+entrypoint = "./functions/anthropic-chat/index.ts"
+
+[functions.roman-tts]
+enabled = true
+verify_jwt = false
+entrypoint = "./functions/roman-tts/index.ts"
+
 [functions.create-stripe-portal-session]
 enabled = true
 verify_jwt = true
