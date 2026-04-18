@@ -1,7 +1,7 @@
-import { BookCrossReferenceMap } from '@/components/BookCrossReferenceMap';
-import { BookLivingIntelligence } from '@/components/BookLivingIntelligence';
-import { BookProvenanceExport } from '@/components/BookProvenanceExport';
-import { SovereignBooksLibrary } from '@/components/SovereignBooksLibrary';
+import BookCrossReferenceMap from '@/components/BookCrossReferenceMap';
+import BookLivingIntelligence from '@/components/BookLivingIntelligence';
+import BookProvenanceExport from '@/components/BookProvenanceExport';
+import SovereignBooksLibrary from '@/components/SovereignBooksLibrary';
 import { useState } from 'react';
 
 const TABS = [
