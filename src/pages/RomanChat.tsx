@@ -58,11 +58,16 @@ export default function RomanChat() {
       const { data, error: fnError } = await supabase.functions.invoke('anthropic-chat', {
         body: {
           message: text,
-          chatHistory: chatHistoryRef.current.slice(-10), // last 10 turns
+          chatHistory: chatHistoryRef.current.slice(-10),
         },
       });
 
-      if (fnError) throw new Error(fnError.message);
+      // Extract real error from function body when possible
+      if (fnError) {
+        const detail = (fnError as any)?.context?.error || (fnError as any)?.context?.message || fnError.message;
+        throw new Error(detail);
+      }
+      if (data?.error) throw new Error(data.error);
       const response: string = data?.response ?? 'The audit trail returned no response.';
 
       addMessage('roman', response);
