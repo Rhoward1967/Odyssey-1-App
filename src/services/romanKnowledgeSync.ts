@@ -91,6 +91,7 @@ const KNOWLEDGE_FILES: string[] = [
 
   // === SOVEREIGN FACTS INDEX — ALWAYS FIRST ===
   'legal/SOVEREIGN_FACTS_INDEX.md',
+  'legal/Judgement_of_No_Legal_Accountability_v24-1.md',  // Living document — 1787–2026 pattern analysis, legal drafting reference
 
   // === TRUST / LEGAL / CORPORATE ===
   'legal/ASSIGNMENT_OF_IP_TO_TRUST.md',
