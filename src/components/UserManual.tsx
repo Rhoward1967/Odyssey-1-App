@@ -493,7 +493,7 @@ export const UserManual: React.FC = () => {
       </Card>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className='grid w-full grid-cols-2 md:grid-cols-5 bg-slate-800/50 gap-1'>
+        <TabsList className='flex flex-wrap h-auto w-full bg-slate-800/50 gap-1 p-1'>
           <TabsTrigger value='getting-started' className='text-xs md:text-sm px-1 md:px-3'>
             📖 Getting Started
           </TabsTrigger>
