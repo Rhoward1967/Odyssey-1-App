@@ -33,7 +33,7 @@ serve(async (req) => {
       .replace(/[•▪►]/g, '')
       .replace(/\|/g, '')
       .trim()
-      .slice(0, 800) // Keep it under 800 chars for response speed
+      .slice(0, 4096) // OpenAI TTS hard limit
 
     const response = await fetch('https://api.openai.com/v1/audio/speech', {
       method: 'POST',

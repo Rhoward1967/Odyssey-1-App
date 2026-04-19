@@ -21,8 +21,89 @@ function daysUntil(dateStr: string): number {
   return Math.floor((target.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
 }
 
+// ─── Knowledge base lookup — finds relevant synced files for the user's query ──
+async function fetchKnowledgeContext(
+  supabase: ReturnType<typeof createClient>,
+  userMessage: string
+): Promise<string> {
+  try {
+    // Always-include files: V24 legal doc + books core + sovereign induction
+    const ALWAYS_INCLUDE = [
+      'legal/Judgement_of_No_Legal_Accountability_v24-1.md',
+      'SOVEREIGN_INDUCTION_PROTOCOL.md',
+      'AI_READ_THIS_FIRST.txt',
+      'D-DRIVE/Banking_Research_v5.docx',
+      'src/services/lobService.ts',
+    ]
+
+    // Pull always-include files
+    const { data: pinned } = await supabase
+      .from('roman_knowledge_base')
+      .select('file_path, content')
+      .in('file_path', ALWAYS_INCLUDE)
+
+    // Search for files relevant to the user's message (keyword match on file_path + content)
+    const keywords = userMessage
+      .toLowerCase()
+      .replace(/[^a-z0-9 ]/g, '')
+      .split(' ')
+      .filter(w => w.length > 3)
+      .slice(0, 5)
+
+    let searchResults: Array<{ file_path: string; content: string }> = []
+    if (keywords.length > 0) {
+      // Search by file_path match first (most reliable — catches "banking research" → D-DRIVE/Banking_Research_v5.docx)
+      const pathResults: Array<{ file_path: string; content: string }> = []
+      for (const kw of keywords) {
+        const { data } = await supabase
+          .from('roman_knowledge_base')
+          .select('file_path, content')
+          .ilike('file_path', `%${kw}%`)
+          .limit(2)
+        if (data) pathResults.push(...data)
+      }
+
+      // Deduplicate by file_path (pinned files already in seen set, so they won't duplicate)
+      const pinnedPaths = (pinned ?? []).map((p: { file_path: string }) => p.file_path)
+      const seen = new Set<string>(pinnedPaths)
+      for (const r of pathResults) {
+        if (!seen.has(r.file_path)) { seen.add(r.file_path); searchResults.push(r) }
+        if (searchResults.length >= 4) break
+      }
+
+      // If still under 4, also try content ILIKE on the strongest keyword
+      if (searchResults.length < 2 && keywords[0]) {
+        const { data } = await supabase
+          .from('roman_knowledge_base')
+          .select('file_path, content')
+          .ilike('content', `%${keywords[0]}%`)
+          .limit(2)
+        for (const r of (data ?? [])) {
+          if (!seen.has(r.file_path)) { seen.add(r.file_path); searchResults.push(r) }
+        }
+      }
+    }
+
+    const allEntries = [...(pinned ?? []), ...searchResults]
+    if (allEntries.length === 0) return ''
+
+    const sections = allEntries.map(entry => {
+      const truncated = entry.content?.slice(0, 6000) ?? ''
+      return `--- FILE: ${entry.file_path} ---\n${truncated}${entry.content?.length > 6000 ? '\n[...truncated]' : ''}`
+    })
+
+    return `\nKNOWLEDGE BASE (synced files — use this as active reference):\n${sections.join('\n\n')}\n`
+  } catch (e) {
+    console.error('Knowledge base fetch error:', e)
+    return ''
+  }
+}
+
 // ─── Build the full system context (trust from DB + static knowledge) ─────────
-async function buildSystemContext(supabase: ReturnType<typeof createClient>): Promise<string> {
+async function buildSystemContext(
+  supabase: ReturnType<typeof createClient>,
+  userMessage: string
+): Promise<string> {
   const now = new Date()
   const currentDate = now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
 
@@ -31,37 +112,30 @@ async function buildSystemContext(supabase: ReturnType<typeof createClient>): Pr
   try {
     const { data } = await supabase
       .from('business_entities')
-      .select('trust_name, status, governing_law, trust_type, established_date, co_trustees, successor_trustees, valuation_tier_1_optimistic, valuation_tier_2_market, valuation_tier_3_conservative, ucc1_combined_lien, ucc1_filings, holds_assets')
-      .eq('trust_id', 'HJFAT-2026-001')
+      .select('entity_name, is_active, formation_state, trust_type, filing_date, trustee_name, estimated_value, strategic_notes, holds_assets, ucc_filing_number, notes')
+      .eq('ein_tax_id', 'HJFAT-2026-001')
       .single()
 
     if (data) {
-      const t1 = data.valuation_tier_1_optimistic
-      const t2 = data.valuation_tier_2_market
-      const t3 = data.valuation_tier_3_conservative
-      const trustees = (data.co_trustees || []).join(', ')
-      const successors = (data.successor_trustees || []).join(', ')
       const assets = (data.holds_assets || []).map((a: string) => `  • ${a}`).join('\n')
-      const uccFilings: Array<{ filing_number: string; filing_id: string; date: string; amount: number }> = data.ucc1_filings || []
-      const uccLines = uccFilings.map((f, i) =>
-        `  ${i + 1}. ${f.filing_number} (${f.filing_id}): $${(f.amount / 1000).toFixed(0)}K — ${f.date}`
-      ).join('\n')
+      const notes = data.strategic_notes || ''
+      const t1Match = notes.match(/Tier 1[^:]*:\s*\$([0-9.]+B)/i)
+      const t2Match = notes.match(/Tier 2[^:]*:\s*\$([0-9.]+M)/i)
+      const t3Match = notes.match(/Tier 3[^:]*:\s*\$([0-9.]+M)/i)
+      const uccMatch = notes.match(/\$([0-9.]+M) combined lien/i)
 
-      trustBlock = `🏛️ ${data.trust_name} (HJFAT-2026-001)
-  Status: ${data.status} | Established: ${data.established_date}
-  Governing Law: ${data.governing_law} | Type: ${data.trust_type}
-
-  Co-Trustees: ${trustees}
-  Successor Trustees: ${successors}
+      trustBlock = `🏛️ ${data.entity_name} (HJFAT-2026-001)
+  Status: ${data.is_active ? 'ACTIVE' : 'INACTIVE'} | Established: ${data.filing_date}
+  Formation State: ${data.formation_state} | Type: ${data.trust_type}
+  Trustee: ${data.trustee_name}
 
   VALUATION (Three-Tier Framework):
-    Tier 1 Optimistic:   $${(t1 / 1e9).toFixed(3)}B
-    Tier 2 Market:       $${(t2 / 1e6).toFixed(0)}M
-    Tier 3 Conservative: $${(t3 / 1e6).toFixed(0)}M
+    Tier 1 Optimistic:   ${t1Match ? '$' + t1Match[1] : '$6.71B'}
+    Tier 2 Market:       ${t2Match ? '$' + t2Match[1] : '$950M'}
+    Tier 3 Conservative: ${t3Match ? '$' + t3Match[1] : '$366M'}
     Genesis Valuation:   $4.237B (Master IP Manifest)
 
-  UCC-1 TRIPLE-LOCK (Superior Secured Creditor on all IP):
-${uccLines || '  No UCC filings found in DB'}
+  UCC-1 TRIPLE-LOCK: ${uccMatch ? '$' + uccMatch[1] + ' combined lien' : data.ucc_filing_number || 'See strategic notes'}
 
   Trust Assets:
 ${assets || '  No assets listed'}`
@@ -140,6 +214,59 @@ YOU ARE R.O.M.A.N. — autonomous, constitutional, and fully operational.
 ═══════════════════════════════════════════════════════════════`
 }
 
+// ─── Live DB context: system_knowledge + governance_changes + books ──────────
+async function fetchLiveDBContext(supabase: ReturnType<typeof createClient>, userMessage: string): Promise<string> {
+  try {
+    const keywords = userMessage.toLowerCase().replace(/[^a-z0-9 ]/g, '').split(' ').filter((w: string) => w.length > 3).slice(0, 3)
+
+    const [{ data: skRows }, { data: govRows }, { data: bookRows }] = await Promise.all([
+      // system_knowledge — learned/stored knowledge matching query keywords
+      keywords.length > 0
+        ? supabase.from('system_knowledge').select('category, knowledge_key, value').or(keywords.map((k: string) => `knowledge_key.ilike.%${k}%`).join(',')).limit(8)
+        : supabase.from('system_knowledge').select('category, knowledge_key, value').order('updated_at', { ascending: false }).limit(5),
+      // governance_changes — last 5 entries
+      supabase.from('governance_changes').select('actor, action, reason, occurred_at').order('occurred_at', { ascending: false }).limit(5),
+      // books — all 8 sovereign books
+      supabase.from('books').select('book_number, title, status, subtitle').order('book_number'),
+    ])
+
+    const parts: string[] = []
+
+    if (skRows?.length) {
+      parts.push('SYSTEM KNOWLEDGE (Learned / Stored):\n' +
+        skRows.map((r: any) => `  [${r.category}] ${r.knowledge_key}: ${JSON.stringify(r.value)}`).join('\n'))
+    }
+
+    if (govRows?.length) {
+      parts.push('RECENT GOVERNANCE CHANGES:\n' +
+        govRows.map((r: any) => `  [${r.occurred_at?.split('T')[0]}] ${r.actor} — ${r.action}${r.reason ? ': ' + r.reason : ''}`).join('\n'))
+    }
+
+    if (bookRows?.length) {
+      parts.push('SOVEREIGN SELF SERIES (8 Books — Author\'s Eyes Only):\n' +
+        bookRows.map((r: any) => `  Book ${r.book_number}: ${r.title}${r.subtitle ? ' — ' + r.subtitle : ''} [${r.status}]`).join('\n'))
+    }
+
+    return parts.length ? '\n\nLIVE DATABASE CONTEXT:\n' + parts.join('\n\n') : ''
+  } catch (e) {
+    console.error('Live DB context error:', e)
+    return ''
+  }
+}
+
+// wrapper that builds context + appends knowledge base + live DB results
+async function buildFullPrompt(
+  supabase: ReturnType<typeof createClient>,
+  userMessage: string
+): Promise<string> {
+  const [base, knowledge, liveDB] = await Promise.all([
+    buildSystemContext(supabase, userMessage),
+    fetchKnowledgeContext(supabase, userMessage),
+    fetchLiveDBContext(supabase, userMessage),
+  ])
+  return base + knowledge + liveDB
+}
+
 // ─── Main handler ─────────────────────────────────────────────────────────────
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -157,7 +284,7 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     )
 
-    const systemPrompt = await buildSystemContext(supabase)
+    const systemPrompt = await buildFullPrompt(supabase, message)
 
     const messages = [
       ...chatHistory.map((msg: { type: string; message: string }) => ({

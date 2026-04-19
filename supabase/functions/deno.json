@@ -10,7 +10,8 @@
   },
   "compilerOptions": {
     "allowJs": true,
-    "lib": ["deno.window"]
+    "lib": ["deno.window"],
+    "noImplicitAny": false
   },
   "lint": {
     "rules": {

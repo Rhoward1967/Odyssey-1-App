@@ -88,41 +88,62 @@ export default function RomanChat() {
     }
   }, [voiceState, voiceEnabled]);
 
-  // ─── TTS via roman-tts edge function ─────────────────────────────────────────
+  // ─── Split text into ~3800-char chunks at sentence boundaries ───────────────
+  function chunkText(text: string, maxChars = 3800): string[] {
+    const clean = text.replace(/[*#`|►•▪]/g, '').replace(/\n+/g, ' ').trim();
+    if (clean.length <= maxChars) return [clean];
+    const sentences = clean.match(/[^.!?]+[.!?]+/g) ?? [clean];
+    const chunks: string[] = [];
+    let current = '';
+    for (const s of sentences) {
+      if (current.length + s.length > maxChars && current) {
+        chunks.push(current.trim());
+        current = s;
+      } else {
+        current += s;
+      }
+    }
+    if (current.trim()) chunks.push(current.trim());
+    return chunks;
+  }
+
+  // ─── TTS via roman-tts edge function (chunked for long text) ─────────────────
   async function speakResponse(text: string) {
     setVoiceState('speaking');
+    const chunks = chunkText(text);
     try {
-      const fnUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/roman-tts`;
-      const ttsRes = await fetch(fnUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY,
-          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-        },
-        body: JSON.stringify({ text }),
-      });
+      for (let i = 0; i < chunks.length; i++) {
+        const fnUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/roman-tts`;
+        const ttsRes = await fetch(fnUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+          },
+          body: JSON.stringify({ text: chunks[i] }),
+        });
 
-      if (!ttsRes.ok) throw new Error(`TTS ${ttsRes.status}`);
-      const data = await ttsRes.arrayBuffer();
-      const blob = new Blob([data], { type: 'audio/mpeg' });
-      const url  = URL.createObjectURL(blob);
+        if (!ttsRes.ok) throw new Error(`TTS ${ttsRes.status}`);
+        const data = await ttsRes.arrayBuffer();
+        const blob = new Blob([data], { type: 'audio/mpeg' });
+        const url  = URL.createObjectURL(blob);
 
-      if (audioRef.current) {
-        audioRef.current.pause();
-        URL.revokeObjectURL(audioRef.current.src);
+        if (audioRef.current) {
+          audioRef.current.pause();
+          URL.revokeObjectURL(audioRef.current.src);
+        }
+
+        await new Promise<void>((resolve, reject) => {
+          const audio = new Audio(url);
+          audioRef.current = audio;
+          audio.onended = () => { URL.revokeObjectURL(url); resolve(); };
+          audio.onerror = () => { URL.revokeObjectURL(url); reject(); };
+          audio.play().catch(reject);
+        });
       }
-
-      const audio = new Audio(url);
-      audioRef.current = audio;
-      audio.onended = () => {
-        setVoiceState('idle');
-        URL.revokeObjectURL(url);
-      };
-      audio.onerror = () => setVoiceState('idle');
-      await audio.play();
+      setVoiceState('idle');
     } catch {
-      // OpenAI TTS failed — fall back to browser speechSynthesis
       speakBrowser(text);
     }
   }
@@ -130,18 +151,22 @@ export default function RomanChat() {
   function speakBrowser(text: string) {
     if (!window.speechSynthesis) { setVoiceState('idle'); return; }
     window.speechSynthesis.cancel();
-    const clean = text.replace(/[*#`|►•▪]/g, '').replace(/\n+/g, ' ').slice(0, 600);
-    const utt = new SpeechSynthesisUtterance(clean);
-    utt.rate = 0.92;
-    utt.pitch = 0.85;
-    // Prefer a deeper voice if available
+    const chunks = chunkText(text, 3000);
     const voices = window.speechSynthesis.getVoices();
     const deep = voices.find(v => /david|mark|guy|male/i.test(v.name)) ?? voices[0];
-    if (deep) utt.voice = deep;
-    utt.onend  = () => setVoiceState('idle');
-    utt.onerror = () => setVoiceState('idle');
+
+    let idx = 0;
+    function speakNext() {
+      if (idx >= chunks.length) { setVoiceState('idle'); return; }
+      const utt = new SpeechSynthesisUtterance(chunks[idx++]);
+      utt.rate = 0.92; utt.pitch = 0.85;
+      if (deep) utt.voice = deep;
+      utt.onend = speakNext;
+      utt.onerror = () => setVoiceState('idle');
+      window.speechSynthesis.speak(utt);
+    }
     setVoiceState('speaking');
-    window.speechSynthesis.speak(utt);
+    speakNext();
   }
 
   // ─── Mic / Speech Recognition ────────────────────────────────────────────────
