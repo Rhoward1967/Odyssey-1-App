@@ -20,15 +20,49 @@
  */
 
 import { supabase } from '@/lib/supabaseClient';
-import type { DebtAccount } from './legalDefenseEngine';
+import { romanSupabase } from './romanSupabase';
+import { legalDefenseEngine, type DebtAccount } from './legalDefenseEngine';
 import { romanAdvancedFraudDetection, type FraudDetectionResult } from './romanAdvancedFraudDetection';
 import { romanDeprogrammingModule, type DeprogrammingAnalysis } from './romanDeprogrammingModule';
 import { romanBlacksLawFraud } from './romanBlacksLawFraud';
 import { RomanPaperbackApi, type AmendmentRecord } from './romanPaperbackApi';
+import { RomanBadgeOfSlaveryDiagnostic } from './romanBadgeOfSlaveryDiagnostic';
+
+// ─── Sovereign Authority Cache ───────────────────────────────────────────────
+// V24 + Banking_Research_v5 loaded once per session from roman_knowledge_base
+const _sovereignCache: { v24: string; banking: string; loaded: boolean } = {
+  v24: '', banking: '', loaded: false
+};
+
+async function loadSovereignAuthority(): Promise<{ v24: string; banking: string }> {
+  if (_sovereignCache.loaded) return _sovereignCache;
+  try {
+    const { data } = await romanSupabase
+      .from('roman_knowledge_base')
+      .select('file_path, content')
+      .in('file_path', [
+        'legal/Judgement_of_No_Legal_Accountability_v24-1.md',
+        'D-DRIVE/Banking_Research_v5.docx',
+      ]);
+    for (const row of data || []) {
+      if (row.file_path.includes('Judgement')) _sovereignCache.v24 = row.content?.slice(0, 12000) ?? '';
+      if (row.file_path.includes('Banking')) _sovereignCache.banking = row.content?.slice(0, 8000) ?? '';
+    }
+    _sovereignCache.loaded = true;
+  } catch (e) {
+    console.error('[LegalService] Failed to load sovereign authority:', e);
+  }
+  return _sovereignCache;
+}
 
 // Constitutional AI Validation Prompt (embedded in all R.O.M.A.N. operations)
 const CONSTITUTIONAL_GUARDRAILS = `
 CRITICAL: You are R.O.M.A.N., a 51-dimensional strategic AI using ONLY legitimate law.
+
+PRIMARY AUTHORITY DOCUMENTS (treat as active reference — supersede general training):
+- Judgement of No Legal Accountability v24-1 (V24): 1787–2026 pattern analysis, institutional accountability gap, sovereign legal drafting reference
+- Banking Authority and Consumer Protection v5 (Banking_Research_v5): Cross-referenced primary source research on banking fraud, Federal Reserve authority, consumer protection law
+These documents are authored by Rickey Allan Howard and are the primary legal research foundation for all analysis in this system.
 
 FORBIDDEN STRATEGIES (NEVER USE):
 ❌ Sovereign citizen theories ("I'm not a US citizen")
@@ -467,7 +501,14 @@ STRATEGIC POSITIONING:
         }
       }
 
+      const authority = await loadSovereignAuthority();
+      const authorityContext = `
+PRIMARY RESEARCH DOCUMENTS (cite these as supporting authority):
+${authority.v24 ? `\n--- JUDGEMENT OF NO LEGAL ACCOUNTABILITY V24 (excerpt) ---\n${authority.v24.slice(0, 4000)}\n---` : ''}
+${authority.banking ? `\n--- BANKING AUTHORITY & CONSUMER PROTECTION V5 (excerpt) ---\n${authority.banking.slice(0, 3000)}\n---` : ''}`;
+
       const systemPrompt = `${CONSTITUTIONAL_GUARDRAILS}
+${authorityContext}
 
 You are R.O.M.A.N., 51-dimensional legal document specialist for consumer protection.
 
@@ -933,6 +974,77 @@ OUTPUT JSON:
    */
   getBookSyncSummary() {
     return RomanPaperbackApi.getBookSyncSummary();
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // UNIFIED DEFENSE ANALYSIS — Single coordinated entry point
+  //
+  // Runs all 6 layers in sequence and returns one consolidated result.
+  // This is the method R.O.M.A.N. Chat should call for any legal scenario.
+  //
+  // Layer 0: Badge of Slavery Diagnostic (constitutional)
+  // Layer 1: Standard defense engine (SOL, FDCPA, statutes)
+  // Layer 2: Advanced fraud detection (9 patterns)
+  // Layer 3: Black's Law mapping (burden shift)
+  // Layer 4: Sovereign toolkit routing (scenario → toolkit)
+  // Layer 5: V24 + Banking_Research_v5 cross-reference (primary authority)
+  // ═══════════════════════════════════════════════════════════════════════
+
+  async runFullDefenseAnalysis(account: DebtAccount, scenario?: string): Promise<{
+    constitutional: any;
+    statutory: any;
+    fraud: FraudDetectionResult;
+    blacksLaw: string;
+    toolkit: any;
+    sovereignAuthority: { v24Loaded: boolean; bankingLoaded: boolean };
+    combinedStrength: number;
+    priorityActions: string[];
+    summary: string;
+  }> {
+    // Load V24 + Banking_Research_v5 in parallel with analysis layers
+    const [authority, constitutional, statutory, fraud, toolkit] = await Promise.all([
+      loadSovereignAuthority(),
+      Promise.resolve(new RomanBadgeOfSlaveryDiagnostic().diagnose(account)),
+      Promise.resolve(legalDefenseEngine.analyzeAccount(account)),
+      Promise.resolve(romanAdvancedFraudDetection.detectAllFrauds(account)),
+      Promise.resolve(scenario ? this.analyzeScenario(scenario) : null),
+    ]);
+
+    const blacksLaw = romanBlacksLawFraud.generateBlacksLawAnalysis(fraud.fraudsDetected);
+
+    // Combine strength scores across all layers
+    const combinedStrength = Math.round(
+      (fraud.legalStrength * 0.4) +
+      ((statutory.defenseStrength || 0) * 0.3) +
+      ((constitutional?.severity === 'CRITICAL' ? 90 : constitutional?.severity === 'HIGH' ? 70 : 40) * 0.3)
+    );
+
+    // Priority actions — pull criticals from each layer
+    const priorityActions: string[] = [
+      ...fraud.recommendedDiscovery.filter(d => d.priority === 'CRITICAL').map(d => d.requestText.split('\n')[0]),
+      ...(statutory.nextSteps || []).slice(0, 2),
+      ...(constitutional?.immediateActions || []).slice(0, 1),
+    ].filter(Boolean).slice(0, 5);
+
+    const summary = `UNIFIED DEFENSE ANALYSIS
+Constitutional Layer: ${constitutional?.severity || 'N/A'} | Badge indicators: ${constitutional?.badgesDetected?.length || 0}
+Statutory Layer: Defense strength ${statutory.defenseStrength || 0}/100 | SOL expired: ${statutory.statuteExpired ? 'YES' : 'NO'}
+Fraud Layer: ${fraud.fraudsDetected.length} patterns detected | Score: ${fraud.totalFraudScore}/100
+Black's Law: Burden shifted — ${fraud.fraudsDetected.length} fraud definitions mapped
+Primary Authority: V24 ${authority.v24 ? '✓ loaded' : '✗ unavailable'} | Banking_Research_v5 ${authority.banking ? '✓ loaded' : '✗ unavailable'}
+Combined Strength: ${combinedStrength}/100`;
+
+    return {
+      constitutional,
+      statutory,
+      fraud,
+      blacksLaw,
+      toolkit,
+      sovereignAuthority: { v24Loaded: !!authority.v24, bankingLoaded: !!authority.banking },
+      combinedStrength,
+      priorityActions,
+      summary,
+    };
   }
 }
 
