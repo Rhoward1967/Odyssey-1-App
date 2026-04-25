@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { X, ChevronRight, BookOpen, HelpCircle } from 'lucide-react'
+import { X, ChevronRight, BookOpen, HelpCircle, Lock, Star } from 'lucide-react'
 import { supabase } from '@/lib/supabaseClient'
 
 interface KnowledgeEntry {
@@ -11,18 +11,21 @@ interface KnowledgeEntry {
 
 interface Props {
   volumeNumber: number
+  isSubscribed: boolean
   onClose: () => void
   onAskRoman: (question: string) => void
+  onSubscribe: () => void
 }
 
-export default function LaymanLawVolume({ volumeNumber, onClose, onAskRoman }: Props) {
-  const [entries, setEntries] = useState<KnowledgeEntry[]>([])
-  const [selected, setSelected] = useState<KnowledgeEntry | null>(null)
-  const [loading, setLoading] = useState(true)
+const FREE_TOPIC_LIMIT = 3
 
-  useEffect(() => {
-    loadEntries()
-  }, [volumeNumber])
+export default function LaymanLawVolume({ volumeNumber, isSubscribed, onClose, onAskRoman, onSubscribe }: Props) {
+  const [entries, setEntries]   = useState<KnowledgeEntry[]>([])
+  const [selected, setSelected] = useState<KnowledgeEntry | null>(null)
+  const [loading, setLoading]   = useState(true)
+  const [showPaywall, setShowPaywall] = useState(false)
+
+  useEffect(() => { loadEntries() }, [volumeNumber])
 
   async function loadEntries() {
     setLoading(true)
@@ -34,6 +37,21 @@ export default function LaymanLawVolume({ volumeNumber, onClose, onAskRoman }: P
       .order('key_name')
     setEntries(data ?? [])
     setLoading(false)
+  }
+
+  function isTopicLocked(index: number) {
+    if (isSubscribed) return false
+    if (volumeNumber === 1) return index >= FREE_TOPIC_LIMIT
+    return true
+  }
+
+  function handleTopicClick(entry: KnowledgeEntry, index: number) {
+    if (isTopicLocked(index)) {
+      setShowPaywall(true)
+    } else {
+      setSelected(entry)
+      setShowPaywall(false)
+    }
   }
 
   return (
@@ -59,31 +77,55 @@ export default function LaymanLawVolume({ volumeNumber, onClose, onAskRoman }: P
             ) : entries.length === 0 ? (
               <p className="text-gray-500 text-sm p-3">Content coming soon for this volume.</p>
             ) : (
-              entries.map(e => (
-                <button
-                  key={e.id}
-                  onClick={() => setSelected(e)}
-                  className={`w-full text-left px-3 py-2.5 rounded-lg text-xs transition-colors ${
-                    selected?.id === e.id
-                      ? 'bg-yellow-500/20 border border-yellow-500/40 text-yellow-300'
-                      : 'text-gray-400 hover:bg-gray-800 hover:text-white'
-                  }`}
-                >
-                  <div className="flex items-center gap-2">
-                    <BookOpen className="w-3 h-3 shrink-0" />
-                    <span className="leading-tight">{e.topic}</span>
+              <>
+                {entries.map((e, i) => {
+                  const locked = isTopicLocked(i)
+                  return (
+                    <button
+                      key={e.id}
+                      onClick={() => handleTopicClick(e, i)}
+                      className={`w-full text-left px-3 py-2.5 rounded-lg text-xs transition-colors ${
+                        locked
+                          ? 'text-gray-600 hover:bg-gray-800/50 cursor-pointer'
+                          : selected?.id === e.id
+                            ? 'bg-yellow-500/20 border border-yellow-500/40 text-yellow-300'
+                            : 'text-gray-400 hover:bg-gray-800 hover:text-white'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2">
+                        {locked
+                          ? <Lock className="w-3 h-3 shrink-0 text-yellow-600" />
+                          : <BookOpen className="w-3 h-3 shrink-0" />
+                        }
+                        <span className="leading-tight">{e.topic}</span>
+                      </div>
+                    </button>
+                  )
+                })}
+
+                {/* Freemium separator hint */}
+                {!isSubscribed && volumeNumber === 1 && entries.length > FREE_TOPIC_LIMIT && (
+                  <div className="px-3 py-2 mt-2 border-t border-gray-800">
+                    <p className="text-xs text-yellow-600">
+                      {entries.length - FREE_TOPIC_LIMIT} more topics — subscribe to unlock
+                    </p>
                   </div>
-                </button>
-              ))
+                )}
+              </>
             )}
           </div>
 
           {/* Content panel */}
           <div className="flex-1 overflow-y-auto p-6">
-            {!selected ? (
+            {showPaywall ? (
+              <PaywallPanel onSubscribe={onSubscribe} onClose={() => setShowPaywall(false)} />
+            ) : !selected ? (
               <div className="flex flex-col items-center justify-center h-full text-center">
                 <BookOpen className="w-12 h-12 text-gray-700 mb-3" />
                 <p className="text-gray-500 text-sm">Select a topic from the left to begin studying.</p>
+                {!isSubscribed && volumeNumber === 1 && (
+                  <p className="text-xs text-yellow-600 mt-2">Topics 1–{FREE_TOPIC_LIMIT} are free. Subscribe to unlock the rest.</p>
+                )}
               </div>
             ) : (
               <div>
@@ -171,6 +213,41 @@ export default function LaymanLawVolume({ volumeNumber, onClose, onAskRoman }: P
           </div>
         </div>
       </div>
+    </div>
+  )
+}
+
+function PaywallPanel({ onSubscribe, onClose }: { onSubscribe: () => void; onClose: () => void }) {
+  return (
+    <div className="flex flex-col items-center justify-center h-full text-center px-8">
+      <div className="w-16 h-16 bg-yellow-500/10 rounded-full flex items-center justify-center mb-4">
+        <Star className="w-8 h-8 text-yellow-400" />
+      </div>
+      <h3 className="text-xl font-bold text-white mb-2">Unlock Full Access</h3>
+      <p className="text-gray-400 text-sm mb-6 max-w-sm">
+        This topic is part of the full Layman's Law curriculum. Subscribe to unlock all volumes, all topics, and unlimited R.O.M.A.N. guidance.
+      </p>
+
+      <div className="bg-gray-800 border border-yellow-500/30 rounded-2xl p-5 mb-6 w-full max-w-sm">
+        <p className="text-yellow-400 font-bold text-lg mb-1">$9.99 / month</p>
+        <ul className="text-xs text-gray-300 space-y-1.5 text-left mt-3">
+          <li className="flex gap-2"><span className="text-green-400">✓</span> All 10 volumes of legal literacy</li>
+          <li className="flex gap-2"><span className="text-green-400">✓</span> Unlimited R.O.M.A.N. legal Q&amp;A</li>
+          <li className="flex gap-2"><span className="text-green-400">✓</span> FCRA, FDCPA, TILA, contract law &amp; more</li>
+          <li className="flex gap-2"><span className="text-green-400">✓</span> Completion certificates per volume</li>
+          <li className="flex gap-2"><span className="text-green-400">✓</span> Cancel anytime</li>
+        </ul>
+      </div>
+
+      <button
+        onClick={onSubscribe}
+        className="bg-yellow-500 hover:bg-yellow-400 text-black font-bold px-8 py-3 rounded-xl text-sm transition-colors w-full max-w-sm"
+      >
+        Subscribe — $9.99/month
+      </button>
+      <button onClick={onClose} className="mt-3 text-xs text-gray-600 hover:text-gray-400 transition-colors">
+        Continue with free topics
+      </button>
     </div>
   )
 }
