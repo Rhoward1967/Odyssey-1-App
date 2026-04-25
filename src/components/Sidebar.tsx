@@ -19,7 +19,8 @@ import {
   TrendingUp,
   Tv,
   Users,
-  Coins
+  Coins,
+  GraduationCap
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
@@ -39,6 +40,7 @@ const menuItems = [
   { icon: ScanBarcode, label: 'Sovereign Scanner', href: '/app/scanner' },
   { icon: Bot, label: 'Discord Bot', href: '/app/discord-bot' },
   { icon: BookOpen, label: 'Sovereign Books', href: '/app/sovereign-books' },
+  { icon: GraduationCap, label: "Layman's Law", href: '/app/layman-law' },
   { icon: Music, label: 'Music Distribution', href: '/app/music' },
   { icon: Radio, label: 'Sovereign Radio', href: '/app/sovereign-radio' },
   { icon: BookOpen, label: 'Handbook', href: '/app/handbook' },

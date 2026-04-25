@@ -49,6 +49,7 @@ import HowardJanitorial from "./pages/HowardJanitorial";
 import SovereignScanner from "./pages/SovereignScanner";
 import DiscordBotDashboard from "./pages/DiscordBotDashboard";
 import SovereignBooks from "./pages/SovereignBooks";
+import LaymanLaw from "./pages/LaymanLaw";
 import MusicDistribution from "./pages/MusicDistribution";
 import SovereignRadio from "./pages/SovereignRadio";
 import RomanChat from "./pages/RomanChat";
@@ -112,6 +113,7 @@ const App = () => {
                               <Route path="music" element={<MusicDistribution />} />
                               <Route path="sovereign-radio" element={<SovereignRadio />} />
                               <Route path="roman" element={<RomanChat />} />
+                              <Route path="layman-law" element={<LaymanLaw />} />
                             </Route>
                           </Route>
 
