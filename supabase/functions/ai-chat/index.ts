@@ -26,21 +26,36 @@ serve(async (req) => {
       });
     }
 
-    const { messages, provider, sessionId } = body;
+    const { messages, provider, sessionId, preferred_language, legal_jurisdiction } = body;
+
+    // Inject language directive into system message if subscriber is non-English
+    let enrichedMessages: Message[] = messages;
+    if (preferred_language && preferred_language !== 'en-US') {
+      const langDirective = `SUBSCRIBER LANGUAGE (MANDATORY): Respond entirely in ${preferred_language}. ALWAYS keep US legal citations in English (15 U.S.C. § 1681, UCC 1-308, etc.). Jurisdiction: ${legal_jurisdiction || 'US'}.`;
+      const sysIdx = messages.findIndex((m: Message) => m.role === 'system');
+      if (sysIdx >= 0) {
+        enrichedMessages = messages.map((m: Message, i: number) =>
+          i === sysIdx ? { ...m, content: m.content + '\n\n' + langDirective } : m
+        );
+      } else {
+        enrichedMessages = [{ role: 'system', content: langDirective }, ...messages];
+      }
+    }
+
     let response = "";
 
     switch (provider) {
       case "anthropic":
-        response = await callAnthropic(messages);
+        response = await callAnthropic(enrichedMessages);
         break;
       case "openai":
-        response = await callOpenAI(messages);
+        response = await callOpenAI(enrichedMessages);
         break;
       case "gemini":
-        response = await callGemini(messages);
+        response = await callGemini(enrichedMessages);
         break;
       default:
-        response = await callAnthropic(messages);
+        response = await callAnthropic(enrichedMessages);
     }
 
     return new Response(
