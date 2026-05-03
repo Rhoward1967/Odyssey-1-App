@@ -2,21 +2,30 @@ import { Button } from '@/components/ui/button';
 import {
     BarChart3,
     Bell,
+    BookMarked,
     BookOpen,
     Bot,
+    Briefcase,
+    Brain,
     Coins,
     CreditCard,
     DollarSign,
-    Home,
+    FileText,
+    Gavel,
+    LayoutDashboard,
     Menu,
+    MessageSquare,
     Monitor,
     Music,
+    Package,
     Radio,
     Scale,
     ScanBarcode,
     Search,
     Settings,
+    Tv,
     User,
+    Users,
     X
 } from 'lucide-react';
 import React, { useState } from 'react';
@@ -38,27 +47,35 @@ const MobileNavigationMenu: React.FC = () => {
   const navigate = useNavigate();
 
   const navItems = [
+    { path: '/app', label: 'Dashboard', icon: LayoutDashboard },
     { path: '/app/roman', label: 'R.O.M.A.N. Chat', icon: Bot },
-    { path: '/app/apex', label: 'Apex Dashboard', icon: Home },
+    { path: '/app/apex', label: 'Apex Dashboard', icon: BarChart3 },
     { path: '/app/trading', label: 'Trading', icon: BarChart3 },
     { path: '/app/calculator', label: 'Calculator', icon: Monitor },
     { path: '/app/workforce', label: 'Workforce', icon: DollarSign },
+    { path: '/app/invoicing', label: 'Invoicing', icon: FileText },
+    { path: '/app/contractors', label: 'Contractors', icon: Users },
+    { path: '/app/bids', label: 'Bids', icon: Briefcase },
+    { path: '/app/mel', label: 'MEL', icon: Brain },
+    { path: '/app/catalog', label: 'Catalog', icon: Package },
     { path: '/app/osc-wallet', label: 'OSC Wallet', icon: Coins },
     { path: '/app/legal-defense', label: 'Legal Defense', icon: Scale },
     { path: '/app/scanner', label: 'Sovereign Scanner', icon: ScanBarcode },
-    { path: '/app/discord-bot', label: 'Discord Bot', icon: Bot },
+    { path: '/app/discord-bot', label: 'Discord Bot', icon: MessageSquare },
     { path: '/app/sovereign-books', label: 'Sovereign Books', icon: BookOpen },
     { path: '/app/music', label: 'Music Distribution', icon: Music },
     { path: '/app/sovereign-radio', label: 'Sovereign Radio', icon: Radio },
+    { path: '/app/handbook', label: 'Handbook', icon: BookMarked },
+    { path: '/app/media-center', label: 'Media Center', icon: Tv },
+    { path: '/app/layman-law', label: "Layman's Law", icon: Gavel },
     { path: '/app/admin', label: 'Admin Center', icon: Settings },
-    { path: '/app/user-manual', label: 'Manual', icon: BookOpen },
-    { path: '/app/subscription', label: 'Subscription', icon: CreditCard },
   ];
 
   // Define the missing secondaryNavItems
   const secondaryNavItems = [
     { path: '/app/profile', label: 'Profile', icon: User },
     { path: '/app/subscription', label: 'Subscription', icon: CreditCard },
+    { path: '/app/user-manual', label: 'User Manual', icon: BookOpen },
   ];
 
   const handleNavigation = (path: string) => {
@@ -124,7 +141,7 @@ const MobileNavigationMenu: React.FC = () => {
               </div>
 
               {/* Main Navigation */}
-              <div className='flex-1 p-4'>
+              <div className='flex-1 p-4 overflow-y-auto'>
                 <div className='space-y-2'>
                   <h3 className='text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3'>
                     Main Menu
@@ -180,7 +197,7 @@ const MobileNavigationMenu: React.FC = () => {
               {/* Footer */}
               <div className='p-4 border-t border-slate-700'>
                 <div className='text-xs text-slate-400 text-center'>
-                  © 2024 ODYSSEY-1 Platform
+                  © 2026 ODYSSEY-1 Platform
                 </div>
               </div>
             </div>

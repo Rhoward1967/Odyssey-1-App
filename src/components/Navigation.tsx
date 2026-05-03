@@ -46,7 +46,7 @@ const Navigation: React.FC = () => {
         </div>
         
         {/* Desktop Navigation - Hidden on mobile */}
-        <div className='hidden md:flex items-center space-x-1'>
+        <div className='hidden md:flex items-center space-x-1 overflow-x-auto max-w-2xl'>
           {navItems.map(item => {
             const Icon = item.icon;
             const isActive = location.pathname === item.path;

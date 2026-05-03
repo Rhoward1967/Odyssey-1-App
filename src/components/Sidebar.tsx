@@ -1,52 +1,59 @@
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/lib/supabaseClient';
 import {
+  BookMarked,
   BookOpen,
   Bot,
+  Brain,
+  Briefcase,
   Calculator,
   ClipboardList,
+  Coins,
   CreditCard,
   FileText,
   Gauge,
+  Gavel,
+  LayoutDashboard,
   ListChecks,
   LogOut,
+  MessageSquare,
   Music,
-  Receipt,
+  Package,
   Radio,
+  Receipt,
   Scale,
   ScanBarcode,
   Settings,
   TrendingUp,
   Tv,
   Users,
-  Coins,
-  GraduationCap
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 const menuItems = [
+  { icon: LayoutDashboard, label: 'Dashboard', href: '/app' },
   { icon: Bot, label: 'R.O.M.A.N. Chat', href: '/app/roman' },
   { icon: Gauge, label: 'Apex Dashboard', href: '/app/apex' },
   { icon: TrendingUp, label: 'Trading', href: '/app/trading' },
-  { icon: Tv, label: 'Media Center', href: '/app/media-center' },
   { icon: Calculator, label: 'Calculator', href: '/app/calculator' },
   { icon: Users, label: 'Workforce', href: '/app/workforce' },
   { icon: Receipt, label: 'Invoicing', href: '/app/invoicing' },
-  { icon: ClipboardList, label: 'Bids', href: '/app/bids' },
-  { icon: ListChecks, label: 'Catalog', href: '/app/catalog' },
+  { icon: ClipboardList, label: 'Contractors', href: '/app/contractors' },
+  { icon: Briefcase, label: 'Bids', href: '/app/bids' },
+  { icon: Brain, label: 'MEL', href: '/app/mel' },
+  { icon: Package, label: 'Catalog', href: '/app/catalog' },
   { icon: Coins, label: 'OSC Wallet', href: '/app/osc-wallet' },
   { icon: Scale, label: 'Legal Defense', href: '/app/legal-defense' },
   { icon: ScanBarcode, label: 'Sovereign Scanner', href: '/app/scanner' },
-  { icon: Bot, label: 'Discord Bot', href: '/app/discord-bot' },
+  { icon: MessageSquare, label: 'Discord Bot', href: '/app/discord-bot' },
   { icon: BookOpen, label: 'Sovereign Books', href: '/app/sovereign-books' },
-  { icon: GraduationCap, label: "Layman's Law", href: '/app/layman-law' },
   { icon: Music, label: 'Music Distribution', href: '/app/music' },
   { icon: Radio, label: 'Sovereign Radio', href: '/app/sovereign-radio' },
-  { icon: BookOpen, label: 'Handbook', href: '/app/handbook' },
+  { icon: BookMarked, label: 'Handbook', href: '/app/handbook' },
+  { icon: Tv, label: 'Media Center', href: '/app/media-center' },
+  { icon: Gavel, label: "Layman's Law", href: '/app/layman-law' },
   { icon: Settings, label: 'Admin Center', href: '/app/admin' },
-  { icon: FileText, label: 'Manual', href: '/app/user-manual' },
-  { icon: CreditCard, label: 'Subscription', href: '/app/subscription' },
 ];
 
 export default function Sidebar() {
@@ -68,7 +75,7 @@ export default function Sidebar() {
   };
 
   return (
-    <div className="hidden md:flex w-64 bg-slate-800 border-r border-slate-700 flex-col">
+    <div className="hidden md:flex w-64 h-full min-h-0 bg-slate-800 border-r border-slate-700 flex-col">
       {/* Header */}
       <div className="p-6 border-b border-slate-700">
         <h1 className="text-xl font-bold text-white">ODYSSEY-1</h1>
@@ -76,7 +83,7 @@ export default function Sidebar() {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 p-4">
+      <nav className="flex-1 p-4 overflow-y-auto">
         <ul className="space-y-2">
           {menuItems.map((item) => {
             const Icon = item.icon;

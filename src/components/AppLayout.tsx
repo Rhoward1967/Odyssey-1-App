@@ -1,10 +1,11 @@
 import { Outlet } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import MobileNavigationMenu from './MobileNavigationMenu';
+import RomanErrorBoundary from './RomanErrorBoundary';
 
 export default function AppLayout() {
   return (
-    <div className="flex h-screen bg-slate-900">
+    <div className="flex h-screen overflow-hidden bg-slate-900">
       {/* Fixed sidebar on the left - hidden on mobile */}
       <Sidebar />
       
@@ -20,8 +21,9 @@ export default function AppLayout() {
         
         {/* Content area with responsive padding */}
         <div className="p-4 md:p-6 max-w-none mt-16 md:mt-0">
-          {/* THIS IS CRITICAL - renders child routes */}
-          <Outlet />
+          <RomanErrorBoundary>
+            <Outlet />
+          </RomanErrorBoundary>
         </div>
       </main>
     </div>

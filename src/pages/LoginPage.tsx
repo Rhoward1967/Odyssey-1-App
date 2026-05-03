@@ -15,13 +15,14 @@ export default function LoginPage() {
     setMessage('');
 
     try {
+      const redirectBase = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        ? window.location.origin
+        : (import.meta.env.VITE_APP_URL || window.location.origin);
+
       const { error } = await supabase.auth.signInWithOtp({
         email: email,
         options: {
-          // This is where the user will be redirected after clicking the magic link
-          emailRedirectTo: import.meta.env.VITE_APP_URL
-            ? `${import.meta.env.VITE_APP_URL}/app`
-            : `${window.location.origin}/app`,
+          emailRedirectTo: `${redirectBase}/app`,
         },
       });
 
