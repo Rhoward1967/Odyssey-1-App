@@ -274,7 +274,16 @@ serve(async (req) => {
   }
 
   try {
-    const { message, chatHistory = [] } = await req.json()
+    const body = await req.json()
+
+    // Health scanner / self-repair ping — respond immediately without calling Anthropic
+    if (body.healthcheck || body.ping || body.action === 'health_check' || body.action === 'cold_boot') {
+      return new Response(JSON.stringify({ status: 'ok' }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      })
+    }
+
+    const { message, chatHistory = [] } = body
 
     const ANTHROPIC_API_KEY = Deno.env.get('ANTHROPIC_API_KEY')
     if (!ANTHROPIC_API_KEY) throw new Error('ANTHROPIC_API_KEY not configured')

@@ -16,6 +16,7 @@
 
 import { createClient } from '@supabase/supabase-js';
 import { createHash } from 'crypto';
+import { execSync } from 'child_process';
 import { existsSync, readFileSync, statSync } from 'fs';
 import { join } from 'path';
 
@@ -92,6 +93,47 @@ const KNOWLEDGE_FILES: string[] = [
   // === SOVEREIGN FACTS INDEX — ALWAYS FIRST ===
   'legal/SOVEREIGN_FACTS_INDEX.md',
   'legal/Judgement_of_No_Legal_Accountability_v24-1.md',  // Living document — 1787–2026 pattern analysis, legal drafting reference
+
+  // === BANKING RESEARCH SERIES (v5–v38) ===
+  'legal/Banking_Research_v5.md',
+  'legal/Banking_Research_v5-1.md',
+  'legal/Banking_Research_v5-2.md',
+  'legal/Banking_Research_v8.md',
+  'legal/Banking_Research_v10-1.md',
+  'legal/Banking_Research_v11-1.md',
+  'legal/Banking_Research_v12.md',
+  'legal/Banking_Research_v13.md',
+  'legal/Banking_Research_v13-1.md',
+  'legal/Banking_Research_v13-2.md',
+  'legal/Banking_Research_v14.md',
+  'legal/Banking_Research_v14-1.md',
+  'legal/Banking_Research_v15.md',
+  'legal/Banking_Research_v16.md',
+  'legal/Banking_Research_v17.md',
+  'legal/Banking_Research_v18.md',
+  'legal/Banking_Research_v19.md',
+  'legal/Banking_Research_v20.md',
+  'legal/Banking_Research_v21.md',
+  'legal/Banking_Research_v22.md',
+  'legal/Banking_Research_v23.md',
+  'legal/Banking_Research_v23-1.md',
+  'legal/Banking_Research_v24.md',
+  'legal/Banking_Research_v25.md',
+  'legal/Banking_Research_v26.md',
+  'legal/Banking_Research_v26-1.md',
+  'legal/Banking_Research_v27.md',
+  'legal/Banking_Research_v28.md',
+  'legal/Banking_Research_v29.md',
+  'legal/Banking_Research_v29-1.md',
+  'legal/Banking_Research_v30.md',
+  'legal/Banking_Research_v31.md',
+  'legal/Banking_Research_v32.md',
+  'legal/Banking_Research_v33.md',
+  'legal/Banking_Research_v34.md',
+  'legal/Banking_Research_v35.md',
+  'legal/Banking_Research_v36.md',
+  'legal/Banking_Research_v37.md',
+  'legal/Banking_Research_v38.md',
 
   // === TRUST / LEGAL / CORPORATE ===
   'legal/ASSIGNMENT_OF_IP_TO_TRUST.md',
@@ -303,8 +345,24 @@ const KNOWLEDGE_FILES: string[] = [
   'src/services/usageTrackingService.ts',
   'src/services/uspsTrackingService.ts',
   'src/services/web3Service.ts',
+  'src/services/RomanSelfRepair.ts',
+  'src/services/RomanVoice.ts',
+  'src/services/RomanHealthScanner.ts',
+  'src/services/trustReadinessService.ts',
+  'src/components/RomanErrorBoundary.tsx',
 
   // === ALL PAGES ===
+  'src/pages/AuthCallback.tsx',
+  'src/pages/DiscordBotDashboard.tsx',
+  'src/pages/Help.tsx',
+  'src/pages/LaymanLaw.tsx',
+  'src/pages/MusicDistribution.tsx',
+  'src/pages/NotFound.tsx',
+  'src/pages/Privacy.tsx',
+  'src/pages/RomanChat.tsx',
+  'src/pages/SovereignRadio.tsx',
+  'src/pages/Terms.tsx',
+  'src/pages/TestCheckout.tsx',
   'src/pages/Admin.tsx',
   'src/pages/AIResearch.tsx',
   'src/pages/ApexDashboard.tsx',
@@ -344,6 +402,16 @@ const KNOWLEDGE_FILES: string[] = [
   'src/pages/Trading.tsx',
   'src/pages/Web3.tsx',
   'src/pages/WorkforceDashboard.tsx',
+
+  // === LAYMAN'S LAW STANDALONE APP ===
+  'layman-law-app/src/App.tsx',
+  'layman-law-app/src/main.tsx',
+  'layman-law-app/src/pages/Dashboard.tsx',
+  'layman-law-app/src/pages/Landing.tsx',
+  'layman-law-app/src/pages/Login.tsx',
+  'layman-law-app/src/components/LaymanLawCompanion.tsx',
+  'layman-law-app/src/components/LaymanLawVolume.tsx',
+  'layman-law-app/src/lib/supabaseClient.ts',
 
   // === APP ROOT ===
   'src/App.tsx',
@@ -510,6 +578,46 @@ async function syncFile(
 }
 
 /**
+ * Sync current git state into roman_knowledge_base.
+ * R.O.M.A.N. always knows which branch he's on and what changed recently.
+ */
+async function syncGitContext(): Promise<void> {
+  try {
+    const branch  = execSync('git rev-parse --abbrev-ref HEAD', { encoding: 'utf-8' }).trim();
+    const log     = execSync('git log --oneline -20', { encoding: 'utf-8' }).trim();
+    const status  = execSync('git status --short', { encoding: 'utf-8' }).trim();
+    const lastDate = execSync('git log -1 --format=%ci', { encoding: 'utf-8' }).trim();
+
+    const content = [
+      `# R.O.M.A.N. Git Context`,
+      `Generated: ${new Date().toISOString()}`,
+      ``,
+      `## Active Branch`,
+      branch,
+      ``,
+      `## Last Commit`,
+      lastDate,
+      ``,
+      `## Uncommitted Changes`,
+      status || 'Clean — no uncommitted changes',
+      ``,
+      `## Recent Commits (last 20)`,
+      log,
+    ].join('\n');
+
+    const checksum = md5(content);
+    await supabase.from('roman_knowledge_base').upsert(
+      { file_path: '__git_context__', content, file_type: 'git_context', checksum, updated_at: new Date().toISOString() },
+      { onConflict: 'file_path' }
+    );
+
+    console.log(`[KnowledgeSync] Git context synced — branch: ${branch}`);
+  } catch (err: any) {
+    console.error('[KnowledgeSync] Git context sync failed:', err.message);
+  }
+}
+
+/**
  * Run an incremental knowledge sync.
  * Only uploads files whose content has changed (checksum diff).
  * mode='startup'  → only files modified in the last 14 days
@@ -568,6 +676,9 @@ export async function runKnowledgeSync(mode: 'startup' | 'full' = 'full'): Promi
       result.errors.push(relPath);
     }
   }
+
+  // Always sync git context so R.O.M.A.N. knows his branch and recent changes
+  await syncGitContext();
 
   result.duration_ms = Date.now() - startTime;
 

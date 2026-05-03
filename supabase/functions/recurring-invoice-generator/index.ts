@@ -43,6 +43,17 @@ Deno.serve(async (req) => {
     return json({}, 200);
   }
 
+  // Health check / self-repair ping — respond without running invoice logic
+  try {
+    const bodyText = await req.clone().text();
+    if (bodyText) {
+      const bodyJson = JSON.parse(bodyText);
+      if (bodyJson.action === 'health_check' || bodyJson.action === 'cold_boot' || bodyJson.healthcheck || bodyJson.ping) {
+        return json({ status: 'ok', service: 'recurring-invoice-generator' });
+      }
+    }
+  } catch { /* not JSON or empty body — proceed normally */ }
+
   try {
     // 1. Get all active recurring invoices that are due today or overdue
     const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD

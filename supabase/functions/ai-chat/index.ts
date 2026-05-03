@@ -17,7 +17,16 @@ serve(async (req) => {
   }
 
   try {
-    const { messages, provider, sessionId } = await req.json();
+    const body = await req.json();
+
+    // Health scanner / self-repair ping — respond immediately without calling any AI API
+    if (body.healthcheck || body.ping || body.action === 'health_check' || body.action === 'cold_boot') {
+      return new Response(JSON.stringify({ status: "ok" }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" }
+      });
+    }
+
+    const { messages, provider, sessionId } = body;
     let response = "";
 
     switch (provider) {
