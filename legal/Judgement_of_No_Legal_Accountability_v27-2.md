@@ -1,4 +1,4 @@
-# Judgement of No Legal Accountability v24-1
+# Judgement of No Legal Accountability v27-2
 **Classification:** Legal Research | Sovereign Reference | Living Document
 **R.O.M.A.N. Tag:** legal_drafting | sovereign_notice | fcra_response | accountability_doctrine | truth_standard
 **Author:** Rickey Allan Howard / Howard Jones Bloodline Ancestral Trust
@@ -20,7 +20,7 @@ A Study in Law, Ethics, and Institutional Accountability
 
 Independent Legal and Philosophical Research
 
-Version 24.0  |  April 2026  |  Living Document
+Version 27.0  |  April 2026  |  Living Document
 
 
 
@@ -1902,6 +1902,88 @@ That is where this document closes. The research continues.
 
 
 
+PART XVI: THE MOROCCAN-AMERICAN TREATY OF 1786 AND THE FOUNDING CONTRADICTION ON SLAVERY
+
+This part documents a specific founding contradiction: the United States ratified a treaty with a nation whose legal framework did not practice race-based chattel slavery in the same year it ratified a Constitution that explicitly protected that institution. The contradiction was not resolved. It was recorded. It belongs in this research.
+
+16.1 The Treaty — Primary Source Facts
+
+ESTABLISHED: The Treaty of Peace and Friendship between the United States and Morocco was sealed June 23, 1786, delivered to American Agent Thomas Barclay June 28, 1786, signed by Thomas Jefferson at Paris January 1, 1787, and signed by John Adams at London January 25, 1787. It was ratified by the United States Congress on July 18, 1787 — one year before the Constitution was ratified. Source: Yale Avalon Project, Barbary Treaties 1786–1816 — confirmed primary source. Ronald Reagan Bicentennial Statement 1986 — confirmed.
+
+ESTABLISHED: It is the longest unbroken peace treaty in United States history. It has never been formally revoked or suspended. Source: Reagan Library confirmed. State Department treaty records confirmed.
+
+ESTABLISHED: Article VI of the United States Constitution — ratified 1788 — states: “This Constitution, and the Laws of the United States which shall be made in Pursuance thereof; and all Treaties made, or which shall be made, under the Authority of the United States, shall be the supreme Law of the Land.” The Morocco Treaty therefore carried Supremacy Clause authority from the moment the Constitution was ratified. Source: Constitutional text — primary source confirmed.
+
+16.2 The Contradiction — What The Simultaneous Record Shows
+
+ESTABLISHED: In 1787 — the same year the Morocco Treaty was signed by Jefferson and Adams — the Constitutional Convention in Philadelphia produced a document that explicitly protected the slave trade until 1808 (Article I, Section 9), counted enslaved persons as three-fifths of a person for representation (Article I, Section 2), and required the return of persons “held to Service or Labour” who escaped across state lines (Article IV, Section 2). Source: Constitutional text — primary source confirmed. Documented previously in Section 1.2 of this research.
+
+ESTABLISHED: Morocco under Sultan Mohammed III (Sidi Muhammad bin Abdallah) did not practice race-based chattel slavery as institutionalized in the American South. The diplomatic recognition formalized in the 1786 Treaty was extended by a Muslim sovereign whose legal framework operated on different principles regarding human bondage than those simultaneously being written into the American Constitution. Source: Wikipedia citing primary conference records — confirmed. Founders Online, Adams Papers — confirmed.
+
+WHAT THE SIMULTANEOUS RECORD SHOWS: Thomas Jefferson negotiated and signed a treaty with a nation that did not institutionalize race-based chattel slavery in 1787. Thomas Jefferson simultaneously owned enslaved persons. The Constitution Jefferson supported carried the three-fifths clause and the slave trade protection clause. The Treaty Jefferson signed carried the Supremacy Clause weight of the Constitution ratified in 1788. Both documents were active law simultaneously. The contradiction between them was never formally resolved by any court. This is documented in the primary source record.
+
+16.3 The Supremacy Clause Question — What Was Never Adjudicated
+
+SUPPORTED: Article VI makes treaties the supreme law of the land. The Morocco Treaty was active law from 1787 forward. The Constitution simultaneously protected slavery. Whether the dignity framework implicit in a treaty with a non-slave sovereign created any legal tension with the Constitution’s slavery provisions was never brought before any court and never formally adjudicated. The gap between the treaty’s existence and the institution it coexisted with was managed politically, not legally. This fits the pattern documented throughout this research: constitutional and treaty text establishing one framework while institutional practice operated under another without formal resolution.
+
+RESEARCH NEEDED: Whether any antebellum legal scholar, abolitionist brief, or congressional record raised the Morocco Treaty as a legal argument against the constitutionality of slavery requires review of abolitionist legal literature, congressional antislavery petitions, and primary legal archives from 1787 through 1865. If such arguments were made and rejected without formal adjudication, that rejection itself belongs in this documented record.
+
+RESEARCH NEEDED: The distinction between self-executing and non-self-executing treaties — which determines whether a treaty creates individually enforceable rights or only government-to-government obligations — was not formally established until Foster v. Neilson (1829). Whether the Morocco Treaty would have been classified as self-executing under that framework, and what that classification would have meant for its interaction with the slavery provisions of the Constitution, requires review of the Foster v. Neilson opinion and subsequent treaty jurisprudence. Source to review: Foster v. Neilson, 27 U.S. 253 (1829).
+
+16.4 Cross-Reference to the Documented Pattern
+
+SUPPORTED: The Morocco Treaty contradiction fits the consistent structural pattern documented throughout this research. Section 1.2 documents that 99.29% of the population had no voice in the founding framework. Section 4.1 documents that the Constitution’s monetary authority text was bypassed without amendment. Part XIV documents that the 13th Amendment’s prohibition on slavery was immediately undermined through the exception clause. This Part documents that a treaty carrying Supremacy Clause authority — signed by the same founders who wrote the slavery protections — coexisted with those protections without resolution. The pattern is the same: the written framework and the institutional practice operated in contradiction, and that contradiction was managed rather than resolved.
+
+NOTE ON METHODOLOGY: This section documents a historical and constitutional contradiction using primary source records. It does not assert that the Morocco Treaty creates individually enforceable rights in current U.S. courts — the self-executing treaty doctrine and subsequent case law make that a legally unsettled question requiring the research identified above. What it documents is that the contradiction existed, was never formally adjudicated, and fits the pattern this research has established across monetary authority, legislative authority, equal protection, and jury accountability.
+
+16.5 The Monetary Framework Contrast — Two Systems, One Treaty
+
+This section documents what the primary source record establishes, supports, and requires further research on regarding the monetary framework contrast between the two treaty parties in 1786. It applies the same evidence categorization used throughout this document.
+
+16.5.1 Morocco’s Legal Framework — ESTABLISHED
+
+ESTABLISHED: Morocco operated under Maliki school jurisprudence at the time of the 1786 Treaty. The Maliki school is one of the four major Sunni schools of Islamic law, dominant across North and West Africa. Its legal framework was codified in the foundational text Al-Muwatta by Malik ibn Anas. Source: De Gruyter academic documentation of Moroccan legal history — confirmed. Fiveable academic reference on Maliki School — confirmed.
+
+ESTABLISHED: All four Sunni schools of jurisprudence — including the Maliki school governing Morocco — agreed on the prohibition of riba (usury/interest) as a foundational legal and ethical principle. The prohibition is rooted in Quranic injunctions, most directly Sura al-Baqara 2:275–279, which condemn usury as unjust and harmful. Source: Harvard Islamic Law Blog, February 2025 — confirmed. Wikipedia on Riba citing classical jurisprudence — confirmed. Wahed Institute on riba prohibition — confirmed.
+
+ESTABLISHED: Sultan Mohammed III — the ruler who both recognized American independence in 1777 and sealed the 1786 Treaty — actively managed Morocco’s monetary system on a metal-backed currency standard. He minted a silver muhammadi dirham with a fixed exchange rate against bronze coins in an attempt to stabilize the currency against foreign coin flooding the market. The monetary system consisted of a golden mithqal divided into silver and bronze denominations. Source: Wikipedia, Economic History of Morocco — confirmed primary source record.
+
+16.5.2 The U.S. Monetary Framework Being Built Simultaneously — ESTABLISHED
+
+ESTABLISHED: In the same period the Morocco Treaty was negotiated and ratified (1786–1787), the United States was constructing a debt-based monetary framework. The National Bank Act of 1863 later tied banking directly to government debt — banks could issue notes only proportional to government bonds held. The constitutional question of whether Congress could delegate its monetary authority to a private banking system was never definitively resolved by the Supreme Court. These facts are documented in the companion Banking Research document (v5.2) and cross-referenced in Part IV of this research.
+
+ESTABLISHED: Article I Section 8 of the Constitution — ratified 1788, one year after the Morocco Treaty — granted Congress power to coin money and regulate its value. Article I Section 10 required gold and silver as legal tender. The constitutional text at founding therefore more closely resembled the metal-backed monetary framework Morocco operated under than the debt-based fiat system the U.S. later adopted. Source: Constitutional text — primary source confirmed. Documented in Part IV of this research.
+
+16.5.3 The Framework Contrast — SUPPORTED
+
+SUPPORTED: In 1786, the United States entered a formal treaty with a sovereign operating under a legal framework that prohibited interest-based lending as a foundational principle, while simultaneously constructing a banking system built on interest-bearing debt. The two frameworks — one prohibiting guaranteed monetary gain on loans, one structuring national finance around it — coexisted under the same Supremacy Clause that made treaties the supreme law of the land. This parallel is documented in the primary source record on both sides. Whether the founders were aware of or considered this contrast in constructing the monetary framework is a research question the documented record supports examining. The argument is sound. The primary source confirmation of the contrast itself is established. The implication for monetary policy is supported, not established.
+
+SUPPORTED: Scholar Feisal Khan has documented that the prohibition on interest-based lending was not unique to Islam — it was a principle shared across pre-modern societies including Christian and Jewish traditions — describing it as a risk-mitigation mechanism for small borrowers who cannot absorb the downside risk of interest-bearing debt. The U.S. constitutional text on money (Article I Section 8 and 10) reflected this same metal-backed, non-debt principle at founding. The departure from that framework — documented in Part IV through the Federal Reserve Act of 1913 and Nixon’s 1971 gold window closure — occurred without constitutional amendment. The Morocco Treaty’s riba prohibition framework and the U.S. constitutional text on money pointed in the same direction at founding. Both were subsequently departed from without formal resolution. Source: Riba Wikipedia citing Feisal Khan — confirmed.
+
+16.5.4 The Practical Limitation — Honest Documentation
+
+ESTABLISHED — LIMITING FACTOR: Islamic finance scholarship documents that while the riba prohibition was the stated legal framework, actual commercial practice in Muslim-majority societies including North Africa included workarounds and legal fictions that functionally permitted interest-bearing transactions. In 18th century Aleppo, courts did not permit money lending on interest — yet many Muslim merchants used legal devices to extend or receive interest-bearing loans in practice. Source: Bruce Masters, The Origins of Western Economic Dominance in the Middle East (NYU Press, 1988), cited in academic documentation — confirmed. This limitation is documented here because honest research requires it. The prohibition was the stated framework and the legal standard. Actual practice diverged. Both facts belong in the record.
+
+16.5.5 Research Needed — The Next Primary Source Steps
+
+RESEARCH NEEDED — PRIORITY 1: Thomas Barclay’s negotiation notes and Thomas Jefferson’s correspondence on the commerce articles of the 1786 Treaty require review. The commerce articles (Articles 14–16) established most-favored-nation trade status but are silent on interest or debt financing. Whether the silence was deliberate accommodation of the riba prohibition, ignorance of it, or simple irrelevance to the treaty’s primary purpose requires review of Founders Online archives and the Papers of Thomas Jefferson (Princeton University Press). Sources to review: founders.archives.gov, Papers of Thomas Jefferson Vol. 10.
+
+RESEARCH NEEDED — PRIORITY 2: Whether Benjamin Franklin, Jefferson, or Adams documented any awareness of Islamic commercial law principles during the treaty negotiations requires review of their correspondence from 1785–1787. Franklin was in Paris during this period and had broad intellectual engagement with non-Western legal systems. Jefferson’s personal library included works on Islamic law. Whether either man made any connection between Moroccan commercial practice and the monetary framework being constructed for the United States is an open research question with potentially significant implications for Part IV of this research. Source to review: Jefferson’s library catalogue (Library of Congress digital collection).
+
+RESEARCH NEEDED — PRIORITY 3: The specific monetary crisis Sultan Mohammed III faced — foreign coins flooding the Moroccan market and destabilizing the locally minted currency — is documented in the Economic History of Morocco. This dynamic is structurally identical to what the United States later experienced when the Federal Reserve Act allowed private banking to effectively control the money supply. Whether Sultan Mohammed III’s silver dirham stabilization strategy — a metal-backed currency with fixed exchange rates — was discussed or referenced in any founding-era American monetary debates requires review of congressional records from 1786–1791 and Hamilton’s First Report on Public Credit (1790). Source to review: Hamilton Papers, Library of Congress.
+
+WHAT THE DOCUMENTED RECORD CURRENTLY SHOWS: In 1786, the United States formalized a treaty with a sovereign whose legal framework prohibited interest-based lending, whose monetary system was metal-backed, and who was simultaneously managing the same problem — foreign monetary destabilization — that the United States would later fail to resolve through the Federal Reserve system. The U.S. constitutional text on money at founding pointed in the same direction as the Moroccan framework. Both were departed from without constitutional amendment or formal resolution. The departure from both frameworks — the riba prohibition the treaty partner operated under and the metal-backed monetary authority the Constitution assigned to Congress — followed the same structural pattern this research has documented throughout: text saying one thing, institutional practice doing another, the gap never formally resolved.
+
+16.5.6 Cross-Reference to Banking Research v7 — The Dual Standard ESTABLISHED
+
+This section records the cross-reference between this treaty research and the companion Banking Research document (v7), which independently documents the same dual standard from a different evidentiary angle.
+
+ESTABLISHED — FROM COMPANION RESEARCH (Banking Research v7, Section 7.6): The U.S. Mint struck metal-backed coins for 43 foreign governments between 1876 and the early 1980s under the Act of January 29, 1874. In 1944 — eleven years after the domestic gold standard was removed under Executive Order 6102 (1933) — the Philadelphia Mint struck 91,210 gold discs equivalent to $20 gold eagles for the Saudi Royal Government. American citizens had been legally prohibited from holding gold since 1933. The Mint was striking gold for a foreign sovereign in 1944 under the same Article I Section 8 authority that governed domestic monetary policy. The dual standard is therefore ESTABLISHED as a documented historical fact, not inference. Source: Banking Research v7 Section 7.6 — CoinWeek primary source confirmed.
+
+CORRECTION TO PRIOR RESEARCH — MOROCCO COINAGE: An earlier research pass suggested Morocco may have been among the nations for which the Philadelphia Mint struck coins. The verified 43-nation list from U.S. Mint records does not include Morocco. A specific claim of 1.2 million silver rials struck for Morocco at Philadelphia in 1897 was generated by an AI research assistant (Gemini) and has no confirmed primary source. Numismatic records indicate Moroccan rials of that period were struck at the Paris Mint, not Philadelphia. This claim is therefore categorized as RESEARCH NEEDED pending review of U.S. Mint Annual Reports at National Archives Record Group 104. The broader dual standard documented above does not depend on Morocco being on the list — it is established independently through the Saudi Arabia gold disc evidence and the 43-nation record. Honest documentation requires this correction to be on the record.
+
+THE CONVERGENCE OF BOTH RESEARCH THREADS: This document establishes that in 1786 the United States entered a treaty with a sovereign operating under a metal-backed, anti-usury monetary framework. The companion Banking Research document establishes that the U.S. Mint maintained a metal-backed coining standard for 43 foreign governments across a 107-year period while progressively removing that standard from the domestic population. The two research threads document the same institutional pattern from different evidentiary angles: the capacity for intrinsic monetary value was maintained for foreign sovereigns and treaty partners while being withdrawn from the domestic population without constitutional amendment and without formal resolution of the resulting gap.
+
 APPENDIX A: PRIMARY SOURCE REFERENCES
 
 
@@ -2153,6 +2235,24 @@ Added Section 10.11 — The Federal Farmer Letter III October 10 1787. Primary s
 April 2026
 
 Added Part XV — The Synthesis — From 1787 to April 2026. Five sections: 15.1 The Warning That Was On the Record — Brutus Federal Farmer Madison Hamilton all documented against their own words. 15.2 The Consistent Pattern — monetary authority legislative authority equal protection jury accountability each documented transfer without Article V amendment. 15.3 The April 2026 Chapter — Sotomayor April 9 Jackson April 13 Minnesota MAP Act April 13 Chevron ruling April 17 each documented with source and prediction connection. 15.4 Final Assessment — fifteen statements supported by primary source record each connected to cited section. 15.5 The Question Left With the Reader — whether the documented framework constitutes a system of law or a system of managed power that invokes law when it serves institutional purposes and bypasses it when it does not. Closing statement: That is where this document closes. The research continues. Version header updated to 24.0.
+
+25.0
+
+April 2026
+
+Added Part XVI — The Moroccan-American Treaty of 1786 and the Founding Contradiction on Slavery. Treaty ratification date July 18 1787 ESTABLISHED — Yale Avalon Project confirmed. Supremacy Clause text ESTABLISHED — Constitutional primary source confirmed. Treaty coexistence with slavery provisions of same-year Constitution ESTABLISHED. Jefferson as simultaneous treaty negotiator and enslaver ESTABLISHED from historical record. Morocco non-practice of race-based chattel slavery ESTABLISHED. Supremacy Clause tension with slavery provisions never formally adjudicated — SUPPORTED. Self-executing treaty doctrine (Foster v. Neilson 1829) identified as RESEARCH NEEDED for determining individual enforceability. Abolitionist use of Morocco Treaty as legal argument identified as RESEARCH NEEDED. Cross-reference to Section 1.2 consent gap, Part XIV 13th Amendment exception clause, and Part XV consistent pattern documented. Methodology note added distinguishing historical documentation from current enforceability claim. Version header updated to 25.0.
+
+26.0
+
+April 2026
+
+Added Section 16.5 — The Monetary Framework Contrast. Five sub-sections. Morocco Maliki jurisprudence at treaty signing ESTABLISHED — De Gruyter and academic sources confirmed. All four Sunni schools including Maliki prohibit riba ESTABLISHED — Harvard Islamic Law Blog and classical jurisprudence confirmed. Sultan Mohammed III metal-backed silver dirham monetary system ESTABLISHED — Economic History of Morocco confirmed. U.S. constitutional text on money (Article I Sections 8 and 10) aligned with metal-backed framework at founding ESTABLISHED — primary source confirmed. Framework contrast between riba-prohibiting treaty partner and interest-based U.S. banking system being built simultaneously SUPPORTED — Feisal Khan scholarship confirmed. Practical limitation documented honestly — Islamic courts prohibited riba but commercial workarounds existed in practice ESTABLISHED — Bruce Masters NYU Press confirmed. Three RESEARCH NEEDED priorities identified: Barclay negotiation notes and Jefferson correspondence on commerce articles; Franklin/Jefferson/Adams awareness of Islamic commercial law; Hamilton First Report on Public Credit vs. Sultan Mohammed III silver dirham strategy. Closing synthesis connecting Morocco monetary framework to Part IV Federal Reserve constitutional question documented. Version header updated to 26.0.
+
+27.0
+
+April 2026
+
+Added Section 16.5.6 — Cross-Reference to Banking Research v7 — The Dual Standard ESTABLISHED. Saudi Arabia gold disc evidence (1944) from companion research confirmed: Philadelphia Mint struck gold for foreign sovereign eleven years after domestic gold standard removed — ESTABLISHED. Dual standard upgraded from SUPPORTED to ESTABLISHED via companion research cross-reference. Morocco coinage claim corrected: Gemini AI claim of 1.2 million silver rials struck for Morocco at Philadelphia Mint in 1897 has no verified primary source — Morocco not on confirmed 43-nation list — corrected to RESEARCH NEEDED pending NARA RG 104 review. Correction documented on record per research methodology standard. Convergence statement connecting treaty research (Part XVI) and banking authority research (v7) documented — same institutional pattern identified from two independent evidentiary angles. Version header updated to 27.0.
 
 
 

@@ -1,4 +1,4 @@
-# Judgement of No Legal Accountability v24-1
+# Judgement of No Legal Accountability v24
 **Classification:** Legal Research | Sovereign Reference | Living Document
 **R.O.M.A.N. Tag:** legal_drafting | sovereign_notice | fcra_response | accountability_doctrine | truth_standard
 **Author:** Rickey Allan Howard / Howard Jones Bloodline Ancestral Trust

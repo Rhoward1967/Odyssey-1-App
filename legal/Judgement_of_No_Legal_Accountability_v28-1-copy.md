@@ -1,4 +1,4 @@
-# Judgement of No Legal Accountability v24-1
+# Judgement of No Legal Accountability v28-1-copy
 **Classification:** Legal Research | Sovereign Reference | Living Document
 **R.O.M.A.N. Tag:** legal_drafting | sovereign_notice | fcra_response | accountability_doctrine | truth_standard
 **Author:** Rickey Allan Howard / Howard Jones Bloodline Ancestral Trust
@@ -20,7 +20,7 @@ A Study in Law, Ethics, and Institutional Accountability
 
 Independent Legal and Philosophical Research
 
-Version 24.0  |  April 2026  |  Living Document
+Version 28.0  |  April 2026  |  Living Document
 
 
 
@@ -1902,6 +1902,142 @@ That is where this document closes. The research continues.
 
 
 
+PART XVI: THE MOROCCAN-AMERICAN TREATY OF 1786 AND THE FOUNDING CONTRADICTION ON SLAVERY
+
+This part documents a specific founding contradiction: the United States ratified a treaty with a nation whose legal framework did not practice race-based chattel slavery in the same year it ratified a Constitution that explicitly protected that institution. The contradiction was not resolved. It was recorded. It belongs in this research.
+
+16.1 The Treaty — Primary Source Facts
+
+ESTABLISHED: The Treaty of Peace and Friendship between the United States and Morocco was sealed June 23, 1786, delivered to American Agent Thomas Barclay June 28, 1786, signed by Thomas Jefferson at Paris January 1, 1787, and signed by John Adams at London January 25, 1787. It was ratified by the United States Congress on July 18, 1787 — one year before the Constitution was ratified. Source: Yale Avalon Project, Barbary Treaties 1786–1816 — confirmed primary source. Ronald Reagan Bicentennial Statement 1986 — confirmed.
+
+ESTABLISHED: It is the longest unbroken peace treaty in United States history. It has never been formally revoked or suspended. Source: Reagan Library confirmed. State Department treaty records confirmed.
+
+ESTABLISHED: Article VI of the United States Constitution — ratified 1788 — states: “This Constitution, and the Laws of the United States which shall be made in Pursuance thereof; and all Treaties made, or which shall be made, under the Authority of the United States, shall be the supreme Law of the Land.” The Morocco Treaty therefore carried Supremacy Clause authority from the moment the Constitution was ratified. Source: Constitutional text — primary source confirmed.
+
+16.2 The Contradiction — What The Simultaneous Record Shows
+
+ESTABLISHED: In 1787 — the same year the Morocco Treaty was signed by Jefferson and Adams — the Constitutional Convention in Philadelphia produced a document that explicitly protected the slave trade until 1808 (Article I, Section 9), counted enslaved persons as three-fifths of a person for representation (Article I, Section 2), and required the return of persons “held to Service or Labour” who escaped across state lines (Article IV, Section 2). Source: Constitutional text — primary source confirmed. Documented previously in Section 1.2 of this research.
+
+ESTABLISHED: Morocco under Sultan Mohammed III (Sidi Muhammad bin Abdallah) did not practice race-based chattel slavery as institutionalized in the American South. The diplomatic recognition formalized in the 1786 Treaty was extended by a Muslim sovereign whose legal framework operated on different principles regarding human bondage than those simultaneously being written into the American Constitution. Source: Wikipedia citing primary conference records — confirmed. Founders Online, Adams Papers — confirmed.
+
+WHAT THE SIMULTANEOUS RECORD SHOWS: Thomas Jefferson negotiated and signed a treaty with a nation that did not institutionalize race-based chattel slavery in 1787. Thomas Jefferson simultaneously owned enslaved persons. The Constitution Jefferson supported carried the three-fifths clause and the slave trade protection clause. The Treaty Jefferson signed carried the Supremacy Clause weight of the Constitution ratified in 1788. Both documents were active law simultaneously. The contradiction between them was never formally resolved by any court. This is documented in the primary source record.
+
+16.3 The Supremacy Clause Question — What Was Never Adjudicated
+
+SUPPORTED: Article VI makes treaties the supreme law of the land. The Morocco Treaty was active law from 1787 forward. The Constitution simultaneously protected slavery. Whether the dignity framework implicit in a treaty with a non-slave sovereign created any legal tension with the Constitution’s slavery provisions was never brought before any court and never formally adjudicated. The gap between the treaty’s existence and the institution it coexisted with was managed politically, not legally. This fits the pattern documented throughout this research: constitutional and treaty text establishing one framework while institutional practice operated under another without formal resolution.
+
+RESEARCH NEEDED: Whether any antebellum legal scholar, abolitionist brief, or congressional record raised the Morocco Treaty as a legal argument against the constitutionality of slavery requires review of abolitionist legal literature, congressional antislavery petitions, and primary legal archives from 1787 through 1865. If such arguments were made and rejected without formal adjudication, that rejection itself belongs in this documented record.
+
+RESEARCH NEEDED: The distinction between self-executing and non-self-executing treaties — which determines whether a treaty creates individually enforceable rights or only government-to-government obligations — was not formally established until Foster v. Neilson (1829). Whether the Morocco Treaty would have been classified as self-executing under that framework, and what that classification would have meant for its interaction with the slavery provisions of the Constitution, requires review of the Foster v. Neilson opinion and subsequent treaty jurisprudence. Source to review: Foster v. Neilson, 27 U.S. 253 (1829).
+
+16.4 Cross-Reference to the Documented Pattern
+
+SUPPORTED: The Morocco Treaty contradiction fits the consistent structural pattern documented throughout this research. Section 1.2 documents that 99.29% of the population had no voice in the founding framework. Section 4.1 documents that the Constitution’s monetary authority text was bypassed without amendment. Part XIV documents that the 13th Amendment’s prohibition on slavery was immediately undermined through the exception clause. This Part documents that a treaty carrying Supremacy Clause authority — signed by the same founders who wrote the slavery protections — coexisted with those protections without resolution. The pattern is the same: the written framework and the institutional practice operated in contradiction, and that contradiction was managed rather than resolved.
+
+NOTE ON METHODOLOGY: This section documents a historical and constitutional contradiction using primary source records. It does not assert that the Morocco Treaty creates individually enforceable rights in current U.S. courts — the self-executing treaty doctrine and subsequent case law make that a legally unsettled question requiring the research identified above. What it documents is that the contradiction existed, was never formally adjudicated, and fits the pattern this research has established across monetary authority, legislative authority, equal protection, and jury accountability.
+
+16.5 The Monetary Framework Contrast — Two Systems, One Treaty
+
+This section documents what the primary source record establishes, supports, and requires further research on regarding the monetary framework contrast between the two treaty parties in 1786. It applies the same evidence categorization used throughout this document.
+
+16.5.1 Morocco’s Legal Framework — ESTABLISHED
+
+ESTABLISHED: Morocco operated under Maliki school jurisprudence at the time of the 1786 Treaty. The Maliki school is one of the four major Sunni schools of Islamic law, dominant across North and West Africa. Its legal framework was codified in the foundational text Al-Muwatta by Malik ibn Anas. Source: De Gruyter academic documentation of Moroccan legal history — confirmed. Fiveable academic reference on Maliki School — confirmed.
+
+ESTABLISHED: All four Sunni schools of jurisprudence — including the Maliki school governing Morocco — agreed on the prohibition of riba (usury/interest) as a foundational legal and ethical principle. The prohibition is rooted in Quranic injunctions, most directly Sura al-Baqara 2:275–279, which condemn usury as unjust and harmful. Source: Harvard Islamic Law Blog, February 2025 — confirmed. Wikipedia on Riba citing classical jurisprudence — confirmed. Wahed Institute on riba prohibition — confirmed.
+
+ESTABLISHED: Sultan Mohammed III — the ruler who both recognized American independence in 1777 and sealed the 1786 Treaty — actively managed Morocco’s monetary system on a metal-backed currency standard. He minted a silver muhammadi dirham with a fixed exchange rate against bronze coins in an attempt to stabilize the currency against foreign coin flooding the market. The monetary system consisted of a golden mithqal divided into silver and bronze denominations. Source: Wikipedia, Economic History of Morocco — confirmed primary source record.
+
+16.5.2 The U.S. Monetary Framework Being Built Simultaneously — ESTABLISHED
+
+ESTABLISHED: In the same period the Morocco Treaty was negotiated and ratified (1786–1787), the United States was constructing a debt-based monetary framework. The National Bank Act of 1863 later tied banking directly to government debt — banks could issue notes only proportional to government bonds held. The constitutional question of whether Congress could delegate its monetary authority to a private banking system was never definitively resolved by the Supreme Court. These facts are documented in the companion Banking Research document (v5.2) and cross-referenced in Part IV of this research.
+
+ESTABLISHED: Article I Section 8 of the Constitution — ratified 1788, one year after the Morocco Treaty — granted Congress power to coin money and regulate its value. Article I Section 10 required gold and silver as legal tender. The constitutional text at founding therefore more closely resembled the metal-backed monetary framework Morocco operated under than the debt-based fiat system the U.S. later adopted. Source: Constitutional text — primary source confirmed. Documented in Part IV of this research.
+
+16.5.3 The Framework Contrast — SUPPORTED
+
+SUPPORTED: In 1786, the United States entered a formal treaty with a sovereign operating under a legal framework that prohibited interest-based lending as a foundational principle, while simultaneously constructing a banking system built on interest-bearing debt. The two frameworks — one prohibiting guaranteed monetary gain on loans, one structuring national finance around it — coexisted under the same Supremacy Clause that made treaties the supreme law of the land. This parallel is documented in the primary source record on both sides. Whether the founders were aware of or considered this contrast in constructing the monetary framework is a research question the documented record supports examining. The argument is sound. The primary source confirmation of the contrast itself is established. The implication for monetary policy is supported, not established.
+
+SUPPORTED: Scholar Feisal Khan has documented that the prohibition on interest-based lending was not unique to Islam — it was a principle shared across pre-modern societies including Christian and Jewish traditions — describing it as a risk-mitigation mechanism for small borrowers who cannot absorb the downside risk of interest-bearing debt. The U.S. constitutional text on money (Article I Section 8 and 10) reflected this same metal-backed, non-debt principle at founding. The departure from that framework — documented in Part IV through the Federal Reserve Act of 1913 and Nixon’s 1971 gold window closure — occurred without constitutional amendment. The Morocco Treaty’s riba prohibition framework and the U.S. constitutional text on money pointed in the same direction at founding. Both were subsequently departed from without formal resolution. Source: Riba Wikipedia citing Feisal Khan — confirmed.
+
+16.5.4 The Practical Limitation — Honest Documentation
+
+ESTABLISHED — LIMITING FACTOR: Islamic finance scholarship documents that while the riba prohibition was the stated legal framework, actual commercial practice in Muslim-majority societies including North Africa included workarounds and legal fictions that functionally permitted interest-bearing transactions. In 18th century Aleppo, courts did not permit money lending on interest — yet many Muslim merchants used legal devices to extend or receive interest-bearing loans in practice. Source: Bruce Masters, The Origins of Western Economic Dominance in the Middle East (NYU Press, 1988), cited in academic documentation — confirmed. This limitation is documented here because honest research requires it. The prohibition was the stated framework and the legal standard. Actual practice diverged. Both facts belong in the record.
+
+16.5.5 Research Needed — The Next Primary Source Steps
+
+RESEARCH NEEDED — PRIORITY 1: Thomas Barclay’s negotiation notes and Thomas Jefferson’s correspondence on the commerce articles of the 1786 Treaty require review. The commerce articles (Articles 14–16) established most-favored-nation trade status but are silent on interest or debt financing. Whether the silence was deliberate accommodation of the riba prohibition, ignorance of it, or simple irrelevance to the treaty’s primary purpose requires review of Founders Online archives and the Papers of Thomas Jefferson (Princeton University Press). Sources to review: founders.archives.gov, Papers of Thomas Jefferson Vol. 10.
+
+RESEARCH NEEDED — PRIORITY 2: Whether Benjamin Franklin, Jefferson, or Adams documented any awareness of Islamic commercial law principles during the treaty negotiations requires review of their correspondence from 1785–1787. Franklin was in Paris during this period and had broad intellectual engagement with non-Western legal systems. Jefferson’s personal library included works on Islamic law. Whether either man made any connection between Moroccan commercial practice and the monetary framework being constructed for the United States is an open research question with potentially significant implications for Part IV of this research. Source to review: Jefferson’s library catalogue (Library of Congress digital collection).
+
+RESEARCH NEEDED — PRIORITY 3: The specific monetary crisis Sultan Mohammed III faced — foreign coins flooding the Moroccan market and destabilizing the locally minted currency — is documented in the Economic History of Morocco. This dynamic is structurally identical to what the United States later experienced when the Federal Reserve Act allowed private banking to effectively control the money supply. Whether Sultan Mohammed III’s silver dirham stabilization strategy — a metal-backed currency with fixed exchange rates — was discussed or referenced in any founding-era American monetary debates requires review of congressional records from 1786–1791 and Hamilton’s First Report on Public Credit (1790). Source to review: Hamilton Papers, Library of Congress.
+
+WHAT THE DOCUMENTED RECORD CURRENTLY SHOWS: In 1786, the United States formalized a treaty with a sovereign whose legal framework prohibited interest-based lending, whose monetary system was metal-backed, and who was simultaneously managing the same problem — foreign monetary destabilization — that the United States would later fail to resolve through the Federal Reserve system. The U.S. constitutional text on money at founding pointed in the same direction as the Moroccan framework. Both were departed from without constitutional amendment or formal resolution. The departure from both frameworks — the riba prohibition the treaty partner operated under and the metal-backed monetary authority the Constitution assigned to Congress — followed the same structural pattern this research has documented throughout: text saying one thing, institutional practice doing another, the gap never formally resolved.
+
+16.5.6 Cross-Reference to Banking Research v7 — The Dual Standard ESTABLISHED
+
+This section records the cross-reference between this treaty research and the companion Banking Research document (v7), which independently documents the same dual standard from a different evidentiary angle.
+
+ESTABLISHED — FROM COMPANION RESEARCH (Banking Research v7, Section 7.6): The U.S. Mint struck metal-backed coins for 43 foreign governments between 1876 and the early 1980s under the Act of January 29, 1874. In 1944 — eleven years after the domestic gold standard was removed under Executive Order 6102 (1933) — the Philadelphia Mint struck 91,210 gold discs equivalent to $20 gold eagles for the Saudi Royal Government. American citizens had been legally prohibited from holding gold since 1933. The Mint was striking gold for a foreign sovereign in 1944 under the same Article I Section 8 authority that governed domestic monetary policy. The dual standard is therefore ESTABLISHED as a documented historical fact, not inference. Source: Banking Research v7 Section 7.6 — CoinWeek primary source confirmed.
+
+CORRECTION TO PRIOR RESEARCH — MOROCCO COINAGE: An earlier research pass suggested Morocco may have been among the nations for which the Philadelphia Mint struck coins. The verified 43-nation list from U.S. Mint records does not include Morocco. A specific claim of 1.2 million silver rials struck for Morocco at Philadelphia in 1897 was generated by an AI research assistant (Gemini) and has no confirmed primary source. Numismatic records indicate Moroccan rials of that period were struck at the Paris Mint, not Philadelphia. This claim is therefore categorized as RESEARCH NEEDED pending review of U.S. Mint Annual Reports at National Archives Record Group 104. The broader dual standard documented above does not depend on Morocco being on the list — it is established independently through the Saudi Arabia gold disc evidence and the 43-nation record. Honest documentation requires this correction to be on the record.
+
+THE CONVERGENCE OF BOTH RESEARCH THREADS: This document establishes that in 1786 the United States entered a treaty with a sovereign operating under a metal-backed, anti-usury monetary framework. The companion Banking Research document establishes that the U.S. Mint maintained a metal-backed coining standard for 43 foreign governments across a 107-year period while progressively removing that standard from the domestic population. The two research threads document the same institutional pattern from different evidentiary angles: the capacity for intrinsic monetary value was maintained for foreign sovereigns and treaty partners while being withdrawn from the domestic population without constitutional amendment and without formal resolution of the resulting gap.
+
+
+
+PART XVI: THE POWELL MEMO — AUGUST 23 1971
+
+This section documents the Powell Memo as a primary source document using the same evidence standard applied throughout this research. Every claim is ESTABLISHED, SUPPORTED, or RESEARCH NEEDED. The memo itself is publicly available through the Lewis F. Powell Jr. Archives at Washington and Lee University School of Law and through the Internet Archive. No characterization is added beyond what the documented record supports.
+
+16.1 The Document — What It Is and When It Was Written
+
+ESTABLISHED: On August 23 1971 Lewis F. Powell Jr. — then a corporate attorney, former president of the American Bar Association, and board member of eleven corporations including Philip Morris — mailed a confidential memorandum to Eugene B. Sydnor Jr., Chair of the Education Committee of the U.S. Chamber of Commerce. The memo was titled Attack On American Free Enterprise System. Two months later on October 22 1971 Nixon nominated Powell to the Supreme Court. Powell was sworn in as an Associate Justice on January 7 1972 — less than six months after the memo was delivered to the Chamber. Source: Lewis F. Powell Jr. Archives, Washington and Lee University School of Law — confirmed primary source. Wikipedia citing documented institutional record — confirmed.
+
+ESTABLISHED: The memo was not disclosed to the U.S. Senate during Powell's Supreme Court confirmation proceedings. It remained confidential until September 28 and 29 1972 when syndicated columnist Jack Anderson cited it in his Washington Merry Go Round column. Anderson cautioned that Powell might use his position on the Supreme Court to put his ideas into practice in behalf of business interests. The Chamber subsequently published the memo in full in its newsletter Washington Report. Source: Washington and Lee University Powell Archives — confirmed. Senator Sheldon Whitehouse Senate floor speech citing primary source record — confirmed.
+
+ESTABLISHED — THE TIMELINE CONVERGENCE: The Powell Memo was dated August 23 1971. Nixon closed the gold window on August 15 1971 — eight days earlier. Both are primary source documents from the same month. Both are on the documented record. Whether the convergence represents coordination or coincidence requires review of the primary record and is not concluded here. What is established is the documented timeline: two significant institutional actions — one monetary, one strategic — both dated to August 1971. Source: Powell Memo date confirmed. Nixon gold window date confirmed in Part IV of this research.
+
+16.2 What the Memo Said — Verbatim Primary Source Text
+
+ESTABLISHED — ON THE JUDICIARY, VERBATIM: Powell wrote: American business and the enterprise system have been affected as much by the courts as by the executive and legislative branches of government. Under our constitutional system, especially with an activist-minded Supreme Court, the judiciary may be the most important instrument for social, economic and political change. Other organizations and groups, recognizing this, have been far more astute in exploiting judicial action than American business. Source: Powell Memo full text — Greenpeace publishing confirmed against Washington and Lee primary source — confirmed. Reclaim Democracy full text publication — confirmed.
+
+ESTABLISHED — ON ORGANIZED LEGAL ACTION, VERBATIM: Powell recommended the Chamber become the voice of American business in the courts with a highly competent staff of lawyers if business is willing to provide the funds. He concluded: The opportunity merits the necessary effort. Source: Senator Sheldon Whitehouse Senate floor speech citing Powell Memo primary source text — confirmed.
+
+ESTABLISHED — ON ACADEMIA AND MEDIA: Powell identified college campuses, the pulpit, the media, and intellectual and literary journals as sources of what he characterized as attacks on the free enterprise system. He recommended systematic corporate funding of scholars, monitoring and critique of media content, and organized presence in academic institutions. Source: Powell Memo full text confirmed through multiple primary source publications.
+
+ESTABLISHED — ON OPENING STATEMENT: Powell's opening sentence was: No thoughtful person can question that the American economic system is under broad attack. Source: Senator Sheldon Whitehouse Senate floor speech citing verbatim primary source — confirmed. Reclaim Democracy full text — confirmed.
+
+16.3 The Documented Institutional Consequences
+
+ESTABLISHED: Powell's 1971 memorandum became the blueprint for the rise of the American conservative movement and the formation of a network of influential think tanks and lobbying organizations including the Heritage Foundation and the American Legislative Exchange Council. Source: Wikipedia citing documented institutional history — confirmed.
+
+ESTABLISHED: During the 2024 presidential election season the Powell Memo was identified as the basis for the Heritage Foundation's Project 2025 agenda. The Heritage Foundation is documented as one of the institutions whose formation followed the Powell Memo's recommendations. Source: Wikipedia citing documented reporting — confirmed.
+
+ESTABLISHED: The U.S. Chamber of Commerce — the institution to which the Powell Memo was addressed — expanded from a passive business group into what Greenpeace documented as the most powerful lobby in Washington DC, spending $770.6 million since 1998 — more than three times the amount spent by the second-largest spender. Source: Greenpeace citing documented lobbying records — confirmed.
+
+16.4 Cross-Reference Against This Research
+
+SUPPORTED — THE JUDICIAL THREAD: Powell wrote in August 1971 that the judiciary may be the most important instrument for social economic and political change and called for systematic corporate legal organization to exploit that instrument. This research documents in Part VI the Chevron-to-Loper Bright transfer of interpretive authority from agencies to courts and in Part XII the emergency docket paradigm shift documented by Justices Sotomayor and Jackson. Powell's 1971 memo identifies the judiciary as the strategic arena. The documented 2024-2026 record confirms the judiciary as the arena in which institutional power has most recently concentrated. Whether the documented judicial outcomes reflect the execution of the strategy Powell described is a research question the documented evidence supports examining. The facts on both ends of the timeline are established. The causal connection between them is supported, not established, pending further primary source construction.
+
+SUPPORTED — THE REGULATORY THREAD: Powell's memo specifically identified regulatory agencies as a critical arena requiring organized corporate counter-strategy. Part V of this research documents the nondelegation doctrine — enforced exactly twice in history, both in 1935 — and Part VI documents the Loper Bright transfer of interpretive authority from agencies to courts. Powell identified the regulatory arena in 1971 as the terrain requiring organized corporate engagement. The documented record in Parts V and VI shows that terrain shifted substantially in the direction his memo recommended. That directional consistency is documented. Whether it reflects the strategy's execution requires further primary source construction.
+
+SUPPORTED — THE CONCEALMENT QUESTION: A man who wrote a confidential strategy memo calling for systematic exploitation of judicial power was appointed to the Supreme Court two months later without that memo being disclosed to the Senate that confirmed him. That sequence is established in the primary source record. The research question it raises — whether a judge who had privately identified the judiciary as the most important instrument for social economic and political change and had recommended organized exploitation of judicial action could adjudicate cases involving corporate interests with the impartiality the institution's own standards require — is the same institutional conflict of interest question documented in Part II of this research applied to a specific documented instance. The facts are established. The institutional question they raise connects to the broader framework already documented in Part II.
+
+16.5 What the Research Honestly Supports Saying
+
+The following statements are supported by the documented primary source record in this section. In August 1971 a corporate attorney who sat on eleven corporate boards wrote a confidential strategy document identifying the judiciary as the most important instrument for social economic and political change and recommending systematic corporate legal organization to exploit that arena. That attorney was appointed to the Supreme Court two months later without the document being disclosed to the Senate. The document was not made public until a journalist leaked it a year after Powell joined the Court. The institutions whose formation the document recommended — including the Heritage Foundation — were subsequently established. The Chamber of Commerce to which the document was addressed became the most powerful lobby in Washington by documented spending records. In 2024 the Heritage Foundation's Project 2025 was identified as tracing its origins to the Powell Memo. In that same year the Supreme Court issued Loper Bright — transferring interpretive authority over regulatory law from agencies to courts — which Justice Kagan documented in formal dissent gives the judiciary exclusive power over every open issue involving the meaning of regulatory law. Powell wrote that the judiciary may be the most important instrument for social economic and political change. The documented 53-year record from 1971 to 2024 does not contradict that assessment.
+
+RESEARCH NEEDED — PRIORITY 1: The specific decisions Powell authored or joined on the Supreme Court that directly benefited corporate interests — and whether those decisions align with the strategic recommendations in his 1971 memo — require primary source review of his written opinions from 1972 through his retirement in 1987. This is the most direct evidentiary test of whether the memo's stated strategy was executed through his judicial decisions. Source to review: U.S. Supreme Court decisions 1972-1987 authored or joined by Powell, available through Justia.com and the Supreme Court's official database.
+
+RESEARCH NEEDED — PRIORITY 2: The specific Senate confirmation record for Lewis Powell — what was disclosed, what questions were asked, and what the vote was — requires primary source review to establish precisely what the Senate knew and did not know at the time of confirmation. Source to review: Senate Judiciary Committee confirmation hearing transcript 1971, Congressional Record.
+
+RESEARCH NEEDED — PRIORITY 3: The full text of the Powell Memo warrants direct primary source review beyond what has been confirmed through secondary publications. The Washington and Lee University School of Law archive holds both a typescript and printed version. Direct retrieval and full primary source documentation of every section — not only the judiciary and business strategy sections — is identified as the next research step. Source: scholarlycommons.law.wlu.edu/powellmemo — confirmed available.
+
+
+
+
+
 APPENDIX A: PRIMARY SOURCE REFERENCES
 
 
@@ -2153,6 +2289,24 @@ Added Section 10.11 — The Federal Farmer Letter III October 10 1787. Primary s
 April 2026
 
 Added Part XV — The Synthesis — From 1787 to April 2026. Five sections: 15.1 The Warning That Was On the Record — Brutus Federal Farmer Madison Hamilton all documented against their own words. 15.2 The Consistent Pattern — monetary authority legislative authority equal protection jury accountability each documented transfer without Article V amendment. 15.3 The April 2026 Chapter — Sotomayor April 9 Jackson April 13 Minnesota MAP Act April 13 Chevron ruling April 17 each documented with source and prediction connection. 15.4 Final Assessment — fifteen statements supported by primary source record each connected to cited section. 15.5 The Question Left With the Reader — whether the documented framework constitutes a system of law or a system of managed power that invokes law when it serves institutional purposes and bypasses it when it does not. Closing statement: That is where this document closes. The research continues. Version header updated to 24.0.
+
+25.0
+
+April 2026
+
+Added Part XVI — The Moroccan-American Treaty of 1786 and the Founding Contradiction on Slavery. Treaty ratification date July 18 1787 ESTABLISHED — Yale Avalon Project confirmed. Supremacy Clause text ESTABLISHED — Constitutional primary source confirmed. Treaty coexistence with slavery provisions of same-year Constitution ESTABLISHED. Jefferson as simultaneous treaty negotiator and enslaver ESTABLISHED from historical record. Morocco non-practice of race-based chattel slavery ESTABLISHED. Supremacy Clause tension with slavery provisions never formally adjudicated — SUPPORTED. Self-executing treaty doctrine (Foster v. Neilson 1829) identified as RESEARCH NEEDED for determining individual enforceability. Abolitionist use of Morocco Treaty as legal argument identified as RESEARCH NEEDED. Cross-reference to Section 1.2 consent gap, Part XIV 13th Amendment exception clause, and Part XV consistent pattern documented. Methodology note added distinguishing historical documentation from current enforceability claim. Version header updated to 25.0.
+
+26.0
+
+April 2026
+
+Added Section 16.5 — The Monetary Framework Contrast. Five sub-sections. Morocco Maliki jurisprudence at treaty signing ESTABLISHED — De Gruyter and academic sources confirmed. All four Sunni schools including Maliki prohibit riba ESTABLISHED — Harvard Islamic Law Blog and classical jurisprudence confirmed. Sultan Mohammed III metal-backed silver dirham monetary system ESTABLISHED — Economic History of Morocco confirmed. U.S. constitutional text on money (Article I Sections 8 and 10) aligned with metal-backed framework at founding ESTABLISHED — primary source confirmed. Framework contrast between riba-prohibiting treaty partner and interest-based U.S. banking system being built simultaneously SUPPORTED — Feisal Khan scholarship confirmed. Practical limitation documented honestly — Islamic courts prohibited riba but commercial workarounds existed in practice ESTABLISHED — Bruce Masters NYU Press confirmed. Three RESEARCH NEEDED priorities identified: Barclay negotiation notes and Jefferson correspondence on commerce articles; Franklin/Jefferson/Adams awareness of Islamic commercial law; Hamilton First Report on Public Credit vs. Sultan Mohammed III silver dirham strategy. Closing synthesis connecting Morocco monetary framework to Part IV Federal Reserve constitutional question documented. Version header updated to 26.0.
+
+27.0
+
+April 2026
+
+Added Section 16.5.6 — Cross-Reference to Banking Research v7 — The Dual Standard ESTABLISHED. Saudi Arabia gold disc evidence (1944) from companion research confirmed: Philadelphia Mint struck gold for foreign sovereign eleven years after domestic gold standard removed — ESTABLISHED. Dual standard upgraded from SUPPORTED to ESTABLISHED via companion research cross-reference. Morocco coinage claim corrected: Gemini AI claim of 1.2 million silver rials struck for Morocco at Philadelphia Mint in 1897 has no verified primary source — Morocco not on confirmed 43-nation list — corrected to RESEARCH NEEDED pending NARA RG 104 review. Correction documented on record per research methodology standard. Convergence statement connecting treaty research (Part XVI) and banking authority research (v7) documented — same institutional pattern identified from two independent evidentiary angles. Version header updated to 27.0.
 
 
 

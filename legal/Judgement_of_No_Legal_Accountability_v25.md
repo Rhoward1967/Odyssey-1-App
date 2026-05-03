@@ -1,4 +1,4 @@
-# Judgement of No Legal Accountability v24-1
+# Judgement of No Legal Accountability v25
 **Classification:** Legal Research | Sovereign Reference | Living Document
 **R.O.M.A.N. Tag:** legal_drafting | sovereign_notice | fcra_response | accountability_doctrine | truth_standard
 **Author:** Rickey Allan Howard / Howard Jones Bloodline Ancestral Trust
@@ -20,7 +20,7 @@ A Study in Law, Ethics, and Institutional Accountability
 
 Independent Legal and Philosophical Research
 
-Version 24.0  |  April 2026  |  Living Document
+Version 25.0  |  April 2026  |  Living Document
 
 
 
@@ -1902,6 +1902,40 @@ That is where this document closes. The research continues.
 
 
 
+PART XVI: THE MOROCCAN-AMERICAN TREATY OF 1786 AND THE FOUNDING CONTRADICTION ON SLAVERY
+
+This part documents a specific founding contradiction: the United States ratified a treaty with a nation whose legal framework did not practice race-based chattel slavery in the same year it ratified a Constitution that explicitly protected that institution. The contradiction was not resolved. It was recorded. It belongs in this research.
+
+16.1 The Treaty — Primary Source Facts
+
+ESTABLISHED: The Treaty of Peace and Friendship between the United States and Morocco was sealed June 23, 1786, delivered to American Agent Thomas Barclay June 28, 1786, signed by Thomas Jefferson at Paris January 1, 1787, and signed by John Adams at London January 25, 1787. It was ratified by the United States Congress on July 18, 1787 — one year before the Constitution was ratified. Source: Yale Avalon Project, Barbary Treaties 1786–1816 — confirmed primary source. Ronald Reagan Bicentennial Statement 1986 — confirmed.
+
+ESTABLISHED: It is the longest unbroken peace treaty in United States history. It has never been formally revoked or suspended. Source: Reagan Library confirmed. State Department treaty records confirmed.
+
+ESTABLISHED: Article VI of the United States Constitution — ratified 1788 — states: “This Constitution, and the Laws of the United States which shall be made in Pursuance thereof; and all Treaties made, or which shall be made, under the Authority of the United States, shall be the supreme Law of the Land.” The Morocco Treaty therefore carried Supremacy Clause authority from the moment the Constitution was ratified. Source: Constitutional text — primary source confirmed.
+
+16.2 The Contradiction — What The Simultaneous Record Shows
+
+ESTABLISHED: In 1787 — the same year the Morocco Treaty was signed by Jefferson and Adams — the Constitutional Convention in Philadelphia produced a document that explicitly protected the slave trade until 1808 (Article I, Section 9), counted enslaved persons as three-fifths of a person for representation (Article I, Section 2), and required the return of persons “held to Service or Labour” who escaped across state lines (Article IV, Section 2). Source: Constitutional text — primary source confirmed. Documented previously in Section 1.2 of this research.
+
+ESTABLISHED: Morocco under Sultan Mohammed III (Sidi Muhammad bin Abdallah) did not practice race-based chattel slavery as institutionalized in the American South. The diplomatic recognition formalized in the 1786 Treaty was extended by a Muslim sovereign whose legal framework operated on different principles regarding human bondage than those simultaneously being written into the American Constitution. Source: Wikipedia citing primary conference records — confirmed. Founders Online, Adams Papers — confirmed.
+
+WHAT THE SIMULTANEOUS RECORD SHOWS: Thomas Jefferson negotiated and signed a treaty with a nation that did not institutionalize race-based chattel slavery in 1787. Thomas Jefferson simultaneously owned enslaved persons. The Constitution Jefferson supported carried the three-fifths clause and the slave trade protection clause. The Treaty Jefferson signed carried the Supremacy Clause weight of the Constitution ratified in 1788. Both documents were active law simultaneously. The contradiction between them was never formally resolved by any court. This is documented in the primary source record.
+
+16.3 The Supremacy Clause Question — What Was Never Adjudicated
+
+SUPPORTED: Article VI makes treaties the supreme law of the land. The Morocco Treaty was active law from 1787 forward. The Constitution simultaneously protected slavery. Whether the dignity framework implicit in a treaty with a non-slave sovereign created any legal tension with the Constitution’s slavery provisions was never brought before any court and never formally adjudicated. The gap between the treaty’s existence and the institution it coexisted with was managed politically, not legally. This fits the pattern documented throughout this research: constitutional and treaty text establishing one framework while institutional practice operated under another without formal resolution.
+
+RESEARCH NEEDED: Whether any antebellum legal scholar, abolitionist brief, or congressional record raised the Morocco Treaty as a legal argument against the constitutionality of slavery requires review of abolitionist legal literature, congressional antislavery petitions, and primary legal archives from 1787 through 1865. If such arguments were made and rejected without formal adjudication, that rejection itself belongs in this documented record.
+
+RESEARCH NEEDED: The distinction between self-executing and non-self-executing treaties — which determines whether a treaty creates individually enforceable rights or only government-to-government obligations — was not formally established until Foster v. Neilson (1829). Whether the Morocco Treaty would have been classified as self-executing under that framework, and what that classification would have meant for its interaction with the slavery provisions of the Constitution, requires review of the Foster v. Neilson opinion and subsequent treaty jurisprudence. Source to review: Foster v. Neilson, 27 U.S. 253 (1829).
+
+16.4 Cross-Reference to the Documented Pattern
+
+SUPPORTED: The Morocco Treaty contradiction fits the consistent structural pattern documented throughout this research. Section 1.2 documents that 99.29% of the population had no voice in the founding framework. Section 4.1 documents that the Constitution’s monetary authority text was bypassed without amendment. Part XIV documents that the 13th Amendment’s prohibition on slavery was immediately undermined through the exception clause. This Part documents that a treaty carrying Supremacy Clause authority — signed by the same founders who wrote the slavery protections — coexisted with those protections without resolution. The pattern is the same: the written framework and the institutional practice operated in contradiction, and that contradiction was managed rather than resolved.
+
+NOTE ON METHODOLOGY: This section documents a historical and constitutional contradiction using primary source records. It does not assert that the Morocco Treaty creates individually enforceable rights in current U.S. courts — the self-executing treaty doctrine and subsequent case law make that a legally unsettled question requiring the research identified above. What it documents is that the contradiction existed, was never formally adjudicated, and fits the pattern this research has established across monetary authority, legislative authority, equal protection, and jury accountability.
+
 APPENDIX A: PRIMARY SOURCE REFERENCES
 
 
@@ -2153,6 +2187,12 @@ Added Section 10.11 — The Federal Farmer Letter III October 10 1787. Primary s
 April 2026
 
 Added Part XV — The Synthesis — From 1787 to April 2026. Five sections: 15.1 The Warning That Was On the Record — Brutus Federal Farmer Madison Hamilton all documented against their own words. 15.2 The Consistent Pattern — monetary authority legislative authority equal protection jury accountability each documented transfer without Article V amendment. 15.3 The April 2026 Chapter — Sotomayor April 9 Jackson April 13 Minnesota MAP Act April 13 Chevron ruling April 17 each documented with source and prediction connection. 15.4 Final Assessment — fifteen statements supported by primary source record each connected to cited section. 15.5 The Question Left With the Reader — whether the documented framework constitutes a system of law or a system of managed power that invokes law when it serves institutional purposes and bypasses it when it does not. Closing statement: That is where this document closes. The research continues. Version header updated to 24.0.
+
+25.0
+
+April 2026
+
+Added Part XVI — The Moroccan-American Treaty of 1786 and the Founding Contradiction on Slavery. Treaty ratification date July 18 1787 ESTABLISHED — Yale Avalon Project confirmed. Supremacy Clause text ESTABLISHED — Constitutional primary source confirmed. Treaty coexistence with slavery provisions of same-year Constitution ESTABLISHED. Jefferson as simultaneous treaty negotiator and enslaver ESTABLISHED from historical record. Morocco non-practice of race-based chattel slavery ESTABLISHED. Supremacy Clause tension with slavery provisions never formally adjudicated — SUPPORTED. Self-executing treaty doctrine (Foster v. Neilson 1829) identified as RESEARCH NEEDED for determining individual enforceability. Abolitionist use of Morocco Treaty as legal argument identified as RESEARCH NEEDED. Cross-reference to Section 1.2 consent gap, Part XIV 13th Amendment exception clause, and Part XV consistent pattern documented. Methodology note added distinguishing historical documentation from current enforceability claim. Version header updated to 25.0.
 
 
 
