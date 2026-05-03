@@ -99,10 +99,76 @@ async function fetchKnowledgeContext(
   }
 }
 
+// ─── Fetch subscriber language & jurisdiction preference ──────────────────────
+async function fetchUserLanguageProfile(
+  supabase: ReturnType<typeof createClient>,
+  userId: string | null
+): Promise<{ preferred_language: string; legal_jurisdiction: string }> {
+  const defaults = { preferred_language: 'en-US', legal_jurisdiction: 'US' }
+  if (!userId) return defaults
+  try {
+    const { data } = await supabase
+      .from('profiles')
+      .select('preferred_language, legal_jurisdiction')
+      .eq('id', userId)
+      .single()
+    return {
+      preferred_language: data?.preferred_language || 'en-US',
+      legal_jurisdiction: data?.legal_jurisdiction || 'US',
+    }
+  } catch {
+    return defaults
+  }
+}
+
+// ─── Build language instruction block ────────────────────────────────────────
+function buildLanguageBlock(preferred_language: string, legal_jurisdiction: string): string {
+  if (preferred_language === 'en-US' && legal_jurisdiction === 'US') return ''
+
+  const langMap: Record<string, string> = {
+    'es-US': 'Spanish (US subscriber — American law applies)',
+    'es-PA': 'Spanish (Panama jurisdiction)',
+    'zh-CN': 'Mandarin Chinese',
+    'zh-TW': 'Traditional Chinese',
+    'tl-US': 'Tagalog',
+    'vi-US': 'Vietnamese',
+    'ar-US': 'Arabic',
+    'fr-US': 'French',
+    'ko-US': 'Korean',
+    'ru-US': 'Russian',
+    'hi-US': 'Hindi',
+    'pt-US': 'Portuguese',
+  }
+
+  const langLabel = langMap[preferred_language] || preferred_language
+  const isUSJurisdiction = legal_jurisdiction === 'US'
+
+  return `
+
+SUBSCRIBER LANGUAGE & JURISDICTION (MANDATORY — READ BEFORE RESPONDING):
+  Preferred Language: ${langLabel}
+  Legal Jurisdiction: ${legal_jurisdiction}
+
+  LANGUAGE INSTRUCTIONS:
+  • Respond entirely in the subscriber's preferred language: ${langLabel}
+  • ALWAYS keep US legal citations in their original English form
+    (e.g., 15 U.S.C. § 1681, UCC 1-308, 42 U.S.C. § 1983)
+    These must stay in English to remain legally precise and court-admissible in America
+  • Explain what each citation means in the subscriber's language, but cite it in English
+  • If the subscriber writes in any language, respond in ${langLabel}
+  • Maintain R.O.M.A.N.'s full authority, character, and reasoning — just in their language
+  ${isUSJurisdiction
+    ? '• US jurisdiction confirmed — reference FCRA, FDCPA, UCC, and constitutional law as normal'
+    : `• Jurisdiction: ${legal_jurisdiction} — US law may not apply directly. Reference the equivalent local legal framework alongside US citations. Flag clearly where US law does not transfer to this jurisdiction.`}
+`
+}
+
 // ─── Build the full system context (trust from DB + static knowledge) ─────────
 async function buildSystemContext(
   supabase: ReturnType<typeof createClient>,
-  userMessage: string
+  userMessage: string,
+  preferred_language = 'en-US',
+  legal_jurisdiction = 'US'
 ): Promise<string> {
   const now = new Date()
   const currentDate = now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
@@ -257,14 +323,18 @@ async function fetchLiveDBContext(supabase: ReturnType<typeof createClient>, use
 // wrapper that builds context + appends knowledge base + live DB results
 async function buildFullPrompt(
   supabase: ReturnType<typeof createClient>,
-  userMessage: string
+  userMessage: string,
+  userId: string | null = null
 ): Promise<string> {
+  const { preferred_language, legal_jurisdiction } = await fetchUserLanguageProfile(supabase, userId)
+  const languageBlock = buildLanguageBlock(preferred_language, legal_jurisdiction)
+
   const [base, knowledge, liveDB] = await Promise.all([
-    buildSystemContext(supabase, userMessage),
+    buildSystemContext(supabase, userMessage, preferred_language, legal_jurisdiction),
     fetchKnowledgeContext(supabase, userMessage),
     fetchLiveDBContext(supabase, userMessage),
   ])
-  return base + knowledge + liveDB
+  return base + languageBlock + knowledge + liveDB
 }
 
 // ─── Main handler ─────────────────────────────────────────────────────────────
@@ -283,7 +353,7 @@ serve(async (req) => {
       })
     }
 
-    const { message, chatHistory = [] } = body
+    const { message, chatHistory = [], userId = null } = body
 
     const ANTHROPIC_API_KEY = Deno.env.get('ANTHROPIC_API_KEY')
     if (!ANTHROPIC_API_KEY) throw new Error('ANTHROPIC_API_KEY not configured')
@@ -293,7 +363,7 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     )
 
-    const systemPrompt = await buildFullPrompt(supabase, message)
+    const systemPrompt = await buildFullPrompt(supabase, message, userId)
 
     const messages = [
       ...chatHistory.map((msg: { type: string; message: string }) => ({

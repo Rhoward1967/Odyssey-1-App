@@ -52,7 +52,11 @@ export default function Profile() {
     
     // Additional
     companySize: '',
-    yearsInBusiness: ''
+    yearsInBusiness: '',
+
+    // Language & Jurisdiction
+    preferred_language: 'en-US',
+    legal_jurisdiction: 'US',
   });
 
   useEffect(() => {
@@ -88,7 +92,9 @@ export default function Profile() {
           billingEmail: profile.email || '',
           salesTaxExempt: false,
           companySize: '',
-          yearsInBusiness: ''
+          yearsInBusiness: '',
+          preferred_language: profile.preferred_language || 'en-US',
+          legal_jurisdiction: profile.legal_jurisdiction || 'US',
         });
       }
     }
@@ -116,6 +122,8 @@ export default function Profile() {
             full_name: formData.fullName,
             email: formData.email,
             company_name: formData.businessName,
+            preferred_language: formData.preferred_language,
+            legal_jurisdiction: formData.legal_jurisdiction,
             updated_at: new Date().toISOString()
           },
           {
@@ -479,6 +487,63 @@ export default function Profile() {
                       placeholder="5"
                       className="mt-1.5 h-10 sm:h-11 text-base"
                     />
+                  </div>
+                </div>
+              </div>
+
+              <Separator className="my-6" />
+
+              {/* Language & Jurisdiction */}
+              <div>
+                <h3 className="text-base sm:text-lg font-semibold mb-1">Language & Jurisdiction</h3>
+                <p className="text-sm text-muted-foreground mb-3 sm:mb-4">
+                  R.O.M.A.N. will respond in your chosen language. US legal citations always remain in English.
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                  <div>
+                    <Label htmlFor="preferred_language" className="text-sm sm:text-base">Preferred Language</Label>
+                    <Select
+                      value={formData.preferred_language}
+                      onValueChange={(value) => setFormData({ ...formData, preferred_language: value })}
+                    >
+                      <SelectTrigger className="mt-1.5 h-10 sm:h-11 text-base">
+                        <SelectValue placeholder="Select language" />
+                      </SelectTrigger>
+                      <SelectContent className="max-h-[300px]">
+                        <SelectItem value="en-US">English (Default)</SelectItem>
+                        <SelectItem value="es-US">Español — Spanish (US)</SelectItem>
+                        <SelectItem value="zh-CN">中文 — Mandarin (Simplified)</SelectItem>
+                        <SelectItem value="zh-TW">中文 — Traditional Chinese</SelectItem>
+                        <SelectItem value="tl-US">Filipino — Tagalog</SelectItem>
+                        <SelectItem value="vi-US">Tiếng Việt — Vietnamese</SelectItem>
+                        <SelectItem value="ar-US">العربية — Arabic</SelectItem>
+                        <SelectItem value="fr-US">Français — French</SelectItem>
+                        <SelectItem value="ko-US">한국어 — Korean</SelectItem>
+                        <SelectItem value="ru-US">Русский — Russian</SelectItem>
+                        <SelectItem value="hi-US">हिन्दी — Hindi</SelectItem>
+                        <SelectItem value="pt-US">Português — Portuguese</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label htmlFor="legal_jurisdiction" className="text-sm sm:text-base">Legal Jurisdiction</Label>
+                    <Select
+                      value={formData.legal_jurisdiction}
+                      onValueChange={(value) => setFormData({ ...formData, legal_jurisdiction: value })}
+                    >
+                      <SelectTrigger className="mt-1.5 h-10 sm:h-11 text-base">
+                        <SelectValue placeholder="Select jurisdiction" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="US">United States</SelectItem>
+                        <SelectItem value="PA">Panama</SelectItem>
+                        <SelectItem value="CA">Canada</SelectItem>
+                        <SelectItem value="UK">United Kingdom</SelectItem>
+                        <SelectItem value="AU">Australia</SelectItem>
+                        <SelectItem value="MX">Mexico</SelectItem>
+                        <SelectItem value="INT">International / Other</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
               </div>
