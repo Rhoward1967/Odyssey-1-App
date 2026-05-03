@@ -87,6 +87,7 @@ if (!SUPABASE_URL || !SUPABASE_KEY || SUPABASE_KEY.length < 100) {
 import { romanSupabase, romanSupabase as supabase } from './romanSupabase';
 import { romanSelfRepair } from './RomanSelfRepair';
 import { romanVoice } from './RomanVoice';
+import { startHealthScanner, isScannerRunning, getLastScanResult, formatScanReport } from './RomanHealthScanner';
 
 console.log('✅ Supabase client initialized with service role');
 
@@ -269,6 +270,7 @@ You have FULL ACCESS to read Master Architect Rickey Howard's seven-book series 
 - "fcra status" / "certified mail" = Quick status of all 17 certified mailings
 - "fcra check" / "run fcra" / "check deadlines" = Run full compliance check
 - "compliance status" / "check mailings" = View approaching deadlines and overdue items
+- "fire escalations" / "send escalations" = Auto-fire Lob escalation letters for all expired deadlines (Final Demand + $1,000 statutory damages)
 
 R.O.M.A.N. autonomously monitors 17 certified mail FCRA validation requests (15 USC §1692g).
 Daily checks run automatically. Critical alerts sent when deadlines approach or pass.
@@ -977,6 +979,24 @@ client.on('clientReady', async () => {
       console.error('❌ Self-repair activation failed:', err.message);
     }
 
+    // 🔬 PROACTIVE HEALTH SCANNER — real detection, every 10 minutes
+    try {
+      const alertChannelId = process.env.DISCORD_FCRA_ALERT_CHANNEL || process.env.DISCORD_STATUS_CHANNEL;
+      startHealthScanner(async (report, issues) => {
+        console.warn(`[HealthScanner] ${issues.length} issue(s) detected — alerting Discord`);
+        if (alertChannelId) {
+          try {
+            const ch = await client.channels.fetch(alertChannelId);
+            if (ch && 'isTextBased' in ch && ch.isTextBased()) {
+              await (ch as any).send(report);
+            }
+          } catch { /* non-fatal — don't let Discord failure suppress the console warn */ }
+        }
+      });
+    } catch (err: any) {
+      console.error('❌ Health scanner startup failed:', err.message);
+    }
+
     // 🎙️ WIRE VOICE TRANSCRIPTION → MESSAGE HANDLER
     romanVoice.setTranscriptionHandler(async (userId, guildId, text) => {
       // Find the guild and a suitable text channel to echo the transcription
@@ -1216,6 +1236,27 @@ async function handleDirectMessage(message: Message) {
       return;
     } catch (err: any) {
       await message.reply(`❌ FCRA check failed: ${err.message}`);
+      return;
+    }
+  }
+
+  if (content === 'fire escalations' || content === 'send escalations' || content === 'fire defaults') {
+    await message.reply('⚖️ **R.O.M.A.N. — Scanning for expired deadlines to escalate...**');
+    try {
+      const result = await romanFCRAMonitor.autoFireEscalationNotices();
+      if (result.fired === 0 && result.skipped === 0 && result.errors.length === 0) {
+        await message.reply('✅ No entities qualify for escalation right now — all deadlines are pending or responses received.');
+      } else {
+        const lines = [`⚖️ **Escalation Run Complete**`,
+          `✅ Letters fired: **${result.fired}**`,
+          `⏭️ Skipped (no address): **${result.skipped}**`,
+        ];
+        if (result.errors.length > 0) lines.push(`❌ Errors: ${result.errors.join(' | ')}`);
+        await message.reply(lines.join('\n'));
+      }
+      return;
+    } catch (err: any) {
+      await message.reply(`❌ Escalation failed: ${err.message}`);
       return;
     }
   }
@@ -2028,6 +2069,29 @@ async function handleDirectMessage(message: Message) {
     }
   }
   
+  // Real-time health scan command
+  if (content.includes('scan health') || content.includes('health scan') || content.includes('run scan')) {
+    await message.reply('🔬 Running proactive health scan across all systems...');
+    try {
+      const { runHealthScan, formatScanReport: fmt } = await import('./RomanHealthScanner');
+      const result = await runHealthScan();
+      await message.reply(fmt(result));
+    } catch (err: any) {
+      await message.reply(`❌ Health scan failed: ${err.message}`);
+    }
+    return;
+  }
+
+  if (content.includes('scanner status') || content.includes('is scanner running')) {
+    const running = isScannerRunning();
+    const last = getLastScanResult();
+    const lastInfo = last
+      ? `\nLast scan: \`${last.timestamp}\` — ${last.issues.length} issues on branch \`${last.branch}\``
+      : '\nNo scan has run yet this session.';
+    await message.reply(`🔬 Health scanner: **${running ? 'ONLINE' : 'OFFLINE'}**${lastInfo}`);
+    return;
+  }
+
   if (content.includes('system health') || content.includes('health check') || content.includes('status report')) {
     await message.reply('🏥 Checking system health...');
     try {

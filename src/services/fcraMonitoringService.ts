@@ -15,11 +15,12 @@ import { differenceInDays, format } from 'date-fns';
 interface TrackingRecord {
   id: string;
   entity_name: string;
+  entity_type?: string | null;
   tracking_number: string;
-  date_mailed: string;        // actual DB column (was: mail_date)
-  fcra_deadline: string;      // confirmed present in live DB
-  status: string;             // actual DB column: 'sent' | 'delivered' | 'responded'
-  response_received: boolean; // not in live DB yet — treated as falsy until added
+  date_mailed: string;
+  fcra_deadline: string;
+  status: string;
+  response_received: boolean;
   notes: string | null;
 }
 
@@ -92,7 +93,8 @@ export class FCRAMonitoringService {
       summary += `⚠️ DEADLINES APPROACHING (≤7 days):\n`;
       approaching_deadline.forEach(r => {
         const daysLeft = differenceInDays(new Date(r.fcra_deadline), now);
-        summary += `  • ${r.entity_name} (${r.entity_type}): ${daysLeft} days remaining\n`;
+        const typeLabel = r.entity_type ? ` (${r.entity_type})` : '';
+        summary += `  • ${r.entity_name}${typeLabel}: ${daysLeft} days remaining\n`;
       });
       summary += `\n`;
     }
@@ -101,7 +103,8 @@ export class FCRAMonitoringService {
       summary += `🔴 NON-RESPONSIVE (Past Deadline):\n`;
       overdue.forEach(r => {
         const daysOverdue = Math.abs(differenceInDays(new Date(r.fcra_deadline), now));
-        summary += `  • ${r.entity_name} (${r.entity_type}): ${daysOverdue} days overdue\n`;
+        const typeLabel = r.entity_type ? ` (${r.entity_type})` : '';
+        summary += `  • ${r.entity_name}${typeLabel}: ${daysOverdue} days overdue\n`;
       });
       summary += `\n`;
     }
