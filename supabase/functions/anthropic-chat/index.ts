@@ -303,12 +303,13 @@ async function fetchLiveDBContext(supabase: ReturnType<typeof createClient>, use
       // books — all 8 sovereign books
       supabase.from('books').select('book_number, title, status, subtitle').order('book_number'),
       // certified_mail_tracking — only when the user is asking about mail / FCRA / a creditor
+      // Schema: entity_name, tracking_number, date_mailed, date_delivered, fcra_deadline, status, notes
       mailRelevant
         ? supabase
             .from('certified_mail_tracking')
-            .select('entity_name, tracking_number, date_mailed, actual_delivery, return_receipt_received, return_receipt_date, response_deadline, response_received, response_type, response_date, legal_action_required, notes')
+            .select('entity_name, tracking_number, date_mailed, date_delivered, fcra_deadline, status, notes')
             .order('date_mailed', { ascending: false })
-            .limit(25)
+            .limit(40)
         : Promise.resolve({ data: null }),
     ])
 
@@ -332,23 +333,23 @@ async function fetchLiveDBContext(supabase: ReturnType<typeof createClient>, use
     if (mailRows?.length) {
       const today = new Date().toISOString().split('T')[0]
       const lines = (mailRows as any[]).map(r => {
-        const overdue = r.response_deadline && r.response_deadline < today && !r.response_received
-        let status: string
-        if (r.response_received) {
-          status = `RESPONDED (${r.response_type || 'unspecified'})${r.response_date ? ' on ' + r.response_date : ''}`
-        } else if (overdue) {
-          const daysOver = Math.floor((Date.now() - new Date(r.response_deadline).getTime()) / 86400000)
-          status = `IN DEFAULT — deadline ${r.response_deadline} passed ${daysOver} days ago`
-        } else if (r.return_receipt_received) {
-          status = `DELIVERED${r.return_receipt_date ? ' ' + r.return_receipt_date : ''} — awaiting response by ${r.response_deadline}`
-        } else if (r.actual_delivery) {
-          status = `DELIVERED ${r.actual_delivery} — green card pending — deadline ${r.response_deadline}`
+        const isDelivered = r.status === 'delivered' || !!r.date_delivered
+        const inDefault = isDelivered && r.fcra_deadline && r.fcra_deadline < today
+        let stateLabel: string
+        if (r.status === 'cancelled') {
+          stateLabel = `CANCELLED (mailing was voided)`
+        } else if (inDefault) {
+          const daysOver = Math.floor((Date.now() - new Date(r.fcra_deadline).getTime()) / 86400000)
+          stateLabel = `IN DEFAULT — delivered ${r.date_delivered || '(date unknown)'} | FCRA deadline ${r.fcra_deadline} passed ${daysOver} days ago | NO RESPONSE`
+        } else if (isDelivered) {
+          stateLabel = `DELIVERED ${r.date_delivered || ''} — awaiting response by FCRA deadline ${r.fcra_deadline}`
         } else {
-          status = `IN TRANSIT — mailed ${r.date_mailed} — deadline ${r.response_deadline}`
+          stateLabel = `IN TRANSIT — mailed ${r.date_mailed} | FCRA deadline ${r.fcra_deadline || 'TBD'}`
         }
-        return `  ${r.entity_name} | Tracking: ${r.tracking_number} | ${status}${r.legal_action_required ? ' | LEGAL ACTION REQUIRED' : ''}`
+        const noteSnippet = r.notes ? ` | Notes: ${String(r.notes).slice(0, 200)}` : ''
+        return `  ${r.entity_name} | Tracking: ${r.tracking_number} | ${stateLabel}${noteSnippet}`
       })
-      parts.push('CERTIFIED MAIL CAMPAIGN — LIVE STATUS (these are real letters already sent and tracked; treat as ground truth):\n' + lines.join('\n'))
+      parts.push('CERTIFIED MAIL CAMPAIGN — LIVE STATUS (these are real letters already sent and tracked in the database; treat as ground truth, not the synced legal docs):\n' + lines.join('\n'))
     }
 
     return parts.length ? '\n\nLIVE DATABASE CONTEXT:\n' + parts.join('\n\n') : ''
