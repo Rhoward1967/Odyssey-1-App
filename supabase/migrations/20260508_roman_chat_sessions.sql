@@ -103,15 +103,15 @@ DROP POLICY IF EXISTS "rchat_sessions_user_owns" ON public.roman_chat_sessions;
 CREATE POLICY "rchat_sessions_user_owns"
   ON public.roman_chat_sessions
   FOR ALL
-  USING     (user_id = auth.uid())
-  WITH CHECK (user_id = auth.uid());
+  USING     (user_id = (SELECT auth.uid()))
+  WITH CHECK (user_id = (SELECT auth.uid()));
 
 DROP POLICY IF EXISTS "rchat_messages_user_owns" ON public.roman_chat_messages;
 CREATE POLICY "rchat_messages_user_owns"
   ON public.roman_chat_messages
   FOR ALL
-  USING     (user_id = auth.uid())
-  WITH CHECK (user_id = auth.uid());
+  USING     (user_id = (SELECT auth.uid()))
+  WITH CHECK (user_id = (SELECT auth.uid()));
 
 COMMENT ON TABLE public.roman_chat_sessions IS 'R.O.M.A.N. persistent chat sessions — Howard Jones Bloodline Ancestral Trust';
 COMMENT ON TABLE public.roman_chat_messages IS 'R.O.M.A.N. chat message history with full-text search';
