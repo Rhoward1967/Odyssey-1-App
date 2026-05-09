@@ -285,29 +285,12 @@ export default function MediaCenter() {
     // Other features: retain placeholder for now
 
     const messages: Record<string, string> = {
-
-      'games': 'ðŸŽ® Educational Games\n\nInteractive learning:\nâ€¢ Math challenges\nâ€¢ Science simulations\nâ€¢ Language practice\nâ€¢ History adventures',
-
-      'tutor': 'ðŸ'¨â€ðŸ« Live Tutoring\n\nFeatures:\nâ€¢ Certified tutors\nâ€¢ 1-on-1 sessions\nâ€¢ Screen sharing\nâ€¢ Recording for review',
-
-      'caselaw': 'âš–ï¸ Case Law Search\n\nSearch across:\nâ€¢ Federal court decisions\nâ€¢ State court databases\nâ€¢ Supreme Court cases\nâ€¢ Legal citations',
-
-      'docreview': 'ðŸ"„ Legal Document Review\n\nAI analysis:\nâ€¢ Contract clause extraction\nâ€¢ Risk identification\nâ€¢ Precedent matching\nâ€¢ Brief summarization',
-
-      'legalresearch': 'ðŸ"š Legal Research\n\nAccess to:\nâ€¢ Westlaw integration\nâ€¢ LexisNexis search\nâ€¢ Public records\nâ€¢ Statute databases',
-
-      'pubmed': 'ðŸ"¬ PubMed Search\n\nSearch:\nâ€¢ 35M+ citations\nâ€¢ Full-text articles\nâ€¢ Clinical studies\nâ€¢ Medical journals',
-
-      'trials': 'ðŸ§¬ Clinical Trials\n\nExplore:\nâ€¢ Active trials\nâ€¢ Research studies\nâ€¢ Patient recruitment\nâ€¢ Trial results',
-
-      'network': 'ðŸ'¥ Medical Peer Network\n\nConnect with:\nâ€¢ Specialists worldwide\nâ€¢ Research collaborators\nâ€¢ Clinical teams\nâ€¢ Academic institutions',
-
-      'studygroups': 'ðŸ'¥ Study Groups\n\nFeatures:\nâ€¢ Find study partners\nâ€¢ Schedule sessions\nâ€¢ Share resources\nâ€¢ Collaborative notes',
-
-      'papers': 'ðŸ"– Research Papers\n\nAccess:\nâ€¢ Google Scholar\nâ€¢ JSTOR articles\nâ€¢ IEEE Xplore\nâ€¢ arXiv preprints',
-
-      'career': 'ðŸŽ¯ Career Prep\n\nTools:\nâ€¢ Resume builder\nâ€¢ Interview practice\nâ€¢ Job board\nâ€¢ Networking tips'
-
+      'pubmed': 'PubMed Search: 35M+ citations, full-text articles, clinical studies and medical journals.',
+      'trials': 'Clinical Trials: Active trials, research studies, patient recruitment and trial results.',
+      'network': 'Medical Peer Network: Connect with specialists, research collaborators and clinical teams.',
+      'studygroups': 'Study Groups: Find study partners, schedule sessions and share resources.',
+      'papers': 'Research Papers: Google Scholar, JSTOR, IEEE Xplore and arXiv preprints.',
+      'career': 'Career Prep: Resume builder, interview practice, job board and networking tips.',
     };
 
     window.alert(messages[feature] || 'Feature coming soon!');
