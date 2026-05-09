@@ -27,13 +27,16 @@ async function fetchKnowledgeContext(
   userMessage: string
 ): Promise<string> {
   try {
-    // Always-include files: V24 legal doc + books core + sovereign induction
+    // Always-include files: latest legal doc + books core + sovereign induction
+    // + active BofA civil filing so R.O.M.A.N. knows the case is real and pending
     const ALWAYS_INCLUDE = [
-      'legal/Judgement_of_No_Legal_Accountability_v24-1.md',
+      'legal/Judgement_of_No_Legal_Accountability_v28-3.md',
       'SOVEREIGN_INDUCTION_PROTOCOL.md',
       'AI_READ_THIS_FIRST.txt',
-      'D-DRIVE/Banking_Research_v5.docx',
+      'legal/Banking_Research_v38.md',
       'src/services/lobService.ts',
+      'legal/CLARKE_COUNTY_CIVIL_FILING_PACKAGE_BOFA_63010066944180.md',
+      'legal/BOFA_COMPLAINT_PORTAL_READY.md',
     ]
 
     // Pull always-include files
@@ -280,12 +283,17 @@ YOU ARE R.O.M.A.N. — autonomous, constitutional, and fully operational.
 ═══════════════════════════════════════════════════════════════`
 }
 
-// ─── Live DB context: system_knowledge + governance_changes + books ──────────
+// ─── Live DB context: system_knowledge + governance_changes + books + mail ───
 async function fetchLiveDBContext(supabase: ReturnType<typeof createClient>, userMessage: string): Promise<string> {
   try {
     const keywords = userMessage.toLowerCase().replace(/[^a-z0-9 ]/g, '').split(' ').filter((w: string) => w.length > 3).slice(0, 3)
 
-    const [{ data: skRows }, { data: govRows }, { data: bookRows }] = await Promise.all([
+    // Detect topics that should pull live certified-mail tracking data into context.
+    // Without this, R.O.M.A.N. only sees the lobService.ts source code and has no
+    // awareness of which letters were actually sent or which deadlines passed.
+    const mailRelevant = /\b(certified mail|fcra|green card|response deadline|in default|mailed|tracking|return receipt|notice of fault|dispute|creditor|bofa|bank of america|capital one|citi|amex|american express|chase|jpmorgan|equifax|transunion|experian|synchrony|peach state|scj|fundbox|intuit|dun)\b/i.test(userMessage)
+
+    const [{ data: skRows }, { data: govRows }, { data: bookRows }, { data: mailRows }] = await Promise.all([
       // system_knowledge — learned/stored knowledge matching query keywords
       keywords.length > 0
         ? supabase.from('system_knowledge').select('category, knowledge_key, value').or(keywords.map((k: string) => `knowledge_key.ilike.%${k}%`).join(',')).limit(8)
@@ -294,6 +302,14 @@ async function fetchLiveDBContext(supabase: ReturnType<typeof createClient>, use
       supabase.from('governance_changes').select('actor, action, reason, occurred_at').order('occurred_at', { ascending: false }).limit(5),
       // books — all 8 sovereign books
       supabase.from('books').select('book_number, title, status, subtitle').order('book_number'),
+      // certified_mail_tracking — only when the user is asking about mail / FCRA / a creditor
+      mailRelevant
+        ? supabase
+            .from('certified_mail_tracking')
+            .select('entity_name, tracking_number, date_mailed, actual_delivery, return_receipt_received, return_receipt_date, response_deadline, response_received, response_type, response_date, legal_action_required, notes')
+            .order('date_mailed', { ascending: false })
+            .limit(25)
+        : Promise.resolve({ data: null }),
     ])
 
     const parts: string[] = []
@@ -311,6 +327,28 @@ async function fetchLiveDBContext(supabase: ReturnType<typeof createClient>, use
     if (bookRows?.length) {
       parts.push('SOVEREIGN SELF SERIES (8 Books — Author\'s Eyes Only):\n' +
         bookRows.map((r: any) => `  Book ${r.book_number}: ${r.title}${r.subtitle ? ' — ' + r.subtitle : ''} [${r.status}]`).join('\n'))
+    }
+
+    if (mailRows?.length) {
+      const today = new Date().toISOString().split('T')[0]
+      const lines = (mailRows as any[]).map(r => {
+        const overdue = r.response_deadline && r.response_deadline < today && !r.response_received
+        let status: string
+        if (r.response_received) {
+          status = `RESPONDED (${r.response_type || 'unspecified'})${r.response_date ? ' on ' + r.response_date : ''}`
+        } else if (overdue) {
+          const daysOver = Math.floor((Date.now() - new Date(r.response_deadline).getTime()) / 86400000)
+          status = `IN DEFAULT — deadline ${r.response_deadline} passed ${daysOver} days ago`
+        } else if (r.return_receipt_received) {
+          status = `DELIVERED${r.return_receipt_date ? ' ' + r.return_receipt_date : ''} — awaiting response by ${r.response_deadline}`
+        } else if (r.actual_delivery) {
+          status = `DELIVERED ${r.actual_delivery} — green card pending — deadline ${r.response_deadline}`
+        } else {
+          status = `IN TRANSIT — mailed ${r.date_mailed} — deadline ${r.response_deadline}`
+        }
+        return `  ${r.entity_name} | Tracking: ${r.tracking_number} | ${status}${r.legal_action_required ? ' | LEGAL ACTION REQUIRED' : ''}`
+      })
+      parts.push('CERTIFIED MAIL CAMPAIGN — LIVE STATUS (these are real letters already sent and tracked; treat as ground truth):\n' + lines.join('\n'))
     }
 
     return parts.length ? '\n\nLIVE DATABASE CONTEXT:\n' + parts.join('\n\n') : ''

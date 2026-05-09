@@ -93,6 +93,13 @@ const KNOWLEDGE_FILES: string[] = [
   // === SOVEREIGN FACTS INDEX — ALWAYS FIRST ===
   'legal/SOVEREIGN_FACTS_INDEX.md',
   'legal/Judgement_of_No_Legal_Accountability_v24-1.md',  // Living document — 1787–2026 pattern analysis, legal drafting reference
+  'legal/Judgement_of_No_Legal_Accountability_v25.md',
+  'legal/Judgement_of_No_Legal_Accountability_v27.md',
+  'legal/Judgement_of_No_Legal_Accountability_v28-3.md',  // Latest revision — pinned in anthropic-chat ALWAYS_INCLUDE
+
+  // === ACTIVE BOFA CIVIL FILING (May 2026) ===
+  'legal/CLARKE_COUNTY_CIVIL_FILING_PACKAGE_BOFA_63010066944180.md',
+  'legal/BOFA_COMPLAINT_PORTAL_READY.md',
 
   // === BANKING RESEARCH SERIES (v5–v38) ===
   'legal/Banking_Research_v5.md',
