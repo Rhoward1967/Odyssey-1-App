@@ -6,6 +6,9 @@ import K12HomeworkHelper from '../components/K12HomeworkHelper';
 import K12EducationalGames from '../components/K12EducationalGames';
 import K12LiveTutoring from '../components/K12LiveTutoring';
 import K12StudyAssistant from '../components/K12StudyAssistant';
+import LegalScenarioAnalyzer from '../components/LegalScenarioAnalyzer';
+import LegalCounterCanon from '../components/LegalCounterCanon';
+import LegalLetterGenerator from '../components/LegalLetterGenerator';
 
 // Legacy placeholder imports (retained for reference)
 
@@ -73,8 +76,7 @@ export default function MediaCenter() {
   const [showAcademicSearchModal, setShowAcademicSearchModal] = useState(false);
 
   const [showDocumentReviewModal, setShowDocumentReviewModal] = useState(false);
-
-
+  const [legalFeature, setLegalFeature] = useState<'none' | 'scenario' | 'countercanon' | 'letters'>('none');
 
   // Attach stream to video element when stream changes
 
@@ -581,53 +583,51 @@ export default function MediaCenter() {
             {/* Legal Features */}
 
             {userType === 'legal' && (
+              legalFeature === 'none' ? (
+                <>
+                  <Card className="bg-green-900/30 border border-green-700/50">
+                    <CardContent className="p-4">
+                      <h4 className="text-white font-semibold mb-1">Scenario Analyzer</h4>
+                      <p className="text-sm text-gray-400 mb-3">Describe your situation — routes to the right Sovereign Toolkit with immediate action steps and standing assertions</p>
+                      <Button size="sm" className="w-full bg-green-600 hover:bg-green-700" onClick={() => setLegalFeature('scenario')}>Analyze My Situation</Button>
+                    </CardContent>
+                  </Card>
 
-              <>
+                  <Card className="bg-green-900/30 border border-green-700/50">
+                    <CardContent className="p-4">
+                      <h4 className="text-white font-semibold mb-1">Counter-Canon</h4>
+                      <p className="text-sm text-gray-400 mb-3">Look up any legal term — 7-part counter-definition: dominant use, embedded assumption, counter-definition, authority, application, truth, strategy</p>
+                      <Button size="sm" className="w-full bg-green-600 hover:bg-green-700" onClick={() => setLegalFeature('countercanon')}>Open Counter-Canon</Button>
+                    </CardContent>
+                  </Card>
 
-                <Card className="bg-green-900/30">
+                  <Card className="bg-green-900/30 border border-green-700/50">
+                    <CardContent className="p-4">
+                      <h4 className="text-white font-semibold mb-1">Letter Generator</h4>
+                      <p className="text-sm text-gray-400 mb-3">Court-ready letters: Debt Validation (§1692g), Credit Dispute (§1681), Cease &amp; Desist, Settlement Offer</p>
+                      <Button size="sm" className="w-full bg-green-600 hover:bg-green-700" onClick={() => setLegalFeature('letters')}>Generate Letter</Button>
+                    </CardContent>
+                  </Card>
 
-                  <CardContent className="p-4">
-
-                    <h4 className="text-white font-semibold mb-2">âš–ï¸ Case Law Search</h4>
-
-                    <p className="text-sm text-gray-400 mb-3">Search federal and state case databases</p>
-
-                    <Button size="sm" className="w-full bg-green-600 hover:bg-green-700" onClick={() => handleFeatureClick('caselaw')}>Search Cases</Button>
-
-                  </CardContent>
-
-                </Card>
-
-                <Card className="bg-green-900/30">
-
-                  <CardContent className="p-4">
-
-                    <h4 className="text-white font-semibold mb-2">ðŸ"„ Document Review</h4>
-
-                    <p className="text-sm text-gray-400 mb-3">AI-powered contract and brief analysis</p>
-
-                    <Button size="sm" className="w-full bg-green-600 hover:bg-green-700" onClick={() => handleReviewDocs()}>Upload Doc</Button>
-
-                  </CardContent>
-
-                </Card>
-
-                <Card className="bg-green-900/30">
-
-                  <CardContent className="p-4">
-
-                    <h4 className="text-white font-semibold mb-2">ðŸ"š Legal Research</h4>
-
-                    <p className="text-sm text-gray-400 mb-3">Westlaw, LexisNexis, and public records</p>
-
-                    <Button size="sm" className="w-full bg-green-600 hover:bg-green-700" onClick={() => handleFeatureClick('legalresearch')}>Start Research</Button>
-
-                  </CardContent>
-
-                </Card>
-
-              </>
-
+                  <Card className="col-span-3 bg-slate-800/60 border border-slate-600 mt-1">
+                    <CardContent className="p-4 flex items-center justify-between">
+                      <div>
+                        <h4 className="text-white font-semibold">Full Legal Defense Suite</h4>
+                        <p className="text-sm text-gray-400">FDCPA/FCRA account tracking, debt analysis, USPS certified mail, settlement calculator, Badge of Slavery diagnostic — all 6 defense layers</p>
+                      </div>
+                      <a href="/app/legal-defense" className="shrink-0 ml-4">
+                        <Button size="sm" className="bg-emerald-700 hover:bg-emerald-600 whitespace-nowrap">Open Full Suite</Button>
+                      </a>
+                    </CardContent>
+                  </Card>
+                </>
+              ) : legalFeature === 'scenario' ? (
+                <LegalScenarioAnalyzer onBack={() => setLegalFeature('none')} />
+              ) : legalFeature === 'countercanon' ? (
+                <LegalCounterCanon onBack={() => setLegalFeature('none')} />
+              ) : (
+                <LegalLetterGenerator onBack={() => setLegalFeature('none')} />
+              )
             )}
 
 
