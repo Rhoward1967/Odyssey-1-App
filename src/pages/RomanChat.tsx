@@ -59,6 +59,7 @@ export default function RomanChat() {
     createSession,
     switchSession,
     saveMessage,
+    deleteSession,
   } = useRomanSessions();
 
   // Scroll to bottom on new message
@@ -66,15 +67,11 @@ export default function RomanChat() {
     chatBottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // On mount: create a fresh session and show greeting
+  // On mount: show greeting in UI only — no DB session yet.
+  // The session is created lazily when the user sends their first message,
+  // so opening the chat without typing doesn't pollute the sidebar.
   useEffect(() => {
-    let cancelled = false;
-    createSession().then(sessionId => {
-      if (cancelled || !sessionId) return;
-      addMessage('roman', GREETING);
-      saveMessage(sessionId, 'roman', GREETING);
-    });
-    return () => { cancelled = true; };
+    addMessage('roman', GREETING);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // When the user switches to an existing session: load its messages into UI
@@ -166,8 +163,20 @@ export default function RomanChat() {
     if (!text.trim() || voiceState === 'thinking') return;
     setError(null);
 
+    // Lazily create the DB session on first user message,
+    // and backfill the greeting that's already on screen.
+    let activeSessionId = currentSessionId;
+    if (!activeSessionId) {
+      activeSessionId = await createSession();
+      if (!activeSessionId) {
+        setError('Could not start a conversation. Please try again.');
+        return;
+      }
+      saveMessage(activeSessionId, 'roman', GREETING);
+    }
+
     addMessage('user', text);
-    if (currentSessionId) saveMessage(currentSessionId, 'user', text);
+    saveMessage(activeSessionId, 'user', text);
     chatHistoryRef.current = [...chatHistoryRef.current, { type: 'user', message: text }];
     setInput('');
     setVoiceState('thinking');
@@ -194,7 +203,7 @@ export default function RomanChat() {
       const response: string = payload?.response ?? 'The audit trail returned no response.';
 
       addMessage('roman', response);
-      if (currentSessionId) saveMessage(currentSessionId, 'roman', response);
+      saveMessage(activeSessionId, 'roman', response);
       chatHistoryRef.current = [...chatHistoryRef.current, { type: 'assistant', message: response }];
 
       if (voiceEnabled) {
@@ -206,7 +215,7 @@ export default function RomanChat() {
       setError(`Connection interrupted: ${err.message}`);
       setVoiceState('idle');
     }
-  }, [voiceState, voiceEnabled, currentSessionId, saveMessage, speakResponse]);
+  }, [voiceState, voiceEnabled, currentSessionId, createSession, saveMessage, speakResponse]);
 
   // ─── Sidebar: switch to an existing session ──────────────────────────────────
   const handleSelectSession = useCallback(async (sessionId: string) => {
@@ -225,6 +234,22 @@ export default function RomanChat() {
     addMessage('roman', GREETING);
     saveMessage(sessionId, 'roman', GREETING);
   }, [createSession, saveMessage]);
+
+  // ─── Sidebar: delete a session ───────────────────────────────────────────────
+  const handleDeleteSession = useCallback(async (sessionId: string) => {
+    const wasActive = sessionId === currentSessionId;
+    const ok = await deleteSession(sessionId);
+    if (!ok) return;
+    if (wasActive) {
+      // Active conversation was deleted — start a fresh one with the greeting.
+      const newId = await createSession();
+      if (!newId) return;
+      setMessages([]);
+      chatHistoryRef.current = [];
+      addMessage('roman', GREETING);
+      saveMessage(newId, 'roman', GREETING);
+    }
+  }, [currentSessionId, deleteSession, createSession, saveMessage]);
 
   // ─── Mic / Speech Recognition ────────────────────────────────────────────────
   function startListening() {
@@ -303,6 +328,7 @@ export default function RomanChat() {
         onSearchChange={setSearchQuery}
         onNewChat={handleNewChat}
         onSelectSession={handleSelectSession}
+        onDeleteSession={handleDeleteSession}
         open={sidebarOpen}
         onToggle={() => setSidebarOpen(o => !o)}
       />

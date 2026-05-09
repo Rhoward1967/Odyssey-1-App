@@ -104,6 +104,22 @@ export function useRomanSessions() {
     setTimeout(() => loadSessions(searchQuery), 600);
   }, [searchQuery, loadSessions]);
 
+  const deleteSession = useCallback(async (sessionId: string): Promise<boolean> => {
+    const { error } = await supabase
+      .from('roman_chat_sessions')
+      .delete()
+      .eq('id', sessionId);
+    if (error) return false;
+
+    const wasActive = sessionId === currentSessionId;
+    if (wasActive) {
+      setCurrentSessionId(null);
+      setSessionMessages([]);
+    }
+    await loadSessions(searchQuery);
+    return true;
+  }, [currentSessionId, searchQuery, loadSessions]);
+
   return {
     sessions,
     currentSessionId,
@@ -115,5 +131,6 @@ export function useRomanSessions() {
     createSession,
     switchSession,
     saveMessage,
+    deleteSession,
   };
 }

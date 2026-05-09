@@ -1,4 +1,4 @@
-import { MessageSquare, PlusCircle, Search, ChevronLeft, ChevronRight } from 'lucide-react';
+import { MessageSquare, PlusCircle, Search, ChevronLeft, ChevronRight, Trash2 } from 'lucide-react';
 import type { ChatSession } from '@/hooks/useRomanSessions';
 
 interface Props {
@@ -8,6 +8,7 @@ interface Props {
   onSearchChange:   (q: string) => void;
   onNewChat:        () => void;
   onSelectSession:  (id: string) => void;
+  onDeleteSession:  (id: string) => void;
   open:             boolean;
   onToggle:         () => void;
 }
@@ -30,6 +31,7 @@ export default function SovereignSidebar({
   onSearchChange,
   onNewChat,
   onSelectSession,
+  onDeleteSession,
   open,
   onToggle,
 }: Props) {
@@ -96,31 +98,47 @@ export default function SovereignSidebar({
         {sessions.map(session => {
           const active = session.id === currentSessionId;
           return (
-            <button
+            <div
               key={session.id}
-              onClick={() => onSelectSession(session.id)}
-              className={`w-full text-left px-3 py-2.5 transition-colors group ${
+              className={`relative group transition-colors ${
                 active
                   ? 'bg-slate-800 border-l-2 border-blue-500'
                   : 'hover:bg-slate-800/60'
               }`}
             >
-              <div className="flex items-start gap-2">
-                <MessageSquare className={`w-3.5 h-3.5 mt-0.5 shrink-0 transition-colors ${
-                  active ? 'text-blue-400' : 'text-gray-600 group-hover:text-gray-400'
-                }`} />
-                <div className="min-w-0 flex-1">
-                  <p className={`text-xs truncate leading-snug ${
-                    active ? 'text-white' : 'text-gray-400 group-hover:text-gray-200'
-                  }`}>
-                    {session.title}
-                  </p>
-                  <p className="text-xs text-gray-600 mt-0.5">
-                    {relativeDate(session.updated_at)}
-                  </p>
+              <button
+                onClick={() => onSelectSession(session.id)}
+                className="w-full text-left px-3 py-2.5 pr-9"
+              >
+                <div className="flex items-start gap-2">
+                  <MessageSquare className={`w-3.5 h-3.5 mt-0.5 shrink-0 transition-colors ${
+                    active ? 'text-blue-400' : 'text-gray-600 group-hover:text-gray-400'
+                  }`} />
+                  <div className="min-w-0 flex-1">
+                    <p className={`text-xs truncate leading-snug ${
+                      active ? 'text-white' : 'text-gray-400 group-hover:text-gray-200'
+                    }`}>
+                      {session.title}
+                    </p>
+                    <p className="text-xs text-gray-600 mt-0.5">
+                      {relativeDate(session.updated_at)}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </button>
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (window.confirm(`Delete "${session.title}"?\n\nThis cannot be undone.`)) {
+                    onDeleteSession(session.id);
+                  }
+                }}
+                title="Delete conversation"
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded opacity-50 group-hover:opacity-100 hover:bg-slate-700 text-gray-500 hover:text-red-400 transition-all"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+              </button>
+            </div>
           );
         })}
       </div>
