@@ -51,6 +51,8 @@ BEGIN
 END;
 $func$;
 
+REVOKE EXECUTE ON FUNCTION public.fn_rchat_update_session() FROM PUBLIC;
+
 DROP TRIGGER IF EXISTS tr_rchat_update_session ON public.roman_chat_messages;
 CREATE TRIGGER tr_rchat_update_session
   AFTER INSERT ON public.roman_chat_messages
@@ -73,6 +75,8 @@ BEGIN
   RETURN NEW;
 END;
 $func$;
+
+REVOKE EXECUTE ON FUNCTION public.fn_rchat_set_title() FROM PUBLIC;
 
 DROP TRIGGER IF EXISTS tr_rchat_set_title ON public.roman_chat_messages;
 CREATE TRIGGER tr_rchat_set_title
