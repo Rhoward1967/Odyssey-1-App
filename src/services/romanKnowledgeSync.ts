@@ -1,3 +1,6 @@
+/// <reference types="node" />
+import process from 'process';
+
 /**
  * R.O.M.A.N. AUTONOMOUS KNOWLEDGE SYNC
  * ======================================
@@ -590,10 +593,30 @@ async function syncFile(
  */
 async function syncGitContext(): Promise<void> {
   try {
-    const branch  = execSync('git rev-parse --abbrev-ref HEAD', { encoding: 'utf-8' }).trim();
-    const log     = execSync('git log --oneline -20', { encoding: 'utf-8' }).trim();
-    const status  = execSync('git status --short', { encoding: 'utf-8' }).trim();
-    const lastDate = execSync('git log -1 --format=%ci', { encoding: 'utf-8' }).trim();
+    let branch: string;
+    let log: string;
+    let status: string;
+    let lastDate: string;
+
+    // Detect at runtime whether we have a working git tree.
+    // Railway builds from a Docker image — no .git dir, no git binary —
+    // so we read Railway-injected env vars instead of shelling out.
+    const hasGitWorktree = existsSync(join(ROOT, '.git'));
+
+    if (!hasGitWorktree) {
+      branch       = process.env.RAILWAY_GIT_BRANCH         || 'unknown';
+      const sha    = process.env.RAILWAY_GIT_COMMIT_SHA     || 'unknown';
+      const msg    = process.env.RAILWAY_GIT_COMMIT_MESSAGE || '(no message)';
+      const author = process.env.RAILWAY_GIT_AUTHOR         || 'unknown';
+      lastDate     = `${sha.slice(0, 7)} — ${msg} (${author})`;
+      log          = `${sha.slice(0, 7)} ${msg}`;
+      status       = 'N/A — running from a built image (no working tree)';
+    } else {
+      branch   = execSync('git rev-parse --abbrev-ref HEAD', { encoding: 'utf-8' }).trim();
+      log      = execSync('git log --oneline -20',          { encoding: 'utf-8' }).trim();
+      status   = execSync('git status --short',             { encoding: 'utf-8' }).trim();
+      lastDate = execSync('git log -1 --format=%ci',        { encoding: 'utf-8' }).trim();
+    }
 
     const content = [
       `# R.O.M.A.N. Git Context`,

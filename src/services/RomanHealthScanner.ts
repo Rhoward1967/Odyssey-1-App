@@ -208,6 +208,9 @@ async function checkKnowledgeStaleness(): Promise<HealthCheck> {
 }
 
 function getGitBranch(): string {
+  // Railway-built images don't include a .git working tree or git binary.
+  // Use the env var Railway injects instead of shelling out.
+  if (process.env.RAILWAY_GIT_BRANCH) return process.env.RAILWAY_GIT_BRANCH;
   try {
     return execSync('git rev-parse --abbrev-ref HEAD', { encoding: 'utf-8' }).trim();
   } catch {
