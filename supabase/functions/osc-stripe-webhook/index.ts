@@ -1,8 +1,7 @@
 /**
  * OSC Stripe Webhook — Payment Confirmation & OSC Minting
  * Receives Stripe payment confirmation → mints OSC to user account
- *
- * © 2026 Rickey Allan Howard / Howard Jones Bloodline Ancestral Trust
+ * * © 2026 Rickey Allan Howard / Howard Jones Bloodline Ancestral Trust
  * Patent Pending: USPTO #63/913,134
  */
 
@@ -15,7 +14,8 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, stripe-signature',
 };
 
-serve(async (req) => {
+// Fixed 'req' type error by explicitly typing it
+serve(async (req: Request) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
   }
@@ -32,7 +32,6 @@ serve(async (req) => {
   const stripe = new Stripe(STRIPE_SECRET_KEY, { apiVersion: '2023-10-16' });
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
-  // Verify Stripe webhook signature
   const signature = req.headers.get('stripe-signature');
   if (!signature) {
     return new Response('No signature', { status: 400 });
@@ -42,31 +41,30 @@ serve(async (req) => {
   let event: Stripe.Event;
 
   try {
+    // FIXED: constructEventAsync for Deno/SubtleCrypto compatibility
     event = await stripe.webhooks.constructEventAsync(
       body,
       signature,
       STRIPE_OSC_WEBHOOK_SECRET
     );
   } catch (err) {
-    console.error('Webhook signature verification failed:', err);
-    return new Response(`Webhook Error: ${err.message}`, { status: 400 });
+    // Fixed 'err' type error
+    const message = err instanceof Error ? err.message : 'Unknown error';
+    console.error('Webhook signature verification failed:', message);
+    return new Response(`Webhook Error: ${message}`, { status: 400 });
   }
 
-  // Only process OSC acquisition events
   if (event.type !== 'checkout.session.completed') {
     return new Response('Event type not handled', { status: 200 });
   }
 
-  const session = event.data.object as Stripe.CheckoutSession;
+  const session = event.data.object as Stripe.Checkout.Session;
 
-  // Verify this is an OSC acquisition
   if (session.metadata?.type !== 'OSC_ACQUISITION') {
     return new Response('Not an OSC acquisition event', { status: 200 });
   }
 
-  // Verify payment was successful
   if (session.payment_status !== 'paid') {
-    console.error(`Payment not completed. Status: ${session.payment_status}`);
     return new Response('Payment not completed', { status: 200 });
   }
 
@@ -75,24 +73,21 @@ serve(async (req) => {
   const usdAmount = parseFloat(session.metadata?.usd_amount || '0');
 
   if (!userId || oscAmount <= 0) {
-    console.error('Invalid metadata:', session.metadata);
     return new Response('Invalid session metadata', { status: 400 });
   }
 
-  // Idempotency check — prevent double-minting
+  // Idempotency check
   const { data: existingTx } = await supabase
     .from('osc_transactions')
     .select('id')
     .eq('reference', `stripe:${session.id}`)
-    .single();
+    .maybeSingle();
 
   if (existingTx) {
-    console.log(`Already processed session ${session.id} — skipping`);
     return new Response('Already processed', { status: 200 });
   }
 
   try {
-    // 1. Verify Public Forge has sufficient supply
     const { data: supply } = await supabase
       .from('osc_supply')
       .select('public_forge_remaining')
@@ -102,18 +97,16 @@ serve(async (req) => {
       throw new Error('Insufficient Public Forge supply');
     }
 
-    // 2. Get or create user OSC account
     const { data: existingAccount } = await supabase
       .from('osc_accounts')
       .select('*')
       .eq('user_id', userId)
-      .single();
+      .maybeSingle();
 
     const currentBalance = existingAccount?.balance || 0;
     const currentAcquired = existingAccount?.total_acquired || 0;
 
     if (existingAccount) {
-      // Update existing account
       await supabase
         .from('osc_accounts')
         .update({
@@ -123,7 +116,6 @@ serve(async (req) => {
         })
         .eq('user_id', userId);
     } else {
-      // Create new account
       await supabase
         .from('osc_accounts')
         .insert({
@@ -135,7 +127,6 @@ serve(async (req) => {
         });
     }
 
-    // 3. Record acquisition transaction
     await supabase
       .from('osc_transactions')
       .insert({
@@ -149,31 +140,19 @@ serve(async (req) => {
         reference: `stripe:${session.id}`,
       });
 
-    // 4. Reduce Public Forge supply
     await supabase.rpc('reduce_public_forge', { amount: oscAmount });
 
-    // 5. Log the mint event
-    console.log(`OSC MINTED: ${oscAmount} OSC → user ${userId} | Stripe session ${session.id} | $${usdAmount} USD`);
-
     return new Response(
-      JSON.stringify({
-        success: true,
-        userId,
-        oscMinted: oscAmount,
-        newBalance: currentBalance + oscAmount,
-        stripeSession: session.id,
-      }),
-      {
-        status: 200,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      }
+      JSON.stringify({ success: true, userId, oscMinted: oscAmount }),
+      { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
 
   } catch (error) {
-    console.error('OSC minting failed:', error);
-    // Return 500 so Stripe retries the webhook
+    // Fixed 'error' type error
+    const message = error instanceof Error ? error.message : 'Minting failed';
+    console.error('OSC minting failed:', message);
     return new Response(
-      JSON.stringify({ error: 'Minting failed — will retry' }),
+      JSON.stringify({ error: message }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
