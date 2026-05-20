@@ -5,23 +5,21 @@ import { BookOpen, Award, Flame, Lock, Star, LogOut } from 'lucide-react'
 import LaymanLawVolume from '../components/LaymanLawVolume'
 import LaymanLawCompanion from '../components/LaymanLawCompanion'
 
-const VOLUMES = [
-  { number: 1,  title: 'Consumer Protection Fundamentals', description: 'FCRA, FDCPA, TILA — your rights with creditors and debt collectors' },
-  { number: 2,  title: 'Debt Collection Defense',          description: 'Validation letters, cease and desist, dispossessory defense' },
-  { number: 3,  title: 'Credit Report Mastery',            description: 'Disputes, reporting timelines, CFPB complaint procedures' },
-  { number: 4,  title: 'Contract Law Basics',              description: 'What makes a contract valid, breach, and your remedies' },
-  { number: 5,  title: 'Tenant and Housing Rights',        description: 'Lease law, habitability standards, eviction defense' },
-  { number: 6,  title: 'Small Claims and Court Procedures',description: 'How to file, what to expect, how to win your case' },
-  { number: 7,  title: 'Identity Theft and Fraud',         description: '18 U.S.C. §1028 protections, recovery procedures, fraud alerts' },
-  { number: 8,  title: 'Business Formation Basics',        description: 'LLCs, EINs, operating agreements, protecting your assets' },
-  { number: 9,  title: 'Estate Planning Fundamentals',     description: 'Wills, trusts, beneficiaries, protecting generational wealth' },
-  { number: 10, title: 'Sovereign Financial Literacy',     description: 'UCC filings, trust structures, asset protection strategy' },
-]
+type Volume = {
+  id: number
+  num: string
+  emoji: string
+  title: string
+  subject: string
+  is_locked: boolean
+  sort_order: number
+}
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL
 
 export default function Dashboard() {
   const navigate = useNavigate()
+  const [volumes, setVolumes]             = useState<Volume[]>([])
   const [activeVolume, setActiveVolume]   = useState<number | null>(null)
   const [companionOpen, setCompanionOpen] = useState(false)
   const [progress, setProgress]           = useState<Record<number, { completed: boolean }>>({})
@@ -30,9 +28,16 @@ export default function Dashboard() {
   const [isSubscribed, setIsSubscribed]   = useState(false)
   const [checkingOut, setCheckingOut]     = useState(false)
 
-  useEffect(() => { loadProgress() }, [])
+  useEffect(() => { loadData() }, [])
 
-  async function loadProgress() {
+  async function loadData() {
+    const { data: vols } = await supabase
+      .from('ll_volumes')
+      .select('id, num, emoji, title, subject, is_locked, sort_order')
+      .eq('is_active', true)
+      .order('sort_order')
+    setVolumes(vols ?? [])
+
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return
 
@@ -79,13 +84,20 @@ export default function Dashboard() {
 
   const completedCount = Object.values(progress).filter(p => p.completed).length
 
-  const volumeList = VOLUMES.map((v, i) => ({
-    ...v,
-    canOpen:   i === 0 ? true : isSubscribed && (progress[i]?.completed === true),
-    completed: progress[v.number]?.completed ?? false,
-    hasCert:   certificates.includes(v.number),
-    needsSub:  i > 0 && !isSubscribed,
-  }))
+  const volumeList = volumes.map((v, i) => {
+    const prevVol = i > 0 ? volumes[i - 1] : null
+    const prevCompleted = i === 0 || (prevVol ? progress[prevVol.id]?.completed === true : false)
+    return {
+      ...v,
+      number:      v.sort_order,
+      description: v.subject,
+      prevNum:     prevVol?.num ?? null,
+      canOpen:     i === 0 ? true : isSubscribed && prevCompleted,
+      completed:   progress[v.id]?.completed ?? false,
+      hasCert:     certificates.includes(v.id),
+      needsSub:    i > 0 && !isSubscribed,
+    }
+  })
 
   return (
     <div className="min-h-screen bg-gray-950 pb-6">
@@ -95,7 +107,7 @@ export default function Dashboard() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-lg font-bold text-yellow-400">Layman's Law</h1>
-            <p className="text-xs text-gray-500">Legal literacy powered by R.O.M.A.N.</p>
+            <p className="text-xs text-gray-500">Real law, powered by R.O.M.A.N.</p>
           </div>
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-1 text-orange-400">
@@ -115,9 +127,9 @@ export default function Dashboard() {
         {/* Progress bar */}
         <div className="mt-3 flex items-center gap-2">
           <div className="flex-1 bg-gray-800 rounded-full h-1.5">
-            <div className="bg-yellow-500 h-1.5 rounded-full transition-all" style={{ width: `${completedCount * 10}%` }} />
+            <div className="bg-yellow-500 h-1.5 rounded-full transition-all" style={{ width: `${volumes.length > 0 ? (completedCount / volumes.length) * 100 : 0}%` }} />
           </div>
-          <span className="text-xs text-gray-500">{completedCount}/10</span>
+          <span className="text-xs text-gray-500">{completedCount}/{volumes.length}</span>
         </div>
       </div>
 
@@ -175,7 +187,7 @@ export default function Dashboard() {
             <div className="flex items-start justify-between">
               <div className="flex-1 pr-3">
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="text-xs text-gray-600">Vol {vol.number}</span>
+                  <span className="text-xs text-gray-600">{vol.emoji} Vol {vol.num}</span>
                   {vol.completed && <span className="text-xs text-green-400 font-medium">✓ Done</span>}
                   {vol.needsSub && <span className="text-xs text-yellow-600">Subscribe</span>}
                 </div>
@@ -200,7 +212,7 @@ export default function Dashboard() {
         <LaymanLawVolume
           volumeNumber={activeVolume}
           isSubscribed={isSubscribed}
-          onClose={() => { setActiveVolume(null); loadProgress() }}
+          onClose={() => { setActiveVolume(null); loadData() }}
           onAskRoman={() => { setActiveVolume(null); setCompanionOpen(true) }}
           onSubscribe={handleSubscribe}
         />

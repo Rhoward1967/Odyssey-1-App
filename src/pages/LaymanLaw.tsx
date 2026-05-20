@@ -4,20 +4,18 @@ import LaymanLawVolume from '@/components/LaymanLawVolume'
 import LaymanLawCompanion from '@/components/LaymanLawCompanion'
 import { BookOpen, Award, Flame, Lock, Star } from 'lucide-react'
 
-const VOLUMES = [
-  { number: 1,  title: 'Consumer Protection Fundamentals', description: 'FCRA, FDCPA, TILA — your rights with creditors and debt collectors' },
-  { number: 2,  title: 'Debt Collection Defense',          description: 'Validation letters, cease and desist, dispossessory defense' },
-  { number: 3,  title: 'Credit Report Mastery',            description: 'Disputes, reporting timelines, CFPB complaint procedures' },
-  { number: 4,  title: 'Contract Law Basics',              description: 'What makes a contract valid, breach, and your remedies' },
-  { number: 5,  title: 'Tenant and Housing Rights',        description: 'Lease law, habitability standards, eviction defense' },
-  { number: 6,  title: 'Small Claims and Court Procedures',description: 'How to file, what to expect, how to win your case' },
-  { number: 7,  title: 'Identity Theft and Fraud',         description: '18 U.S.C. §1028 protections, recovery procedures, fraud alerts' },
-  { number: 8,  title: 'Business Formation Basics',        description: 'LLCs, EINs, operating agreements, protecting your assets' },
-  { number: 9,  title: 'Estate Planning Fundamentals',     description: 'Wills, trusts, beneficiaries, protecting generational wealth' },
-  { number: 10, title: 'Sovereign Financial Literacy',     description: 'UCC filings, trust structures, asset protection strategy' },
-]
+type Volume = {
+  id: number
+  num: string
+  emoji: string
+  title: string
+  subject: string
+  is_locked: boolean
+  sort_order: number
+}
 
 export default function LaymanLaw() {
+  const [volumes, setVolumes]               = useState<Volume[]>([])
   const [activeVolume, setActiveVolume]     = useState<number | null>(null)
   const [companionOpen, setCompanionOpen]   = useState(false)
   const [progress, setProgress]             = useState<Record<number, { completed: boolean; score: number }>>({})
@@ -26,9 +24,16 @@ export default function LaymanLaw() {
   const [isSubscribed, setIsSubscribed]     = useState(false)
   const [checkingOut, setCheckingOut]       = useState(false)
 
-  useEffect(() => { loadProgress() }, [])
+  useEffect(() => { loadData() }, [])
 
-  async function loadProgress() {
+  async function loadData() {
+    const { data: vols } = await supabase
+      .from('ll_volumes')
+      .select('id, num, emoji, title, subject, is_locked, sort_order')
+      .eq('is_active', true)
+      .order('sort_order')
+    setVolumes(vols ?? [])
+
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return
 
@@ -74,17 +79,19 @@ export default function LaymanLaw() {
 
   const completedCount = Object.values(progress).filter(p => p.completed).length
 
-  const volumeList = VOLUMES.map((v, i) => {
-    const prevCompleted = i === 0 || progress[i]?.completed === true
-    const canOpen = i === 0
-      ? true
-      : isSubscribed && prevCompleted
+  const volumeList = volumes.map((v, i) => {
+    const prevVol = i > 0 ? volumes[i - 1] : null
+    const prevCompleted = i === 0 || (prevVol ? progress[prevVol.id]?.completed === true : false)
+    const canOpen = i === 0 ? true : isSubscribed && prevCompleted
     return {
       ...v,
+      number:      v.sort_order,
+      description: v.subject,
+      prevNum:     prevVol?.num ?? null,
       canOpen,
-      completed:  progress[v.number]?.completed ?? false,
-      hasCert:    certificates.includes(v.number),
-      needsSub:   i > 0 && !isSubscribed,
+      completed:   progress[v.id]?.completed ?? false,
+      hasCert:     certificates.includes(v.id),
+      needsSub:    i > 0 && !isSubscribed,
     }
   })
 
@@ -95,7 +102,7 @@ export default function LaymanLaw() {
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-yellow-400">Layman's Law</h1>
-            <p className="text-gray-400 text-sm mt-1">Legal literacy for everyone — powered by R.O.M.A.N.</p>
+            <p className="text-gray-400 text-sm mt-1">Real law for everyone — powered by R.O.M.A.N.</p>
           </div>
           <div className="flex items-center gap-6">
             <div className="text-center">
@@ -115,7 +122,7 @@ export default function LaymanLaw() {
             <div className="text-center">
               <div className="flex items-center gap-1 text-green-400">
                 <BookOpen className="w-4 h-4" />
-                <span className="font-bold">{completedCount}/10</span>
+                <span className="font-bold">{completedCount}/{volumes.length}</span>
               </div>
               <p className="text-xs text-gray-500">Volumes</p>
             </div>
@@ -137,10 +144,10 @@ export default function LaymanLaw() {
             <div className="flex-1 bg-gray-800 rounded-full h-2">
               <div
                 className="bg-yellow-500 h-2 rounded-full transition-all duration-500"
-                style={{ width: `${(completedCount / 10) * 100}%` }}
+                style={{ width: `${volumes.length > 0 ? (completedCount / volumes.length) * 100 : 0}%` }}
               />
             </div>
-            <span className="text-xs text-yellow-400 w-12 text-right">{completedCount * 10}%</span>
+            <span className="text-xs text-yellow-400 w-12 text-right">{volumes.length > 0 ? Math.round((completedCount / volumes.length) * 100) : 0}%</span>
           </div>
         </div>
       </div>
@@ -153,7 +160,7 @@ export default function LaymanLaw() {
               <Star className="w-5 h-5 text-yellow-400 shrink-0" />
               <div>
                 <p className="text-sm font-semibold text-yellow-300">Free preview: Volume I · Topics 1–3</p>
-                <p className="text-xs text-gray-400">Unlock all 10 volumes + R.O.M.A.N. deep dives for $9.99/month</p>
+                <p className="text-xs text-gray-400">Unlock all 20 volumes + Series I Certificate for $9.99/month</p>
               </div>
             </div>
             <button
@@ -185,7 +192,7 @@ export default function LaymanLaw() {
               }`}
             >
               <div className="flex items-start justify-between mb-2">
-                <span className="text-xs font-medium text-gray-500">Volume {vol.number}</span>
+                <span className="text-xs font-medium text-gray-500">{vol.emoji} Volume {vol.num}</span>
                 <div className="flex items-center gap-1">
                   {vol.hasCert && <Award className="w-4 h-4 text-yellow-400" />}
                   {!vol.canOpen && vol.needsSub && <Star className="w-4 h-4 text-yellow-600" />}
@@ -208,8 +215,8 @@ export default function LaymanLaw() {
               {vol.needsSub && (
                 <div className="mt-3 text-xs text-yellow-500 font-medium">Subscribe to unlock →</div>
               )}
-              {!vol.canOpen && !vol.needsSub && (
-                <div className="mt-3 text-xs text-gray-600">Complete Volume {vol.number - 1} to unlock</div>
+              {!vol.canOpen && !vol.needsSub && vol.prevNum && (
+                <div className="mt-3 text-xs text-gray-600">Complete Volume {vol.prevNum} to unlock</div>
               )}
             </button>
           ))}
@@ -221,7 +228,7 @@ export default function LaymanLaw() {
         <LaymanLawVolume
           volumeNumber={activeVolume}
           isSubscribed={isSubscribed}
-          onClose={() => { setActiveVolume(null); loadProgress() }}
+          onClose={() => { setActiveVolume(null); loadData() }}
           onAskRoman={() => { setActiveVolume(null); setCompanionOpen(true) }}
           onSubscribe={handleSubscribe}
         />
