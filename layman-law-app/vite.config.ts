@@ -35,4 +35,15 @@ export default defineConfig({
       },
     }),
   ],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          'supabase':     ['@supabase/supabase-js'],
+          'icons':        ['lucide-react'],
+        },
+      },
+    },
+  },
 })
