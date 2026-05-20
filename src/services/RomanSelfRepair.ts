@@ -89,7 +89,7 @@ export class ConnectionWatchdog {
     try {
       const { error } = await romanSupabase
         .from('system_config')
-        .select('id')
+        .select('key')
         .limit(1)
         .maybeSingle();
       return !error;

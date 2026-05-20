@@ -51,6 +51,8 @@ BEGIN
 END;
 $func$;
 
+REVOKE EXECUTE ON FUNCTION public.fn_rchat_update_session() FROM PUBLIC;
+
 DROP TRIGGER IF EXISTS tr_rchat_update_session ON public.roman_chat_messages;
 CREATE TRIGGER tr_rchat_update_session
   AFTER INSERT ON public.roman_chat_messages
@@ -73,6 +75,8 @@ BEGIN
   RETURN NEW;
 END;
 $func$;
+
+REVOKE EXECUTE ON FUNCTION public.fn_rchat_set_title() FROM PUBLIC;
 
 DROP TRIGGER IF EXISTS tr_rchat_set_title ON public.roman_chat_messages;
 CREATE TRIGGER tr_rchat_set_title
@@ -99,15 +103,15 @@ DROP POLICY IF EXISTS "rchat_sessions_user_owns" ON public.roman_chat_sessions;
 CREATE POLICY "rchat_sessions_user_owns"
   ON public.roman_chat_sessions
   FOR ALL
-  USING     (user_id = auth.uid())
-  WITH CHECK (user_id = auth.uid());
+  USING     (user_id = (SELECT auth.uid()))
+  WITH CHECK (user_id = (SELECT auth.uid()));
 
 DROP POLICY IF EXISTS "rchat_messages_user_owns" ON public.roman_chat_messages;
 CREATE POLICY "rchat_messages_user_owns"
   ON public.roman_chat_messages
   FOR ALL
-  USING     (user_id = auth.uid())
-  WITH CHECK (user_id = auth.uid());
+  USING     (user_id = (SELECT auth.uid()))
+  WITH CHECK (user_id = (SELECT auth.uid()));
 
 COMMENT ON TABLE public.roman_chat_sessions IS 'R.O.M.A.N. persistent chat sessions — Howard Jones Bloodline Ancestral Trust';
 COMMENT ON TABLE public.roman_chat_messages IS 'R.O.M.A.N. chat message history with full-text search';

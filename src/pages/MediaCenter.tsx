@@ -1,16 +1,16 @@
 import AcademicSearchModal from '../components/AcademicSearchModal';
-
 import DocumentReviewModal from '../components/DocumentReviewModal';
-
 import FileUploadModal from '../components/FileUploadModal';
-
 import StudyGroupModal from '../components/StudyGroupModal';
+import K12HomeworkHelper from '../components/K12HomeworkHelper';
+import K12EducationalGames from '../components/K12EducationalGames';
+import K12LiveTutoring from '../components/K12LiveTutoring';
+import K12StudyAssistant from '../components/K12StudyAssistant';
+import LegalScenarioAnalyzer from '../components/LegalScenarioAnalyzer';
+import LegalCounterCanon from '../components/LegalCounterCanon';
+import LegalLetterGenerator from '../components/LegalLetterGenerator';
 
-// import AIChat from '../components/AIChat'; // Not found, keep stub for now
-
-
-
-// Placeholder component imports for clarity
+// Legacy placeholder imports (retained for reference)
 
 import {
   BookOpen,
@@ -46,27 +46,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../co
 
 // These stubs are for local testing and should be replaced by the Lab team with the actual components.
 
-const AIChatStub = () => (
-
-    <div className="bg-gray-800 p-6 rounded-xl h-full flex flex-col items-center justify-center text-gray-500">
-
-        <p className="text-xl font-bold mb-4">Homework Helper Activated</p>
-
-        <p>AI Chat Component (Wired to /ai-chat Endpoint)</p>
-
-    </div>
-
-);
-
-const ResearchAIBotStub = () => (
-
-    <div className="bg-gray-800 p-6 rounded-xl h-full flex flex-col items-center justify-center text-gray-500">
-
-        Research AI Bot (Wired to /ai-chat Endpoint)
-
-    </div>
-
-);
 
 
 
@@ -97,8 +76,7 @@ export default function MediaCenter() {
   const [showAcademicSearchModal, setShowAcademicSearchModal] = useState(false);
 
   const [showDocumentReviewModal, setShowDocumentReviewModal] = useState(false);
-
-
+  const [legalFeature, setLegalFeature] = useState<'none' | 'scenario' | 'countercanon' | 'letters'>('none');
 
   // Attach stream to video element when stream changes
 
@@ -182,7 +160,7 @@ export default function MediaCenter() {
 
        
 
-        console.log('ðŸ“¹ Camera stream obtained:', mediaStream.getTracks());
+        console.log('ðŸ"¹ Camera stream obtained:', mediaStream.getTracks());
 
         setStream(mediaStream);
 
@@ -241,9 +219,7 @@ export default function MediaCenter() {
 
 
   const handleShareDocument = () => {
-
-    window.alert('ðŸ”— Document Sharing coming soon!\n\nShare with:\nâ€¢ Email links\nâ€¢ Team members\nâ€¢ Study groups\nâ€¢ Public links with permissions');
-
+    // Document sharing — coming in next release
   };
 
 
@@ -309,29 +285,12 @@ export default function MediaCenter() {
     // Other features: retain placeholder for now
 
     const messages: Record<string, string> = {
-
-      'games': 'ðŸŽ® Educational Games\n\nInteractive learning:\nâ€¢ Math challenges\nâ€¢ Science simulations\nâ€¢ Language practice\nâ€¢ History adventures',
-
-      'tutor': 'ðŸ‘¨â€ðŸ« Live Tutoring\n\nFeatures:\nâ€¢ Certified tutors\nâ€¢ 1-on-1 sessions\nâ€¢ Screen sharing\nâ€¢ Recording for review',
-
-      'caselaw': 'âš–ï¸ Case Law Search\n\nSearch across:\nâ€¢ Federal court decisions\nâ€¢ State court databases\nâ€¢ Supreme Court cases\nâ€¢ Legal citations',
-
-      'docreview': 'ðŸ“„ Legal Document Review\n\nAI analysis:\nâ€¢ Contract clause extraction\nâ€¢ Risk identification\nâ€¢ Precedent matching\nâ€¢ Brief summarization',
-
-      'legalresearch': 'ðŸ“š Legal Research\n\nAccess to:\nâ€¢ Westlaw integration\nâ€¢ LexisNexis search\nâ€¢ Public records\nâ€¢ Statute databases',
-
-      'pubmed': 'ðŸ”¬ PubMed Search\n\nSearch:\nâ€¢ 35M+ citations\nâ€¢ Full-text articles\nâ€¢ Clinical studies\nâ€¢ Medical journals',
-
-      'trials': 'ðŸ§¬ Clinical Trials\n\nExplore:\nâ€¢ Active trials\nâ€¢ Research studies\nâ€¢ Patient recruitment\nâ€¢ Trial results',
-
-      'network': 'ðŸ‘¥ Medical Peer Network\n\nConnect with:\nâ€¢ Specialists worldwide\nâ€¢ Research collaborators\nâ€¢ Clinical teams\nâ€¢ Academic institutions',
-
-      'studygroups': 'ðŸ‘¥ Study Groups\n\nFeatures:\nâ€¢ Find study partners\nâ€¢ Schedule sessions\nâ€¢ Share resources\nâ€¢ Collaborative notes',
-
-      'papers': 'ðŸ“– Research Papers\n\nAccess:\nâ€¢ Google Scholar\nâ€¢ JSTOR articles\nâ€¢ IEEE Xplore\nâ€¢ arXiv preprints',
-
-      'career': 'ðŸŽ¯ Career Prep\n\nTools:\nâ€¢ Resume builder\nâ€¢ Interview practice\nâ€¢ Job board\nâ€¢ Networking tips'
-
+      'pubmed': 'PubMed Search: 35M+ citations, full-text articles, clinical studies and medical journals.',
+      'trials': 'Clinical Trials: Active trials, research studies, patient recruitment and trial results.',
+      'network': 'Medical Peer Network: Connect with specialists, research collaborators and clinical teams.',
+      'studygroups': 'Study Groups: Find study partners, schedule sessions and share resources.',
+      'papers': 'Research Papers: Google Scholar, JSTOR, IEEE Xplore and arXiv preprints.',
+      'career': 'Career Prep: Resume builder, interview practice, job board and networking tips.',
     };
 
     window.alert(messages[feature] || 'Feature coming soon!');
@@ -350,7 +309,7 @@ export default function MediaCenter() {
 
             <CardContent className="p-4">
 
-                <h4 className="text-white font-semibold mb-2">ðŸ“ Homework Helper</h4>
+                <h4 className="text-white font-semibold mb-2">ðŸ" Homework Helper</h4>
 
                 <p className="text-sm text-gray-400 mb-3">Step-by-step problem solving for math, science, and more</p>
 
@@ -378,7 +337,7 @@ export default function MediaCenter() {
 
             <CardContent className="p-4">
 
-                <h4 className="text-white font-semibold mb-2">ðŸ‘¨â€ðŸ« Live Tutoring</h4>
+                <h4 className="text-white font-semibold mb-2">ðŸ'¨â€ðŸ« Live Tutoring</h4>
 
                 <p className="text-sm text-gray-400 mb-3">Connect with certified tutors for 1-on-1 help</p>
 
@@ -399,76 +358,13 @@ export default function MediaCenter() {
     switch (activeFeature) {
 
       case 'homework':
-
-        return (
-
-            // Use col-span-3 to fill the entire card area
-
-            <div className="col-span-3 h-full">
-
-                <div className="mb-4">
-
-                    <Button size="sm" variant="outline" onClick={() => setActiveFeature('none')} className="text-white border-gray-600 hover:bg-gray-700">
-
-                        &larr; Back to Features
-
-                    </Button>
-
-                </div>
-
-                {/* MANDATE: AIChat component integrated here */}
-
-                {/* The Lab team must use the actual AIChat component for the live endpoint */}
-
-                <AIChatStub />
-
-            </div>
-
-        );
+        return <K12HomeworkHelper onBack={() => setActiveFeature('none')} />;
 
       case 'games':
-
-        return (
-
-          <div className="col-span-3 h-full p-6 text-white text-center">
-
-            <div className="mb-4">
-
-                <Button size="sm" variant="outline" onClick={() => setActiveFeature('none')} className="text-white border-gray-600 hover:bg-gray-700">
-
-                    &larr; Back to Features
-
-                </Button>
-
-            </div>
-
-            Games Dashboard (Coming Soon / Needs Integration)
-
-          </div>
-
-        );
+        return <K12EducationalGames onBack={() => setActiveFeature('none')} />;
 
       case 'tutor':
-
-        return (
-
-          <div className="col-span-3 h-full p-6 text-white text-center">
-
-            <div className="mb-4">
-
-                <Button size="sm" variant="outline" onClick={() => setActiveFeature('none')} className="text-white border-gray-600 hover:bg-gray-700">
-
-                    &larr; Back to Features
-
-                </Button>
-
-            </div>
-
-            Tutoring Scheduling (Coming Soon / Needs Integration)
-
-          </div>
-
-        );
+        return <K12LiveTutoring onBack={() => setActiveFeature('none')} />;
 
       case 'none':
       default:
@@ -491,7 +387,7 @@ export default function MediaCenter() {
 
       <div>
 
-        <h1 className="text-3xl font-bold text-white mb-2">ðŸŽ“ Media Center</h1>
+        <h1 className="text-3xl font-bold text-white mb-2">ðŸŽ" Media Center</h1>
 
         <p className="text-gray-400">Educational hub for students, professionals, and lifelong learners</p>
 
@@ -627,13 +523,13 @@ export default function MediaCenter() {
 
             <CardTitle className="text-white">
 
-              {userType === 'k12' && 'ðŸŽ“ K-12 Student Portal'}
+              {userType === 'k12' && 'ðŸŽ" K-12 Student Portal'}
 
               {userType === 'legal' && 'âš–ï¸ Legal Professional Suite'}
 
               {userType === 'medical' && 'ðŸ¥ Medical Research Hub'}
 
-              {userType === 'college' && 'ðŸ“š College Student Center'}
+              {userType === 'college' && 'ðŸ"š College Student Center'}
 
             </CardTitle>
 
@@ -670,53 +566,51 @@ export default function MediaCenter() {
             {/* Legal Features */}
 
             {userType === 'legal' && (
+              legalFeature === 'none' ? (
+                <>
+                  <Card className="bg-green-900/30 border border-green-700/50">
+                    <CardContent className="p-4">
+                      <h4 className="text-white font-semibold mb-1">Scenario Analyzer</h4>
+                      <p className="text-sm text-gray-400 mb-3">Describe your situation — routes to the right Sovereign Toolkit with immediate action steps and standing assertions</p>
+                      <Button size="sm" className="w-full bg-green-600 hover:bg-green-700" onClick={() => setLegalFeature('scenario')}>Analyze My Situation</Button>
+                    </CardContent>
+                  </Card>
 
-              <>
+                  <Card className="bg-green-900/30 border border-green-700/50">
+                    <CardContent className="p-4">
+                      <h4 className="text-white font-semibold mb-1">Counter-Canon</h4>
+                      <p className="text-sm text-gray-400 mb-3">Look up any legal term — 7-part counter-definition: dominant use, embedded assumption, counter-definition, authority, application, truth, strategy</p>
+                      <Button size="sm" className="w-full bg-green-600 hover:bg-green-700" onClick={() => setLegalFeature('countercanon')}>Open Counter-Canon</Button>
+                    </CardContent>
+                  </Card>
 
-                <Card className="bg-green-900/30">
+                  <Card className="bg-green-900/30 border border-green-700/50">
+                    <CardContent className="p-4">
+                      <h4 className="text-white font-semibold mb-1">Letter Generator</h4>
+                      <p className="text-sm text-gray-400 mb-3">Court-ready letters: Debt Validation (§1692g), Credit Dispute (§1681), Cease &amp; Desist, Settlement Offer</p>
+                      <Button size="sm" className="w-full bg-green-600 hover:bg-green-700" onClick={() => setLegalFeature('letters')}>Generate Letter</Button>
+                    </CardContent>
+                  </Card>
 
-                  <CardContent className="p-4">
-
-                    <h4 className="text-white font-semibold mb-2">âš–ï¸ Case Law Search</h4>
-
-                    <p className="text-sm text-gray-400 mb-3">Search federal and state case databases</p>
-
-                    <Button size="sm" className="w-full bg-green-600 hover:bg-green-700" onClick={() => handleFeatureClick('caselaw')}>Search Cases</Button>
-
-                  </CardContent>
-
-                </Card>
-
-                <Card className="bg-green-900/30">
-
-                  <CardContent className="p-4">
-
-                    <h4 className="text-white font-semibold mb-2">ðŸ“„ Document Review</h4>
-
-                    <p className="text-sm text-gray-400 mb-3">AI-powered contract and brief analysis</p>
-
-                    <Button size="sm" className="w-full bg-green-600 hover:bg-green-700" onClick={() => handleReviewDocs()}>Upload Doc</Button>
-
-                  </CardContent>
-
-                </Card>
-
-                <Card className="bg-green-900/30">
-
-                  <CardContent className="p-4">
-
-                    <h4 className="text-white font-semibold mb-2">ðŸ“š Legal Research</h4>
-
-                    <p className="text-sm text-gray-400 mb-3">Westlaw, LexisNexis, and public records</p>
-
-                    <Button size="sm" className="w-full bg-green-600 hover:bg-green-700" onClick={() => handleFeatureClick('legalresearch')}>Start Research</Button>
-
-                  </CardContent>
-
-                </Card>
-
-              </>
-
+                  <Card className="col-span-3 bg-slate-800/60 border border-slate-600 mt-1">
+                    <CardContent className="p-4 flex items-center justify-between">
+                      <div>
+                        <h4 className="text-white font-semibold">Full Legal Defense Suite</h4>
+                        <p className="text-sm text-gray-400">FDCPA/FCRA account tracking, debt analysis, USPS certified mail, settlement calculator, Badge of Slavery diagnostic — all 6 defense layers</p>
+                      </div>
+                      <a href="/app/legal-defense" className="shrink-0 ml-4">
+                        <Button size="sm" className="bg-emerald-700 hover:bg-emerald-600 whitespace-nowrap">Open Full Suite</Button>
+                      </a>
+                    </CardContent>
+                  </Card>
+                </>
+              ) : legalFeature === 'scenario' ? (
+                <LegalScenarioAnalyzer onBack={() => setLegalFeature('none')} />
+              ) : legalFeature === 'countercanon' ? (
+                <LegalCounterCanon onBack={() => setLegalFeature('none')} />
+              ) : (
+                <LegalLetterGenerator onBack={() => setLegalFeature('none')} />
+              )
             )}
 
 
@@ -731,7 +625,7 @@ export default function MediaCenter() {
 
                   <CardContent className="p-4">
 
-                    <h4 className="text-white font-semibold mb-2">ðŸ”¬ PubMed Search</h4>
+                    <h4 className="text-white font-semibold mb-2">ðŸ"¬ PubMed Search</h4>
 
                     <p className="text-sm text-gray-400 mb-3">Search 35M+ biomedical literature citations</p>
 
@@ -759,7 +653,7 @@ export default function MediaCenter() {
 
                   <CardContent className="p-4">
 
-                    <h4 className="text-white font-semibold mb-2">ðŸ‘¥ Peer Network</h4>
+                    <h4 className="text-white font-semibold mb-2">ðŸ'¥ Peer Network</h4>
 
                     <p className="text-sm text-gray-400 mb-3">Connect with medical professionals worldwide</p>
 
@@ -785,7 +679,7 @@ export default function MediaCenter() {
 
                   <CardContent className="p-4">
 
-                    <h4 className="text-white font-semibold mb-2">ðŸ‘¥ Study Groups</h4>
+                    <h4 className="text-white font-semibold mb-2">ðŸ'¥ Study Groups</h4>
 
                     <p className="text-sm text-gray-400 mb-3">Find or create study groups for your courses</p>
 
@@ -799,7 +693,7 @@ export default function MediaCenter() {
 
                   <CardContent className="p-4">
 
-                    <h4 className="text-white font-semibold mb-2">ðŸ“– Research Papers</h4>
+                    <h4 className="text-white font-semibold mb-2">ðŸ"– Research Papers</h4>
 
                     <p className="text-sm text-gray-400 mb-3">Access Google Scholar, JSTOR, IEEE Xplore</p>
 
@@ -993,40 +887,9 @@ export default function MediaCenter() {
 
               </div>
 
-              {/* Recent documents placeholder */}
-
               <div className="space-y-2">
-
                 <p className="text-sm text-gray-400">Recent documents:</p>
-
-                <div className="space-y-1">
-
-                  <div
-
-                    className="p-2 bg-slate-900/50 rounded text-sm text-gray-400 hover:bg-slate-900 cursor-pointer transition-colors"
-
-                    onClick={() => window.alert('ðŸ“„ Opening Research_Paper_Draft.pdf...\n\nFile preview coming soon!')}
-
-                  >
-
-                    ðŸ“„ Research_Paper_Draft.pdf
-
-                  </div>
-
-                  <div
-
-                    className="p-2 bg-slate-900/50 rounded text-sm text-gray-400 hover:bg-slate-900 cursor-pointer transition-colors"
-
-                    onClick={() => window.alert('ðŸ“Š Opening Case_Study_Analysis.xlsx...\n\nSpreadsheet viewer coming soon!')}
-
-                  >
-
-                    ðŸ“Š Case_Study_Analysis.xlsx
-
-                  </div>
-
-                </div>
-
+                <p className="text-xs text-gray-600 italic">No documents uploaded yet. Use the Upload button to add files.</p>
               </div>
 
             </CardContent>
@@ -1063,7 +926,7 @@ export default function MediaCenter() {
 
             <CardContent className="flex-1 overflow-hidden">
 
-              <ResearchAIBotStub /> {/* Use the stub here */}
+              <K12StudyAssistant />
 
             </CardContent>
 
