@@ -7,14 +7,19 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { PatternLearningEngine } from '../patternLearningEngine';
 
-// Mock Supabase client
-const mockSupabase = {
-  from: vi.fn(),
-  rpc: vi.fn()
-};
+// Mock Supabase client.
+// vi.hoisted() is required because vi.mock() factories are hoisted above all
+// imports — a plain `const mockSupabase = ...` would be in the TDZ when the
+// factory runs at module load.
+const { mockSupabase } = vi.hoisted(() => ({
+  mockSupabase: {
+    from: vi.fn(),
+    rpc: vi.fn(),
+  },
+}));
 
 vi.mock('@supabase/supabase-js', () => ({
-  createClient: () => mockSupabase
+  createClient: () => mockSupabase,
 }));
 
 // Mock Constitutional Core
