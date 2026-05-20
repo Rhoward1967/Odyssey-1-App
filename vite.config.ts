@@ -26,7 +26,12 @@ export default defineConfig(({ mode }) => ({
     setupFiles: './src/test/setup.ts',
     css: true,
     include: ['src/**/*.{test,spec}.{js,ts,jsx,tsx}'],
-    exclude: ['node_modules', 'dist'],
+    exclude: [
+      'node_modules',
+      'dist',
+      // Demo script — uses console.log, has no Vitest test blocks.
+      'src/lib/positiveGeometry.test.ts',
+    ],
     mockReset: true,
     clearMocks: true,
     restoreMocks: true,

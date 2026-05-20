@@ -2,7 +2,7 @@ import { supabase } from '@/lib/supabaseClient';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { mockBid, mockCustomer, mockInvoice, mockUser } from '../utils';
 
-vi.mock('@/lib/supabase');
+vi.mock('@/lib/supabaseClient');
 
 describe('Invoice Management', () => {
   beforeEach(() => {

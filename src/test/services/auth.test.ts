@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { mockUser } from '../utils';
 
 // Mock the supabase module
-vi.mock('@/lib/supabase');
+vi.mock('@/lib/supabaseClient');
 
 describe('Authentication Service', () => {
   beforeEach(() => {

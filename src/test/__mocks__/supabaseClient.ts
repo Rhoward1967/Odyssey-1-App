@@ -15,6 +15,7 @@ export const supabase = {
     update: vi.fn(() => Promise.resolve({ data: [], error: null })),
     delete: vi.fn(() => Promise.resolve({ data: [], error: null }))
   })),
+  rpc: vi.fn(() => Promise.resolve({ data: null, error: null })),
   auth: {
     getSession: vi.fn(() => Promise.resolve({ data: { session: null }, error: null })),
     getUser: vi.fn(() => Promise.resolve({ data: { user: null }, error: null })),
