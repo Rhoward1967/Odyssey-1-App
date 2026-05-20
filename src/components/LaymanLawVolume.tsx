@@ -231,10 +231,10 @@ function PaywallPanel({ onSubscribe, onClose }: { onSubscribe: () => void; onClo
       <div className="bg-gray-800 border border-yellow-500/30 rounded-2xl p-5 mb-6 w-full max-w-sm">
         <p className="text-yellow-400 font-bold text-lg mb-1">$9.99 / month</p>
         <ul className="text-xs text-gray-300 space-y-1.5 text-left mt-3">
-          <li className="flex gap-2"><span className="text-green-400">✓</span> All 10 volumes of legal literacy</li>
+          <li className="flex gap-2"><span className="text-green-400">✓</span> All 20 volumes of real law</li>
           <li className="flex gap-2"><span className="text-green-400">✓</span> Unlimited R.O.M.A.N. legal Q&amp;A</li>
-          <li className="flex gap-2"><span className="text-green-400">✓</span> FCRA, FDCPA, TILA, contract law &amp; more</li>
-          <li className="flex gap-2"><span className="text-green-400">✓</span> Completion certificates per volume</li>
+          <li className="flex gap-2"><span className="text-green-400">✓</span> FCRA, FDCPA, TILA, tort law, tax law &amp; more</li>
+          <li className="flex gap-2"><span className="text-green-400">✓</span> Series I Certificate after Final Exam</li>
           <li className="flex gap-2"><span className="text-green-400">✓</span> Cancel anytime</li>
         </ul>
       </div>

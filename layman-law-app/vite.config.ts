@@ -11,7 +11,7 @@ export default defineConfig({
       manifest: {
         name: "Layman's Law",
         short_name: "Layman's Law",
-        description: 'Know your rights. Legal literacy powered by R.O.M.A.N.',
+        description: 'Know your rights. All of them. 20 volumes of real law + Series I Certificate, powered by R.O.M.A.N.',
         theme_color: '#eab308',
         background_color: '#030712',
         display: 'standalone',

@@ -2,10 +2,10 @@ import { useNavigate } from 'react-router-dom'
 import { BookOpen, Shield, Scale, CheckCircle, Star } from 'lucide-react'
 
 const FEATURES = [
-  { icon: Scale,    text: 'FCRA, FDCPA, TILA — your rights explained in plain English' },
-  { icon: Shield,   text: 'Debt collection defense, credit report disputes, tenant rights' },
-  { icon: BookOpen, text: '10 volumes of legal literacy — from contracts to court procedure' },
-  { icon: Star,     text: 'R.O.M.A.N. AI answers your specific questions 24/7' },
+  { icon: BookOpen, text: '20 volumes of real law — from Tort Law to Environmental Law, every area that touches your everyday life' },
+  { icon: Scale,    text: 'Real scenarios, not definitions — learn what a debt collector can legally do at 9pm and your rights at a traffic stop' },
+  { icon: Star,     text: 'Series I Certificate after Final Exam — 50 scenario-based mastery questions, 80% to pass' },
+  { icon: Shield,   text: 'Consumer protection, tax law, digital privacy, self-defense — the law that operates on you every day' },
 ]
 
 export default function Landing() {
@@ -21,13 +21,13 @@ export default function Landing() {
         </div>
 
         <h1 className="text-4xl font-bold text-white mb-3 leading-tight">
-          Know Your Rights.
+          Know Your Rights. All of Them.
         </h1>
         <p className="text-xl text-yellow-400 font-semibold mb-4">
-          Legal literacy for everyone.
+          The law applies to you every single day — most people just don't know it.
         </p>
         <p className="text-gray-400 text-base max-w-sm mb-10 leading-relaxed">
-          Understand consumer protection law, debt collection defense, credit rights, and more — powered by R.O.M.A.N. AI.
+          Layman's Law is a complete legal education system built for people who were never taught the rules the system runs on. 20 volumes. 300+ lessons. Real scenarios. No law degree required.
         </p>
 
         <div className="w-full max-w-sm space-y-3 mb-8">
@@ -35,7 +35,7 @@ export default function Landing() {
             onClick={() => navigate('/login?mode=signup')}
             className="w-full bg-yellow-500 hover:bg-yellow-400 active:bg-yellow-600 text-black font-bold py-4 rounded-2xl text-base transition-colors"
           >
-            Start Free — Volume I Included
+            Start Learning Free
           </button>
           <button
             onClick={() => navigate('/login')}
@@ -70,7 +70,7 @@ export default function Landing() {
           <p className="text-3xl font-bold text-white mb-1">$9.99<span className="text-base font-normal text-gray-400">/month</span></p>
           <p className="text-xs text-gray-500 mb-5">Cancel anytime</p>
           <ul className="text-sm text-gray-300 space-y-2 text-left mb-5">
-            {['All 10 volumes', 'Unlimited R.O.M.A.N. Q&A', 'Completion certificates', 'Offline reading'].map(f => (
+            {['All 20 volumes', 'Unlimited R.O.M.A.N. Q&A', 'Series I Certificate after Final Exam', 'Offline reading'].map(f => (
               <li key={f} className="flex items-center gap-2">
                 <CheckCircle className="w-4 h-4 text-green-400 shrink-0" />
                 {f}
