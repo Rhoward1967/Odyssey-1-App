@@ -29,8 +29,10 @@ serve(async (req) => {
     const priceId99 = Deno.env.get('STRIPE_PRICE_ID_99');
     const priceId299 = Deno.env.get('STRIPE_PRICE_ID_299');
     const priceId999 = Deno.env.get('STRIPE_PRICE_ID_999');
+    const priceIdLayman = Deno.env.get('STRIPE_PRICE_ID_LAYMAN');
 
     let priceId: string;
+    let isLaymanLaw = false;
 
     // Mapping logic (Hardened)
     if (price === '99' || tier === 'Basic' || tier === 'ODYSSEY Basic' || tier === 'basic') {
@@ -39,6 +41,9 @@ serve(async (req) => {
       priceId = priceId299!;
     } else if (price === '999' || tier === 'Enterprise' || tier === 'ODYSSEY Enterprise' || tier === 'enterprise') {
       priceId = priceId999!;
+    } else if (price === '9.99' || tier === 'layman_law' || tier === 'Layman Law') {
+      priceId = priceIdLayman!;
+      isLaymanLaw = true;
     } else {
       throw new Error(`Invalid tier: ${tier}`);
     }
@@ -52,8 +57,12 @@ serve(async (req) => {
       mode: 'subscription',
       customer_email: userEmail,
       line_items: [{ price: priceId, quantity: 1 }],
-      success_url: `${req.headers.get('origin')}/app?subscription=success`,
-      cancel_url: `${req.headers.get('origin')}/subscribe`,
+      success_url: isLaymanLaw
+        ? `${req.headers.get('origin')}/dashboard?subscribed=success`
+        : `${req.headers.get('origin')}/app?subscription=success`,
+      cancel_url: isLaymanLaw
+        ? `${req.headers.get('origin')}/`
+        : `${req.headers.get('origin')}/subscribe`,
       // This block ensures the database knows WHO paid and WHERE the royalty goes
       metadata: {
         supabase_user_id: userId,
