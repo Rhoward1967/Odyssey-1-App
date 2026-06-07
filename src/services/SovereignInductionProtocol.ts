@@ -56,7 +56,7 @@ export interface InductionStatus {
 
 export const IMMUTABLE_TRUTHS = {
   MANUAL_ENTRY_PRIMACY: 
-    'The 14 Clients and 5 Contractors in public.customers and public.contractors are the absolute source of truth. ' +
+    'The 15 Clients and 5 Contractors in public.customers and public.contractors are the absolute source of truth. ' +
     'External API status reports (e.g., QuickBooks 404s) are secondary and do not indicate a system failure.',
   
   RESOURCE_GOVERNOR: 
@@ -143,7 +143,7 @@ export class SovereignInductionProtocol {
     console.log('🔱 VERIFYING ONE ACCORD RECOGNITION...');
     
     try {
-      // Verify 14 clients exist
+      // Verify 15 clients exist (Tonyia Brooks added 2026-06)
       const { count: customerCount, error: customerError } = await romanSupabase
         .from('customers')
         .select('*', { count: 'exact', head: true })
@@ -166,11 +166,11 @@ export class SovereignInductionProtocol {
       }
       
       console.log('✅ ONE ACCORD RECOGNITION: Verified');
-      console.log(`   - Active Clients: ${customerCount} (Expected: 14)`);
+      console.log(`   - Active Clients: ${customerCount} (Expected: 15)`);
       console.log(`   - Active Contractors: ${contractorCount} (Expected: 5)`);
       console.log('   - Manual Entry Primacy: ACKNOWLEDGED');
       
-      return customerCount === 14 && contractorCount === 5;
+      return customerCount === 15 && contractorCount === 5;
       
     } catch (error: any) {
       console.error('❌ ONE ACCORD verification failed:', error.message);
@@ -248,7 +248,7 @@ export class SovereignInductionProtocol {
     // Step 2: One Accord Recognition
     const oneAccordPassed = await this.verifyOneAccordRecognition();
     if (!oneAccordPassed) {
-      status.missing_requirements.push('ONE ACCORD: Must verify 14 Clients and 5 Contractors exist');
+      status.missing_requirements.push('ONE ACCORD: Must verify 15 Clients and 5 Contractors exist');
     }
     
     // Step 3: Temporal Awareness Check
