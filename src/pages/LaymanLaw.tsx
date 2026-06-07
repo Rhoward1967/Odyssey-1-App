@@ -4,6 +4,8 @@ import LaymanLawVolume from '@/components/LaymanLawVolume'
 import LaymanLawCompanion from '@/components/LaymanLawCompanion'
 import { BookOpen, Award, Flame, Lock, Star } from 'lucide-react'
 
+const ARCHITECT_EMAILS = ['generalmanager81@gmail.com']
+
 type Volume = {
   id: number
   num: string
@@ -22,6 +24,7 @@ export default function LaymanLaw() {
   const [streak, setStreak]                 = useState(0)
   const [certificates, setCertificates]     = useState<number[]>([])
   const [isSubscribed, setIsSubscribed]     = useState(false)
+  const [isArchitect, setIsArchitect]       = useState(false)
   const [checkingOut, setCheckingOut]       = useState(false)
 
   useEffect(() => { loadData() }, [])
@@ -51,7 +54,9 @@ export default function LaymanLaw() {
     setProgress(progressMap)
     setStreak(streakData?.current_streak ?? 0)
     setCertificates((certs ?? []).map(c => c.volume_number))
-    setIsSubscribed(!!sub)
+    const architect = user.email ? ARCHITECT_EMAILS.includes(user.email.toLowerCase()) : false
+    setIsArchitect(architect)
+    setIsSubscribed(!!sub || architect)
   }
 
   async function handleSubscribe() {
@@ -82,7 +87,7 @@ export default function LaymanLaw() {
   const volumeList = volumes.map((v, i) => {
     const prevVol = i > 0 ? volumes[i - 1] : null
     const prevCompleted = i === 0 || (prevVol ? progress[prevVol.id]?.completed === true : false)
-    const canOpen = i === 0 ? true : isSubscribed && prevCompleted
+    const canOpen = isArchitect || (i === 0 ? true : isSubscribed && prevCompleted)
     return {
       ...v,
       number:      v.sort_order,
@@ -91,7 +96,7 @@ export default function LaymanLaw() {
       canOpen,
       completed:   progress[v.id]?.completed ?? false,
       hasCert:     certificates.includes(v.id),
-      needsSub:    i > 0 && !isSubscribed,
+      needsSub:    i > 0 && !isSubscribed && !isArchitect,
     }
   })
 
