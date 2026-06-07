@@ -49,7 +49,7 @@ const CRITICAL_FUNCTIONS = [
 
 // Source of truth — these counts must never drift
 const EXPECTED_COUNTS = [
-  { table: 'customers',          expected: 14, label: 'Active Customers' },
+  { table: 'customers',          expected: 15, label: 'Active Customers' },
   { table: 'contractors',        expected: 5,  label: 'Active Contractors' },
   { table: 'recurring_invoices', min: 21,      label: 'Recurring Schedules' },
 ];
