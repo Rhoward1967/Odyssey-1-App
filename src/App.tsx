@@ -33,6 +33,7 @@ import Invoicing from "./pages/Invoicing";
 import ContractorManager from "./components/ContractorManager";
 import BidsList from "./pages/BidsList";
 import LeadIntake from "./pages/LeadIntake";
+import BidExtractor from "./pages/BidExtractor";
 import Mel from "./pages/Mel";
 import CatalogManager from "./pages/CatalogManager";
 import Trading from "./pages/Trading";
@@ -95,6 +96,7 @@ const App = () => {
                               <Route path="invoicing" element={<Invoicing />} />
                               <Route path="contractors" element={<ContractorManager />} />
                               <Route path="leads" element={<LeadIntake />} />
+                              <Route path="bid-extract" element={<BidExtractor />} />
                               <Route path="bids" element={<BidsList />} />
                               <Route path="mel" element={<Mel />} />
                               <Route path="catalog" element={<CatalogManager />} />
