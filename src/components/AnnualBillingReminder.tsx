@@ -15,6 +15,7 @@ interface AnnualContract {
   location_label: string;
   amount_cents: number;
   next_invoice_date: string;
+  reprice_sent_on: string | null;
   customers: {
     company_name: string | null;
     customer_name: string | null;
@@ -41,7 +42,7 @@ function customerDisplayName(c: AnnualContract['customers']): string {
   return c.company_name || c.customer_name || personName || c.email || 'Unknown Customer';
 }
 
-function computeRenewal(nextInvoiceDate: string) {
+function computeRenewal(nextInvoiceDate: string, repriceSentOn: string | null) {
   const renewalOn = parseLocalDate(nextInvoiceDate);
   const repriceBy = new Date(renewalOn);
   repriceBy.setDate(renewalOn.getDate() - 16);
@@ -56,7 +57,9 @@ function computeRenewal(nextInvoiceDate: string) {
   let stageLabel: string;
   let stageDetail: string;
 
-  if (today < repriceBy) {
+  const repriceComplete = !!repriceSentOn;
+
+  if (!repriceComplete && today < repriceBy) {
     stage = 'reprice';
     nextMilestone = repriceBy;
     stageLabel = `Reprice by ${formatLocal(repriceBy)}`;
@@ -64,8 +67,9 @@ function computeRenewal(nextInvoiceDate: string) {
   } else if (today < renewalOn) {
     stage = 'notify';
     nextMilestone = renewalOn;
-    stageLabel = `Notify customer by ${formatLocal(renewalOn)}`;
-    stageDetail = 'Repricing sent — invoice goes out on this date';
+    stageLabel = `Send invoice ${formatLocal(renewalOn)}`;
+    const sentNote = repriceSentOn ? ` (repricing sent ${formatLocal(parseLocalDate(repriceSentOn))})` : '';
+    stageDetail = `Repricing sent${sentNote ? sentNote : ''} — invoice goes out on this date`;
   } else if (today < paymentDue) {
     stage = 'invoiced';
     nextMilestone = paymentDue;
@@ -107,9 +111,9 @@ export function AnnualBillingReminder({ userId }: AnnualBillingReminderProps) {
 
         const { data, error } = await supabase
           .from('recurring_invoices')
-          .select('id, location_label, amount_cents, next_invoice_date, customers(company_name, customer_name, first_name, last_name, email)')
+          .select('id, location_label, amount_cents, next_invoice_date, reprice_sent_on, customers(company_name, customer_name, first_name, last_name, email)')
           .eq('is_active', true)
-          .eq('frequency', 'annual') // Temporary: Use frequency until billing_category exists
+          .or('billing_category.eq.annual,frequency.eq.annual')
           .lte('next_invoice_date', sixtyDaysOut.toISOString().split('T')[0])
           .gte('next_invoice_date', today.toISOString().split('T')[0])
           .order('next_invoice_date', { ascending: true });
@@ -157,7 +161,7 @@ export function AnnualBillingReminder({ userId }: AnnualBillingReminderProps) {
       </CardHeader>
       <CardContent className="space-y-4">
         {upcomingRenewals.map((contract) => {
-          const renewal = computeRenewal(contract.next_invoice_date);
+          const renewal = computeRenewal(contract.next_invoice_date, contract.reprice_sent_on);
           const amount = contract.amount_cents / 100;
           const displayName = customerDisplayName(contract.customers);
 
