@@ -16,9 +16,70 @@ interface AnnualContract {
   amount_cents: number;
   next_invoice_date: string;
   customers: {
-    company_name: string;
-    email: string;
+    company_name: string | null;
+    customer_name: string | null;
+    first_name: string | null;
+    last_name: string | null;
+    email: string | null;
   } | null;
+}
+
+type RenewalStage = 'reprice' | 'notify' | 'invoiced' | 'overdue';
+
+function parseLocalDate(yyyyMmDd: string): Date {
+  const [y, m, d] = yyyyMmDd.split('T')[0].split('-').map(Number);
+  return new Date(y, m - 1, d);
+}
+
+function formatLocal(date: Date): string {
+  return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+}
+
+function customerDisplayName(c: AnnualContract['customers']): string {
+  if (!c) return 'Unknown Customer';
+  const personName = [c.first_name, c.last_name].filter(Boolean).join(' ').trim();
+  return c.company_name || c.customer_name || personName || c.email || 'Unknown Customer';
+}
+
+function computeRenewal(nextInvoiceDate: string) {
+  const renewalOn = parseLocalDate(nextInvoiceDate);
+  const repriceBy = new Date(renewalOn);
+  repriceBy.setDate(renewalOn.getDate() - 16);
+  const paymentDue = new Date(renewalOn);
+  paymentDue.setDate(renewalOn.getDate() + 31);
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  let stage: RenewalStage;
+  let nextMilestone: Date;
+  let stageLabel: string;
+  let stageDetail: string;
+
+  if (today < repriceBy) {
+    stage = 'reprice';
+    nextMilestone = repriceBy;
+    stageLabel = `Reprice by ${formatLocal(repriceBy)}`;
+    stageDetail = 'Finalize new pricing and send to customer contact';
+  } else if (today < renewalOn) {
+    stage = 'notify';
+    nextMilestone = renewalOn;
+    stageLabel = `Notify customer by ${formatLocal(renewalOn)}`;
+    stageDetail = 'Repricing sent — invoice goes out on this date';
+  } else if (today < paymentDue) {
+    stage = 'invoiced';
+    nextMilestone = paymentDue;
+    stageLabel = `Invoice sent — payment due ${formatLocal(paymentDue)}`;
+    stageDetail = 'Awaiting customer acceptance and payment';
+  } else {
+    stage = 'overdue';
+    nextMilestone = paymentDue;
+    stageLabel = `Payment overdue (due ${formatLocal(paymentDue)})`;
+    stageDetail = 'Follow up with customer for payment';
+  }
+
+  const daysUntil = Math.max(0, Math.ceil((nextMilestone.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)));
+  return { stage, stageLabel, stageDetail, daysUntil, renewalOn, paymentDue };
 }
 
 interface AnnualBillingReminderProps {
@@ -46,7 +107,7 @@ export function AnnualBillingReminder({ userId }: AnnualBillingReminderProps) {
 
         const { data, error } = await supabase
           .from('recurring_invoices')
-          .select('id, location_label, amount_cents, next_invoice_date, customers(company_name, email)')
+          .select('id, location_label, amount_cents, next_invoice_date, customers(company_name, customer_name, first_name, last_name, email)')
           .eq('is_active', true)
           .eq('frequency', 'annual') // Temporary: Use frequency until billing_category exists
           .lte('next_invoice_date', sixtyDaysOut.toISOString().split('T')[0])
@@ -73,25 +134,16 @@ export function AnnualBillingReminder({ userId }: AnnualBillingReminderProps) {
     loadAnnualContracts();
   }, []);
 
-  // Calculate days until next renewal
-  const getDaysUntil = (dateStr: string): number => {
-    const today = new Date();
-    const renewalDate = new Date(dateStr);
-    const diffTime = renewalDate.getTime() - today.getTime();
-    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  };
-
-  // Determine alert severity
-  const getAlertVariant = (daysUntil: number): 'default' | 'destructive' => {
-    return daysUntil <= 30 ? 'destructive' : 'default';
+  const getStageVariant = (stage: RenewalStage): 'default' | 'destructive' => {
+    return stage === 'overdue' || stage === 'notify' ? 'destructive' : 'default';
   };
 
   if (loading) {
-    return null; // Silent loading
+    return null;
   }
 
   if (upcomingRenewals.length === 0) {
-    return null; // No alerts needed
+    return null;
   }
 
   return (
@@ -105,22 +157,23 @@ export function AnnualBillingReminder({ userId }: AnnualBillingReminderProps) {
       </CardHeader>
       <CardContent className="space-y-4">
         {upcomingRenewals.map((contract) => {
-          const daysUntil = getDaysUntil(contract.next_invoice_date);
+          const renewal = computeRenewal(contract.next_invoice_date);
           const amount = contract.amount_cents / 100;
-          
+          const displayName = customerDisplayName(contract.customers);
+
           return (
-            <Alert 
-              key={contract.id} 
-              variant={getAlertVariant(daysUntil)}
+            <Alert
+              key={contract.id}
+              variant={getStageVariant(renewal.stage)}
               className="border-l-4"
             >
               <AlertTitle className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Calendar className="h-4 w-4" />
-                  <span className="font-bold">{contract.customers?.company_name || 'Unknown Customer'}</span>
+                  <span className="font-bold">{displayName}</span>
                 </div>
-                <Badge variant={daysUntil <= 30 ? 'destructive' : 'secondary'}>
-                  {daysUntil} days
+                <Badge variant={renewal.daysUntil <= 30 ? 'destructive' : 'secondary'}>
+                  {renewal.daysUntil} days
                 </Badge>
               </AlertTitle>
               <AlertDescription className="mt-2 space-y-1">
@@ -133,17 +186,14 @@ export function AnnualBillingReminder({ userId }: AnnualBillingReminderProps) {
                   <span className="text-gray-600">/ year</span>
                 </div>
                 <p className="text-sm text-gray-700">
-                  <strong>Renewal Date:</strong> {new Date(contract.next_invoice_date).toLocaleDateString('en-US', { 
-                    year: 'numeric', 
-                    month: 'long', 
-                    day: 'numeric' 
-                  })}
+                  <strong>Invoice Date:</strong> {formatLocal(renewal.renewalOn)}
+                  {' · '}
+                  <strong>Payment Due:</strong> {formatLocal(renewal.paymentDue)}
                 </p>
-                {daysUntil <= 30 && (
-                  <p className="text-sm font-semibold text-red-700 mt-2">
-                    ⚠️ COLLECTION ALERT: Contact {contract.customers?.email || 'customer'} to confirm renewal
-                  </p>
-                )}
+                <p className="text-sm font-semibold text-amber-900 mt-2">
+                  📌 {renewal.stageLabel}
+                </p>
+                <p className="text-xs text-gray-600">{renewal.stageDetail}</p>
               </AlertDescription>
             </Alert>
           );
