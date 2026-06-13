@@ -141,44 +141,37 @@ export default function BidsList() {
   }
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
-      {/* Header */}
+    <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Bids</h1>
-          <p className="text-gray-500 mt-1">
-            Manage your bids and convert them to invoices
-          </p>
+          <h1 className="text-3xl font-bold text-white">Bids</h1>
+          <p className="text-slate-400 mt-1">Manage your bids and convert them to invoices</p>
         </div>
-        <Button onClick={() => navigate('/app/calculator')}>
+        <Button onClick={() => navigate('/app/calculator')} className="bg-yellow-500 hover:bg-yellow-400 text-black font-semibold">
           <FileText className="w-4 h-4 mr-2" />
           Create New Bid
         </Button>
       </div>
 
-      {/* Error Message */}
       {error && (
-        <Card className="border-red-200 bg-red-50">
+        <Card className="border-red-500/40 bg-red-950/30">
           <CardContent className="pt-6">
-            <p className="text-red-800">{error}</p>
+            <p className="text-red-200">{error}</p>
           </CardContent>
         </Card>
       )}
 
-      {/* Bids Table */}
-      <Card>
+      <Card className="border-slate-700 bg-slate-800/50">
         <CardHeader>
-          <CardTitle>All Bids</CardTitle>
+          <CardTitle className="text-white">All Bids</CardTitle>
         </CardHeader>
         <CardContent>
           {bids.length === 0 ? (
             <div className="text-center py-12">
-              <FileText className="w-12 h-12 mx-auto text-gray-400 mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No bids yet</h3>
-              <p className="text-gray-500 mb-4">
-                Create your first bid using the Bidding Calculator
-              </p>
-              <Button onClick={() => navigate('/app/calculator')}>
+              <FileText className="w-12 h-12 mx-auto text-slate-500 mb-4" />
+              <h3 className="text-lg font-medium text-white mb-2">No bids yet</h3>
+              <p className="text-slate-400 mb-4">Create your first bid using the Bidding Calculator</p>
+              <Button onClick={() => navigate('/app/calculator')} className="bg-yellow-500 hover:bg-yellow-400 text-black font-semibold">
                 Create Bid
               </Button>
             </div>
@@ -186,28 +179,28 @@ export default function BidsList() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Bid Number</TableHead>
-                  <TableHead>Customer</TableHead>
-                  <TableHead>Title</TableHead>
-                  <TableHead className="text-right">Total Amount</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Date</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
+                  <TableHead className="text-slate-300">Bid Number</TableHead>
+                  <TableHead className="text-slate-300">Customer</TableHead>
+                  <TableHead className="text-slate-300">Title</TableHead>
+                  <TableHead className="text-slate-300 text-right">Total Amount</TableHead>
+                  <TableHead className="text-slate-300">Status</TableHead>
+                  <TableHead className="text-slate-300">Date</TableHead>
+                  <TableHead className="text-slate-300 text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {bids.map((bid) => (
                   <TableRow key={bid.id}>
-                    <TableCell className="font-medium">
-                      {bid.bid_number || `BID-${bid.id.slice(0, 8)}`}
+                    <TableCell className="font-medium text-white">
+                      {bid.bid_number || `BID-${(bid.id ?? '').toString().slice(0, 8)}`}
                     </TableCell>
-                    <TableCell>{getCustomerDisplay(bid)}</TableCell>
-                    <TableCell>{bid.title}</TableCell>
-                    <TableCell className="text-right font-semibold">
+                    <TableCell className="text-slate-300">{getCustomerDisplay(bid)}</TableCell>
+                    <TableCell className="text-slate-300">{bid.title ?? '—'}</TableCell>
+                    <TableCell className="text-right font-semibold text-white">
                       {formatCurrency(bid.total_cents)}
                     </TableCell>
                     <TableCell>{getStatusBadge(bid.status)}</TableCell>
-                    <TableCell className="text-gray-600">
+                    <TableCell className="text-slate-300">
                       {formatDate(bid.created_at)}
                     </TableCell>
                     <TableCell className="text-right">
@@ -216,6 +209,7 @@ export default function BidsList() {
                           size="sm"
                           onClick={() => handleConvertToInvoice(bid.id)}
                           disabled={convertingBidId === bid.id}
+                          className="bg-yellow-500 hover:bg-yellow-400 text-black font-semibold"
                         >
                           {convertingBidId === bid.id ? (
                             <>
@@ -227,7 +221,7 @@ export default function BidsList() {
                           )}
                         </Button>
                       ) : (
-                        <span className="text-sm text-gray-500">Converted</span>
+                        <span className="text-sm text-slate-400">Converted</span>
                       )}
                     </TableCell>
                   </TableRow>
