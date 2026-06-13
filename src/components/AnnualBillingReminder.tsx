@@ -1,7 +1,7 @@
 // ANNUAL BILLING WATCHMAN
 // Protocol: SIP-2026-005 - Phase 3 Automation
-// Component: Beth Smith Renewal Alert System
-// Mission: Prevent $61,030 annual revenue from being overlooked
+// Component: Annual Contract Renewal Alert System
+// Mission: Prevent $67,833 annual revenue from being overlooked
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
@@ -38,8 +38,9 @@ function formatLocal(date: Date): string {
 
 function customerDisplayName(c: AnnualContract['customers']): string {
   if (!c) return 'Unknown Customer';
+  // Show contact person name first, then org name as fallback
   const personName = [c.first_name, c.last_name].filter(Boolean).join(' ').trim();
-  return c.company_name || c.customer_name || personName || c.email || 'Unknown Customer';
+  return c.customer_name || personName || c.company_name || c.email || 'Unknown Customer';
 }
 
 function computeRenewal(nextInvoiceDate: string, repriceSentOn: string | null) {
@@ -69,7 +70,7 @@ function computeRenewal(nextInvoiceDate: string, repriceSentOn: string | null) {
     nextMilestone = renewalOn;
     stageLabel = `Send invoice ${formatLocal(renewalOn)}`;
     const sentNote = repriceSentOn ? ` (repricing sent ${formatLocal(parseLocalDate(repriceSentOn))})` : '';
-    stageDetail = `Repricing sent${sentNote ? sentNote : ''} — invoice goes out on this date`;
+    stageDetail = `Repricing sent${sentNote} — invoice goes out on this date`;
   } else if (today < paymentDue) {
     stage = 'invoiced';
     nextMilestone = paymentDue;
@@ -97,14 +98,12 @@ export function AnnualBillingReminder({ userId }: AnnualBillingReminderProps) {
   useEffect(() => {
     const loadAnnualContracts = async () => {
       try {
-        // Verify authenticated session
         const { data: { session } } = await supabase.auth.getSession();
         if (!session) {
           setLoading(false);
-          return; // Silent fail - no alerts if not logged in
+          return;
         }
 
-        // Query: Find billing_category = 'annual' with renewals in next 60 days
         const today = new Date();
         const sixtyDaysOut = new Date();
         sixtyDaysOut.setDate(today.getDate() + 60);
@@ -113,16 +112,13 @@ export function AnnualBillingReminder({ userId }: AnnualBillingReminderProps) {
           .from('recurring_invoices')
           .select('id, location_label, amount_cents, next_invoice_date, reprice_sent_on, customers(company_name, customer_name, first_name, last_name, email)')
           .eq('is_active', true)
-          .or('billing_category.eq.annual,frequency.eq.annual')
+          .eq('billing_category', 'annual')
           .lte('next_invoice_date', sixtyDaysOut.toISOString().split('T')[0])
           .gte('next_invoice_date', today.toISOString().split('T')[0])
           .order('next_invoice_date', { ascending: true });
 
         if (!error && data) {
-          // Transform data: Supabase returns customers as array, we need single object
-          const transformed = data.map(item => ({
-            ...item,
-            customers: Array.isArray(item.customers) && item.customers.length > 0
+const transformed = data.map((item: typeof data[number]) => ({            customers: Array.isArray(item.customers) && item.customers.length > 0
               ? item.customers[0]
               : null
           }));
@@ -139,16 +135,11 @@ export function AnnualBillingReminder({ userId }: AnnualBillingReminderProps) {
   }, []);
 
   const getStageVariant = (stage: RenewalStage): 'default' | 'destructive' => {
-    return stage === 'overdue' || stage === 'notify' ? 'destructive' : 'default';
+    return stage === 'overdue' ? 'destructive' : 'default';
   };
 
-  if (loading) {
-    return null;
-  }
-
-  if (upcomingRenewals.length === 0) {
-    return null;
-  }
+  if (loading) return null;
+  if (upcomingRenewals.length === 0) return null;
 
   return (
     <Card className="border-amber-500 bg-amber-50">
@@ -208,9 +199,9 @@ export function AnnualBillingReminder({ userId }: AnnualBillingReminderProps) {
 }
 
 // WATCHMAN SPECIFICATIONS:
-// - Scans for billing_category = 'annual' contracts
-// - Triggers alert 60 days before renewal (escalates at 30 days)
-// - Beth Smith ACC contracts (July 1, 2026):
-//   * Dougherty Street Government Building: $31,250.00
-//   * Satula Avenue Government Building: $29,780.00
-// - Total protected revenue: $61,030.00/year
+// - Scans for billing_category = 'annual' contracts within 60 days
+// - Stage auto-advances: reprice → send invoice → awaiting payment → overdue
+// - Jackie Cross (ACC Government) contracts (July 1, 2026):
+//   * Dougherty Street Government Building: $34,875.00
+//   * Satula Avenue Government Building: $32,958.00
+// - Total protected revenue: $67,833.00/year
