@@ -97,7 +97,7 @@ export default function BidsList() {
   };
 
   const formatCurrency = (cents: number): string => {
-    return `$${(cents / 100).toFixed(2)}`;
+    return `$${(cents / 100).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   };
 
   const formatDate = (dateString: string): string => {
@@ -196,8 +196,9 @@ export default function BidsList() {
                     </TableCell>
                     <TableCell className="text-slate-300">{getCustomerDisplay(bid)}</TableCell>
                     <TableCell className="text-slate-300">{bid.title ?? '—'}</TableCell>
-                    <TableCell className="text-right font-semibold text-white">
-                      {formatCurrency(bid.total_cents)}
+                    <TableCell className="text-right text-white">
+                      <div className="font-semibold">{formatCurrency(bid.total_cents)} <span className="text-xs text-slate-400 font-normal">/yr</span></div>
+                      <div className="text-xs text-slate-400">{formatCurrency(Math.round(bid.total_cents / 4))} /quarter</div>
                     </TableCell>
                     <TableCell>{getStatusBadge(bid.status)}</TableCell>
                     <TableCell className="text-slate-300">
