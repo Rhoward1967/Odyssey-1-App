@@ -1,7 +1,5 @@
-import { useEffect, useState } from "react";
-
-const SUPABASE_URL = "https://tvsxloejfsrdganemsmg.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR2c3hsb2VqZnNyZGdhbmVtc21nIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjUzNzg0NDgsImV4cCI6MjA0MDk1NDQ0OH0.rnpcHzMlrCNYseqN8JZKL3OEHDdW7wU_1P9cNlOhCLk";
+import { useState, useEffect } from "react";
+import { supabase } from "@/lib/supabaseClient";
 
 const weaponColors: Record<string, string> = {
   "Weapon 7": "bg-red-100 border-red-500 text-red-900",
@@ -52,20 +50,19 @@ export default function FCRADashboard() {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("violations");
 
-  const headers = {
-    "Content-Type": "application/json",
-    apikey: SUPABASE_ANON_KEY,
-    Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-  };
-
   useEffect(() => {
     const load = async () => {
       try {
-        const [vRes, aRes] = await Promise.all([
-          fetch(`${SUPABASE_URL}/rest/v1/fcra_violations?select=*,active_credit_accounts(creditor_name,account_number_last4,reported_balance)&order=statutory_damages_max.desc`, { headers }),
-          fetch(`${SUPABASE_URL}/rest/v1/active_credit_accounts?select=*&order=reported_balance.desc`, { headers }),
+        const [{ data: v }, { data: a }] = await Promise.all([
+          supabase
+            .from("fcra_violations")
+            .select("*, active_credit_accounts(creditor_name, account_number_last4, reported_balance)")
+            .order("statutory_damages_max", { ascending: false }),
+          supabase
+            .from("active_credit_accounts")
+            .select("*")
+            .order("reported_balance", { ascending: false }),
         ]);
-        const [v, a] = await Promise.all([vRes.json(), aRes.json()]);
         setViolations(Array.isArray(v) ? v : []);
         setAccounts(Array.isArray(a) ? a : []);
       } catch (e) {
@@ -93,6 +90,8 @@ export default function FCRADashboard() {
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 p-4 font-mono">
       <div className="max-w-5xl mx-auto">
+
+        {/* Header */}
         <div className="border border-slate-700 rounded-lg p-6 mb-6 bg-slate-900">
           <div className="flex items-center gap-3 mb-2">
             <span className="text-3xl">⚔️</span>
@@ -107,6 +106,7 @@ export default function FCRADashboard() {
           </div>
         </div>
 
+        {/* Summary Cards */}
         <div className="grid grid-cols-2 gap-4 mb-6 md:grid-cols-4">
           <div className="bg-slate-900 border border-slate-700 rounded-lg p-4">
             <p className="text-xs text-slate-500 mb-1">ACCOUNTS SCANNED</p>
@@ -126,6 +126,7 @@ export default function FCRADashboard() {
           </div>
         </div>
 
+        {/* Weapons Activated Banner */}
         {uniqueViolations.length > 0 && (
           <div className="bg-red-950 border border-red-600 rounded-lg p-4 mb-6">
             <p className="text-red-400 text-xs font-bold mb-2">⚡ WEAPONS ACTIVATED</p>
@@ -141,6 +142,7 @@ export default function FCRADashboard() {
           </div>
         )}
 
+        {/* Tabs */}
         <div className="flex gap-2 mb-4">
           {["violations", "accounts"].map(tab => (
             <button
@@ -157,6 +159,7 @@ export default function FCRADashboard() {
           ))}
         </div>
 
+        {/* Violations Tab */}
         {activeTab === "violations" && (
           <div className="space-y-4">
             {uniqueViolations.length === 0 ? (
@@ -189,6 +192,7 @@ export default function FCRADashboard() {
           </div>
         )}
 
+        {/* Accounts Tab */}
         {activeTab === "accounts" && (
           <div className="space-y-2">
             {accounts.map((a, i) => (
@@ -214,10 +218,12 @@ export default function FCRADashboard() {
           </div>
         )}
 
+        {/* Footer */}
         <div className="mt-6 border border-slate-800 rounded-lg p-4 text-center">
           <p className="text-xs text-slate-600">CONFIDENTIAL — Howard Jones Bloodline Ancestral Trust · Toolkit VIII</p>
           <p className="text-xs text-slate-700 mt-1">Not legal advice. For use with licensed counsel only.</p>
         </div>
+
       </div>
     </div>
   );
