@@ -29,6 +29,7 @@ import {
   TrendingUp,
   Tv,
   Users,
+  Shield,
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
@@ -44,11 +45,11 @@ const menuItems = [
   { icon: ClipboardList, label: 'Contractors', href: '/app/contractors' },
   { icon: Target, label: 'Leads', href: '/app/leads' },
   { icon: ScanLine, label: 'Bid Extractor', href: '/app/bid-extract' },
+  { icon: Shield, label: 'FCRA Audit', href: '/app/fcra-audit' },
   { icon: Briefcase, label: 'Bids', href: '/app/bids' },
   { icon: Brain, label: 'MEL', href: '/app/mel' },
   { icon: Package, label: 'Catalog', href: '/app/catalog' },
   { icon: Coins, label: 'OSC Wallet', href: '/app/osc-wallet' },
-  { icon: Scale, label: 'Legal Defense', href: '/app/legal-defense' },
   { icon: ScanBarcode, label: 'Sovereign Scanner', href: '/app/scanner' },
   { icon: MessageSquare, label: 'Discord Bot', href: '/app/discord-bot' },
   { icon: BookOpen, label: 'Sovereign Books', href: '/app/sovereign-books' },
