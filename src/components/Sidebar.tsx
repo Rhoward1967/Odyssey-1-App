@@ -49,6 +49,7 @@ const menuItems = [
   { icon: Package, label: 'Catalog', href: '/app/catalog' },
   { icon: Coins, label: 'OSC Wallet', href: '/app/osc-wallet' },
   { icon: Scale, label: 'Legal Defense', href: '/app/legal-defense' },
+  { icon: ListChecks, label: 'FCRA Tracking', href: '/app/fcra' },
   { icon: ScanBarcode, label: 'Sovereign Scanner', href: '/app/scanner' },
   { icon: MessageSquare, label: 'Discord Bot', href: '/app/discord-bot' },
   { icon: BookOpen, label: 'Sovereign Books', href: '/app/sovereign-books' },

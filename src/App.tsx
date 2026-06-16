@@ -40,6 +40,7 @@ import Trading from "./pages/Trading";
 import Calculator from "./pages/Calculator";
 import SovereignContractIntake from "./pages/SovereignContractIntake";
 import LegalDefenseDashboard from "./components/LegalDefenseDashboard";
+import FCRADashboard from "./pages/FCRADashboard";
 import Handbook from "./pages/Handbook";
 import UserManual from "./components/UserManual";
 import MediaCenter from "./pages/MediaCenter";
@@ -104,6 +105,7 @@ const App = () => {
                               <Route path="calculator" element={<Calculator />} />
                               <Route path="contracts/new" element={<SovereignContractIntake />} />
                               <Route path="legal-defense" element={<LegalDefenseDashboard />} />
+                              <Route path="fcra" element={<FCRADashboard />} />
                               <Route path="handbook" element={<Handbook />} />
                               <Route path="user-manual" element={<UserManual />} />
                               <Route path="media-center" element={<MediaCenter />} />
