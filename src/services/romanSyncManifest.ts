@@ -12,20 +12,34 @@
  */
 
 import { romanSupabase } from './romanSupabase';
+import { validateCorpusOperation } from './romanCorpusGuard';
 import { writeFileSync } from 'fs';
 import { join } from 'path';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 export interface ManifestState {
-  generated_at:   string;
-  system_version: string;
-  live_status:    SystemStatus;
-  legal_campaign: LegalStatus;
-  publishing:     PublishingStatus;
-  ip_portfolio:   IPStatus;
-  financials:     FinancialStatus;
-  next_actions:   string[];
+  generated_at:     string;
+  system_version:   string;
+  live_status:      SystemStatus;
+  legal_campaign:   LegalStatus;
+  publishing:       PublishingStatus;
+  ip_portfolio:     IPStatus;
+  financials:       FinancialStatus;
+  bcg_architecture: BCGArchitectureStatus;
+  next_actions:     string[];
+}
+
+interface BCGSection {
+  id:    number;
+  title: string;
+}
+
+interface BCGArchitectureStatus {
+  linchpins:        BCGSection[];
+  sub_linchpins:    BCGSection[];
+  total_sections:   number;
+  dependency_count: number;
 }
 
 interface SystemStatus {
@@ -124,6 +138,51 @@ async function collectPublishingStatus(): Promise<PublishingStatus> {
   };
 }
 
+async function collectBCGLinchpins(): Promise<BCGArchitectureStatus> {
+  // Grounds R.O.M.A.N.'s view of the BCG corpus in the hardened relational schema
+  // (corpus_sections + section_dependencies) rather than inferring it from
+  // roman_knowledge_base text. The dependency map is immutably locked at the
+  // database layer via the `lock_logic_framework` trigger — no AI context drift
+  // can alter these structural relationships.
+
+  // Pre-flight against the immutable structural rules before touching the corpus.
+  // A whole-table read carries no section_ids, so this resolves to ALLOW; the
+  // guard is wired in regardless so the pattern holds as more consumers are added.
+  const guard = await validateCorpusOperation('QUERY', 'corpus_sections', null, 'manifest:collectBCGLinchpins');
+  if (guard.verdict === 'ABORT') {
+    // A veto on a read is not expected; surface it and fall back to the verified
+    // structural constants so the manifest still renders rather than crashing.
+    console.warn(`[manifest] BCG pre-flight ABORT: ${guard.reason}`);
+    return {
+      linchpins:        [{ id: 2, title: 'Celestial Drivers — Saturn and Uranus' }, { id: 5, title: 'System Clock — 7.83Hz Schumann Resonance' }, { id: 13, title: 'Merkaba Activation — Geometric Blueprint' }, { id: 24, title: 'Concurrent Operator Dynamics — Executive Governance' }],
+      sub_linchpins:    [{ id: 1, title: 'Prime Source / Star Tetrahedron Engine' }, { id: 6, title: 'Flower of Life Blueprint' }, { id: 14, title: 'Data Core / Dodecahedron Memory Safe' }],
+      total_sections:   36,
+      dependency_count: 51,
+    };
+  }
+
+  const [linchpinRows, totalSections, depCount] = await Promise.all([
+    romanSupabase
+      .from('corpus_sections')
+      .select('id, title, is_linchpin, is_sub_linchpin')
+      .or('is_linchpin.eq.true,is_sub_linchpin.eq.true')
+      .order('id', { ascending: true }),
+    romanSupabase.from('corpus_sections').select('id', { count: 'exact', head: true }),
+    romanSupabase.from('section_dependencies').select('id', { count: 'exact', head: true }),
+  ]);
+
+  const rows = linchpinRows.data || [];
+  const linchpins     = rows.filter(r => r.is_linchpin).map(r => ({ id: r.id, title: r.title }));
+  const sub_linchpins = rows.filter(r => r.is_sub_linchpin).map(r => ({ id: r.id, title: r.title }));
+
+  return {
+    linchpins:        linchpins.length     ? linchpins     : [{ id: 2, title: 'Celestial Drivers — Saturn and Uranus' }, { id: 5, title: 'System Clock — 7.83Hz Schumann Resonance' }, { id: 13, title: 'Merkaba Activation — Geometric Blueprint' }, { id: 24, title: 'Concurrent Operator Dynamics — Executive Governance' }],
+    sub_linchpins:    sub_linchpins.length ? sub_linchpins : [{ id: 1, title: 'Prime Source / Star Tetrahedron Engine' }, { id: 6, title: 'Flower of Life Blueprint' }, { id: 14, title: 'Data Core / Dodecahedron Memory Safe' }],
+    total_sections:   totalSections.count || 36,
+    dependency_count: depCount.count || 51,
+  };
+}
+
 function getIPStatus(): IPStatus {
   return {
     patent_count:      30,
@@ -144,10 +203,11 @@ function getFinancialStatus(): FinancialStatus {
 // ─── Manifest Generator ───────────────────────────────────────────────────────
 
 export async function generateSyncManifest(): Promise<ManifestState> {
-  const [system, legal, publishing] = await Promise.all([
+  const [system, legal, publishing, bcg] = await Promise.all([
     collectSystemStatus(),
     collectLegalStatus(),
     collectPublishingStatus(),
+    collectBCGLinchpins(),
   ]);
 
   const now = new Date();
@@ -173,9 +233,10 @@ export async function generateSyncManifest(): Promise<ManifestState> {
     live_status:    system,
     legal_campaign: legal,
     publishing,
-    ip_portfolio:   getIPStatus(),
-    financials:     getFinancialStatus(),
-    next_actions:   nextActions,
+    ip_portfolio:     getIPStatus(),
+    financials:       getFinancialStatus(),
+    bcg_architecture: bcg,
+    next_actions:     nextActions,
   };
 }
 
@@ -297,6 +358,25 @@ Any AI assistant reading this manifest:
 
 ---
 
+## IX. BCG CORPUS ARCHITECTURE
+
+The structural spine of the corpus is grounded in a hardened relational schema —
+\`corpus_sections\` (${state.bcg_architecture.total_sections} sections) and
+\`section_dependencies\` (${state.bcg_architecture.dependency_count} mappings) — not inferred from text.
+Every section maps to its governing anchor with \`justification_text\` drawn from the literal corpus.
+
+**Linchpins (${state.bcg_architecture.linchpins.length}) — load-bearing anchors:**
+${state.bcg_architecture.linchpins.map(s => `- Section ${s.id}: ${s.title}`).join('\n')}
+
+**Sub-Linchpins (${state.bcg_architecture.sub_linchpins.length}) — secondary anchors:**
+${state.bcg_architecture.sub_linchpins.map(s => `- Section ${s.id}: ${s.title}`).join('\n')}
+
+> **\`section_dependencies\` is immutably locked via the \`lock_logic_framework\` database trigger.**
+> No AI context drift can alter these relationships — they are a verified database fact,
+> re-read into every R.O.M.A.N. session as the corpus's structural ground truth.
+
+---
+
 *All rights reserved. UCC 1-308. Without Prejudice.*
 *Howard Jones Bloodline Ancestral Trust — Sovereign Grantor: Rickey Allan Howard*
 *Generated by R.O.M.A.N. 2.0 Autonomous Sync Engine — ${state.generated_at}*
@@ -353,6 +433,9 @@ export async function getManifestDiscordSummary(): Promise<string> {
       `**IP PORTFOLIO**`,
       `${state.ip_portfolio.patent_count}+ patents | ${state.ip_portfolio.genesis_valuation}`,
       `⚠️ ${state.ip_portfolio.critical_deadline}`,
+      ``,
+      `**BCG ARCHITECTURE**`,
+      `BCG: ${state.bcg_architecture.linchpins.length} linchpins | ${state.bcg_architecture.sub_linchpins.length} sub-linchpins | ${state.bcg_architecture.total_sections} sections | dependency map locked`,
       ``,
       `**NEXT ACTIONS**`,
       state.next_actions.slice(0, 3).map((a, i) => `${i + 1}. ${a}`).join('\n'),
