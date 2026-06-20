@@ -21,7 +21,12 @@ function daysUntil(dateStr: string): number {
   return Math.floor((target.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
 }
 
-// ─── Knowledge base lookup — finds relevant synced files for the user's query ──
+// ─── Knowledge base lookup — UNIFIED semantic + recency + map retrieval ────────
+// Replaces the legacy 4-file ILIKE keyhole. Generates a query embedding and calls
+// public.roman_search_knowledge_unified (semantic ⊕ recency ⊕ map lanes), keeping
+// the always-include pinned files as a safety floor. Fully graceful: if the
+// embedding or RPC fails, R.O.M.A.N. still gets the pinned floor + whatever lanes
+// the RPC can serve. Signature unchanged so buildFullPrompt is untouched.
 async function fetchKnowledgeContext(
   supabase: ReturnType<typeof createClient>,
   userMessage: string
@@ -39,63 +44,127 @@ async function fetchKnowledgeContext(
       'legal/BOFA_COMPLAINT_PORTAL_READY.md',
     ]
 
-    // Pull always-include files
+    // Pinned safety floor — always present, independent of retrieval
     const { data: pinned } = await supabase
       .from('roman_knowledge_base')
       .select('file_path, content')
       .in('file_path', ALWAYS_INCLUDE)
 
-    // Search for files relevant to the user's message (keyword match on file_path + content)
-    const keywords = userMessage
-      .toLowerCase()
-      .replace(/[^a-z0-9 ]/g, '')
-      .split(' ')
-      .filter(w => w.length > 3)
-      .slice(0, 5)
-
-    let searchResults: Array<{ file_path: string; content: string }> = []
-    if (keywords.length > 0) {
-      // Search by file_path match first (most reliable — catches "banking research" → D-DRIVE/Banking_Research_v5.docx)
-      const pathResults: Array<{ file_path: string; content: string }> = []
-      for (const kw of keywords) {
-        const { data } = await supabase
-          .from('roman_knowledge_base')
-          .select('file_path, content')
-          .ilike('file_path', `%${kw}%`)
-          .limit(2)
-        if (data) pathResults.push(...data)
-      }
-
-      // Deduplicate by file_path (pinned files already in seen set, so they won't duplicate)
-      const pinnedPaths = (pinned ?? []).map((p: { file_path: string }) => p.file_path)
-      const seen = new Set<string>(pinnedPaths)
-      for (const r of pathResults) {
-        if (!seen.has(r.file_path)) { seen.add(r.file_path); searchResults.push(r) }
-        if (searchResults.length >= 4) break
-      }
-
-      // If still under 4, also try content ILIKE on the strongest keyword
-      if (searchResults.length < 2 && keywords[0]) {
-        const { data } = await supabase
-          .from('roman_knowledge_base')
-          .select('file_path, content')
-          .ilike('content', `%${keywords[0]}%`)
-          .limit(2)
-        for (const r of (data ?? [])) {
-          if (!seen.has(r.file_path)) { seen.add(r.file_path); searchResults.push(r) }
+    // 1. Query embedding (text-embedding-3-small). Graceful: null → the RPC still
+    //    serves the text + recency + map lanes.
+    let queryEmbedding: number[] | null = null
+    const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY')
+    if (OPENAI_API_KEY) {
+      try {
+        const er = await fetch('https://api.openai.com/v1/embeddings', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${OPENAI_API_KEY}` },
+          body: JSON.stringify({ model: 'text-embedding-3-small', input: userMessage.slice(0, 8000) }),
+        })
+        if (er.ok) {
+          const ej = await er.json()
+          queryEmbedding = ej.data?.[0]?.embedding ?? null
+        } else {
+          console.error('Query embedding failed:', er.status, (await er.text()).slice(0, 200))
         }
+      } catch (e) {
+        console.error('Query embedding error:', e)
       }
     }
 
-    const allEntries = [...(pinned ?? []), ...searchResults]
-    if (allEntries.length === 0) return ''
+    // 2. Unified retrieval: semantic ⊕ recency ⊕ map in a single RPC call.
+    //    Matches the verified signature:
+    //    roman_search_knowledge_unified(p_query_text text, p_query_embedding vector,
+    //      p_match_count int, p_recency_count int) → (file_path, content, similarity,
+    //      content_changed_at, match_lane)
+    const semantic: any[] = [], recency: any[] = [], mapRows: any[] = []
+    try {
+      const { data: matches, error: rpcErr } = await supabase.rpc('roman_search_knowledge_unified', {
+        p_query_text: userMessage,
+        p_query_embedding: queryEmbedding ? `[${queryEmbedding.join(',')}]` : null,
+        p_match_count: 12,
+        p_recency_count: 8,
+      })
+      if (rpcErr) {
+        console.error('Unified RPC error:', rpcErr.message)
+      } else if (Array.isArray(matches)) {
+        for (const m of matches) {
+          if (m.match_lane === 'map') mapRows.push(m)
+          else if (m.match_lane === 'recency') recency.push(m)
+          else semantic.push(m)
+        }
+      }
+    } catch (e) {
+      console.error('Unified RPC threw:', e)
+    }
 
-    const sections = allEntries.map(entry => {
-      const truncated = entry.content?.slice(0, 6000) ?? ''
-      return `--- FILE: ${entry.file_path} ---\n${truncated}${entry.content?.length > 6000 ? '\n[...truncated]' : ''}`
-    })
+    // 2b. Deep legal passages — reuse the SAME query embedding to pull the most
+    //     relevant chunks of the big canonical legal docs (Judgement v28-3, Banking
+    //     v38) from roman_doc_chunks. This reads RELEVANT passages from anywhere in
+    //     the 228K/346K-char docs, not just their first 6-8K. No extra OpenAI call.
+    let legalChunks: any[] = []
+    if (queryEmbedding) {
+      try {
+        const { data: chunks, error: cErr } = await supabase.rpc('roman_search_doc_chunks', {
+          p_query_embedding: `[${queryEmbedding.join(',')}]`,
+          p_match_count: 6,
+          p_doc_filter: null,
+        })
+        if (cErr) console.error('doc_chunks RPC error:', cErr.message)
+        else if (Array.isArray(chunks)) legalChunks = chunks
+      } catch (e) {
+        console.error('doc_chunks RPC threw:', e)
+      }
+    }
 
-    return `\nKNOWLEDGE BASE (synced files — use this as active reference):\n${sections.join('\n\n')}\n`
+    // 3. Format: pinned floor + three labeled lanes so R.O.M.A.N. understands
+    //    WHAT each block is, WHEN it changed, and WHERE it lives.
+    const blocks: string[] = []
+    const seen = new Set<string>()
+
+    if (pinned?.length) {
+      const ps = (pinned as any[]).map(p => {
+        seen.add(p.file_path)
+        const c = (p.content ?? '').slice(0, 6000)
+        return `--- FILE: ${p.file_path} ---\n${c}${(p.content?.length ?? 0) > 6000 ? '\n[...truncated]' : ''}`
+      })
+      blocks.push('PINNED (always-active reference):\n' + ps.join('\n\n'))
+    }
+
+    if (mapRows.length) {
+      blocks.push('SYSTEM MAP (the whole house — what exists and where):\n' +
+        mapRows.map(m => m.content).filter(Boolean).join('\n'))
+    }
+
+    if (recency.length) {
+      const rs = recency.filter(r => !seen.has(r.file_path)).map(r => {
+        seen.add(r.file_path)
+        const when = r.content_changed_at ? String(r.content_changed_at).split('T')[0] : 'recent'
+        return `[RECENT ${when}] ${r.file_path}\n${(r.content ?? '').slice(0, 1500)}`
+      })
+      if (rs.length) blocks.push('RECENTLY CHANGED (newest work — prioritize over older docs):\n' + rs.join('\n\n'))
+    }
+
+    if (semantic.length) {
+      const ss = semantic.filter(s => !seen.has(s.file_path)).map(s => {
+        seen.add(s.file_path)
+        const conf = typeof s.similarity === 'number' ? `${(s.similarity * 100).toFixed(0)}%` : ''
+        return `[MATCH ${conf}] ${s.file_path}\n${(s.content ?? '').slice(0, 3500)}`
+      })
+      if (ss.length) blocks.push('SEMANTIC MATCHES (relevant to the question by meaning):\n' + ss.join('\n\n'))
+    }
+
+    if (legalChunks.length) {
+      const lc = legalChunks.map(c => {
+        const doc = c.doc_path ? String(c.doc_path).split('/').pop() : 'legal doc'
+        const conf = typeof c.similarity === 'number' ? `${(c.similarity * 100).toFixed(0)}%` : ''
+        return `[${doc} #${c.chunk_index} ${conf}]\n${(c.content ?? '').slice(0, 3000)}`
+      })
+      blocks.push('DEEP LEGAL PASSAGES (most relevant excerpts from the FULL canonical research — Judgement v28-3 & Banking Research v38, retrieved from anywhere in the documents, not just their opening):\n' + lc.join('\n\n'))
+    }
+
+    if (blocks.length === 0) return ''
+    return `\nKNOWLEDGE BASE (live retrieval — semantic + recency + map; this IS your active reality):\n${blocks.join('\n\n')}\n`
   } catch (e) {
     console.error('Knowledge base fetch error:', e)
     return ''
