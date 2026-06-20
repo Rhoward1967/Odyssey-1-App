@@ -245,41 +245,45 @@ async function buildSystemContext(
   const now = new Date()
   const currentDate = now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
 
-  // Live trust data from business_entities table
-  let trustBlock = '⚠️ Trust data unavailable — check business_entities table'
+  // Trust IDENTITY from business_entities; LIVE VALUATION from the trust_total_valuation
+  // VIEW, which recomputes from trust_asset_portfolio on every query. Add an asset to the
+  // portfolio and R.O.M.A.N. reflects the new total automatically — no manual sync, no
+  // stale figure. (Replaced the old hardcoded $6.71B/$4.237B tiers, which were months stale.)
+  let trustBlock = '⚠️ Trust valuation unavailable — check trust_asset_portfolio'
   try {
-    const { data } = await supabase
-      .from('business_entities')
-      .select('entity_name, is_active, formation_state, trust_type, filing_date, trustee_name, estimated_value, strategic_notes, holds_assets, ucc_filing_number, notes')
-      .eq('ein_tax_id', 'HJFAT-2026-001')
-      .single()
+    const fmtUsd = (n: any) => '$' + Math.round(Number(n || 0)).toLocaleString('en-US')
+    const [{ data: ent }, { data: tv }, { data: recent }] = await Promise.all([
+      supabase.from('business_entities')
+        .select('entity_name, is_active, formation_state, trust_type, filing_date, trustee_name')
+        .eq('ein_tax_id', 'HJFAT-2026-001').single(),
+      supabase.from('trust_total_valuation').select('*').single(),
+      supabase.from('trust_asset_portfolio')
+        .select('asset_name, asset_type, valuation_usd')
+        .order('valuation_usd', { ascending: false }).limit(10),
+    ])
+    const name = ent?.entity_name || 'Howard Jones Bloodline Ancestral Trust'
+    if (tv) {
+      const lastUpd = tv.last_updated ? String(tv.last_updated).split('T')[0] : 'unknown'
+      const top = (recent || []).map((a: any) => `    • ${a.asset_name} — ${fmtUsd(a.valuation_usd)} (${a.asset_type})`).join('\n')
+      trustBlock = `🏛️ ${name} (HJFAT-2026-001)${ent ? `
+  Status: ${ent.is_active ? 'ACTIVE' : 'INACTIVE'} | Established: ${ent.filing_date} | ${ent.formation_state} ${ent.trust_type} | Trustee: ${ent.trustee_name}` : ''}
 
-    if (data) {
-      const assets = (data.holds_assets || []).map((a: string) => `  • ${a}`).join('\n')
-      const notes = data.strategic_notes || ''
-      const t1Match = notes.match(/Tier 1[^:]*:\s*\$([0-9.]+B)/i)
-      const t2Match = notes.match(/Tier 2[^:]*:\s*\$([0-9.]+M)/i)
-      const t3Match = notes.match(/Tier 3[^:]*:\s*\$([0-9.]+M)/i)
-      const uccMatch = notes.match(/\$([0-9.]+M) combined lien/i)
+  LIVE IP PORTFOLIO (audited, conservative — recomputed from trust_asset_portfolio; auto-updates
+  the instant an asset is added | last updated ${lastUpd}):
+    TOTAL: ${fmtUsd(tv.total_valuation_usd)} across ${tv.total_assets} assets
+    Patents ${fmtUsd(tv.patent_valuation)} | Copyright ${fmtUsd(tv.copyright_valuation)} | Trade Secrets ${fmtUsd(tv.trade_secret_valuation)} | Trademark ${fmtUsd(tv.trademark_valuation)}
 
-      trustBlock = `🏛️ ${data.entity_name} (HJFAT-2026-001)
-  Status: ${data.is_active ? 'ACTIVE' : 'INACTIVE'} | Established: ${data.filing_date}
-  Formation State: ${data.formation_state} | Type: ${data.trust_type}
-  Trustee: ${data.trustee_name}
+  Top holdings:
+${top || '    (none)'}
 
-  VALUATION (Three-Tier Framework):
-    Tier 1 Optimistic:   ${t1Match ? '$' + t1Match[1] : '$6.71B'}
-    Tier 2 Market:       ${t2Match ? '$' + t2Match[1] : '$950M'}
-    Tier 3 Conservative: ${t3Match ? '$' + t3Match[1] : '$366M'}
-    Genesis Valuation:   $4.237B (Master IP Manifest)
-
-  UCC-1 TRIPLE-LOCK: ${uccMatch ? '$' + uccMatch[1] + ' combined lien' : data.ucc_filing_number || 'See strategic notes'}
-
-  Trust Assets:
-${assets || '  No assets listed'}`
+  IMPORTANT: Quote ONLY this live total. Do NOT cite older figures ($6.71B / $4.237B / $100K)
+  from business_entities, the Master IP Manifest, or the IP_VAULT — those are stale snapshots.
+  trust_total_valuation is the single source of truth.`
+    } else if (ent) {
+      trustBlock = `🏛️ ${name} (HJFAT-2026-001) — Status: ${ent.is_active ? 'ACTIVE' : 'INACTIVE'} | Trustee: ${ent.trustee_name}\n  ⚠️ Live valuation view (trust_total_valuation) unavailable this request.`
     }
   } catch (e) {
-    console.error('Trust data load error:', e)
+    console.error('Trust valuation load error:', e)
   }
 
   // Patent deadlines
@@ -317,7 +321,7 @@ BUSINESS:
   • Revenue: $14,283.07/month MRR + $61,030/year
   • Active: 14 customers | 5 contractors | 21 recurring schedules
 
-TRUST DATA (Live from business_entities):
+TRUST DATA (LIVE — valuation auto-recomputed from trust_asset_portfolio):
 ${trustBlock}
 
 PATENT PORTFOLIO — 30 PATENTS | CONVERSION DEADLINES:
