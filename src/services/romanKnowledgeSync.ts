@@ -20,7 +20,7 @@ import process from 'process';
 import { createClient } from '@supabase/supabase-js';
 import { createHash } from 'crypto';
 import { execSync } from 'child_process';
-import { existsSync, readFileSync, statSync } from 'fs';
+import { existsSync, readFileSync, statSync, readdirSync } from 'fs';
 import { join } from 'path';
 
 // ─── Supabase client (Node.js / service role) ──────────────────────────────
@@ -500,8 +500,80 @@ export interface SyncResult {
 }
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
-function md5(content: string): string {
-  return createHash('md5').update(content).digest('hex');
+// SHA-256 to MATCH the roman_kb_set_checksum DB trigger, which recomputes
+// checksum = sha256(content) on every write. (Previously this used md5, which
+// can NEVER equal sha256 → the diff always failed → every file re-synced every
+// run. That's why all rows shared one 3AM timestamp.)
+function sha256(content: string): string {
+  return createHash('sha256').update(content, 'utf8').digest('hex');
+}
+
+// OpenAI embedding (text-embedding-3-small, 1536-dim) — same model used across
+// the system. Graceful: returns null if no key or on error, so the sync never breaks.
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY || process.env.VITE_OPENAI_API_KEY || '';
+async function generateEmbedding(text: string): Promise<number[] | null> {
+  if (!OPENAI_API_KEY) return null;
+  try {
+    const res = await fetch('https://api.openai.com/v1/embeddings', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${OPENAI_API_KEY}` },
+      body: JSON.stringify({ model: 'text-embedding-3-small', input: text.slice(0, 8000) }),
+    });
+    if (!res.ok) { console.error('[KnowledgeSync] embedding failed:', res.status); return null; }
+    const json = await res.json();
+    return json?.data?.[0]?.embedding ?? null;
+  } catch (e: any) {
+    console.error('[KnowledgeSync] embedding error:', e?.message || e);
+    return null;
+  }
+}
+
+// ─── Filesystem crawl — replaces the hand-typed allowlist ─────────────────────
+// Recursively discovers every indexable file under CRAWL_ROOTS so new files
+// self-register forever. KNOWLEDGE_FILES above is kept as a SEED (unioned in),
+// so nothing currently indexed can ever regress.
+const CRAWL_ROOTS = ['src', 'docs', 'legal', 'supabase/functions', 'financial', 'layman-law-app/src'];
+const IGNORE_DIRS = new Set(['node_modules', 'dist', 'build', 'coverage', '.git', '.next', '.vercel', '.turbo', '.temp']);
+const INCLUDE_EXT = new Set(['.ts', '.tsx', '.md', '.txt', '.sql']);
+// NEVER index secrets or lock/min noise.
+const EXCLUDE_FILE = [/\.env/i, /\.key$/i, /\.pem$/i, /secret/i, /credential/i, /package-lock\.json$/i, /\.min\./i];
+
+function isIndexable(name: string): boolean {
+  const dot = name.lastIndexOf('.');
+  const ext = dot >= 0 ? name.slice(dot).toLowerCase() : '';
+  if (!INCLUDE_EXT.has(ext)) return false;
+  if (EXCLUDE_FILE.some(p => p.test(name))) return false;
+  return true;
+}
+
+function crawlDir(absDir: string, relBase: string, out: Set<string>): void {
+  let entries: any[];
+  try { entries = readdirSync(absDir, { withFileTypes: true }); } catch { return; }
+  for (const e of entries) {
+    const rel = relBase ? `${relBase}/${e.name}` : e.name;
+    if (e.isDirectory()) {
+      if (IGNORE_DIRS.has(e.name) || e.name.startsWith('.')) continue;
+      crawlDir(join(absDir, e.name), rel, out);
+    } else if (e.isFile() && isIndexable(e.name)) {
+      out.add(rel);
+    }
+  }
+}
+
+function collectFiles(): string[] {
+  const found = new Set<string>(KNOWLEDGE_FILES); // seed — never regress current coverage
+  // root-level *.md / *.txt
+  try {
+    for (const e of readdirSync(ROOT, { withFileTypes: true })) {
+      if (e.isFile() && isIndexable(e.name) && /\.(md|txt)$/i.test(e.name)) found.add(e.name);
+    }
+  } catch { /* ignore */ }
+  // recursive crawl of each root
+  for (const root of CRAWL_ROOTS) {
+    const absRoot = join(ROOT, root);
+    if (existsSync(absRoot)) crawlDir(absRoot, root, found);
+  }
+  return Array.from(found);
 }
 
 function getFileType(filePath: string): string {
@@ -541,12 +613,32 @@ async function fetchStoredChecksums(): Promise<Map<string, string>> {
 }
 
 /**
+ * Fetch file_paths whose embedding is still NULL — cheap (no vectors pulled).
+ * Used so files that synced before embeddings existed get re-embedded (self-heal),
+ * even when their content hasn't changed.
+ */
+async function fetchPathsMissingEmbedding(): Promise<Set<string>> {
+  const set = new Set<string>();
+  const { data, error } = await supabase
+    .from('roman_knowledge_base')
+    .select('file_path')
+    .is('embedding', null);
+  if (error) {
+    console.error('[KnowledgeSync] Failed to fetch null-embedding paths:', error.message);
+    return set;
+  }
+  for (const row of data || []) if (row.file_path) set.add(row.file_path);
+  return set;
+}
+
+/**
  * Sync a single file into roman_knowledge_base.
  * Returns 'synced' | 'skipped' | 'failed'
  */
 async function syncFile(
   relPath: string,
-  storedChecksums: Map<string, string>
+  storedChecksums: Map<string, string>,
+  needsEmbedding: Set<string>
 ): Promise<'synced_new' | 'synced_updated' | 'skipped' | 'failed'> {
   const absPath = join(ROOT, relPath);
 
@@ -559,26 +651,32 @@ async function syncFile(
     return 'failed';
   }
 
-  const checksum = md5(content);
+  const storedContent = content.slice(0, 500_000); // 500KB cap per entry
+  const checksum = sha256(storedContent);           // sha256 to match the DB trigger
   const stored = storedChecksums.get(relPath);
 
-  // Skip if unchanged
-  if (stored === checksum) return 'skipped';
+  // Skip only if content is unchanged AND it already has an embedding
+  // (so files synced before embeddings existed get self-healed).
+  if (stored === checksum && !needsEmbedding.has(relPath)) return 'skipped';
 
   const isNew = !stored;
 
+  // Embed-on-write (first 8K). Graceful — if null, the row still syncs and will
+  // be picked up again later via the needsEmbedding set.
+  const embedding = await generateEmbedding(storedContent);
+
+  const row: Record<string, any> = {
+    file_path: relPath,
+    content: storedContent,
+    file_type: getFileType(relPath),
+    checksum,
+    updated_at: new Date().toISOString(),
+  };
+  if (embedding) row.embedding = embedding;
+
   const { error } = await supabase
     .from('roman_knowledge_base')
-    .upsert(
-      {
-        file_path: relPath,
-        content: content.slice(0, 500_000), // 500KB cap per entry
-        file_type: getFileType(relPath),
-        checksum,
-        updated_at: new Date().toISOString(),
-      },
-      { onConflict: 'file_path' }
-    );
+    .upsert(row, { onConflict: 'file_path' });
 
   if (error) {
     console.error(`[KnowledgeSync] Failed to upsert ${relPath}:`, error.message);
@@ -636,7 +734,7 @@ async function syncGitContext(): Promise<void> {
       log,
     ].join('\n');
 
-    const checksum = md5(content);
+    const checksum = sha256(content);
     await supabase.from('roman_knowledge_base').upsert(
       { file_path: '__git_context__', content, file_type: 'git_context', checksum, updated_at: new Date().toISOString() },
       { onConflict: 'file_path' }
@@ -659,6 +757,9 @@ export async function runKnowledgeSync(mode: 'startup' | 'full' = 'full'): Promi
   console.log(`\n[KnowledgeSync] Starting ${mode} sync — ${new Date().toISOString()}`);
 
   const storedChecksums = await fetchStoredChecksums();
+  const needsEmbedding = await fetchPathsMissingEmbedding();
+  const files = collectFiles();
+  console.log(`[KnowledgeSync] Crawl discovered ${files.length} indexable files (${needsEmbedding.size} missing embeddings)`);
   const cutoffMs = mode === 'startup' ? Date.now() - 14 * 24 * 60 * 60 * 1000 : 0;
 
   const result: SyncResult = {
@@ -671,7 +772,7 @@ export async function runKnowledgeSync(mode: 'startup' | 'full' = 'full'): Promi
     duration_ms: 0,
   };
 
-  for (const relPath of KNOWLEDGE_FILES) {
+  for (const relPath of files) {
     const absPath = join(ROOT, relPath);
 
     if (!existsSync(absPath)) {
@@ -692,7 +793,7 @@ export async function runKnowledgeSync(mode: 'startup' | 'full' = 'full'): Promi
       }
     }
 
-    const outcome = await syncFile(relPath, storedChecksums);
+    const outcome = await syncFile(relPath, storedChecksums, needsEmbedding);
 
     if (outcome === 'synced_new') {
       result.synced++;
