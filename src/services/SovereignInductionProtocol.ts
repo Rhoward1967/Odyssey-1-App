@@ -322,15 +322,18 @@ export class SovereignInductionProtocol {
         session_id: this.sessionId
       };
       
-      // Log to system_knowledge table for permanent record
-      await romanSupabase.from('system_knowledge').insert({
+      // Log to system_knowledge table for permanent record.
+      // Upsert by (category, knowledge_key) so re-induction of the same session
+      // updates instead of throwing 23505. (This was previously a broken insert
+      // referencing non-existent columns subcategory/key/data and omitting the
+      // required knowledge_key — so induction records were silently never saved.)
+      await romanSupabase.from('system_knowledge').upsert({
         category: 'sovereign_induction',
-        subcategory: 'ai_briefing',
-        key: `induction_${this.sessionId}`,
-        value: systemName,
-        data: record,
-        created_at: new Date().toISOString()
-      });
+        knowledge_key: `induction_${this.sessionId}`,
+        value: { system_name: systemName, subcategory: 'ai_briefing', ...record },
+        learned_from: 'SovereignInductionProtocol',
+        updated_at: new Date().toISOString(),
+      }, { onConflict: 'category,knowledge_key' });
       
       sfLogger.complete('sovereign_induction_complete', `${systemName} successfully inducted - Write access granted`, {
         system_name: systemName,
