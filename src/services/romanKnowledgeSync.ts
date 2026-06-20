@@ -532,11 +532,15 @@ async function generateEmbedding(text: string): Promise<number[] | null> {
 // Recursively discovers every indexable file under CRAWL_ROOTS so new files
 // self-register forever. KNOWLEDGE_FILES above is kept as a SEED (unioned in),
 // so nothing currently indexed can ever regress.
-const CRAWL_ROOTS = ['src', 'docs', 'legal', 'supabase/functions', 'financial', 'layman-law-app/src'];
+const CRAWL_ROOTS = ['src', 'docs', 'legal', 'supabase/functions', 'financial', 'layman-law-app/src', 'research'];
 const IGNORE_DIRS = new Set(['node_modules', 'dist', 'build', 'coverage', '.git', '.next', '.vercel', '.turbo', '.temp']);
 const INCLUDE_EXT = new Set(['.ts', '.tsx', '.md', '.txt', '.sql']);
-// NEVER index secrets or lock/min noise.
+// NEVER index secrets or lock/min noise. (Tested against the FILE NAME only.)
 const EXCLUDE_FILE = [/\.env/i, /\.key$/i, /\.pem$/i, /secret/i, /credential/i, /package-lock\.json$/i, /\.min\./i];
+// PATH-based exclusions (tested against the relative path). The BCG foundation
+// sections are append-only (roman_kb_guard_foundation trigger blocks UPDATE), so
+// skip them — otherwise every sync logs a guard error trying to re-embed them.
+const EXCLUDE_PATH = [/research\/bio_cosmic_generator\/section_/i];
 
 function isIndexable(name: string): boolean {
   const dot = name.lastIndexOf('.');
@@ -554,7 +558,7 @@ function crawlDir(absDir: string, relBase: string, out: Set<string>): void {
     if (e.isDirectory()) {
       if (IGNORE_DIRS.has(e.name) || e.name.startsWith('.')) continue;
       crawlDir(join(absDir, e.name), rel, out);
-    } else if (e.isFile() && isIndexable(e.name)) {
+    } else if (e.isFile() && isIndexable(e.name) && !EXCLUDE_PATH.some(p => p.test(rel))) {
       out.add(rel);
     }
   }
