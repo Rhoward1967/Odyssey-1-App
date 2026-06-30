@@ -8,6 +8,7 @@ import { Brain, Calculator, TrendingUp, Users, Zap } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import CustomerProfileModal from './CustomerProfileModal';
 import LogicGateAuditPanel from './LogicGateAuditPanel';
+import { getQBCustomers } from '@/services/quickbooksDataService';
 
 
 // --- Unified Customer Interface (matches client manager) ---
@@ -68,10 +69,27 @@ export default function BiddingCalculator() {
       .order('company_name', { ascending: true });
     if (error) {
       console.warn('Failed to fetch customers:', error.message);
-      setCustomers([]);
-      return;
     }
-    setCustomers(data || []);
+    const local = data || [];
+
+    // Also pull the real QuickBooks customer list (1,200+) so estimates can be
+    // built against actual QB accounts, not just the local table. Additive and
+    // graceful — if QB hasn't synced, the builder still shows local customers.
+    const qb = await getQBCustomers();
+    const qbMapped: Customer[] = qb.map((c) => ({
+      id: `qb:${c.qb_id}`,
+      first_name: null,
+      last_name: null,
+      company_name: c.display_name || c.company_name || 'QuickBooks Customer',
+      email: c.email,
+      phone: null,
+      address: null,
+      billing_city: null,
+      billing_state: null,
+      billing_zip: null,
+    }));
+
+    setCustomers([...local, ...qbMapped]);
   };
 
   const handleSaveCustomer = async (formData: any) => {

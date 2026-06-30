@@ -126,10 +126,12 @@ Over 40 edge functions including:
 
 ## Critical Design Decisions
 
-### 1. QuickBooks Integration: DISABLED BY DESIGN
-The QuickBooks integration is **intentionally disabled**. The `qbo_enabled` flag in `system_config` is set to `false`. This is the **Manual Bypass Strategy** - manual entry is preferred over API sync. QuickBooks API errors are expected and not system failures.
+### 1. QuickBooks: READ-pull is LIVE; auto WRITE-BACK is disabled by design
+**The "disabled by design" rule applies only to automated write-back TO QuickBooks** (pushing invoices/estimates via API). That stays OFF — final entry into QB is manual (`qbo_enabled=false` governs write-back). Do NOT build auto-push to QB.
 
-**Do NOT "fix" this or investigate why QB sync isn't working.**
+**Reading FROM QuickBooks IS intended and IS live** (rebuilt 2026-06-30). R.O.M.A.N. pulls QB data to help build estimates; Rickey enters the final estimate into QB manually. Do NOT fence this off — that misreading is why the read-integration went unbuilt for years.
+- `quickbooks-read` edge fn (paginated, read-only) mirrors QB → `qb_customers` / `qb_items` / `qb_estimates`; runs nightly via cron `quickbooks-read-nightly`.
+- OAuth refresh token lives in `qb_oauth_tokens` and **must persist on rotation** (QB rotates the refresh token every use; not saving it = the pipe dies → the classic "worked once then broke"). See [[project-quickbooks-reconnect]].
 
 ### 2. Resource Governor: 70% Limit is Mandatory
 The `MAX_MEMORY_USAGE = 0.7` in `src/lib/resourceGovernor.ts` is based on the Schumann Resonance baseline (7.83 Hz). This is a constitutional constraint, not a conservative default.
