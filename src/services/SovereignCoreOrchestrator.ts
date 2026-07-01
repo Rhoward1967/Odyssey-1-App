@@ -845,10 +845,19 @@ export class SovereignCoreOrchestrator {
             : '100%';
         }
 
+        // Real, verifiable live counts from the database (not hardcoded self-description)
+        const [cust, contr, sched, kb] = await Promise.all([
+          supabase.from('customers').select('id', { count: 'exact', head: true }),
+          supabase.from('contractors').select('id', { count: 'exact', head: true }),
+          supabase.from('recurring_invoices').select('id', { count: 'exact', head: true }),
+          supabase.from('roman_knowledge_base').select('id', { count: 'exact', head: true }),
+        ]);
+        const n = (r: any) => (r && typeof r.count === 'number' ? r.count : '—');
+
         return {
           success: true,
           data: systemStatus,
-          message: `🔱 R.O.M.A.N. System Status: ${systemStatus.self_awareness.status} | ${systemStatus.self_awareness.capabilities_operational}/${systemStatus.self_awareness.capabilities_known} capabilities operational | ${systemStatus.self_awareness.edge_functions_deployed} Edge Functions deployed | Access: ${systemStatus.sovereignty.access_status}`
+          message: `R.O.M.A.N. online — ${new Date().toLocaleString()} | ${n(cust)} customers · ${n(contr)} contractors · ${n(sched)} recurring schedules | ${n(kb)} knowledge files | ${systemStatus.agents.active} agents active · ${systemStatus.commands.processed_today} commands today | governance ${systemStatus.sovereignty.constitutional_compliance} compliant`
         };
       } catch (error: any) {
         return {
