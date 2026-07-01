@@ -2,6 +2,8 @@ import { Mic, MicOff, Send, Volume2, VolumeX, Bot, User } from 'lucide-react';
 import { useEffect, useRef, useState, useCallback } from 'react';
 import SovereignSidebar from '@/components/SovereignSidebar';
 import { useRomanSessions } from '@/hooks/useRomanSessions';
+import { SovereignCoreOrchestrator } from '@/services/SovereignCoreOrchestrator';
+import { supabase } from '@/lib/supabaseClient';
 
 interface Message {
   id: string;
@@ -42,6 +44,7 @@ export default function RomanChat() {
   const [voiceEnabled,  setVoiceEnabled]  = useState(true);
   const [micAvailable]                    = useState(!!SpeechRecognition);
   const [error,         setError]         = useState<string | null>(null);
+  const [pendingCommand, setPendingCommand] = useState<string | null>(null);
 
   const chatBottomRef  = useRef<HTMLDivElement>(null);
   const recognitionRef = useRef<any>(null);
@@ -179,8 +182,46 @@ export default function RomanChat() {
     saveMessage(activeSessionId, 'user', text);
     chatHistoryRef.current = [...chatHistoryRef.current, { type: 'user', message: text }];
     setInput('');
-    setVoiceState('thinking');
 
+    // ── COMMAND EXECUTION — two-factor: "/do <cmd>" proposes, "confirm" executes ──
+    // Awaiting confirmation of a previously-proposed command?
+    if (pendingCommand !== null) {
+      const cmd = pendingCommand;
+      setPendingCommand(null);
+      if (text.trim().toLowerCase() !== 'confirm') {
+        const msg = 'Command cancelled — nothing was executed.';
+        addMessage('roman', msg); saveMessage(activeSessionId, 'roman', msg);
+        setVoiceState('idle');
+        return;
+      }
+      setVoiceState('thinking');
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        const result: any = await SovereignCoreOrchestrator.processIntent(cmd, user?.id ?? '', 1);
+        const summary = (result && (result.message || result.summary))
+          ? (result.message || result.summary)
+          : JSON.stringify(result, null, 2);
+        const msg = `Executed. Receipt:\n${summary}`;
+        addMessage('roman', msg); saveMessage(activeSessionId, 'roman', msg);
+      } catch (err: any) {
+        addMessage('roman', `Execution failed: ${err.message}`);
+      }
+      setVoiceState('idle');
+      return;
+    }
+
+    // New explicit command → PREVIEW and require confirmation (does NOT execute yet).
+    if (text.trim().toLowerCase().startsWith('/do ')) {
+      const cmd = text.trim().slice(4).trim();
+      setPendingCommand(cmd);
+      const msg = `Ready to EXECUTE against the live system:\n\n"${cmd}"\n\nThis can perform real actions (payroll, trades, email, data changes). Reply "confirm" to execute, or anything else to cancel.`;
+      addMessage('roman', msg); saveMessage(activeSessionId, 'roman', msg);
+      setVoiceState('idle');
+      return;
+    }
+
+    // ── CONVERSATION (default) — talk only, no execution ──
+    setVoiceState('thinking');
     try {
       const fnUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/anthropic-chat`;
       const fnRes = await fetch(fnUrl, {
@@ -215,7 +256,7 @@ export default function RomanChat() {
       setError(`Connection interrupted: ${err.message}`);
       setVoiceState('idle');
     }
-  }, [voiceState, voiceEnabled, currentSessionId, createSession, saveMessage, speakResponse]);
+  }, [voiceState, voiceEnabled, currentSessionId, createSession, saveMessage, speakResponse, pendingCommand]);
 
   // ─── Sidebar: switch to an existing session ──────────────────────────────────
   const handleSelectSession = useCallback(async (sessionId: string) => {
@@ -435,7 +476,7 @@ export default function RomanChat() {
               value={input}
               onChange={e => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Speak your command or type here..."
+              placeholder="Type to chat · /do <command> to execute"
               rows={1}
               disabled={voiceState === 'thinking' || voiceState === 'listening'}
               className="flex-1 bg-slate-700 text-white placeholder-gray-500 rounded-xl px-4 py-3 text-sm resize-none outline-none focus:ring-1 focus:ring-blue-500 disabled:opacity-50 max-h-32 overflow-y-auto"
