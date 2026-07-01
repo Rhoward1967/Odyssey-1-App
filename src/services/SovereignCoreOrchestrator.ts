@@ -845,19 +845,19 @@ export class SovereignCoreOrchestrator {
             : '100%';
         }
 
-        // Real, verifiable live counts from the database (not hardcoded self-description)
-        const [cust, contr, sched, kb] = await Promise.all([
-          supabase.from('customers').select('id', { count: 'exact', head: true }),
-          supabase.from('contractors').select('id', { count: 'exact', head: true }),
-          supabase.from('recurring_invoices').select('id', { count: 'exact', head: true }),
-          supabase.from('roman_knowledge_base').select('id', { count: 'exact', head: true }),
-        ]);
-        const n = (r: any) => (r && typeof r.count === 'number' ? r.count : '—');
+        // Real counts come from the server (roman-status uses the service role and
+        // bypasses RLS). The engine runs in the browser under RLS and can't read
+        // these tables directly, so we fetch true numbers from the edge function.
+        let live: any = { customers: '—', contractors: '—', schedules: '—', knowledge_files: '—', agents_active: '—', commands_today: '—' };
+        try {
+          const { data: sc } = await supabase.functions.invoke('roman-status');
+          if (sc && sc.ok) live = sc;
+        } catch { /* graceful — leave dashes */ }
 
         return {
           success: true,
-          data: systemStatus,
-          message: `R.O.M.A.N. online — ${new Date().toLocaleString()} | ${n(cust)} customers · ${n(contr)} contractors · ${n(sched)} recurring schedules | ${n(kb)} knowledge files | ${systemStatus.agents.active} agents active · ${systemStatus.commands.processed_today} commands today | governance ${systemStatus.sovereignty.constitutional_compliance} compliant`
+          data: { ...systemStatus, live_counts: live },
+          message: `R.O.M.A.N. online — ${new Date().toLocaleString()} | ${live.customers} customers · ${live.contractors} contractors · ${live.schedules} recurring schedules | ${live.knowledge_files} knowledge files | ${live.agents_active} agents active · ${live.commands_today} commands today | governance ${systemStatus.sovereignty.constitutional_compliance} compliant`
         };
       } catch (error: any) {
         return {
