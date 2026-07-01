@@ -245,6 +245,19 @@ async function buildSystemContext(
   const now = new Date()
   const currentDate = now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
 
+  // LIVE active operational counts (real DB, service role) — never hardcode these.
+  let opCounts = 'counts unavailable'
+  try {
+    const [cu, co, sc] = await Promise.all([
+      supabase.from('customers').select('*', { count: 'exact', head: true }).eq('status', 'active'),
+      supabase.from('contractors').select('*', { count: 'exact', head: true }).eq('status', 'active'),
+      supabase.from('recurring_invoices').select('*', { count: 'exact', head: true }).eq('is_active', true),
+    ])
+    opCounts = `${cu.count ?? '?'} active customers | ${co.count ?? '?'} contractors | ${sc.count ?? '?'} recurring schedules`
+  } catch (e) {
+    console.error('opCounts load error:', e)
+  }
+
   // Trust IDENTITY from business_entities; LIVE VALUATION from the trust_total_valuation
   // VIEW, which recomputes from trust_asset_portfolio on every query. Add an asset to the
   // portfolio and R.O.M.A.N. reflects the new total automatically — no manual sync, no
@@ -322,13 +335,13 @@ The KNOWLEDGE BASE and LIVE DATABASE blocks in this prompt are your current, aut
 BUSINESS:
   • HJS Services LLC — Janitorial services, est. 1988
   • Revenue: $14,283.07/month MRR + $61,030/year
-  • Active: 14 customers | 5 contractors | 21 recurring schedules
+  • Active: ${opCounts}
 
 TRUST DATA (LIVE — valuation auto-recomputed from trust_asset_portfolio):
 ${trustBlock}
 
-PATENT PORTFOLIO — 30 PATENTS | CONVERSION DEADLINES:
-${patentLines}
+IP STRATEGY (LOCKED 2026-06-02 — report THIS, never conversion deadlines):
+  All 71 designs are VAULTED in the Howard Jones Bloodline Ancestral Trust as PERPETUAL TRADE SECRETS. Provisional applications are being allowed to EXPIRE naturally — no filings, no USPTO exposure, no conversion deadlines to act on. The vault is the protection (trade secrets never expire; patents expire in 20 years; zero USPTO entries = zero public-disclosure or reverse-engineering risk). Trust notarization is deliberately delayed until AFTER bankruptcy completes — unpatented designs don't appear on bankruptcy schedules and can't be clawed back. AFTER bankruptcy and cash flow are corrected, ONE utility patent will be filed — the Odyssey-1 AI Platform — with broad functional claims covering all integrated subsystems without disclosing the mechanics; everything underneath is legally protected under it. The BCG corpus follows the same path: trade secret, vaulted, perpetual. Rickey's daughter inherits full decision rights on all future patenting; the vault holds until she moves. NEVER tell Rickey to convert or file a patent, and NEVER cite a patent conversion deadline — that contradicts the locked strategy.
 
 UNIVERSAL MATH ENGINE (Sovereign Mathematics):
   1×1=2  (Entity Presence — both entities preserved)
